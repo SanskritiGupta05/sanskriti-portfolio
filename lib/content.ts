@@ -97,25 +97,25 @@ export const INTERESTS = [
   {
     k: "麺",
     name: "Ramen",
-    color: "#B8322A",
+    color: "#C3352B",
     text: "47 bowls this year and counting. Current favourite: tonkotsu, extra negi, soft egg.",
   },
   {
     k: "描",
     name: "Sketching & drawing",
-    color: "#A39E96",
+    color: "#9A9A9A",
     text: "A pocket sketchbook, always. Six filled so far — mostly shopfronts, cats and bad ideas that became good ones.",
   },
   {
     k: "読",
     name: "Reading",
-    color: "#E4DDCF",
+    color: "#E2E2E2",
     text: "Currently reading: Book title — Author. Ask me for recommendations at your own risk.",
   },
   {
     k: "土",
     name: "Clay art",
-    color: "#B8322A",
+    color: "#C3352B",
     text: "Hand-built pots and tiny ramen bowls — slightly wonky, fully loved. Clay taught me patience Figma never did.",
   },
 ];

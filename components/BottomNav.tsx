@@ -31,7 +31,8 @@ export default function BottomNav() {
   }, []);
 
   useEffect(() => {
-    const ids = LINKS.map((l) => l.href.slice(1));
+    // watch every section so the pill clears when you're in one that isn't in the nav
+    const ids = ["top", "craft", "stations", "work", "built", "more", "play", "why", "life"];
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
@@ -73,7 +74,7 @@ export default function BottomNav() {
           <rect x="4" y="3" width="8" height="2" fill="currentColor" />
           <path d="M4.5 5 C1 6.5 1 13.5 4.5 15 H11.5 C15 13.5 15 6.5 11.5 5 Z" className="bnav-lamp" />
           <rect x="4" y="15" width="8" height="2" fill="currentColor" />
-          <path d="M8 17 V20" stroke="#B8322A" strokeWidth="1.6" />
+          <path d="M8 17 V20" stroke="#C3352B" strokeWidth="1.6" />
         </svg>
       </button>
       <button className="bnav-cta" onClick={copy}>

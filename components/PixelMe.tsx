@@ -16,7 +16,7 @@ const PAL: Record<string, string> = {
   R: "#C8372D", // ribbon
   r: "#8E1F18",
   C: "#26252B", // uniform
-  c: "#F5F2EC", // collar
+  c: "#F7F7F7", // collar
   T: "#C8372D", // tie
 };
 

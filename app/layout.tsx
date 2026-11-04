@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [{ color: "#F5F2EC" }],
+  themeColor: [{ color: "#F7F7F7" }],
 };
 
 // Runs before paint so the lantern's last choice never flashes the wrong theme.

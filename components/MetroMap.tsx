@@ -58,7 +58,7 @@ export default function MetroMap() {
             <rect x="21" y="7" width="9" height="7" rx="1.5" className="f-ink" />
             <rect x="34" y="7" width="9" height="7" rx="1.5" className="f-ink" />
             <path d="M48 7 H55 Q58 8 58 14 H48 Z" className="f-ink" />
-            <rect x="2" y="16" width="60" height="2" fill="#B8322A" />
+            <rect x="2" y="16" width="60" height="2" fill="#C3352B" />
           </g>
         </svg>
         {STATIONS.map((s, i) => {

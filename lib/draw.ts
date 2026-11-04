@@ -84,7 +84,7 @@ export const WASHI = (() => {
     const l = 6 + rnd() * 22;
     d += `M${x.toFixed(1)} ${y.toFixed(1)} q${(Math.cos(a) * l * 0.5 + rnd() * 4).toFixed(1)} ${(Math.sin(a) * l * 0.5 + rnd() * 4).toFixed(1)} ${(Math.cos(a) * l).toFixed(1)} ${(Math.sin(a) * l).toFixed(1)} `;
   }
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><path d='${d}' stroke='%23807a70' stroke-opacity='0.16' stroke-width='0.7' fill='none'/></svg>`;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><path d='${d}' stroke='%23888888' stroke-opacity='0.10' stroke-width='0.7' fill='none'/></svg>`;
   return `url("data:image/svg+xml;utf8,${svg.replace(/#/g, "%23").replace(/"/g, "'")}")`;
 })();
 

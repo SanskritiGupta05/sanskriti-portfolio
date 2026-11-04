@@ -53,7 +53,7 @@ export default function Lantern() {
               <stop offset="1" stopColor="#FFD58A" stopOpacity="0" />
             </radialGradient>
             <pattern id="lfib" width="7" height="40" patternUnits="userSpaceOnUse">
-              <path d="M2 0 Q3.5 20 2 40 M5.5 4 Q4.5 18 5.8 34" stroke="#6E6A64" strokeOpacity="0.16" strokeWidth="0.6" fill="none" />
+              <path d="M2 0 Q3.5 20 2 40 M5.5 4 Q4.5 18 5.8 34" stroke="#555555" strokeOpacity="0.16" strokeWidth="0.6" fill="none" />
             </pattern>
             <clipPath id="lbody">
               <path d="M48 177 C2 197 2 301 48 321 L102 321 C148 301 148 197 102 177 Z" />
@@ -89,7 +89,7 @@ export default function Lantern() {
           <ellipse cx="75" cy="335" rx="30" ry="4" fill="#0A0A0A" />
           <line x1="75" y1="339" x2="75" y2="350" stroke="#161616" strokeWidth="2" />
           <g className="lantern-tassel">
-            <circle cx="75" cy="352" r="3.5" fill="#B8322A" />
+            <circle cx="75" cy="352" r="3.5" fill="#C3352B" />
             <path d="M68 355 H82 L85 388 H65 Z" fill="url(#lt)" />
             <path d="M70 358 L69 386 M74 358 L74 387 M78 358 L79 387 M81 358 L83 386" stroke="#5E1610" strokeWidth="0.6" />
           </g>

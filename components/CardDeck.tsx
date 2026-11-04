@@ -73,7 +73,7 @@ export default function CardDeck() {
   const front = FEATURED[order[0]];
   const frontStyle: React.CSSProperties = flying
     ? { transform: `translate(${drag.x >= 0 ? 760 : -760}px, ${drag.y - 40}px) rotate(${drag.x >= 0 ? 18 : -18}deg)`, opacity: 0 }
-    : { transform: `translate(${drag.x}px, ${drag.y * 0.3}px) rotate(${drag.x * 0.03}deg)` };
+    : { transform: `rotateX(${drag.active ? 0 : 8}deg) rotateY(${drag.active ? 0 : -6}deg) translate(${drag.x}px, ${drag.y * 0.3}px) rotate(${drag.x * 0.03}deg)` };
 
   return (
     <section className="col section" id="work">

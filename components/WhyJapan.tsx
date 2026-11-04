@@ -64,10 +64,10 @@ function RamenShop() {
       <g className="shop-sign-hang">
         <path d="M34 150 V140 M82 150 V140" className="s-ink" />
         <rect x="22" y="150" width="72" height="82" fill="#3A3A3A" className="s-ink" strokeWidth="1.4" />
-        <path d="M40 192 H76 Q74 214 58 216 Q42 214 40 192 Z" fill="#B8322A" />
-        <path d="M46 186 L64 162 M52 188 L70 164" stroke="#F5F2EC" strokeWidth="1.6" />
+        <path d="M40 192 H76 Q74 214 58 216 Q42 214 40 192 Z" fill="#C3352B" />
+        <path d="M46 186 L64 162 M52 188 L70 164" stroke="#F7F7F7" strokeWidth="1.6" />
       </g>
-      <rect x="262" y="126" width="62" height="140" fill="#B8322A" className="s-ink" strokeWidth="1.4" />
+      <rect x="262" y="126" width="62" height="140" fill="#C3352B" className="s-ink" strokeWidth="1.4" />
       <text x="293" y="186" textAnchor="middle" className="shop-banner">
         麺
       </text>
@@ -86,7 +86,7 @@ function RamenShop() {
       {door(230)}
       <rect x="150" y="306" width="80" height="164" className="f-line" />
       <path d="M162 318 H218 M166 328 H214 M170 338 H210" className="s-ink" />
-      <path d="M180 346 H200 Q198 356 190 357 Q182 356 180 346 Z" fill="#B8322A" />
+      <path d="M180 346 H200 Q198 356 190 357 Q182 356 180 346 Z" fill="#C3352B" />
       <rect x="152" y="384" width="76" height="8" className="f-ink" />
       {[172, 208].map((x) => (
         <g key={x}>
@@ -95,16 +95,16 @@ function RamenShop() {
         </g>
       ))}
       <rect x="36" y="472" width="312" height="10" className="f-ink3 s-ink" />
-      <path d="M300 482 L308 418 H340 L348 482" fill="#B8322A" className="s-ink" strokeWidth="1.4" />
+      <path d="M300 482 L308 418 H340 L348 482" fill="#C3352B" className="s-ink" strokeWidth="1.4" />
       <path d="M312 446 H336 Q334 462 324 463 Q314 462 312 446 Z" fill="#FFFFFF" />
       <g className="steam">
         <path d="M318 410 q-5 -8 0 -16 q5 -8 0 -16" className="s-ink2" strokeWidth="1.2" fill="none" />
         <path d="M330 410 q-5 -8 0 -16 q5 -8 0 -16" className="s-ink2" strokeWidth="1.2" fill="none" />
       </g>
       <path d={frond(30, 440, 7, 46)} className="s-ink" strokeWidth="1" fill="none" />
-      <path d="M14 446 H46 L42 480 H18 Z" fill="#B8322A" className="s-ink" strokeWidth="1.2" />
+      <path d="M14 446 H46 L42 480 H18 Z" fill="#C3352B" className="s-ink" strokeWidth="1.2" />
       <path d={frond(372, 456, 5, 28)} className="s-ink" strokeWidth="1" fill="none" />
-      <path d="M360 460 H384 L381 482 H363 Z" fill="#B8322A" className="s-ink" strokeWidth="1.2" />
+      <path d="M360 460 H384 L381 482 H363 Z" fill="#C3352B" className="s-ink" strokeWidth="1.2" />
       <path d="M0 482 H390" className="s-ink" strokeWidth="1.4" />
     </svg>
   );

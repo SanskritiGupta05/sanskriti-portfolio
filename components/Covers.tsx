@@ -32,16 +32,16 @@ export function ProjectPoster({ i }: { i: number }) {
         <g style={GRAIN}>
           <rect width="300" height="332" fill="#141414" />
           {Array.from({ length: 14 }, (_, r) => (
-            <text key={r} x="18" y={34 + r * 15} fill="#F5F2EC" fillOpacity={0.09 + (r % 4) * 0.03} fontSize="9" fontFamily="var(--f-mono)">
+            <text key={r} x="18" y={34 + r * 15} fill="#F7F7F7" fillOpacity={0.09 + (r % 4) * 0.03} fontSize="9" fontFamily="var(--f-mono)">
               {["GET /api/orders   200", "POST /api/cart    201", "mock: db.find()   ok", "assert status     ✓", "replay #4821      ✓"][r % 5]}
             </text>
           ))}
           <circle cx="214" cy="92" r="58" fill="#C8372D" />
-          <path d={CHECK} fill="#F5F2EC" transform="translate(30 -20)" style={{ filter: "url(#ink-bleed)" }} />
-          <text x="22" y="292" fill="#F5F2EC" fontSize="38" fontFamily="var(--f-min)" letterSpacing="-1.5">
+          <path d={CHECK} fill="#F7F7F7" transform="translate(30 -20)" style={{ filter: "url(#ink-bleed)" }} />
+          <text x="22" y="292" fill="#F7F7F7" fontSize="38" fontFamily="var(--f-min)" letterSpacing="-1.5">
             Keploy
           </text>
-          <text x="24" y="312" fill="#F5F2EC" fillOpacity="0.55" fontSize="9" fontFamily="var(--f-mono)" letterSpacing="1.5">
+          <text x="24" y="312" fill="#F7F7F7" fillOpacity="0.55" fontSize="9" fontFamily="var(--f-mono)" letterSpacing="1.5">
             TEST, DON’T GUESS · 2025
           </text>
           <text x="276" y="300" fill="#C8372D" fontSize="22" fontFamily="var(--f-brush)" textAnchor="middle">
@@ -54,7 +54,7 @@ export function ProjectPoster({ i }: { i: number }) {
     return (
       <svg className="poster" viewBox="0 0 300 332" role="img" aria-label="GeeksforGeeks cover">
         <g style={GRAIN}>
-          <rect width="300" height="332" fill="#EDE5D6" />
+          <rect width="300" height="332" fill="#ECECEC" />
           <text x="22" y="190" fill="#161616" fontSize="168" fontFamily="var(--f-brush)" style={{ filter: "url(#ink-bleed)" }}>
             学
           </text>
@@ -78,20 +78,20 @@ export function ProjectPoster({ i }: { i: number }) {
   return (
     <svg className="poster" viewBox="0 0 300 332" role="img" aria-label="Mosaic AI cover">
       <g style={GRAIN}>
-        <rect width="300" height="332" fill="#B8322A" />
+        <rect width="300" height="332" fill="#C3352B" />
         {Array.from({ length: 36 }, (_, k) => {
           const x = 30 + (k % 6) * 40;
           const y = 26 + Math.floor(k / 6) * 34;
           const v = rnd();
-          const fill = v < 0.45 ? "#F5F2EC" : v < 0.7 ? "#161616" : "#8E1F18";
+          const fill = v < 0.45 ? "#F7F7F7" : v < 0.7 ? "#161616" : "#8E1F18";
           return <rect key={k} x={x} y={y} width={v < 0.85 ? 32 : 16} height="26" fill={fill} fillOpacity={v < 0.45 ? 0.9 : 1} />;
         })}
         <circle cx="190" cy="94" r="9" fill="#F2C27A" />
         <path d="M190 74 V114 M170 94 H210" stroke="#F2C27A" strokeWidth="2" />
-        <text x="22" y="276" fill="#F5F2EC" fontSize="40" fontFamily="var(--f-min)" letterSpacing="-1.5">
+        <text x="22" y="276" fill="#F7F7F7" fontSize="40" fontFamily="var(--f-min)" letterSpacing="-1.5">
           Mosaic AI
         </text>
-        <text x="24" y="300" fill="#F5F2EC" fillOpacity="0.7" fontSize="9" fontFamily="var(--f-mono)" letterSpacing="1.5">
+        <text x="24" y="300" fill="#F7F7F7" fillOpacity="0.7" fontSize="9" fontFamily="var(--f-mono)" letterSpacing="1.5">
           AN INTERFACE PEOPLE TRUST · 2024
         </text>
       </g>
@@ -125,12 +125,12 @@ export function VibePoster({ i }: { i: number }) {
     return (
       <svg className="shoji-preview" viewBox="0 0 360 300" preserveAspectRatio="xMidYMid slice" aria-hidden>
         <g style={GRAIN}>
-          <rect width="360" height="300" fill="#EDE5D6" />
+          <rect width="360" height="300" fill="#ECECEC" />
           <text x="34" y="190" fontSize="130" fontFamily="var(--f-brush)" fill="#161616" style={{ filter: "url(#ink-bleed)" }}>
             道具
           </text>
           <rect x="34" y="214" width="150" height="34" rx="17" fill="#161616" />
-          <text x="109" y="236" textAnchor="middle" fontSize="11" fontFamily="var(--f-mono)" fill="#F5F2EC">
+          <text x="109" y="236" textAnchor="middle" fontSize="11" fontFamily="var(--f-mono)" fill="#F7F7F7">
             ship it →
           </text>
           <path d="M226 230 L246 250 L238 251 L243 262 L238 264 L233 253 L225 259 Z" fill="#C8372D" />
@@ -144,12 +144,12 @@ export function VibePoster({ i }: { i: number }) {
     <svg className="shoji-preview" viewBox="0 0 360 300" preserveAspectRatio="xMidYMid slice" aria-hidden>
       <g style={GRAIN}>
         <rect width="360" height="300" fill="#161616" />
-        <path d="M30 250 H330 M30 250 V40" stroke="#F5F2EC" strokeOpacity="0.2" />
-        <path d={STROKE} fill="#F5F2EC" transform="matrix(1 0 0 -1 0 330)" style={{ filter: "url(#ink-bleed)" }} />
+        <path d="M30 250 H330 M30 250 V40" stroke="#F7F7F7" strokeOpacity="0.2" />
+        <path d={STROKE} fill="#F7F7F7" transform="matrix(1 0 0 -1 0 330)" style={{ filter: "url(#ink-bleed)" }} />
         {[0.08, 0.2, 0.42, 0.66, 0.86, 0.96].map((t, k) => (
           <circle key={k} cx={40 + k * 48} cy={250 - t * 190} r="5" fill="#C8372D" />
         ))}
-        <text x="30" y="30" fontSize="9" fontFamily="var(--f-mono)" fill="#F5F2EC" fillOpacity="0.6" letterSpacing="1.5">
+        <text x="30" y="30" fontSize="9" fontFamily="var(--f-mono)" fill="#F7F7F7" fillOpacity="0.6" letterSpacing="1.5">
           CUBIC-BEZIER(.3, 1.3, .5, 1)
         </text>
       </g>
@@ -159,14 +159,14 @@ export function VibePoster({ i }: { i: number }) {
 
 /** Small cover used by the More-work cursor preview. */
 export function MiniPoster({ i }: { i: number }) {
-  const bg = ["#161616", "#B8322A", "#EDE5D6", "#3A3A3A"][i % 4];
-  const fg = i % 4 === 2 ? "#161616" : "#F5F2EC";
+  const bg = ["#161616", "#C3352B", "#ECECEC", "#3A3A3A"][i % 4];
+  const fg = i % 4 === 2 ? "#161616" : "#F7F7F7";
   const k = ["週", "三十", "跳", "雑"][i % 4];
   return (
     <svg viewBox="0 0 190 124" aria-hidden>
       <g style={GRAIN}>
         <rect width="190" height="124" fill={bg} />
-        <circle cx="150" cy="34" r="20" fill={i % 4 === 1 ? "#F5F2EC" : "#C8372D"} />
+        <circle cx="150" cy="34" r="20" fill={i % 4 === 1 ? "#F7F7F7" : "#C8372D"} />
         <text x="14" y="96" fontSize="58" fontFamily="var(--f-brush)" fill={fg}>
           {k}
         </text>
@@ -188,10 +188,10 @@ export function InterestArt({ i }: { i: number }) {
         <path d="M110 0 L142 46 L174 0" className="s-ink" strokeWidth="2" fill="none" />
         <g transform="rotate(-4 142 96)" style={{ filter: "url(#ink-rough)" }}>
           <rect x="82" y="44" width="120" height="96" rx="8" fill="#C8372D" className="s-ink" strokeWidth="2" />
-          <text x="142" y="64" textAnchor="middle" fontSize="9" fontFamily="var(--f-mono)" fill="#F5F2EC" letterSpacing="1.5">
+          <text x="142" y="64" textAnchor="middle" fontSize="9" fontFamily="var(--f-mono)" fill="#F7F7F7" letterSpacing="1.5">
             HELLO, MY NAME IS
           </text>
-          <rect x="92" y="72" width="100" height="56" rx="3" fill="#FBF9F5" />
+          <rect x="92" y="72" width="100" height="56" rx="3" fill="#FFFFFF" />
           <text x="142" y="108" textAnchor="middle" fontSize="22" fontFamily="var(--f-hand)" fill="#161616">
             Sanskriti
           </text>
@@ -209,10 +209,10 @@ export function InterestArt({ i }: { i: number }) {
           <path d="M120 54 q-8 -12 0 -24 q8 -12 0 -24 M142 50 q-8 -12 0 -24 q8 -12 0 -24 M164 54 q-8 -12 0 -24 q8 -12 0 -24" className="s-ink" strokeOpacity="0.4" strokeWidth="2" fill="none" />
         </g>
         <g style={{ filter: "url(#ink-rough)" }}>
-          <ellipse cx="142" cy="78" rx="78" ry="14" fill="#E8D9B5" className="s-ink" strokeWidth="2" />
-          <ellipse cx="118" cy="76" rx="16" ry="7" fill="#FBF9F5" />
+          <ellipse cx="142" cy="78" rx="78" ry="14" fill="#EFE3C8" className="s-ink" strokeWidth="2" />
+          <ellipse cx="118" cy="76" rx="16" ry="7" fill="#FFFFFF" />
           <ellipse cx="118" cy="76" rx="7" ry="4" fill="#E9A23B" />
-          <circle cx="160" cy="76" r="9" fill="#FBF9F5" className="s-ink" />
+          <circle cx="160" cy="76" r="9" fill="#FFFFFF" className="s-ink" />
           <path d="M155 76 q5 -5 10 0" stroke="#C8372D" strokeWidth="2" fill="none" />
           <rect x="176" y="70" width="18" height="10" fill="#6A8D3A" />
           <path d="M64 78 H220 C220 116 186 144 142 144 C98 144 64 116 64 78 Z" fill="#161616" />
@@ -226,7 +226,7 @@ export function InterestArt({ i }: { i: number }) {
       <svg {...common}>
         <rect width="284" height="160" className="f-surface" />
         <g transform="rotate(-6 142 80)" style={{ filter: "url(#ink-rough)" }}>
-          <rect x="60" y="22" width="164" height="118" rx="4" fill="#FBF9F5" className="s-ink" strokeWidth="2" />
+          <rect x="60" y="22" width="164" height="118" rx="4" fill="#FFFFFF" className="s-ink" strokeWidth="2" />
           {[34, 50, 66, 82, 98, 114, 130].map((y) => (
             <circle key={y} cx="60" cy={y} r="3" fill="none" className="s-ink" />
           ))}
@@ -248,11 +248,11 @@ export function InterestArt({ i }: { i: number }) {
         <g style={{ filter: "url(#ink-rough)" }}>
           <rect x="70" y="118" width="150" height="20" fill="#161616" />
           <rect x="80" y="98" width="132" height="20" fill="#C8372D" />
-          <rect x="74" y="78" width="140" height="20" fill="#EDE5D6" className="s-ink" />
+          <rect x="74" y="78" width="140" height="20" fill="#ECECEC" className="s-ink" />
           <rect x="88" y="60" width="118" height="18" fill="#3A3A3A" />
-          <path d="M150 60 L170 20 L190 60 Z" fill="#FBF9F5" className="s-ink" strokeWidth="1.5" />
+          <path d="M150 60 L170 20 L190 60 Z" fill="#FFFFFF" className="s-ink" strokeWidth="1.5" />
           <path d="M170 20 V60" className="s-ink" />
-          <text x="146" y="113" fontSize="9" fontFamily="var(--f-mono)" fill="#F5F2EC" letterSpacing="1" textAnchor="middle">
+          <text x="146" y="113" fontSize="9" fontFamily="var(--f-mono)" fill="#F7F7F7" letterSpacing="1" textAnchor="middle">
             BOOK TITLE
           </text>
         </g>
@@ -266,7 +266,7 @@ export function InterestArt({ i }: { i: number }) {
       <rect width="284" height="160" className="f-surface" />
       <ellipse cx="142" cy="140" rx="90" ry="10" className="f-ink" fillOpacity="0.12" />
       <g style={{ filter: "url(#ink-rough)" }}>
-        <ellipse cx="142" cy="128" rx="66" ry="10" fill="#6E6A64" />
+        <ellipse cx="142" cy="128" rx="66" ry="10" fill="#555555" />
         <path d="M108 50 Q96 92 112 124 Q142 138 172 124 Q188 92 176 50 Z" fill="#B9A58C" className="s-ink" strokeWidth="2" />
         <ellipse cx="142" cy="50" rx="34" ry="8" fill="#8F7C65" className="s-ink" strokeWidth="2" />
         <path d="M110 84 Q142 94 174 84 M112 100 Q142 110 172 100" className="s-ink" strokeOpacity="0.35" fill="none" />
