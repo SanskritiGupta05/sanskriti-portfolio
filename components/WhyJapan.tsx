@@ -42,7 +42,7 @@ function door(x0: number) {
 /** Original line-art ramen shop. Steam rises and the noren sways on hover. */
 function RamenShop() {
   return (
-    <svg className="shop" viewBox="0 0 390 500" role="img" aria-label="Line illustration of a small ramen shop">
+    <svg className="shop" style={{ filter: "url(#ink-rough)" }} viewBox="0 0 390 500" role="img" aria-label="Line illustration of a small ramen shop">
       <path d="M362 60 V482" className="s-ink2" strokeWidth="8" />
       <path d="M346 92 H380 M350 120 H378" className="s-ink" strokeWidth="2" />
       <circle cx="362" cy="140" r="7" className="f-ink" />

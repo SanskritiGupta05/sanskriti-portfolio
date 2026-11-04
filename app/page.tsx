@@ -5,6 +5,7 @@ import Craft from "@/components/Craft";
 import Footer from "@/components/Footer";
 import Gachapon from "@/components/Gachapon";
 import Hero from "@/components/Hero";
+import InkDefs from "@/components/InkDefs";
 import Intro from "@/components/Intro";
 import Lantern from "@/components/Lantern";
 import MetroMap from "@/components/MetroMap";
@@ -16,6 +17,7 @@ import WhyJapan from "@/components/WhyJapan";
 export default function Home() {
   return (
     <>
+      <InkDefs />
       <Intro />
       <Lantern />
       <ScrollRail />

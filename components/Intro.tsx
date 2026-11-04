@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PixelMe } from "./Hero";
+import PixelMe from "./PixelMe";
 
 /** Scroll-unroll intro. Plays once per session; any key / click skips. */
 export default function Intro() {

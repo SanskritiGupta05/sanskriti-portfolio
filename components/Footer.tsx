@@ -58,10 +58,12 @@ export default function Footer() {
           </linearGradient>
         </defs>
         <circle cx="1110" cy="110" r="46" className="sun" />
-        <path d="M0 340 L160 250 L300 320 L470 230 L620 330 Z" fill="url(#fj2)" opacity="0.7" />
+        <g style={{ filter: "url(#sumi-wash)" }}>
+          <path d="M0 340 L160 250 L300 320 L470 230 L620 330 Z" fill="url(#fj2)" opacity="0.7" />
         <path d="M900 330 L1080 240 L1220 300 L1440 220 V340 Z" fill="url(#fj2)" opacity="0.7" />
         <path d="M360 420 L640 150 Q690 122 740 150 L1080 420 Z" fill="url(#fj)" />
-        <path d="M640 150 Q690 122 740 150 L770 178 L748 186 L728 170 L708 190 L690 174 L672 190 L652 170 L632 186 L610 180 Z" className="snow" />
+        </g>
+        <path d="M640 150 Q690 122 740 150 L770 178 L748 186 L728 170 L708 190 L690 174 L672 190 L652 170 L632 186 L610 180 Z" className="snow" style={{ filter: "url(#ink-rough)" }} />
         <ellipse cx="560" cy="300" rx="220" ry="16" className="mist" />
         <ellipse cx="900" cy="330" rx="260" ry="18" className="mist mist-2" />
         <g className="birds">

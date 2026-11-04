@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { MORE_WORK } from "@/lib/content";
+import { MiniPoster } from "./Covers";
 import SectionHeader from "./SectionHeader";
 
 /** Ink fills the row on hover; a little preview follows the cursor. */
@@ -26,14 +27,7 @@ export default function MoreWork() {
         ))}
       </ul>
       <div className={`more-float ${hover !== null ? "is-on" : ""}`} style={{ transform: `translate(${pos.x + 24}px, ${pos.y - 70}px) rotate(-4deg)` }} aria-hidden>
-        <svg viewBox="0 0 190 124">
-          <rect width="190" height="124" rx="8" className="f-paper2" />
-          <rect x="14" y="14" width="80" height="10" rx="3" className="f-ink" />
-          <rect x="14" y="32" width="120" height="6" rx="3" className="f-ink" fillOpacity="0.2" />
-          <circle cx="50" cy="80" r="22" className="f-ink" />
-          <rect x="86" y="62" width="40" height="40" rx="8" fill="#B8322A" />
-          <rect x="134" y="62" width="40" height="40" rx="20" fill="none" className="s-ink" strokeWidth="2" />
-        </svg>
+        <MiniPoster i={hover ?? 0} />
       </div>
     </section>
   );

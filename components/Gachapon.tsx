@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { INTERESTS } from "@/lib/content";
+import { InterestArt } from "./Covers";
 import { K } from "./Icons";
 import SectionHeader from "./SectionHeader";
 
@@ -131,8 +132,7 @@ export default function Gachapon() {
         <div className="gacha-result" aria-live="polite">
           <div className={`gacha-card ${phase === "open" ? "is-open" : ""}`} key={`${idx}-${turns}`}>
             <div className="gacha-photo">
-              <span className="brush">{it.k}</span>
-              <small className="mono">drop a photo here</small>
+              <InterestArt i={idx} />
             </div>
             <h3>
               <span className="brush red">{it.k}</span> <span className="min">{it.name}</span>

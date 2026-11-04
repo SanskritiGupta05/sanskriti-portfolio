@@ -1,7 +1,7 @@
 /* ============ tokens: washi + sumi by day, lantern light by night ============ */
 :root {
   --paper: #f5f2ec; --paper2: #fbf9f5; --surface: #ece8e0; --white: #ffffff;
-  --ink: #161616; --ink2: #6e6a64; --ink3: #a39e96; --line: #dad5cc;
+  --ink: #141414; --ink2: #57534d; --ink3: #a39e96; --line: #dad5cc;
   --seal: #b8322a; --warm: #e7e1d5; --card: #efeae0; --card2: #e4ddcf; --dark: #141414;
   --l1: #9c958a; --l2: #e9e3d8; --l3: #fbf8f2; --l4: #d6cfc3; --l5: #8e877c; --glow-op: 0;
   --fuji-top: #3a3a3a; --fuji-mid: #8c8882; --street: #1e1e1e; --window: #ede7dc; --sun: #b8322a; --snow: #ffffff;
@@ -11,7 +11,7 @@
 }
 [data-theme="night"] {
   --paper: #111111; --paper2: #191919; --surface: #1c1c1c; --white: #222222;
-  --ink: #edeae4; --ink2: #8c8882; --ink3: #5a5752; --line: #2a2a2a;
+  --ink: #efece6; --ink2: #a29d95; --ink3: #5a5752; --line: #2a2a2a;
   --seal: #e0574a; --warm: #191816; --card: #2a2723; --card2: #34302a; --dark: #1e1e1e;
   --l1: #c77f34; --l2: #f6c877; --l3: #ffe3a6; --l4: #f0b865; --l5: #b86f2a; --glow-op: 1;
   --fuji-top: #5a5752; --fuji-mid: #2e2e30; --street: #050505; --window: #f2c27a; --sun: #edeae4; --snow: #cfcbc4;
@@ -40,7 +40,7 @@ button { font: inherit; }
 
 /* SVG paint helpers so every drawing follows the theme */
 .f-ink { fill: var(--ink); } .f-paper { fill: var(--paper); } .f-paper2 { fill: var(--paper2); }
-.f-line { fill: var(--line); } .f-ink3 { fill: var(--ink3); } .f-white { fill: var(--white); }
+.f-line { fill: var(--line); } .f-surface { fill: var(--surface); } .f-ink3 { fill: var(--ink3); } .f-white { fill: var(--white); }
 .s-ink { stroke: var(--ink); } .s-ink2 { stroke: var(--ink2); } .s-paper { stroke: var(--paper); }
 [class*="f-"], [class*="s-"] { transition: fill 0.6s, stroke 0.6s; }
 
@@ -463,6 +463,55 @@ button { font: inherit; }
 .scroll-seal { position: absolute; right: 26px; bottom: 26px; width: 26px; height: 26px; border-radius: 3px; background: #b8322a; transform: rotate(-6deg); }
 .intro-skip { margin: 0; color: var(--ink2); font-size: 12px; }
 
+/* ============ hi-fi polish layer ============ */
+:root { --shadow: 0 1px 2px rgba(20, 16, 10, 0.08), 0 8px 18px rgba(20, 16, 10, 0.08), 0 28px 56px rgba(20, 16, 10, 0.12); }
+[data-theme="night"] { --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 24px rgba(0, 0, 0, 0.45), 0 30px 60px rgba(0, 0, 0, 0.5); }
+
+/* risograph-ish paper grain over everything */
+body::after {
+  content: ""; position: fixed; inset: 0; z-index: 55; pointer-events: none; opacity: 0.55; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.35  0 0 0 0 0.3  0 0 0 0 0.25  0 0 0 0.16 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+[data-theme="night"] body::after { mix-blend-mode: screen; opacity: 0.35; }
+
+/* type scale: bigger display, more contrast */
+.hero { gap: 22px; }
+.name { font-size: 112px; letter-spacing: -0.045em; }
+.name-block .seal { width: 52px; height: 52px; font-size: 32px; }
+.underline { width: 400px; height: 28px; }
+.dict .min { font-size: 16px; }
+.bio { font-size: 22px; line-height: 1.55; color: var(--ink2); max-width: 640px; }
+.bio-2 { font-size: 18px; }
+.quote { font-size: 19px; }
+.shead { margin-bottom: 36px; gap: 22px; }
+.shead-kanji { position: relative; font-size: 92px; }
+.shead-kanji::before { content: ""; position: absolute; z-index: -1; left: 36%; top: 30%; width: 62px; height: 62px; border-radius: 50%; background: var(--seal); opacity: 0.13; }
+.shead-title { font-size: 44px; letter-spacing: -0.03em; }
+.shead-kicker { font-size: 12px; }
+.intro-line { font-size: 18px; color: var(--ink2); }
+.why-title { font-size: 44px; }
+.why-story { font-size: 15px; }
+.footer-bye { font-size: 80px; line-height: 1; }
+.footer-line { font-size: 30px; }
+
+/* depth */
+.deck-card, .stamp, .gacha-card { box-shadow: var(--shadow); }
+.shoji { box-shadow: 0 2px 0 #4a3f37 inset, 0 30px 70px rgba(0, 0, 0, 0.55); border: 1px solid #3a302a; }
+.metro { box-shadow: var(--shadow); }
+.charm-svg { filter: drop-shadow(0 18px 18px rgba(20, 16, 10, 0.18)); }
+.charm-sub { font: 14px var(--f-brush); letter-spacing: 0.3em; }
+.charm-k { font-size: 64px; }
+
+/* artwork */
+.poster { display: block; width: 100%; height: 100%; }
+.deck-thumb-wrap { box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 6px 14px rgba(0, 0, 0, 0.18); }
+.deck-text h3 { font-size: 42px; }
+.gacha-photo { display: block; height: 160px; overflow: hidden; }
+.interest-art { display: block; width: 100%; height: 100%; }
+.art-steam { animation: steam 2.6s ease-in-out infinite; }
+.lantern-inner { opacity: var(--glow-op); transition: opacity 0.8s 0.25s; }
+.more-float { width: 220px; height: 144px; }
+
 /* ============ responsive ============ */
 @media (max-width: 1180px) {
   .lantern-wrap { left: auto; right: 8px; transform: scale(0.62); transform-origin: top right; }
@@ -478,7 +527,14 @@ button { font: inherit; }
   .hero { padding-top: 40px; }
   .hero-stage { height: 200px; transform: scale(0.85); transform-origin: left top; }
   .side-note { display: none; }
-  .name { font-size: 58px; }
+  .name { font-size: 64px; }
+  .shead-kanji { font-size: 64px; }
+  .shead-title { font-size: 30px; }
+  .bio { font-size: 18px; }
+  .footer-bye { font-size: 56px; }
+  .footer-line { font-size: 22px; }
+  .why-title { font-size: 34px; }
+  .deck-text h3 { font-size: 32px; }
   .seal { width: 38px; height: 38px; font-size: 22px; }
   .underline { width: 240px; }
   .bio { font-size: 17px; }

@@ -3,42 +3,8 @@
 import { useEffect, useState } from "react";
 import { ENSO, UNDERLINE } from "@/lib/draw";
 import { K } from "./Icons";
+import PixelMe from "./PixelMe";
 import Seigaiha from "./Seigaiha";
-
-const MAP = [
-  "......HHHH......",
-  "....HHHHHHHH....",
-  "...HHHHHHHHHHR..",
-  "..HHHHHHHHHHHRR.",
-  "..HHHHHHHHHHHH..",
-  "..HHSHHSSHHSHH..",
-  "..HSSSSSSSSSSH..",
-  "..HSEESSSSEESH..",
-  "..HSEWSSSSEWSH..",
-  "..HSBSSSSSSBSH..",
-  "..HHSSSSPSSSHH..",
-  "..HH.SSSSSS.HH..",
-  "..HH..SSSS..HH..",
-  "..H..CCCCCC..H..",
-  "....CCCWWCCC....",
-  "...CCCCCCCCCC...",
-];
-const PAL: Record<string, string> = { H: "#222222", S: "#F3EEE6", E: "#222222", W: "#FFFFFF", B: "#D9CFC4", R: "#B8322A", P: "#8A6F66", C: "#3A3A3A" };
-
-export function PixelMe({ size = 128 }: { size?: number }) {
-  return (
-    <svg className="pixel-me" width={size} height={size} viewBox="0 0 128 128" shapeRendering="crispEdges" role="img" aria-label="Pixel-art me">
-      {MAP.flatMap((row, y) =>
-        [...row].map((ch, x) =>
-          PAL[ch] ? <rect key={`${x}-${y}`} x={x * 8} y={y * 8} width="8" height="8" fill={PAL[ch]} className={ch === "E" || ch === "W" ? "px-eye" : undefined} /> : null,
-        ),
-      )}
-      {/* eyelids for the blink */}
-      <rect className="px-lid" x="32" y="56" width="16" height="16" fill="#F3EEE6" />
-      <rect className="px-lid" x="80" y="56" width="16" height="16" fill="#F3EEE6" />
-    </svg>
-  );
-}
 
 const THOUGHTS: [string, string][] = [
   ["考え中…", "thinking (always)"],
@@ -68,7 +34,7 @@ export default function Hero() {
                 <path d={ENSO.centre} stroke="#fff" strokeWidth="30" fill="none" pathLength={1} className="enso-mask" />
               </mask>
             </defs>
-            <g mask="url(#enso-draw)">
+            <g mask="url(#enso-draw)" style={{ filter: "url(#ink-bleed)" }}>
               <path d={ENSO.body} className="f-ink" />
               {ENSO.dry.map((d, i) => (
                 <path key={i} d={d} className="s-paper" strokeWidth="1.1" fill="none" />

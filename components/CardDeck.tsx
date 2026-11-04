@@ -2,30 +2,9 @@
 
 import { useCallback, useRef, useState } from "react";
 import { FEATURED } from "@/lib/content";
+import { ProjectPoster } from "./Covers";
 import { K } from "./Icons";
 import SectionHeader from "./SectionHeader";
-
-function Thumb({ i }: { i: number }) {
-  const accent = ["#B8322A", "#3A4F8C", "#6A8D3A"][i % 3];
-  return (
-    <svg className="deck-thumb" viewBox="0 0 300 332" aria-hidden>
-      <rect width="300" height="332" fill="#161616" />
-      <rect x="28" y="40" width="244" height="252" rx="8" fill="#F5F2EC" />
-      <rect x="28" y="40" width="244" height="22" rx="8" fill="#ECE8E0" />
-      {[42, 52, 62].map((x) => (
-        <circle key={x} cx={x} cy="51" r="3" fill="#A39E96" />
-      ))}
-      <rect x="48" y="84" width="120" height="14" rx="3" fill="#161616" />
-      <rect x="48" y="106" width="170" height="6" rx="3" fill="#161616" fillOpacity="0.2" />
-      <rect x="48" y="134" width="96" height="120" rx="6" fill="#ECE8E0" />
-      <rect x="154" y="134" width="98" height="56" rx="6" fill={accent} fillOpacity="0.85" />
-      <rect x="154" y="198" width="98" height="56" rx="6" fill="#ECE8E0" />
-      <text x="150" y="318" textAnchor="middle" fill="#A39E96" fontSize="10" fontFamily="var(--f-mono)">
-        swap for prototype gif
-      </text>
-    </svg>
-  );
-}
 
 /** Red mizuhiki cord from the page edge to the card's eyelet, with knot and tassels. */
 function Cord() {
@@ -140,7 +119,7 @@ export default function CardDeck() {
         >
           <span className="eyelet" aria-hidden />
           <div className="deck-thumb-wrap">
-            <Thumb i={order[0]} />
+            <ProjectPoster i={order[0]} />
           </div>
           <span className="deck-fold" aria-hidden />
           <div className="deck-text">
