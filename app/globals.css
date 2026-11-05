@@ -709,6 +709,43 @@ body::after {
 .pull-hint { position: absolute; left: 36px; top: 78px; color: var(--ink3); font-size: 12px; white-space: nowrap; }
 .lantern-hint { left: 190px; top: 230px; }
 
+/* ============ isometric pills: every pill is a small extruded key ============ */
+:where(.chip, .status, .tool, .capsule-chip, .pill-btn, .mail, .pager-dot, .bnav-cta, .bnav-home, .bnav-icon, .bnav ul a.is-active) {
+  --pill-bg: var(--white);
+  --pill-edge: color-mix(in srgb, var(--pill-bg) 70%, #000);
+  --pill-hi: rgba(255, 255, 255, 0.6);
+  background: var(--pill-bg);
+  box-shadow: inset 0 1px 0 var(--pill-hi), 0 3px 0 0 var(--pill-edge), 0 6px 10px -3px rgba(0, 0, 0, 0.22);
+  transform: translateY(-1px);
+  transition: transform 0.18s var(--ease), box-shadow 0.18s ease, background 0.3s, color 0.3s;
+}
+:is(.chip, .status, .tool, .capsule-chip, .pill-btn, .mail, .pager-dot, .bnav-cta, .bnav-home, .bnav-icon):hover {
+  transform: translateY(-2.5px);
+  box-shadow: inset 0 1px 0 var(--pill-hi), 0 4.5px 0 0 var(--pill-edge), 0 10px 16px -4px rgba(0, 0, 0, 0.24);
+}
+:is(.chip, .status, .tool, .capsule-chip, .pill-btn, .mail, .pager-dot, .bnav-cta, .bnav-home, .bnav-icon):active {
+  transform: translateY(2px);
+  box-shadow: inset 0 1px 0 var(--pill-hi), 0 0 0 0 var(--pill-edge), 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition-duration: 0.06s;
+}
+/* colours per pill */
+.chip { cursor: default; background: var(--pill-bg); }
+.pager-dot, .pill-btn { background: var(--pill-bg); }
+.bnav-cta, .bnav-home, .bnav-icon, .bnav ul a.is-active, .tool { background: var(--pill-bg); }
+.status, .pill-btn.dark, .capsule-chip.is-on, .pager-dot.is-on { --pill-bg: var(--ink); --pill-hi: rgba(255, 255, 255, 0.18); }
+[data-theme="night"] :is(.status, .pill-btn.dark, .capsule-chip.is-on, .pager-dot.is-on) { --pill-edge: #8a8782; --pill-hi: rgba(255, 255, 255, 0.5); }
+[data-theme="night"] :is(.chip, .mail, .pill-btn:not(.dark), .capsule-chip:not(.is-on), .pager-dot:not(.is-on)) { --pill-edge: #070707; --pill-hi: rgba(255, 255, 255, 0.08); }
+.tool { --pill-hi: rgba(255, 255, 255, 0.7); }
+.tool:hover { transform: translateY(-2.5px) rotate(-3deg); }
+.bnav-cta, .bnav-home { --pill-bg: #c3352b; --pill-hi: rgba(255, 255, 255, 0.35); }
+.bnav-icon { --pill-bg: color-mix(in srgb, var(--nav-fg) 12%, var(--nav-bg)); --pill-edge: color-mix(in srgb, var(--nav-bg) 60%, #000); --pill-hi: rgba(255, 255, 255, 0.12); }
+.bnav-icon.is-on { --pill-bg: #c3352b; --pill-edge: #7e1a14; }
+.bnav ul a.is-active { --pill-bg: var(--nav-fg); --pill-edge: color-mix(in srgb, var(--nav-fg) 62%, #000); --pill-hi: rgba(255, 255, 255, 0.7); }
+[data-theme="night"] .bnav ul a.is-active { --pill-hi: rgba(255, 255, 255, 0.12); }
+.bnav { box-shadow: 0 4px 0 0 color-mix(in srgb, var(--nav-bg) 55%, #000), 0 14px 30px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.1); }
+.pill-seal { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 2px 0 #7e1a14; }
+.mail-seal { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 2px 0 #7e1a14; }
+
 /* ============ responsive ============ */
 @media (max-width: 1180px) {
   .lantern-wrap { left: auto; right: 8px; transform: scale(0.62); transform-origin: top right; }

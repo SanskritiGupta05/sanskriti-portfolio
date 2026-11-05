@@ -195,7 +195,7 @@ const TOOL_STYLE: Record<string, { bg: string; fg: string; icon: IconKind }> = {
 export function ToolChip({ name }: { name: string }) {
   const t = TOOL_STYLE[name];
   return (
-    <span className="tool" style={{ background: t.bg, color: t.fg }}>
+    <span className="tool" style={{ ["--pill-bg" as string]: t.bg, color: t.fg } as React.CSSProperties}>
       <Icon kind={t.icon} size={14} />
       {name}
     </span>
