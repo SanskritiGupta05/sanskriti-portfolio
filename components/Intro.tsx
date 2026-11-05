@@ -11,11 +11,16 @@ export default function Intro() {
     let seen = false;
     try {
       seen = sessionStorage.getItem("kyo-intro") === "1";
-      sessionStorage.setItem("kyo-intro", "1");
     } catch {}
     if (seen || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     setState("open");
-    const close = () => setState((s) => (s === "open" ? "closing" : s));
+    // remember only once it has actually closed (safe under StrictMode's double effect run)
+    const close = () => {
+      try {
+        sessionStorage.setItem("kyo-intro", "1");
+      } catch {}
+      setState((s) => (s === "open" ? "closing" : s));
+    };
     const t = window.setTimeout(close, 2300);
     window.addEventListener("keydown", close);
     window.addEventListener("pointerdown", close);

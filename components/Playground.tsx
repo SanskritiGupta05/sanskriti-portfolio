@@ -65,13 +65,34 @@ function HankoButton() {
 }
 
 const STAMPS = [
-  { name: "Ink toggle", desc: "A switch that bleeds like sumi", value: "¥84", rot: -2, el: <InkToggle /> },
-  { name: "Brush slider", desc: "Range input drawn as a stroke", value: "¥63", rot: 1.5, el: <BrushSlider /> },
-  { name: "Cursor petals", desc: "Trail that falls like sakura", value: "¥120", rot: 1, el: <Petals /> },
-  { name: "Hanko button", desc: "Click → stamp confirmation", value: "¥94", rot: -1.5, el: <HankoButton /> },
+  { name: "Ink toggle", jp: "墨", desc: "A switch that bleeds like sumi", value: "84", tint: "#DCE3F0", accent: "#2F4A86", cancel: true, el: <InkToggle /> },
+  { name: "Brush slider", jp: "筆", desc: "Range input drawn as a stroke", value: "63", tint: "#F4DCD5", accent: "#B23A2E", cancel: false, el: <BrushSlider /> },
+  { name: "Cursor petals", jp: "桜", desc: "A trail that falls like sakura", value: "120", tint: "#F6E3E6", accent: "#B24A62", cancel: false, el: <Petals /> },
+  { name: "Hanko button", jp: "判", desc: "Click → stamp confirmation", value: "94", tint: "#E1E8D2", accent: "#4F6B2C", cancel: true, el: <HankoButton /> },
 ];
 
-/** Live UI experiments, collected like postage stamps. */
+function Postmark() {
+  return (
+    <svg className="cancel" viewBox="0 0 220 120" aria-hidden>
+      <g style={{ filter: "url(#ink-bleed)" }}>
+        <circle cx="60" cy="60" r="44" fill="none" stroke="#1D1D24" strokeWidth="2.4" />
+        <circle cx="60" cy="60" r="33" fill="none" stroke="#1D1D24" strokeWidth="1.2" />
+        <text x="60" y="48" textAnchor="middle" fontSize="11" fontFamily="var(--f-min)" fill="#1D1D24">
+          遊便局
+        </text>
+        <text x="60" y="66" textAnchor="middle" fontSize="12" fontFamily="var(--f-mono)" fill="#1D1D24">
+          26.11.05
+        </text>
+        <text x="60" y="82" textAnchor="middle" fontSize="8" fontFamily="var(--f-mono)" fill="#1D1D24">
+          PLAYGROUND
+        </text>
+        <path d="M108 38 q11 -8 22 0 t22 0 t22 0 t22 0 M108 60 q11 -8 22 0 t22 0 t22 0 t22 0 M108 82 q11 -8 22 0 t22 0 t22 0 t22 0" stroke="#1D1D24" strokeWidth="2.4" fill="none" />
+      </g>
+    </svg>
+  );
+}
+
+/** Live UI experiments, kept like postage stamps in a stock-book album. */
 export default function Playground() {
   return (
     <section className="col section" id="play">
@@ -87,28 +108,33 @@ export default function Playground() {
         </K>{" "}
         it.
       </p>
-      <div className="stamps">
-        {STAMPS.map((s) => (
-          <figure key={s.name} className="stamp" style={{ ["--rot" as string]: `${s.rot}deg` }}>
-            <div className="stamp-art">
-              <span className="min stamp-value">{s.value}</span>
-              {s.el}
-            </div>
-            <figcaption>
-              <span className="min">{s.name}</span>
-              <small>{s.desc}</small>
-              <span className="brush stamp-jp">遊</span>
-            </figcaption>
-          </figure>
+      <div className="album">
+        <p className="album-label mono">切手帳 · STOCK BOOK Nº 01</p>
+        {[0, 1].map((row) => (
+          <div className="album-row" key={row}>
+            {STAMPS.slice(row * 2, row * 2 + 2).map((s, k) => (
+              <figure key={s.name} className="stamp2" style={{ ["--tint" as string]: s.tint, ["--accent" as string]: s.accent, ["--rot" as string]: `${(row + k) % 2 ? 1.2 : -1.4}deg` }}>
+                <div className="stamp2-paper">
+                  <div className="stamp2-frame">
+                    <span className="stamp2-value">
+                      <b className="min">{s.value}</b>
+                      <small className="min">円</small>
+                    </span>
+                    <span className="stamp2-jp brush">{s.jp}</span>
+                    <div className="stamp2-demo">{s.el}</div>
+                    <span className="stamp2-post mono">遊便 · ASOBI POST</span>
+                    <span className="stamp2-name">
+                      <b className="min">{s.name}</b>
+                      <small>{s.desc}</small>
+                    </span>
+                  </div>
+                </div>
+                {s.cancel && <Postmark />}
+              </figure>
+            ))}
+            <span className="album-strip" aria-hidden />
+          </div>
         ))}
-        <svg className="postmark" width="150" height="90" viewBox="0 0 150 90" aria-hidden>
-          <circle cx="45" cy="45" r="36" fill="none" className="s-ink" strokeOpacity="0.5" strokeWidth="2" />
-          <circle cx="45" cy="45" r="28" fill="none" className="s-ink" strokeOpacity="0.3" />
-          <text x="45" y="49" textAnchor="middle" className="f-ink" fillOpacity="0.5" fontSize="10" fontFamily="var(--f-mono)">
-            2026 · 遊
-          </text>
-          <path d="M84 28 q8 -6 16 0 t16 0 t16 0 t16 0 M84 45 q8 -6 16 0 t16 0 t16 0 t16 0 M84 62 q8 -6 16 0 t16 0 t16 0 t16 0" className="s-ink" strokeOpacity="0.5" strokeWidth="2" fill="none" />
-        </svg>
       </div>
       <a href="#" className="pill-btn">
         <span className="mono">See all 24 stamps</span>
