@@ -663,6 +663,52 @@ body::after {
 .stamp2 .petal-field { position: absolute; inset: -40px -10px -40px; }
 .cancel { position: absolute; right: -54px; top: -14px; z-index: 2; width: 210px; opacity: 0.55; mix-blend-mode: multiply; pointer-events: none; transform: rotate(-9deg); }
 
+/* ============ hero v3: shikishi, brush, hanko ============ */
+.hero-stage { height: 270px; }
+.shikishi-tilt { position: relative; width: 240px; transform: perspective(900px) rotateY(calc(-9deg + var(--ry))) rotateX(calc(4deg + var(--rx))) rotate(-2deg); transform-origin: 50% 100%; transition: transform 0.5s var(--ease); }
+.shikishi { position: relative; width: 240px; height: 240px; border: 7px solid transparent; border-radius: 2px;
+  background: linear-gradient(#fcfbf7, #f6f4ee) padding-box, linear-gradient(135deg, #f6e4a8, #b8913a 35%, #f8e9b8 55%, #9c7a2c 80%, #e6c977) border-box;
+  box-shadow: 1px 2px 0 #cfcfcf, 3px 5px 0 #bdbdbd, 0 18px 30px rgba(0, 0, 0, 0.18); }
+.shikishi::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: var(--washi); opacity: 0.8; }
+[data-theme="night"] .shikishi { filter: brightness(0.9); }
+.shikishi .enso { position: absolute; left: 1px; top: 1px; width: 224px; height: 224px; overflow: visible; }
+.shikishi .pixel-wrap { left: 49px; top: 47px; }
+.shikishi-sign { position: absolute; right: 10px; bottom: 34px; color: #141414; font-size: 13px; opacity: 0.75; writing-mode: vertical-rl; }
+.shikishi-seal { position: absolute; right: 9px; bottom: 9px; }
+.shikishi-shadow { position: absolute; left: 14px; right: 6px; bottom: -22px; height: 22px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.28), transparent); transform: translateX(var(--sx)); filter: blur(4px); }
+.bubble { left: 266px; top: 0; width: 200px; height: 104px; }
+.bubble-text { left: 24px; top: 13px; }
+.bubble-text .hand { color: #555; }
+.bubble-text .brush { color: #141414; }
+.side-note { left: 270px; top: 168px; }
+.hanko { flex: none; mix-blend-mode: multiply; }
+[data-theme="night"] .hanko { mix-blend-mode: normal; }
+.name-seal { transform: rotate(-8deg); }
+.underline { width: 400px; height: 30px; bottom: -4px; }
+
+/* ============ lantern v3: chōchin with pull-cord ============ */
+.lantern-wrap { left: calc(50% + 380px); }
+.lantern-sway { position: relative; transform-origin: 85px 0; animation: sway 6s ease-in-out infinite; }
+.lantern-sway:hover { animation-duration: 2.4s; }
+.lantern-sway.is-pulling { animation: pull 1s cubic-bezier(0.3, 1.5, 0.5, 1); }
+.lantern { animation: none !important; transform: none; }
+.lantern svg { filter: drop-shadow(8px 26px 22px rgba(0, 0, 0, 0.18)); }
+.lantern-rib { stroke: #2e2e2e; stroke-opacity: 0.55; }
+[data-theme="night"] .lantern-rib { stroke: #5b2a08; stroke-opacity: 0.75; }
+.lantern-kanji { font-size: 52px; fill: #141414; fill-opacity: 0.86; }
+[data-theme="night"] .lantern-kanji { fill: #6b2e0a; }
+.lantern-flame { opacity: var(--glow-op); transform-box: fill-box; transform-origin: 50% 70%; transition: opacity 0.8s 0.2s; }
+[data-theme="night"] .lantern-flame { animation: candle 2.6s ease-in-out infinite alternate; }
+@keyframes candle { 0% { transform: scale(1); opacity: 0.88; } 30% { transform: scale(1.03, 0.98); opacity: 1; } 60% { transform: scale(0.98, 1.02); opacity: 0.92; } 100% { transform: scale(1.02); opacity: 1; } }
+.lantern-glow { left: -60px; top: 105px; width: 290px; height: 290px; }
+.tassel-fringe { position: absolute; left: 65px; top: 366px; pointer-events: none; transform-origin: 20px 0; animation: sway 3s ease-in-out infinite reverse; }
+.pullcord { position: absolute; left: 100px; top: 340px; width: 40px; }
+.pullcord > svg { display: block; overflow: visible; }
+.bead { position: absolute; left: 9px; top: 74px; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: grab; touch-action: none; filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.3)); transition: transform 0.5s cubic-bezier(0.3, 1.8, 0.5, 1); }
+.bead:active { cursor: grabbing; }
+.pull-hint { position: absolute; left: 36px; top: 78px; color: var(--ink3); font-size: 12px; white-space: nowrap; }
+.lantern-hint { left: 190px; top: 230px; }
+
 /* ============ responsive ============ */
 @media (max-width: 1180px) {
   .lantern-wrap { left: auto; right: 8px; transform: scale(0.62); transform-origin: top right; }
@@ -676,7 +722,7 @@ body::after {
   .section { padding-block: 56px; }
   .band { padding-block: 110px; }
   .hero { padding-top: 40px; }
-  .hero-stage { height: 200px; transform: scale(0.85); transform-origin: left top; }
+  .hero-stage { height: 220px; transform: scale(0.8); transform-origin: left top; }
   .side-note { display: none; }
   .name { font-size: 64px; }
   .shead-kanji { font-size: 64px; }

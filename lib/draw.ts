@@ -123,3 +123,81 @@ export function rooftops() {
   }
   return houses;
 }
+
+/**
+ * Dry-brush stroke made of individual bristle strands.
+ * `at(t)` returns the centre point for t∈[0,1]; `width(t)` the brush width;
+ * strands break up (dry brush) as `dry(t)` rises toward 1.
+ */
+export function bristles(
+  at: (t: number) => [number, number],
+  width: (t: number) => number,
+  dry: (t: number) => number,
+  { strands = 18, steps = 120, seed = 5 } = {},
+) {
+  const rnd = seeded(seed);
+  const out: { d: string; sw: number; op: number }[] = [];
+  for (let k = 0; k < strands; k++) {
+    const lane = k / (strands - 1) - 0.5; // -0.5 … 0.5 across the brush
+    const jitter = (rnd() - 0.5) * 0.12;
+    const op = 0.55 + rnd() * 0.45;
+    const sw = 1.1 + rnd() * 1.6;
+    const breakAt = 0.55 + rnd() * 0.5; // where this bristle starts to skip
+    const end = Math.min(1, 0.78 + rnd() * 0.3 - Math.abs(lane) * 0.25);
+    let d = "";
+    let pen = false;
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      if (t > end) break;
+      const [x, y] = at(t);
+      const [x2, y2] = at(Math.min(1, t + 0.002));
+      const dx = x2 - x;
+      const dy = y2 - y;
+      const l = Math.hypot(dx, dy) || 1;
+      const nx = -dy / l;
+      const ny = dx / l;
+      const off = (lane + jitter * Math.sin(t * 12 + k)) * width(t);
+      // dry brush: random gaps that grow along the stroke
+      const gap = t > breakAt && rnd() < dry(t) * 0.55;
+      if (gap) {
+        pen = false;
+        continue;
+      }
+      const px = (x + nx * off).toFixed(1);
+      const py = (y + ny * off).toFixed(1);
+      d += pen ? ` L${px} ${py}` : ` M${px} ${py}`;
+      pen = true;
+    }
+    out.push({ d: d.trim(), sw, op });
+  }
+  return out;
+}
+
+const deg = (a: number) => (a * Math.PI) / 180;
+
+export const ENSO_BRUSH = (() => {
+  const cx = 112;
+  const cy = 112;
+  const R = 88;
+  const a0 = -70;
+  const sweep = 328;
+  const at = (t: number): [number, number] => {
+    const a = deg(a0 + t * sweep);
+    const r = R + Math.sin(t * 7) * 1.6 + t * 2;
+    return [cx + Math.cos(a) * r, cy + Math.sin(a) * r];
+  };
+  const width = (t: number) => (t < 0.06 ? 8 + t * 220 : t < 0.65 ? 21 - (t - 0.06) * 9 : Math.max(3, 15.7 * (1 - (t - 0.65) / 0.42)));
+  const dry = (t: number) => (t < 0.45 ? 0 : (t - 0.45) / 0.55);
+  const strands = bristles(at, width, dry, { strands: 22, seed: 9 });
+  const [sx, sy] = at(0);
+  const rnd = seeded(77);
+  const splat = Array.from({ length: 7 }, () => ({ x: sx + (rnd() - 0.3) * 40, y: sy + (rnd() - 0.6) * 30, r: 0.6 + rnd() * 2.2 }));
+  return { strands, pool: { x: sx, y: sy }, splat };
+})();
+
+export const UNDERLINE_BRUSH = (() => {
+  const at = (t: number): [number, number] => [6 + t * 380, 14 - Math.sin(t * 3.1) * 4 + t * 4];
+  const width = (t: number) => (t < 0.06 ? 3 + t * 120 : Math.max(2, 10 - t * 8));
+  const dry = (t: number) => (t < 0.5 ? 0.05 : (t - 0.5) * 1.6);
+  return bristles(at, width, dry, { strands: 12, seed: 21, steps: 90 });
+})();
