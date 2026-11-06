@@ -171,10 +171,9 @@ export default function WhyJapan() {
             </p>
           </div>
           <a className="pill-btn dark" href="#">
-            <span>Why I love Japanese design</span>
+            <span>Read why I love Japanese design</span>
             <span className="pill-seal">→</span>
           </a>
-          <p className="mono why-note">a 4-minute read · with tiny-house diagrams</p>
         </div>
       </div>
       <PixelEdge seed={17} side="bottom" />

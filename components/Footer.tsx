@@ -63,7 +63,7 @@ export default function Footer() {
         <p className="brush footer-bye">またね</p>
         <p className="min footer-line">See you around — or say hello.</p>
         <button className={`mail ${done ? "is-done" : ""}`} onClick={copy} aria-label={`Copy email ${EMAIL}`}>
-          <span className="mono">{EMAIL}</span>
+          <span>Email me</span>
           <span className="mail-seal brush">{done ? "済" : "写"}</span>
           {done && (
             <span className="mail-stamp brush" aria-hidden>
@@ -71,13 +71,6 @@ export default function Footer() {
             </span>
           )}
         </button>
-        <nav className="footer-links mono" aria-label="Elsewhere">
-          {["linkedin", "x / twitter", "read.cv", "dribbble", "resume"].map((l) => (
-            <a key={l} href="#">
-              {l}
-            </a>
-          ))}
-        </nav>
         <p className="hand footer-hint" aria-hidden>
           psst — move around the street · light the lanterns · click the {theme === "night" ? "moon" : "sun"}
         </p>
@@ -240,6 +233,7 @@ export default function Footer() {
       <div className="footer-bar">
         <span className="mono">© 2026 Sanskriti</span>
         <span className="min">designed in Figma · vibe-coded with Claude · 静かに</span>
+        <span className="mono footer-tm">Product names and logos are trademarks of their owners</span>
       </div>
     </footer>
   );

@@ -146,7 +146,23 @@ const PATHS: Record<IconKind, ReactNode> = {
   ),
 };
 
+// Real brand logos (CC0, gilbarbara/logos via taste-skill's icons.mjs) — never drawn look-alikes.
+const BRAND: Partial<Record<IconKind, { file: string; ink?: boolean; ratio: number }>> = {
+  figma: { file: "figma", ratio: 0.67 },
+  claude: { file: "claude", ratio: 1 },
+  cursor: { file: "cursor", ink: true, ratio: 0.88 },
+  vercel: { file: "vercel", ink: true, ratio: 1.15 },
+  framer: { file: "framer", ink: true, ratio: 0.67 },
+  v0: { file: "v0", ink: true, ratio: 2.1 },
+};
+
 export function Icon({ kind, size = 16, className }: { kind: IconKind; size?: number; className?: string }) {
+  const b = BRAND[kind];
+  if (b)
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img className={`ic ic-${kind} logo ${b.ink ? "logo-ink" : ""} ${className ?? ""}`} src={`/icons/${b.file}.svg`} alt="" width={Math.round(size * b.ratio)} height={size} aria-hidden />
+    );
   return (
     <svg className={`ic ic-${kind} ${className ?? ""}`} width={size} height={size} viewBox="0 0 16 16" aria-hidden="true">
       {PATHS[kind]}
@@ -183,20 +199,20 @@ export function K({
   );
 }
 
-const TOOL_STYLE: Record<string, { bg: string; fg: string; icon: IconKind }> = {
-  "Claude Code": { bg: "#F7E6DC", fg: "#8A3A1C", icon: "claude" },
-  Cursor: { bg: "#E8E8E8", fg: "#111111", icon: "cursor" },
-  Figma: { bg: "#F1ECFF", fg: "#4A2C8F", icon: "figma" },
-  Framer: { bg: "#E3EDFF", fg: "#0040C0", icon: "framer" },
-  v0: { bg: "#161616", fg: "#FFFFFF", icon: "v0" },
-  Vercel: { bg: "#EDEDED", fg: "#111111", icon: "vercel" },
+const TOOL_ICON: Record<string, IconKind> = {
+  "Claude Code": "claude",
+  Cursor: "cursor",
+  Figma: "figma",
+  Framer: "framer",
+  v0: "v0",
+  Vercel: "vercel",
 };
 
+/** Tool chip: one neutral pill style, the tool's real logo in its own colours. */
 export function ToolChip({ name }: { name: string }) {
-  const t = TOOL_STYLE[name];
   return (
-    <span className="tool" style={{ ["--pill-bg" as string]: t.bg, color: t.fg } as React.CSSProperties}>
-      <Icon kind={t.icon} size={14} />
+    <span className="tool">
+      <Icon kind={TOOL_ICON[name]} size={14} />
       {name}
     </span>
   );

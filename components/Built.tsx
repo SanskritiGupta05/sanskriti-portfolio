@@ -47,10 +47,6 @@ export default function Built() {
                       <ToolChip key={t} name={t} />
                     ))}
                   </div>
-                  <p className="plate-links mono">
-                    <a href="#">live →</a>
-                    <a href="#">code →</a>
-                  </p>
                 </div>
                 <span className="hikite" aria-hidden />
               </div>

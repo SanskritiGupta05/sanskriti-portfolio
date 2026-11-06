@@ -820,6 +820,16 @@ body::after {
 .plate h3 { font-size: 22px; }
 .plate-links a { text-decoration: underline wavy rgba(195,53,43,0.6) 1px; text-underline-offset: 4px; }
 
+/* ============ taste-skill pass ============ */
+.tool { --pill-bg: var(--white); color: var(--ink); border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent); }
+.plate .tool { --pill-bg: #ffffff; color: #141414; }
+img.logo { display: inline-block; height: 1em; width: auto; vertical-align: -0.12em; }
+.kw img.logo { height: 15px; margin-right: 4px; }
+.tool img.logo { height: 14px; }
+.on-dark img.logo-ink, [data-theme="night"] :is(.kw, .intro-line) img.logo-ink { filter: invert(1); }
+.footer-bar { flex-wrap: wrap; }
+.footer-tm { flex-basis: 100%; opacity: 0.5 !important; font-size: 10px; }
+
 /* ============ responsive ============ */
 @media (max-width: 1180px) {
   .lantern-wrap { left: auto; right: 8px; transform: scale(0.62); transform-origin: top right; }

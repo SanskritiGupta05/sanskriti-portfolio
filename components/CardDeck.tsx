@@ -142,7 +142,7 @@ export default function CardDeck() {
               ))}
             </dl>
             <a href={front.href} className="deck-read mono">
-              read the story <span>→</span>
+              read the case study <span>→</span>
             </a>
           </div>
           <p className="tategaki brush" aria-hidden>

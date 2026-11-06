@@ -328,19 +328,6 @@ export default function Gachapon() {
         ))}
       </div>
 
-      <dl className="facts">
-        {[
-          ["047", "bowls this year"],
-          ["6", "sketchbooks filled"],
-          ["30+", "meetups attended"],
-          ["Book title", "reading now"],
-        ].map(([a, b]) => (
-          <div key={b}>
-            <dt className="min">{a}</dt>
-            <dd className="mono">{b}</dd>
-          </div>
-        ))}
-      </dl>
     </section>
   );
 }

@@ -5,12 +5,12 @@ type Cell = string | null;
 const PAL: Record<string, string> = {
   K: "#1B1A1F", // outline
   H: "#2B2A33", // hair
-  h: "#55536A", // hair highlight
+  h: "#596170", // hair highlight
   S: "#F6E3D3", // skin
   s: "#E6C3AE", // skin shade
   W: "#FFFFFF",
   E: "#1B1A1F", // pupil
-  I: "#5B4A7C", // iris
+  I: "#3B4250", // iris
   B: "#F2A7A0", // blush
   M: "#B5483A", // mouth
   R: "#C8372D", // ribbon

@@ -78,7 +78,7 @@ export default function BottomNav() {
         </svg>
       </button>
       <button className="bnav-cta" onClick={copy}>
-        <span className="bnav-label">{done ? "copied!" : "say hi"}</span>
+        <span className="bnav-label">{done ? "copied!" : "Email me"}</span>
         <span aria-hidden>{done ? <span className="brush">済</span> : "→"}</span>
       </button>
     </nav>

@@ -73,9 +73,6 @@ export default function Hero() {
             <span className="hand">{THOUGHTS[t][1]}</span>
           </div>
         </div>
-        <p className="hand side-note" aria-hidden>
-          ↙ me in 32×32, on a shikishi board
-        </p>
       </div>
 
       <p className="greet">

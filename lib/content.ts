@@ -22,7 +22,6 @@ export const FEATURED: Project[] = [
     meta: [
       ["role", "Product designer"],
       ["scope", "Web app · 0 to 1"],
-      ["impact", "+38% activation*"],
     ],
     href: "#",
   },
@@ -35,7 +34,6 @@ export const FEATURED: Project[] = [
     meta: [
       ["role", "Product designer"],
       ["scope", "Web + mobile"],
-      ["impact", "placeholder*"],
     ],
     href: "#",
   },
@@ -48,7 +46,6 @@ export const FEATURED: Project[] = [
     meta: [
       ["role", "Product + visual"],
       ["scope", "AI · 0 to 1"],
-      ["impact", "placeholder*"],
     ],
     href: "#",
   },
@@ -98,13 +95,13 @@ export const INTERESTS = [
     k: "麺",
     name: "Ramen",
     color: "#C3352B",
-    text: "47 bowls this year and counting. Current favourite: tonkotsu, extra negi, soft egg.",
+    text: "Always hunting the next good bowl. Current favourite: tonkotsu, extra negi, soft egg.",
   },
   {
     k: "描",
     name: "Sketching & drawing",
     color: "#9A9A9A",
-    text: "A pocket sketchbook, always. Six filled so far — mostly shopfronts, cats and bad ideas that became good ones.",
+    text: "A pocket sketchbook, always — mostly shopfronts, cats and bad ideas that became good ones.",
   },
   {
     k: "読",

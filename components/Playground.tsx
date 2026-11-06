@@ -136,10 +136,6 @@ export default function Playground() {
           </div>
         ))}
       </div>
-      <a href="#" className="pill-btn">
-        <span className="mono">See all 24 stamps</span>
-        <span className="pill-seal">→</span>
-      </a>
     </section>
   );
 }
