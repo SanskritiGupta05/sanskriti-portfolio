@@ -48,59 +48,77 @@ export default function BottomNav() {
     return () => io.disconnect();
   }, []);
 
+  const fade = { initial: { opacity: 0 }, animate: { opacity: 1, transition: { duration: 0.15, delay: 0.05 } }, exit: { opacity: 0, transition: { duration: 0.1 } } };
+
   return (
-    <nav className={`bnav ${compact ? "is-compact" : ""}`} aria-label="Main">
-      <a className="bnav-home brush" href="#top" aria-label="Back to top">
-        サ
-      </a>
-      <ul>
-        {LINKS.map((l) => (
-          <li key={l.label}>
-            <a
-              href={l.href}
-              className={active === l.href.slice(1) ? "is-active" : ""}
-              onPointerEnter={() => setTip(l.label)}
-              onPointerLeave={() => setTip(null)}
-              onFocus={() => setTip(l.label)}
-              onBlur={() => setTip(null)}
-            >
-              {active === l.href.slice(1) && <motion.span layoutId="nav-pill" className="bnav-pill" aria-hidden />}
-              <span className="brush">{l.k}</span>
-              <span className="bnav-label">{l.label}</span>
-              <AnimatePresence>
-                {tip === l.label && (
-                  <motion.span
-                    className="bnav-tip"
-                    role="tooltip"
-                    initial={{ opacity: 0, y: 8, scale: 0.92, x: "-50%" }}
-                    animate={{ opacity: 1, y: 0, scale: 1, x: "-50%" }}
-                    exit={{ opacity: 0, y: 4, scale: 0.96, x: "-50%", transition: { duration: 0.12 } }}
-                  >
-                    <b className="brush">{l.k}</b> {l.meaning}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </a>
-          </li>
-        ))}
-      </ul>
-      <span className="bnav-div" />
-      <button className={`bnav-icon brush ${sound ? "is-on" : ""}`} aria-pressed={sound} aria-label="Sound" onClick={() => setSound((s) => !s)}>
-        音
-      </button>
-      <button className="bnav-icon" aria-label={theme === "night" ? "Switch to day" : "Switch to night"} aria-pressed={theme === "night"} onClick={toggle}>
-        <svg width="16" height="20" viewBox="0 0 16 20" aria-hidden>
-          <path d="M8 0 V3" stroke="currentColor" />
-          <rect x="4" y="3" width="8" height="2" fill="currentColor" />
-          <path d="M4.5 5 C1 6.5 1 13.5 4.5 15 H11.5 C15 13.5 15 6.5 11.5 5 Z" className="bnav-lamp" />
-          <rect x="4" y="15" width="8" height="2" fill="currentColor" />
-          <path d="M8 17 V20" stroke="#C3352B" strokeWidth="1.6" />
-        </svg>
-      </button>
-      <button className="bnav-cta" onClick={copy}>
-        <span className="bnav-label">{done ? "copied!" : "Email me"}</span>
-        <span aria-hidden>{done ? <span className="brush">済</span> : "→"}</span>
-      </button>
-    </nav>
+    <div className="bnav-dock">
+      <motion.nav layout className={`bnav ${compact ? "is-compact" : ""}`} style={{ borderRadius: 999 }} aria-label="Main">
+        <motion.a layout="position" className="bnav-home brush" href="#top" aria-label="Back to top">
+          サ
+        </motion.a>
+        <ul>
+          {LINKS.map((l) => (
+            <motion.li layout="position" key={l.label}>
+              <a
+                href={l.href}
+                className={active === l.href.slice(1) ? "is-active" : ""}
+                aria-label={l.label}
+                onPointerEnter={() => setTip(l.label)}
+                onPointerLeave={() => setTip(null)}
+                onFocus={() => setTip(l.label)}
+                onBlur={() => setTip(null)}
+              >
+                {active === l.href.slice(1) && <motion.span layoutId="nav-pill" className="bnav-pill" aria-hidden />}
+                <span className="brush">{l.k}</span>
+                <AnimatePresence initial={false}>
+                  {!compact && (
+                    <motion.span className="bnav-label" {...fade}>
+                      {l.label}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+                <AnimatePresence>
+                  {tip === l.label && (
+                    <motion.span
+                      className="bnav-tip"
+                      role="tooltip"
+                      style={{ transformOrigin: "50% 100%" }}
+                      initial={{ opacity: 0, y: 6, scale: 0.96, x: "-50%" }}
+                      animate={{ opacity: 1, y: 0, scale: 1, x: "-50%", transition: { duration: 0.16, ease: [0.23, 1, 0.32, 1] } }}
+                      exit={{ opacity: 0, y: 3, scale: 0.98, x: "-50%", transition: { duration: 0.1 } }}
+                    >
+                      <b className="brush">{l.k}</b> {l.meaning}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </a>
+            </motion.li>
+          ))}
+        </ul>
+        <motion.span layout="position" className="bnav-div" />
+        <motion.button layout="position" className={`bnav-icon brush ${sound ? "is-on" : ""}`} aria-pressed={sound} aria-label="Sound" onClick={() => setSound((s) => !s)}>
+          音
+        </motion.button>
+        <motion.button layout="position" className="bnav-icon" aria-label={theme === "night" ? "Switch to day" : "Switch to night"} aria-pressed={theme === "night"} onClick={toggle}>
+          <svg width="16" height="20" viewBox="0 0 16 20" aria-hidden>
+            <path d="M8 0 V3" stroke="currentColor" />
+            <rect x="4" y="3" width="8" height="2" fill="currentColor" />
+            <path d="M4.5 5 C1 6.5 1 13.5 4.5 15 H11.5 C15 13.5 15 6.5 11.5 5 Z" className="bnav-lamp" />
+            <rect x="4" y="15" width="8" height="2" fill="currentColor" />
+            <path d="M8 17 V20" stroke="#C3352B" strokeWidth="1.6" />
+          </svg>
+        </motion.button>
+        <motion.button layout="position" className="bnav-cta" onClick={copy} aria-label={done ? "Email copied" : "Email me"}>
+          <AnimatePresence initial={false}>
+            {!compact && (
+              <motion.span className="bnav-label" {...fade}>
+                {done ? "copied!" : "Email me"}
+              </motion.span>
+            )}
+          </AnimatePresence>
+          <span aria-hidden>{done ? <span className="brush">済</span> : "→"}</span>
+        </motion.button>
+      </motion.nav>
+    </div>
   );
 }

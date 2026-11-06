@@ -26,6 +26,7 @@ export default function MoreWork() {
             onPointerEnter={(e) => e.pointerType === "mouse" && setFlipped(i)}
             onPointerLeave={(e) => e.pointerType === "mouse" && setFlipped(null)}
           >
+            <div className="ema-swing">
             <svg className="ema-cord" viewBox="0 0 60 46" aria-hidden>
               <path d="M10 0 C12 18 22 30 26 44 M50 0 C48 18 38 30 34 44" stroke="#C3352B" strokeWidth="2.4" fill="none" />
               <path d="M10 0 C12 18 22 30 26 44 M50 0 C48 18 38 30 34 44" stroke="#6E140F" strokeWidth="2.4" strokeDasharray="1.2 2" fill="none" strokeOpacity="0.5" />
@@ -51,6 +52,7 @@ export default function MoreWork() {
                 </span>
               </span>
             </button>
+            </div>
           </div>
         ))}
       </div>

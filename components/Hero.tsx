@@ -30,7 +30,7 @@ export default function Hero() {
   return (
     <header className="hero col" id="top">
       <div className="hero-stage">
-        <Tilt className="shikishi-tilt" max={12}>
+        <Tilt className="shikishi-tilt" max={12} rotate={-2} baseX={4} baseY={-9} perspective={900} shadowClassName="shikishi-shadow">
           <div className="shikishi">
             <svg className="enso" viewBox="0 0 224 224" aria-hidden>
               <defs>
@@ -56,7 +56,6 @@ export default function Hero() {
             </span>
             <Hanko char="サ" size={22} seed={7} className="shikishi-seal" />
           </div>
-          <span className="shikishi-shadow" aria-hidden />
         </Tilt>
         <div className="bubble" aria-live="polite">
           <svg width="200" height="104" viewBox="0 0 200 104" aria-hidden>

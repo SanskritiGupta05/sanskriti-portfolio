@@ -1,30 +1,60 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import type { ReactNode } from "react";
 
-/** Light isometric tilt: the child leans toward the cursor and its shadow shifts. */
-export default function Tilt({ children, max = 10, className = "", style }: { children: ReactNode; max?: number; className?: string; style?: React.CSSProperties }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const onMove = (e: React.PointerEvent) => {
-    const el = ref.current;
-    if (!el || e.pointerType !== "mouse") return;
-    const r = el.getBoundingClientRect();
+const SPRING = { stiffness: 220, damping: 20, mass: 0.6 };
+
+/**
+ * Light isometric tilt: the element leans toward the cursor on a spring (momentum, no CSS-variable
+ * recalcs). `rotate`/`baseX`/`baseY` are its resting pose; an optional shadow slides opposite the lean.
+ */
+export default function Tilt({
+  children,
+  max = 10,
+  className = "",
+  rotate = 0,
+  baseX = 0,
+  baseY = 0,
+  perspective = 800,
+  shadowClassName,
+}: {
+  children: ReactNode;
+  max?: number;
+  className?: string;
+  rotate?: number;
+  baseX?: number;
+  baseY?: number;
+  perspective?: number;
+  shadowClassName?: string;
+}) {
+  const reduce = useReducedMotion();
+  const rx = useMotionValue(baseX);
+  const ry = useMotionValue(baseY);
+  const sx = useMotionValue(0);
+  const rotateX = useSpring(rx, SPRING);
+  const rotateY = useSpring(ry, SPRING);
+  const shadowX = useSpring(sx, SPRING);
+
+  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (reduce || e.pointerType !== "mouse") return;
+    const r = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width - 0.5;
     const y = (e.clientY - r.top) / r.height - 0.5;
-    el.style.setProperty("--ry", `${(x * max).toFixed(2)}deg`);
-    el.style.setProperty("--rx", `${(-y * max * 0.7).toFixed(2)}deg`);
-    el.style.setProperty("--sx", `${(-x * 14).toFixed(1)}px`);
+    ry.set(baseY + x * max);
+    rx.set(baseX - y * max * 0.7);
+    sx.set(-x * 14);
   };
   const reset = () => {
-    const el = ref.current;
-    if (!el) return;
-    el.style.setProperty("--ry", "0deg");
-    el.style.setProperty("--rx", "0deg");
-    el.style.setProperty("--sx", "0px");
+    rx.set(baseX);
+    ry.set(baseY);
+    sx.set(0);
   };
+
   return (
-    <div ref={ref} className={`tilt ${className}`} style={style} onPointerMove={onMove} onPointerLeave={reset}>
+    <motion.div className={`tilt ${className}`} style={{ rotate, rotateX, rotateY, transformPerspective: perspective }} onPointerMove={onMove} onPointerLeave={reset}>
       {children}
-    </div>
+      {shadowClassName && <motion.span className={shadowClassName} style={{ x: shadowX }} aria-hidden />}
+    </motion.div>
   );
 }

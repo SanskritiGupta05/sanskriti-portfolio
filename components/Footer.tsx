@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, useMotionValue, useMotionValueEvent, useReducedMotion, useSpring, useTransform, type MotionValue } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { EMAIL } from "@/lib/content";
 import { rooftops } from "@/lib/draw";
@@ -13,6 +14,45 @@ const LANTERNS = Array.from({ length: 9 }, (_, i) => {
 });
 const FLIES: [number, number][] = [[300, 160], [420, 90], [520, 200], [880, 120], [960, 60], [1040, 170], [1200, 110], [1260, 210], [180, 100], [640, 230], [760, 150]];
 
+const SOFT = { stiffness: 90, damping: 20, mass: 0.6 };
+
+/** One parallax depth layer: moves opposite the cursor, on a spring (no re-render per mouse move). */
+function useLayer(px: MotionValue<number>, py: MotionValue<number>, depth: number) {
+  const x = useTransform(px, (v) => -v * depth);
+  const y = useTransform(py, (v) => -v * depth * 0.4);
+  return { x, y };
+}
+
+/** A small bird on the wire; flees from the cursor and flaps while it's up. */
+function Bird({ bx, by, mx, my }: { bx: number; by: number; mx: MotionValue<number>; my: MotionValue<number> }) {
+  const dist = useTransform([mx, my], ([x, y]: number[]) => Math.hypot(bx - x, by - y));
+  const rawX = useTransform([mx, my], ([x, y]: number[]) => {
+    const d = Math.hypot(bx - x, by - y);
+    return d < 170 ? ((bx - x) / (d || 1)) * 160 * ((170 - d) / 170) : 0;
+  });
+  const rawY = useTransform(dist, (d) => (d < 170 ? -140 * ((170 - d) / 170) - 30 : 0));
+  const x = useSpring(rawX, { stiffness: 140, damping: 16 });
+  const y = useSpring(rawY, { stiffness: 140, damping: 16 });
+  const [flying, setFlying] = useState(false);
+  useMotionValueEvent(dist, "change", (d) => {
+    if (d < 170 !== flying) setFlying(d < 170);
+  });
+  return (
+    <motion.g className="bird" style={{ x, y }}>
+      {flying ? (
+        <path d={`M${bx - 10} ${by - 6} q5 -7 10 0 q5 -7 10 0`} className="s-ink wing" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+      ) : (
+        <g>
+          <ellipse cx={bx} cy={by - 5} rx="6" ry="4.5" className="f-ink" />
+          <circle cx={bx + 5} cy={by - 9} r="3" className="f-ink" />
+          <path d={`M${bx + 8} ${by - 9} l3 1 l-3 1`} fill="#C3352B" />
+          <path d={`M${bx - 6} ${by - 4} l-6 2`} className="s-ink" strokeWidth="2" />
+        </g>
+      )}
+    </motion.g>
+  );
+}
+
 /**
  * Ink-wash street at the foot of Fuji.
  *  - the whole scene parallaxes with the cursor (four depth layers)
@@ -25,7 +65,20 @@ export default function Footer() {
   const { done, copy } = useCopy(EMAIL);
   const { theme, toggle } = useTheme();
   const sceneRef = useRef<SVGSVGElement>(null);
-  const [cursor, setCursor] = useState<{ x: number; y: number } | null>(null);
+  const reduce = useReducedMotion();
+  // cursor in scene units (far away = birds sit still); parallax springs follow it
+  const mx = useMotionValue(-9999);
+  const my = useMotionValue(-9999);
+  const nx = useMotionValue(0);
+  const ny = useMotionValue(0);
+  const px = useSpring(nx, SOFT);
+  const py = useSpring(ny, SOFT);
+  const l4 = useLayer(px, py, 4);
+  const l8 = useLayer(px, py, 8);
+  const l14 = useLayer(px, py, 14);
+  const l18 = useLayer(px, py, 18);
+  const l22 = useLayer(px, py, 22);
+  const l30 = useLayer(px, py, 30);
   const [lit, setLit] = useState<Set<number>>(new Set());
   const [wave, setWave] = useState(0);
   const [houseOn, setHouseOn] = useState<number | null>(null);
@@ -35,7 +88,13 @@ export default function Footer() {
     const svg = sceneRef.current;
     if (!svg) return;
     const r = svg.getBoundingClientRect();
-    setCursor({ x: ((e.clientX - r.left) / r.width) * 1440, y: ((e.clientY - r.top) / r.height) * 480 });
+    const x = ((e.clientX - r.left) / r.width) * 1440;
+    const y = ((e.clientY - r.top) / r.height) * 480;
+    mx.set(x);
+    my.set(y);
+    if (reduce) return;
+    nx.set((x / 1440 - 0.5) * 2);
+    ny.set((y / 480 - 0.5) * 2);
   };
 
   const lightAll = () => {
@@ -52,10 +111,12 @@ export default function Footer() {
 
   useEffect(() => setLit(new Set()), [theme]);
 
-  // parallax offsets per depth layer
-  const px = cursor ? (cursor.x / 1440 - 0.5) * 2 : 0;
-  const py = cursor ? (cursor.y / 480 - 0.5) * 2 : 0;
-  const layer = (depth: number) => ({ transform: `translate(${(-px * depth).toFixed(1)}px, ${(-py * depth * 0.4).toFixed(1)}px)` });
+  const leave = () => {
+    mx.set(-9999);
+    my.set(-9999);
+    nx.set(0);
+    ny.set(0);
+  };
 
   return (
     <footer className="footer">
@@ -82,7 +143,7 @@ export default function Footer() {
         viewBox="0 0 1440 480"
         preserveAspectRatio="xMidYMax slice"
         onPointerMove={onMove}
-        onPointerLeave={() => setCursor(null)}
+        onPointerLeave={leave}
         role="img"
         aria-label="An ink-wash street at the foot of Mount Fuji"
       >
@@ -96,6 +157,11 @@ export default function Footer() {
             <stop offset="0" style={{ stopColor: "var(--ink3)" }} />
             <stop offset="1" style={{ stopColor: "var(--paper)", stopOpacity: 0 }} />
           </linearGradient>
+          <radialGradient id="ffglow">
+            <stop offset="0" stopColor="#FFE3A6" stopOpacity="1" />
+            <stop offset="0.35" stopColor="#F2C27A" stopOpacity="0.85" />
+            <stop offset="1" stopColor="#F2C27A" stopOpacity="0" />
+          </radialGradient>
           <radialGradient id="lampGlow">
             <stop offset="0" stopColor="#FFD58A" stopOpacity="0.9" />
             <stop offset="1" stopColor="#FFD58A" stopOpacity="0" />
@@ -103,7 +169,7 @@ export default function Footer() {
         </defs>
 
         {/* sky layer */}
-        <g style={layer(4)}>
+        <motion.g style={l4}>
           <g className="sun-wrap" onClick={clickSun} role="button" aria-label={theme === "night" ? "Click the moon for morning" : "Click the sun for night"} tabIndex={0} onKeyDown={(e) => e.key === "Enter" && clickSun()}>
             <circle cx="1110" cy="110" r="70" fill="transparent" />
             <circle cx="1110" cy="110" r="46" className="sun" />
@@ -114,32 +180,32 @@ export default function Footer() {
               <path key={i} d={`M${i * 22} ${(i % 2) * 10} q6 -7 12 0 q6 -7 12 0`} className="s-ink" strokeWidth="1.5" fill="none" strokeLinecap="round" />
             ))}
           </g>
-        </g>
+        </motion.g>
 
         {/* far hills + Fuji */}
-        <g style={layer(8)}>
+        <motion.g style={l8}>
           <g style={{ filter: "url(#sumi-wash)" }}>
             <path d="M-40 340 L160 250 L300 320 L470 230 L620 330 Z" fill="url(#fj2)" opacity="0.7" />
             <path d="M900 330 L1080 240 L1220 300 L1480 220 V340 Z" fill="url(#fj2)" opacity="0.7" />
             <path d="M360 420 L640 150 Q690 122 740 150 L1080 420 Z" fill="url(#fj)" />
           </g>
           <path d="M640 150 Q690 122 740 150 L770 178 L748 186 L728 170 L708 190 L690 174 L672 190 L652 170 L632 186 L610 180 Z" className="snow" style={{ filter: "url(#ink-rough)" }} />
-        </g>
+        </motion.g>
 
         {/* mist */}
-        <g style={layer(14)}>
+        <motion.g style={l14}>
           <ellipse cx="560" cy="300" rx="220" ry="16" className="mist" />
           <ellipse cx="900" cy="330" rx="260" ry="18" className="mist mist-2" />
-        </g>
+        </motion.g>
 
-        <g className="fireflies" style={layer(18)}>
+        <motion.g className="fireflies" style={l18}>
           {FLIES.map(([x, y], i) => (
-            <circle key={i} cx={x + (cursor ? (cursor.x - x) * 0.04 : 0)} cy={y + (cursor ? (cursor.y - y) * 0.04 : 0)} r="2.5" style={{ animationDelay: `${(i * 370) % 2000}ms` }} />
+            <circle key={i} cx={x} cy={y} r="7" style={{ animationDelay: `${(i * 370) % 2000}ms` }} />
           ))}
-        </g>
+        </motion.g>
 
         {/* street layer */}
-        <g style={layer(22)}>
+        <motion.g style={l22}>
           <rect x="296" y="290" width="5" height="190" className="street" />
           <rect x="1298" y="290" width="5" height="190" className="street" />
           <path d="M300 300 Q800 380 1300 300" className="s-ink" fill="none" />
@@ -147,33 +213,9 @@ export default function Footer() {
 
           {/* birds perched on the wire — scatter from the cursor */}
           <g className="birds">
-            {PERCHED.map(([bx, by], i) => {
-              let dx = 0;
-              let dy = 0;
-              if (cursor) {
-                const d = Math.hypot(bx - cursor.x, by - cursor.y);
-                if (d < 170) {
-                  const f = (170 - d) / 170;
-                  dx = ((bx - cursor.x) / (d || 1)) * 160 * f;
-                  dy = -140 * f - 30;
-                }
-              }
-              const flying = dx !== 0;
-              return (
-                <g key={i} className="bird" style={{ transform: `translate(${dx}px, ${dy}px)` }}>
-                  {flying ? (
-                    <path d={`M${bx - 10} ${by - 6} q5 -7 10 0 q5 -7 10 0`} className="s-ink wing" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-                  ) : (
-                    <g>
-                      <ellipse cx={bx} cy={by - 5} rx="6" ry="4.5" className="f-ink" />
-                      <circle cx={bx + 5} cy={by - 9} r="3" className="f-ink" />
-                      <path d={`M${bx + 8} ${by - 9} l3 1 l-3 1`} fill="#C3352B" />
-                      <path d={`M${bx - 6} ${by - 4} l-6 2`} className="s-ink" strokeWidth="2" />
-                    </g>
-                  )}
-                </g>
-              );
-            })}
+            {PERCHED.map(([bx, by], i) => (
+              <Bird key={i} bx={bx} by={by} mx={mx} my={my} />
+            ))}
           </g>
 
           <g className="lantern-string" key={wave}>
@@ -206,10 +248,10 @@ export default function Footer() {
               );
             })}
           </g>
-        </g>
+        </motion.g>
 
         {/* houses — nearest layer */}
-        <g className="houses" style={layer(30)}>
+        <motion.g className="houses" style={l30}>
           {HOUSES.map((h, i) => {
             const top = 480 - h.h;
             const on = houseOn === i;
@@ -227,7 +269,7 @@ export default function Footer() {
           <rect x="128" y="404" width="114" height="8" className="street" />
           <rect x="142" y="386" width="10" height="94" className="street" />
           <rect x="218" y="386" width="10" height="94" className="street" />
-        </g>
+        </motion.g>
       </svg>
 
       <div className="footer-bar">

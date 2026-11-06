@@ -139,7 +139,7 @@ export default function CardDeck() {
   const back = () => setOrder((o) => [o[2], o[0], o[1]]);
 
   const onDragEnd = (_: unknown, info: PanInfo) => {
-    if (Math.abs(info.offset.x) > 110 || Math.abs(info.velocity.x) > 500) toss(Math.sign(info.offset.x || info.velocity.x), info.velocity.x);
+    if (Math.abs(info.offset.x) > 110 || Math.abs(info.velocity.x) > 110) toss(Math.sign(info.offset.x || info.velocity.x), info.velocity.x);
     else animate([x0, x1, x2][order[0]], 0, { type: "spring", stiffness: 500, damping: 30 });
   };
 
@@ -165,7 +165,8 @@ export default function CardDeck() {
         aria-roledescription="card deck"
         aria-label={`${front.title} — card ${order[0] + 1} of 3. Use arrow keys to shuffle.`}
         onKeyDown={(e) => {
-          if (e.key === "ArrowRight") toss(1);
+          // keyboard: no throw animation, just reorder (the stack springs into place)
+          if (e.key === "ArrowRight") setOrder((o) => [...o.slice(1), o[0]]);
           if (e.key === "ArrowLeft") back();
         }}
       >

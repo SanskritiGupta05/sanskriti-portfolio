@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
+import { useRef, useState } from "react";
 import { STATIONS } from "@/lib/content";
 import SectionHeader from "./SectionHeader";
 
@@ -66,25 +67,26 @@ function Train() {
 export default function MetroMap() {
   const wrap = useRef<HTMLDivElement>(null);
   const path = useRef<SVGPathElement>(null);
-  const [train, setTrain] = useState({ x: 70, y: 132, a: 0, p: 0 });
-
-  useEffect(() => {
-    const onScroll = () => {
-      const el = wrap.current;
-      const pth = path.current;
-      if (!el || !pth) return;
-      const r = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (vh * 0.75)));
-      const L = pth.getTotalLength();
-      const pt = pth.getPointAtLength(p * L);
-      const pt2 = pth.getPointAtLength(Math.min(L, p * L + 1));
-      setTrain({ x: pt.x, y: pt.y, a: (Math.atan2(pt2.y - pt.y, pt2.x - pt.x) * 180) / Math.PI, p });
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const reduce = useReducedMotion();
+  // scroll progress through the sign → position on the route; no React re-render per frame
+  const { scrollYProgress } = useScroll({ target: wrap, offset: ["start 0.85", "start 0.1"] });
+  const p = useSpring(scrollYProgress, { stiffness: 120, damping: 24, mass: 0.5 });
+  const trainTransform = useTransform(p, (v) => {
+    const pth = path.current;
+    if (!pth) return "translate(24px, 94px)";
+    const t = reduce ? 0 : Math.min(1, Math.max(0, v));
+    const L = pth.getTotalLength();
+    const a = pth.getPointAtLength(t * L);
+    const b = pth.getPointAtLength(Math.min(L, t * L + 1));
+    const ang = (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI;
+    return `translate(${a.x}px, ${a.y}px) rotate(${ang}deg) translate(-46px, -38px)`;
+  });
+  // only re-render when the train passes a station
+  const [passed, setPassed] = useState(0);
+  useMotionValueEvent(p, "change", (v) => {
+    const n = reduce ? 1 : STOPS.filter((s) => v >= s.t - 0.02).length;
+    if (n !== passed) setPassed(n);
+  });
 
   return (
     <section className="col section" id="stations">
@@ -123,7 +125,7 @@ export default function MetroMap() {
 
             {STOPS.map((s, i) => {
               const st = STATIONS[i];
-              const reached = train.p >= s.t - 0.02;
+              const reached = i < passed;
               const ly = s.side === "above" ? s.y - 56 : s.y + 34;
               const anchor = i === 3 ? "end" : "start";
               const lx = i === 3 ? s.x + 22 : s.x - 22;
@@ -163,9 +165,9 @@ export default function MetroMap() {
               <circle cy="-26" r="4.5" fill="#fff" />
             </g>
 
-            <g transform={`translate(${train.x} ${train.y}) rotate(${train.a}) translate(-46 -38)`} className="train">
+            <motion.g style={{ transform: trainTransform }} className="train">
               <Train />
-            </g>
+            </motion.g>
 
             <text x="30" y="276" className="stn-meta">
               2021 → now · scroll to ride the line

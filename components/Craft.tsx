@@ -120,9 +120,8 @@ export default function Craft() {
         </svg>
         {CHARMS.map((c, i) => (
           <figure key={c.t} className="charm" style={{ ["--rot" as string]: `${c.rot}deg` }}>
-            <Tilt className="charm-swing" max={16}>
+            <Tilt className="charm-swing" max={16} rotate={c.rot} perspective={700}>
               <Charm k={c.k} t={c.t} i={i} />
-              <span className="charm-shadow" aria-hidden />
             </Tilt>
             <figcaption>{c.d}</figcaption>
           </figure>
