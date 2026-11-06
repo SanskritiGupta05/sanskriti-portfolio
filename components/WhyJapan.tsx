@@ -1,4 +1,5 @@
 import { K } from "./Icons";
+import Hanko from "./Hanko";
 import PixelEdge from "./PixelEdge";
 
 function frond(cx: number, cy: number, n: number, len: number) {
@@ -121,6 +122,12 @@ export default function WhyJapan() {
             <span className="seal brush">和</span>
             <span className="mono">wa — why Japanese design</span>
           </p>
+          <div className="letter">
+            <span className="tape tape-l" aria-hidden />
+            <span className="tape tape-r" aria-hidden />
+            <p className="letter-open brush" aria-hidden>
+              拝啓
+            </p>
           <h2 className="min why-title">
             Small spaces,
             <br />
@@ -158,6 +165,11 @@ export default function WhyJapan() {
             </K>{" "}
             whose creativity I keep aspiring to. The fascination never wore off.
           </p>
+            <p className="letter-sign">
+              <span className="hand">— Sanskriti</span>
+              <Hanko char="和" size={30} seed={11} />
+            </p>
+          </div>
           <a className="pill-btn dark" href="#">
             <span>Why I love Japanese design</span>
             <span className="pill-seal">→</span>
