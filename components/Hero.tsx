@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { ENSO, ENSO_BRUSH, UNDERLINE_BRUSH } from "@/lib/draw";
 import Hanko from "./Hanko";
@@ -68,10 +69,18 @@ export default function Hero() {
             <path d="M22 4 H168 Q186 4 186 22 V52 Q186 70 168 70 H58 L30 92 L38 70 H22 Q4 70 4 52 V22 Q4 4 22 4 Z" fill="#FFFFFF" stroke="#141414" strokeWidth="2" style={{ filter: "url(#ink-rough)" }} />
             <path d="M150 12 l6 -6 M160 14 l8 -4 M166 22 l9 -1" stroke="#141414" strokeWidth="1.6" strokeLinecap="round" />
           </svg>
-          <div className="bubble-text" key={t}>
-            <span className="brush">{THOUGHTS[t][0]}</span>
-            <span className="hand">{THOUGHTS[t][1]}</span>
-          </div>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              className="bubble-text"
+              key={t}
+              initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: -6, filter: "blur(4px)", transition: { duration: 0.16 } }}
+            >
+              <span className="brush">{THOUGHTS[t][0]}</span>
+              <span className="hand">{THOUGHTS[t][1]}</span>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
 

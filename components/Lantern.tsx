@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { motion, useMotionValue, useTransform } from "motion/react";
+import { useState } from "react";
 import { useTheme } from "@/lib/hooks";
 
 const TOP = 170;
@@ -26,28 +27,13 @@ const FRINGE = Array.from({ length: 15 }, (_, i) => i);
 export default function Lantern() {
   const { theme, toggle } = useTheme();
   const [pulling, setPulling] = useState(false);
-  const [drag, setDrag] = useState(0);
-  const start = useRef<number | null>(null);
+  const beadY = useMotionValue(0);
+  const cordD = useTransform(beadY, (v) => `M20 0 C19 30 21 60 20 ${84 + v}`);
 
   const pull = () => {
     setPulling(true);
     window.setTimeout(() => setPulling(false), 1000);
     window.setTimeout(toggle, 160);
-  };
-
-  const onDown = (e: React.PointerEvent) => {
-    (e.currentTarget as Element).setPointerCapture(e.pointerId);
-    start.current = e.clientY;
-  };
-  const onMove = (e: React.PointerEvent) => {
-    if (start.current === null) return;
-    setDrag(Math.max(0, Math.min(70, e.clientY - start.current)));
-  };
-  const onUp = () => {
-    if (start.current === null) return;
-    start.current = null;
-    if (drag > 26) pull();
-    setDrag(0);
   };
 
   return (
@@ -163,7 +149,7 @@ export default function Lantern() {
         </button>
 
         {/* pull-cord with a wooden bead */}
-        <div className="pullcord" style={{ ["--drag" as string]: `${drag}px` }}>
+        <div className="pullcord">
           <svg width="40" height="160" viewBox="0 0 40 160" aria-hidden>
             <defs>
               <radialGradient id="bead" cx="0.35" cy="0.3" r="0.75">
@@ -172,15 +158,19 @@ export default function Lantern() {
                 <stop offset="1" stopColor="#5A3518" />
               </radialGradient>
             </defs>
-            <path d={`M20 0 C19 30 21 60 20 ${84 + drag}`} stroke="#4A4A4A" strokeWidth="1.2" fill="none" />
+            <motion.path d={cordD} stroke="#4A4A4A" strokeWidth="1.2" fill="none" />
           </svg>
-          <button
+          <motion.button
             className="bead"
-            style={{ transform: `translateY(${drag}px)`, transition: drag ? "none" : undefined }}
-            onPointerDown={onDown}
-            onPointerMove={onMove}
-            onPointerUp={onUp}
-            onPointerCancel={onUp}
+            style={{ y: beadY }}
+            drag="y"
+            dragConstraints={{ top: 0, bottom: 70 }}
+            dragElastic={0.12}
+            dragSnapToOrigin
+            dragTransition={{ bounceStiffness: 700, bounceDamping: 14 }}
+            whileHover={{ scale: 1.12 }}
+            whileTap={{ scale: 0.92 }}
+            onDragEnd={() => beadY.get() > 26 && pull()}
             onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && pull()}
             aria-label="Pull the cord to switch day and night"
           >
@@ -189,7 +179,7 @@ export default function Lantern() {
               <path d="M5 8 Q11 6 17 9 M4.5 12 Q11 10 17.5 13" stroke="#5A3518" strokeOpacity="0.4" strokeWidth="0.7" fill="none" />
               <ellipse cx="8" cy="7" rx="3" ry="1.8" fill="#fff" fillOpacity="0.45" />
             </svg>
-          </button>
+          </motion.button>
           <span className="hand pull-hint" aria-hidden>
             pull ↓
           </span>

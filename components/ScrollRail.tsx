@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { SECTIONS } from "@/lib/content";
 
@@ -34,7 +35,8 @@ export default function ScrollRail() {
     <aside className={`rail ${active >= 0 ? "is-visible" : ""}`} aria-label="Sections">
       {SECTIONS.map((s, i) => (
         <a key={s.id} href={`#${s.id}`} className={`rail-stop ${i === active ? "is-active" : ""} ${i < active ? "is-past" : ""}`}>
-          <span className="brush">{s.k}</span>
+          {i === active && <motion.span layoutId="rail-on" className="rail-on" aria-hidden />}
+          <span className="brush rail-k">{s.k}</span>
           <span className="rail-label mono">{s.label}</span>
         </a>
       ))}

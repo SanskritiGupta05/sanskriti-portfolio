@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { EMAIL } from "@/lib/content";
 import { useCopy, useTheme } from "@/lib/hooks";
@@ -18,6 +19,7 @@ export default function BottomNav() {
   const [compact, setCompact] = useState(false);
   const [active, setActive] = useState("");
   const [sound, setSound] = useState(false);
+  const [tip, setTip] = useState<string | null>(null);
 
   useEffect(() => {
     let last = window.scrollY;
@@ -54,12 +56,30 @@ export default function BottomNav() {
       <ul>
         {LINKS.map((l) => (
           <li key={l.label}>
-            <a href={l.href} className={active === l.href.slice(1) ? "is-active" : ""}>
+            <a
+              href={l.href}
+              className={active === l.href.slice(1) ? "is-active" : ""}
+              onPointerEnter={() => setTip(l.label)}
+              onPointerLeave={() => setTip(null)}
+              onFocus={() => setTip(l.label)}
+              onBlur={() => setTip(null)}
+            >
+              {active === l.href.slice(1) && <motion.span layoutId="nav-pill" className="bnav-pill" aria-hidden />}
               <span className="brush">{l.k}</span>
               <span className="bnav-label">{l.label}</span>
-              <span className="bnav-tip" role="tooltip">
-                <b className="brush">{l.k}</b> {l.meaning}
-              </span>
+              <AnimatePresence>
+                {tip === l.label && (
+                  <motion.span
+                    className="bnav-tip"
+                    role="tooltip"
+                    initial={{ opacity: 0, y: 8, scale: 0.92, x: "-50%" }}
+                    animate={{ opacity: 1, y: 0, scale: 1, x: "-50%" }}
+                    exit={{ opacity: 0, y: 4, scale: 0.96, x: "-50%", transition: { duration: 0.12 } }}
+                  >
+                    <b className="brush">{l.k}</b> {l.meaning}
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </a>
           </li>
         ))}

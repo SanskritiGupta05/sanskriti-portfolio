@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { INTERESTS } from "@/lib/content";
 import { seeded } from "@/lib/draw";
@@ -319,6 +320,7 @@ export default function Gachapon() {
       <div className="tray" role="group" aria-label="Pick an interest">
         {INTERESTS.map((x, i) => (
           <button key={x.name} className={`capsule-chip ${i === idx ? "is-on" : ""}`} onClick={() => pick(i)}>
+            {i === idx && <motion.span layoutId="chip-on" className="chip-on" aria-hidden />}
             <svg width="22" height="22" viewBox="-20 -20 40 40" aria-hidden>
               <Capsule tone={INTEREST_SHELL[i]} id={`chip${i}`} />
             </svg>

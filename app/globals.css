@@ -830,6 +830,43 @@ img.logo { display: inline-block; height: 1em; width: auto; vertical-align: -0.1
 .footer-bar { flex-wrap: wrap; }
 .footer-tm { flex-basis: 100%; opacity: 0.5 !important; font-size: 10px; }
 
+/* ============ motion (spring) layer ============ */
+.bnav ul a.is-active { background: transparent !important; box-shadow: none !important; transform: none !important; }
+.bnav ul a > span:not(.bnav-pill):not(.bnav-tip) { position: relative; z-index: 1; }
+.bnav-pill { position: absolute; inset: 0; z-index: 0; border-radius: 999px; background: var(--nav-fg);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 3px 0 0 color-mix(in srgb, var(--nav-fg) 62%, #000), 0 6px 10px -3px rgba(0,0,0,0.3); }
+[data-theme="night"] .bnav-pill { box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 3px 0 0 color-mix(in srgb, var(--nav-fg) 62%, #000), 0 6px 10px -3px rgba(0,0,0,0.3); }
+.bnav-tip { opacity: 1; transform: none; transition: none; left: 50%; }
+.bnav ul a:hover .bnav-tip, .bnav ul a:focus-visible .bnav-tip { opacity: 1; transform: none; }
+
+/* deck with motion */
+.deck-slot { position: absolute; left: 0; top: 36px; width: 100%; height: 380px; transform-style: preserve-3d; }
+.deck-slot .deck-card { position: absolute; inset: 0; top: 0; transform: none; cursor: default; transition: background-color 0.45s ease; animation: none; }
+.deck-slot .deck-card.front { cursor: grab; }
+.deck-slot .deck-card { display: block; padding: 0; background-color: var(--card); background-image: var(--washi); }
+.deck-slot .back-1 { background-color: #b8322a; background-image: none; }
+.deck-slot .back-2 { background-color: var(--card2); background-image: none; }
+.deck-face { position: absolute; inset: 0; display: flex; gap: 26px; padding: 24px 44px; transition: opacity 0.3s ease; }
+.deck-card.back .deck-face { opacity: 0; pointer-events: none; }
+.deck-card .deck-back-num { opacity: 0; transition: opacity 0.3s ease; }
+.deck-card.back .deck-back-num { opacity: 0.8; }
+.deck { perspective: 1600px; }
+.pager-dot { position: relative; isolation: isolate; }
+.pager-dot.is-on { background: var(--white) !important; color: var(--paper); }
+.pager-on { position: absolute; inset: -1px; z-index: -1; border-radius: 4px; background: var(--ink); box-shadow: 0 3px 0 0 color-mix(in srgb, var(--ink) 70%, #000); }
+.pager-k { position: relative; }
+
+/* rail + capsule chip shared indicators */
+.rail-stop.is-active { background: transparent; }
+.rail-on { position: absolute; inset: 0; border-radius: 4px; background: #fff; }
+.rail-k { position: relative; }
+.rail-stop.is-active .rail-k { color: #000; }
+.capsule-chip { position: relative; isolation: isolate; }
+.capsule-chip.is-on { background: var(--white) !important; color: var(--paper); }
+.capsule-chip > *:not(.chip-on) { position: relative; }
+.chip-on { position: absolute; inset: -1px; z-index: -1; border-radius: 99px; background: var(--ink); box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 3px 0 0 color-mix(in srgb, var(--ink) 70%, #000); }
+.bead { transition: none; }
+
 /* ============ responsive ============ */
 @media (max-width: 1180px) {
   .lantern-wrap { left: auto; right: 8px; transform: scale(0.62); transform-origin: top right; }
@@ -864,6 +901,8 @@ img.logo { display: inline-block; height: 1em; width: auto; vertical-align: -0.1
   .deck { height: 680px; }
   .deck-card { height: 620px; }
   .front { flex-direction: column; gap: 16px; padding: 20px; }
+  .deck-slot { height: 620px; }
+  .deck-face { flex-direction: column; gap: 16px; padding: 20px; }
   .deck-thumb-wrap { flex: 0 0 220px; }
   .deck-fold, .tategaki, .eyelet { display: none; }
   .deck-text { padding-right: 0; }

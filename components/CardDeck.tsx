@@ -1,5 +1,6 @@
 "use client";
 
+import { animate, motion, useMotionValue, useTransform, type MotionValue, type PanInfo } from "motion/react";
 import { useCallback, useRef, useState } from "react";
 import { FEATURED } from "@/lib/content";
 import { ProjectPoster } from "./Covers";
@@ -39,41 +40,110 @@ function Cord() {
   );
 }
 
+// resting place of each stack position (front, middle, back)
+const POS = [
+  { x: 0, y: 0, rotate: 0, z: 3 },
+  { x: -8, y: -4, rotate: 2.5, z: 2 },
+  { x: 26, y: -8, rotate: -4, z: 1 },
+];
+
+function Card({ i, pos, x, onDragEnd }: { i: number; pos: number; x: MotionValue<number>; onDragEnd: (e: unknown, info: PanInfo) => void }) {
+  const p = FEATURED[i];
+  const rotate = useTransform(x, [-420, 0, 420], [-14, 0, 14]);
+  const front = pos === 0;
+  const at = POS[pos];
+  return (
+    <motion.div
+      className="deck-slot"
+      initial={false}
+      animate={{ x: at.x, y: at.y, rotate: at.rotate, rotateX: 8, rotateY: -6 }}
+      style={{ zIndex: at.z }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    >
+      <motion.article
+        className={`deck-card ${front ? "front" : `back back-${pos}`}`}
+        style={{ x, rotate }}
+        drag={front ? "x" : false}
+        dragMomentum={false}
+        dragElastic={0.9}
+        onDragEnd={onDragEnd}
+        whileDrag={{ scale: 1.02, cursor: "grabbing" }}
+        aria-hidden={!front}
+      >
+        <span className="eyelet" aria-hidden />
+        <div className="deck-face">
+          <div className="deck-thumb-wrap">
+            <ProjectPoster i={i} />
+          </div>
+          <span className="deck-fold" aria-hidden />
+          <div className="deck-text">
+            <p className="deck-top">
+              <span className="min red">{p.num} / 参</span>
+              <span className="mono">EST. {p.year}</span>
+            </p>
+            <h3 className="min" style={p.title.length > 9 ? { fontSize: 27 } : undefined}>
+              {p.title}
+            </h3>
+            <p className="deck-desc">{p.description}</p>
+            <dl className="deck-meta mono">
+              {p.meta.map(([a, b]) => (
+                <div key={a}>
+                  <dt>{a}</dt>
+                  <dd>{b}</dd>
+                </div>
+              ))}
+            </dl>
+            <a href={p.href} className="deck-read mono" tabIndex={front ? 0 : -1}>
+              read the case study <span>→</span>
+            </a>
+          </div>
+          <p className="tategaki brush" aria-hidden>
+            {p.katakana}
+          </p>
+          <span className="seal deck-seal brush" aria-hidden>
+            {p.num}
+          </span>
+        </div>
+        <span className="brush deck-back-num" aria-hidden>
+          {p.num}
+        </span>
+      </motion.article>
+    </motion.div>
+  );
+}
+
 export default function CardDeck() {
   const [order, setOrder] = useState([0, 1, 2]);
-  const [drag, setDrag] = useState({ x: 0, y: 0, active: false });
-  const [flying, setFlying] = useState(false);
-  const start = useRef({ x: 0, y: 0 });
+  const busy = useRef(false);
+  const x0 = useMotionValue(0);
+  const x1 = useMotionValue(0);
+  const x2 = useMotionValue(0);
+  const xs = [x0, x1, x2];
 
-  const next = useCallback((dir = 1) => {
-    setFlying(true);
-    window.setTimeout(() => {
-      setOrder((o) => (dir > 0 ? [...o.slice(1), o[0]] : [o[2], o[0], o[1]]));
-      setFlying(false);
-      setDrag({ x: 0, y: 0, active: false });
-    }, 380);
-  }, []);
+  /** Throw the front card off (dir ±1), then let it swoop back in behind the stack. */
+  const toss = useCallback(
+    (dir: number, velocity = 0) => {
+      if (busy.current) return;
+      busy.current = true;
+      const mv = [x0, x1, x2][order[0]];
+      animate(mv, dir * 900, { type: "spring", stiffness: 220, damping: 28, velocity }).then(() => {
+        setOrder((o) => [...o.slice(1), o[0]]);
+        animate(mv, 0, { type: "spring", stiffness: 260, damping: 30 }).then(() => {
+          busy.current = false;
+        });
+      });
+    },
+    [order, x0, x1, x2],
+  );
 
-  const onDown = (e: React.PointerEvent) => {
-    if ((e.target as HTMLElement).closest("a,button")) return;
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-    start.current = { x: e.clientX, y: e.clientY };
-    setDrag({ x: 0, y: 0, active: true });
-  };
-  const onMove = (e: React.PointerEvent) => {
-    if (!drag.active) return;
-    setDrag({ x: e.clientX - start.current.x, y: e.clientY - start.current.y, active: true });
-  };
-  const onUp = () => {
-    if (!drag.active) return;
-    if (Math.abs(drag.x) > 120) next(1);
-    else setDrag({ x: 0, y: 0, active: false });
+  const back = () => setOrder((o) => [o[2], o[0], o[1]]);
+
+  const onDragEnd = (_: unknown, info: PanInfo) => {
+    if (Math.abs(info.offset.x) > 110 || Math.abs(info.velocity.x) > 500) toss(Math.sign(info.offset.x || info.velocity.x), info.velocity.x);
+    else animate([x0, x1, x2][order[0]], 0, { type: "spring", stiffness: 500, damping: 30 });
   };
 
   const front = FEATURED[order[0]];
-  const frontStyle: React.CSSProperties = flying
-    ? { transform: `translate(${drag.x >= 0 ? 760 : -760}px, ${drag.y - 40}px) rotate(${drag.x >= 0 ? 18 : -18}deg)`, opacity: 0 }
-    : { transform: `rotateX(${drag.active ? 0 : 8}deg) rotateY(${drag.active ? 0 : -6}deg) translate(${drag.x}px, ${drag.y * 0.3}px) rotate(${drag.x * 0.03}deg)` };
 
   return (
     <section className="col section" id="work">
@@ -95,63 +165,14 @@ export default function CardDeck() {
         aria-roledescription="card deck"
         aria-label={`${front.title} — card ${order[0] + 1} of 3. Use arrow keys to shuffle.`}
         onKeyDown={(e) => {
-          if (e.key === "ArrowRight") next(1);
-          if (e.key === "ArrowLeft") next(-1);
+          if (e.key === "ArrowRight") toss(1);
+          if (e.key === "ArrowLeft") back();
         }}
       >
         <Cord />
-        {[2, 1].map((pos) => {
-          const p = FEATURED[order[pos]];
-          return (
-            <div key={p.title} className={`deck-card back back-${pos}`} aria-hidden>
-              <span className="brush deck-back-num">{p.num}</span>
-            </div>
-          );
-        })}
-        <article
-          key={front.title}
-          className={`deck-card front ${drag.active ? "is-dragging" : ""}`}
-          style={frontStyle}
-          onPointerDown={onDown}
-          onPointerMove={onMove}
-          onPointerUp={onUp}
-          onPointerCancel={onUp}
-        >
-          <span className="eyelet" aria-hidden />
-          <div className="deck-thumb-wrap">
-            <ProjectPoster i={order[0]} />
-          </div>
-          <span className="deck-fold" aria-hidden />
-          <div className="deck-text">
-            <p className="deck-top">
-              <span className="min red">
-                {front.num} / 参
-              </span>
-              <span className="mono">EST. {front.year}</span>
-            </p>
-            <h3 className="min" style={front.title.length > 9 ? { fontSize: 27 } : undefined}>
-              {front.title}
-            </h3>
-            <p className="deck-desc">{front.description}</p>
-            <dl className="deck-meta mono">
-              {front.meta.map(([a, b]) => (
-                <div key={a}>
-                  <dt>{a}</dt>
-                  <dd>{b}</dd>
-                </div>
-              ))}
-            </dl>
-            <a href={front.href} className="deck-read mono">
-              read the case study <span>→</span>
-            </a>
-          </div>
-          <p className="tategaki brush" aria-hidden>
-            {front.katakana}
-          </p>
-          <span className="seal deck-seal brush" aria-hidden>
-            {front.num}
-          </span>
-        </article>
+        {FEATURED.map((_, i) => (
+          <Card key={i} i={i} pos={order.indexOf(i)} x={xs[i]} onDragEnd={onDragEnd} />
+        ))}
       </div>
       <div className="pager">
         {FEATURED.map((p, i) => (
@@ -165,7 +186,8 @@ export default function CardDeck() {
               setOrder([...order.slice(idx), ...order.slice(0, idx)]);
             }}
           >
-            {p.num}
+            {order[0] === i && <motion.span layoutId="pager-on" className="pager-on" aria-hidden />}
+            <span className="pager-k">{p.num}</span>
           </button>
         ))}
         <span className="mono pager-hint">drag the card · ← →</span>

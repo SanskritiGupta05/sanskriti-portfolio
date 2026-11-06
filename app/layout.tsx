@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Mono, Inter, Klee_One, Shippori_Mincho, Yuji_Boku, Zen_Kaku_Gothic_New } from "next/font/google";
 import { WASHI } from "@/lib/draw";
+import MotionProvider from "@/components/MotionProvider";
 import "./globals.css";
 
 const mincho = Shippori_Mincho({ weight: ["500", "700"], subsets: ["latin"], variable: "--f-min", preload: false, display: "swap" });
@@ -28,7 +29,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body style={{ ["--washi" as string]: WASHI }}>{children}</body>
+      <body style={{ ["--washi" as string]: WASHI }}>
+        <MotionProvider>{children}</MotionProvider>
+      </body>
     </html>
   );
 }
