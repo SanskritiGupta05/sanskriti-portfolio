@@ -87,6 +87,16 @@ text-shadow: 0 0 .6px rgba(0,0,0,.45), 0 0 1.4px rgba(0,0,0,.12);
 - "Minimal" means aesthetic and not maximalist. It never means less content or bare pages.
 - Keep this file updated after every change.
 
+## 5b. Tech stack
+
+- **Framework:** Next.js (React). Set it up when we start building the first section.
+- **Styling: Tailwind CSS. No hand-written vanilla CSS.** Put the colours, fonts, the 5 type sizes and the Soft ink shadow in the Tailwind theme as tokens, so the size rules are enforced in one place.
+- **Use libraries freely** instead of hand-rolling things:
+  - **Motion (Framer Motion)** for animation and page transitions.
+  - **Three.js** (via React Three Fiber) for 3D moments, where it adds something.
+  - Others as they fit, such as Lenis for smooth scrolling and GSAP for scroll-driven sequences.
+- The HTML files in `explorations/` are quick throwaway demos and stay plain HTML. They are not part of the site.
+
 ## 6. References to review
 
 Sanskriti is going through these. Note the likes and dislikes in section 7.
@@ -169,3 +179,5 @@ _Not started. Sanskriti will describe each section; record its content and decis
 - **2026-11-13:** Gathered minimal and Japanese website references (section 6). Created this context file.
 - **2026-11-13:** Sanskriti clarified that "minimal" means aesthetic and restrained, not low-content. Swapped plain text-only sites for aesthetic minimal ones.
 - **2026-11-13:** Pushed this file and the type demo (`explorations/type-demo.html`) to GitHub as a backup.
+- **2026-11-13:** Made `explorations/references.html`, a browsable page of all the section 6 links, built from this file. Kept local only (gitignored); section 6 is the backed-up copy.
+- **2026-11-13:** Stack decided: Next.js + Tailwind (no vanilla CSS), with libraries such as Motion and Three.js used freely (section 5b).
