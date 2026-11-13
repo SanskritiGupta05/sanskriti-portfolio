@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Type Direction Demo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Cutive+Mono&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/redaction@5.1.0/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/redaction-20@5.1.0/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/redaction-35@5.1.0/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/redaction-50@5.1.0/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/redaction-70@5.1.0/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/redaction-100@5.1.0/index.css">
+<style>
+  :root {
+    --paper: #ffffff;
+    --ink: #1c1b19;
+    --body-ink: #2b2a28;
+    --muted: #6b6b6b;
+    --rule: #e2e2e2;
+    /* the whole type system: 2 heading sizes, 3 body sizes */
+    --h1: 72px;
+    --h2: 36px;
+    --b-lg: 20px;
+    --b: 16px;
+    --b-sm: 13px;
+    --heading: 'Redaction', Georgia, serif;
+    --glitch: 'Redaction 50', 'Redaction', Georgia, serif;
+    --body-font: 'Courier New', Courier, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--body-font); font-size: var(--b); line-height: 1.6; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 48px 24px 96px; }
+
+  /* ---- controls ---- */
+  .controls { position: sticky; top: 0; z-index: 2; background: var(--paper); border-bottom: 1px solid var(--rule); padding: 12px 0; margin-bottom: 48px; display: flex; flex-wrap: wrap; gap: 12px 32px; font-family: 'Courier Prime', monospace; }
+  .control { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .control > span { font-size: var(--b-sm); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .control button { font: inherit; font-size: var(--b-sm); text-transform: uppercase; letter-spacing: .06em; background: none; border: 1px solid var(--ink); color: var(--ink); padding: 5px 10px; cursor: pointer; }
+  .control button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+  /* ---- type roles ---- */
+  .h1, .h2 { font-family: var(--heading); font-weight: 400; color: var(--ink); }
+  .h1 { font-size: var(--h1); line-height: 1.02; letter-spacing: -.01em; margin-bottom: 24px; }
+  .h2 { font-size: var(--h2); line-height: 1.1; margin-bottom: 12px; }
+  /* the highlight: a worn cut of the same serif, used instead of italics */
+  .glitch { font-family: var(--glitch); }
+  .label { font-size: var(--b-sm); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); display: block; margin-bottom: 8px; }
+  .big { font-size: var(--b-lg); max-width: 46ch; margin-bottom: 56px; }
+
+  /* ---- vintage body: printed ink on paper ---- */
+  .body-text { color: var(--body-ink); }
+  /* soft: no distortion at all, just the slightly blurred, inky edge of a scanned page */
+  body[data-ink="soft"] .body-text { color: #2f2e2c; text-shadow: 0 0 .6px rgba(0,0,0,.45), 0 0 1.4px rgba(0,0,0,.12); }
+  body[data-ink="light"] .body-text { filter: url(#ink-light); text-shadow: 0 0 .5px rgba(0,0,0,.35); }
+  body[data-ink="strong"] .body-text { filter: url(#ink-strong); text-shadow: 0 0 .8px rgba(0,0,0,.55); }
+  /* Courier New is a hairline font: give it a touch more ink so it reads like the printed reference */
+  body[data-font="new"] .body-text { -webkit-text-stroke: .25px var(--body-ink); }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-bottom: 64px; }
+  p + p { margin-top: 12px; }
+  .row { display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid var(--rule); padding: 10px 0; }
+  .row .label { margin: 0; }
+  .passage { max-width: 62ch; margin-bottom: 64px; }
+  .passage p { text-indent: 2ch; }
+  .passage p:first-of-type { text-indent: 0; }
+  .note { font-size: var(--b-sm); color: var(--muted); border-top: 1px solid var(--ink); padding-top: 16px; }
+  .note p + p { margin-top: 6px; }
+  @media (max-width: 720px) {
+    :root { --h1: 48px; --h2: 28px; --b-lg: 18px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body data-ink="soft" data-font="new">
+<!-- ink filters: roughen glyph edges slightly, like type pressed into paper -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="ink-light" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.6" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="ink-strong" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" seed="7" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.9" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+    <feTurbulence type="fractalNoise" baseFrequency="2.2" numOctaves="1" seed="11" result="speck"/>
+    <feColorMatrix in="speck" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.3 1.55" result="holes"/>
+    <feComposite in="rough" in2="holes" operator="in"/>
+  </filter>
+</svg>
+
+<div class="wrap">
+  <div class="controls">
+    <div class="control" role="group" aria-label="Highlight wear">
+      <span>Highlight wear</span>
+      <button data-wear="20">20</button>
+      <button data-wear="35">35</button>
+      <button data-wear="50" aria-pressed="true">50</button>
+      <button data-wear="70">70</button>
+      <button data-wear="100">100</button>
+    </div>
+    <div class="control" role="group" aria-label="Body ink">
+      <span>Body ink</span>
+      <button data-ink="off">Clean</button>
+      <button data-ink="soft" aria-pressed="true">Soft</button>
+      <button data-ink="light">Printed</button>
+      <button data-ink="strong">Worn</button>
+    </div>
+    <div class="control" role="group" aria-label="Body font">
+      <span>Body font</span>
+      <button data-font="new" aria-pressed="true">Courier New</button>
+      <button data-font="cutive">Cutive Mono</button>
+      <button data-font="prime">Courier Prime</button>
+    </div>
+  </div>
+
+  <span class="label">Hello, I'm</span>
+  <h1 class="h1">Sanskriti, a designer of <span class="glitch">small, useful</span> things</h1>
+  <p class="big body-text">I design products, draw a lot, and build half my ideas in code. If I don't know something, I learn it.</p>
+
+  <div class="grid">
+    <div>
+      <span class="label">01 · Selected work</span>
+      <h2 class="h2">Making a crowded app feel <span class="glitch">calm</span></h2>
+      <div class="body-text">
+        <p>A redesign of a learning app used by thousands of students every day. Fewer screens, clearer cards, and a design system the team <span class="glitch">still uses</span>.</p>
+        <p>Read the case study →</p>
+      </div>
+    </div>
+    <div>
+      <span class="label">02 · Off the clock</span>
+      <h2 class="h2">Ramen, clay and <span class="glitch">sketchbooks</span></h2>
+      <div class="body-text">
+        <div class="row"><span>Design meetups</span><span class="label">Monthly</span></div>
+        <div class="row"><span>Sketching</span><span class="label">Daily</span></div>
+        <div class="row"><span>Clay art</span><span class="label">Weekends</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="passage body-text">
+    <span class="label">03 · A longer read</span>
+    <p>My mind never stops thinking. It's a boon and a pain. Most days it means I notice the small things first: a label that says too much, a button that hides, a screen that asks for patience it hasn't earned.</p>
+    <p>I like design that feels <span class="glitch">lived in</span>, the way a well-used notebook does. Clear enough to trust, a little imperfect, and always open to a new idea.</p>
+  </div>
+
+  <div class="note">
+    <p>Headings: Redaction (clean). Highlights: a worn cut of Redaction, used in place of italics, in headings and inside body text.</p>
+    <p>Body: Courier New (or Cutive Mono, a light old-typewriter font). Soft adds only a faint ink blur. Printed and Worn also roughen the letter edges. The words stay real text, so they can be selected and read by screen readers.</p>
+    <p>Sizes: headings 72 / 36, body 20 / 16 / 13.</p>
+  </div>
+</div>
+
+<script>
+  const root = document.documentElement;
+  function group(attr, onPick) {
+    const btns = document.querySelectorAll(`.controls button[data-${attr}]`);
+    btns.forEach(b => b.addEventListener('click', () => {
+      btns.forEach(x => x.setAttribute('aria-pressed', x === b));
+      onPick(b.dataset[attr]);
+    }));
+  }
+  group('wear', v => root.style.setProperty('--glitch', `'Redaction ${v}', 'Redaction', Georgia, serif`));
+  group('ink', v => document.body.dataset.ink = v);
+  const bodyFonts = {
+    new: "'Courier New', Courier, monospace",
+    cutive: "'Cutive Mono', 'Courier New', monospace",
+    prime: "'Courier Prime', 'Courier New', monospace",
+  };
+  group('font', v => {
+    document.body.dataset.font = v;
+    root.style.setProperty('--body-font', bodyFonts[v]);
+  });
+</script>
+</body>
+</html>

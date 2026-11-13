@@ -168,3 +168,4 @@ _Not started. Sanskriti will describe each section; record its content and decis
 - **2026-11-13:** Locked the type system: Redaction headings, Redaction 50 for highlights, Courier New body with Soft ink, white background, sizes 72/36 and 20/16/13. Demo saved in `explorations/type-demo.html`.
 - **2026-11-13:** Gathered minimal and Japanese website references (section 6). Created this context file.
 - **2026-11-13:** Sanskriti clarified that "minimal" means aesthetic and restrained, not low-content. Swapped plain text-only sites for aesthetic minimal ones.
+- **2026-11-13:** Pushed this file and the type demo (`explorations/type-demo.html`) to GitHub as a backup.
