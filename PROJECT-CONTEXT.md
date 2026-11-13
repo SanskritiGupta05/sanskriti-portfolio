@@ -34,7 +34,7 @@ in any new Claude account or conversation.
 
 ### Colour
 - **Background:** plain white `#FFFFFF`. Not off-white or paper-coloured.
-- **Text ink:** `#1C1B19` (headings), `#2F2E2C` (body).
+- **Text ink:** `#1C1B19` (headings), `#2B2A28` (body).
 - **Muted grey (labels, captions):** `#6B6B6B`.
 - **Divider lines:** `#E2E2E2`.
 
@@ -43,7 +43,7 @@ in any new Claude account or conversation.
 |---|---|---|
 | Headings | **Redaction** (clean cut) | Simple serif |
 | Highlights | **Redaction 35** (worn/glitchy cut) | Used **instead of italics** to emphasise words, in headings and inside body text |
-| Body | **Courier New** + "Soft" ink | Vintage typewriter feel, like a scanned book page |
+| Body | **Courier New** + "Printed" ink | Vintage typewriter feel, like a scanned book page |
 
 **Size rules: max 2 heading sizes, max 3 body sizes. Never add a size outside this scale.**
 
@@ -57,11 +57,24 @@ in any new Claude account or conversation.
 
 Mobile (under 720px) scales H1 → 48px, H2 → 28px, body large → 18px.
 
-**Soft ink effect (body only):** no distortion, just a faint ink blur.
+**Printed ink effect (body only):** a gentle SVG filter that slightly roughens letter edges, plus a faint ink blur.
+It's subtle on purpose: the stronger versions looked too distorted.
+
+```html
+<!-- put once in the layout -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="ink-printed" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.6" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+```
 
 ```css
-color: #2f2e2c;
-text-shadow: 0 0 .6px rgba(0,0,0,.45), 0 0 1.4px rgba(0,0,0,.12);
+color: #2b2a28;
+filter: url(#ink-printed);
+text-shadow: 0 0 .5px rgba(0,0,0,.35);
+-webkit-text-stroke: .25px #2b2a28; /* Courier New is very thin; this adds a touch of ink */
 ```
 
 **Font sources:**
@@ -75,7 +88,7 @@ text-shadow: 0 0 .6px rgba(0,0,0,.45), 0 0 1.4px rgba(0,0,0,.12);
 - **The old version (Japanese black-and-white, washi paper, lantern day/night, mizuhiki cord):** fully deleted on 2026-11-13 from code, GitHub history and Figma. Don't bring it back unless Sanskriti asks.
 - **Instrument Serif:** rejected as overused.
 - **Other heading candidates shown:** Brygada 1918, Gambarino, Young Serif, Gloock. Redaction won.
-- **Body "Printed" and "Worn" ink effects** (SVG filters that roughen letter edges): too distorted. "Soft" won.
+- **Body "Worn" ink effect** and the first, stronger "Printed" version: too distorted. "Soft" (blur only) was briefly chosen, then replaced by the gentler "Printed".
 - **Courier Prime:** too clean and modern. **Cutive Mono** was the runner-up for the body font.
 
 ## 5. Working preferences
@@ -90,7 +103,7 @@ text-shadow: 0 0 .6px rgba(0,0,0,.45), 0 0 1.4px rgba(0,0,0,.12);
 ## 5b. Tech stack
 
 - **Framework:** Next.js (React). Set it up when we start building the first section.
-- **Styling: Tailwind CSS. No hand-written vanilla CSS.** Put the colours, fonts, the 5 type sizes and the Soft ink shadow in the Tailwind theme as tokens, so the size rules are enforced in one place.
+- **Styling: Tailwind CSS. No hand-written vanilla CSS.** Put the colours, fonts, the 5 type sizes and the Printed ink styles in the Tailwind theme (the SVG filter lives once in the root layout) as tokens, so the size rules are enforced in one place.
 - **Use libraries freely** instead of hand-rolling things:
   - **Motion (Framer Motion)** for animation and page transitions.
   - **Three.js** (via React Three Fiber) for 3D moments, where it adds something.
@@ -182,3 +195,4 @@ _Not started. Sanskriti will describe each section; record its content and decis
 - **2026-11-13:** Made `explorations/references.html`, a browsable page of all the section 6 links, built from this file. Kept local only (gitignored); section 6 is the backed-up copy.
 - **2026-11-13:** Stack decided: Next.js + Tailwind (no vanilla CSS), with libraries such as Motion and Three.js used freely (section 5b).
 - **2026-11-13:** Highlight cut changed from Redaction 50 to **Redaction 35** (less broken, Sanskriti preferred it).
+- **2026-11-13:** Body ink changed from Soft to **Printed** (gentle edge roughening, displacement scale 0.6).
