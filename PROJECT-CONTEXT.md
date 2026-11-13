@@ -42,7 +42,7 @@ in any new Claude account or conversation.
 | Role | Font | Notes |
 |---|---|---|
 | Headings | **Redaction** (clean cut) | Simple serif |
-| Highlights | **Redaction 50** (worn/glitchy cut) | Used **instead of italics** to emphasise words, in headings and inside body text |
+| Highlights | **Redaction 35** (worn/glitchy cut) | Used **instead of italics** to emphasise words, in headings and inside body text |
 | Body | **Courier New** + "Soft" ink | Vintage typewriter feel, like a scanned book page |
 
 **Size rules: max 2 heading sizes, max 3 body sizes. Never add a size outside this scale.**
@@ -65,7 +65,7 @@ text-shadow: 0 0 .6px rgba(0,0,0,.45), 0 0 1.4px rgba(0,0,0,.12);
 ```
 
 **Font sources:**
-- Redaction: `https://cdn.jsdelivr.net/npm/@fontsource/redaction@5.1.0/index.css` and `.../@fontsource/redaction-50@5.1.0/index.css`. The other worn cuts are 20, 35, 70 and 100.
+- Redaction: `https://cdn.jsdelivr.net/npm/@fontsource/redaction@5.1.0/index.css` and `.../@fontsource/redaction-35@5.1.0/index.css`. The other worn cuts are 20, 50, 70 and 100.
 - Courier New: a system font on Mac and Windows. Use `'Courier New', Courier, monospace`.
 
 **Labels style:** body small, uppercase, letter-spacing 0.08em, muted grey.
@@ -181,3 +181,4 @@ _Not started. Sanskriti will describe each section; record its content and decis
 - **2026-11-13:** Pushed this file and the type demo (`explorations/type-demo.html`) to GitHub as a backup.
 - **2026-11-13:** Made `explorations/references.html`, a browsable page of all the section 6 links, built from this file. Kept local only (gitignored); section 6 is the backed-up copy.
 - **2026-11-13:** Stack decided: Next.js + Tailwind (no vanilla CSS), with libraries such as Motion and Three.js used freely (section 5b).
+- **2026-11-13:** Highlight cut changed from Redaction 50 to **Redaction 35** (less broken, Sanskriti preferred it).
