@@ -206,7 +206,7 @@ function driftSteam(g, f) {
 }
 
 function sparkle(g, x, y, r, on) {
-  if (!on) { set(g, x, y, 'G'); return; }
+  if (!on) return; // resting sparkles disappear completely (no leftover dot)
   for (let i = 1; i <= r; i++) pts(g, [[x + i, y], [x - i, y], [x, y + i], [x, y - i]], 'G');
 }
 
@@ -343,7 +343,6 @@ function blinkIn(g, boxes, lidRow, keep = 'k') {
 function twinkle(g, boxes, f) {
   const b = boxes[f % boxes.length];
   for (let y = b.y0; y <= b.y1; y++) for (let x = b.x0; x <= b.x1; x++) if (get(g, x, y) !== '.' && !HAIR_CHARS.includes(get(g, x, y))) set(g, x, y, '.');
-  set(g, b.c[0], b.c[1], 'G');
 }
 
 // the steam curl rises a pixel and settles back
@@ -525,12 +524,47 @@ function penStroke(g, f) {
   pts(g, MARKS.slice(0, Math.floor((f % 16) / 4) + 1), 'X');
 }
 
+// ---- life for the drawing pose ----
+
+// move a block of rows up by one pixel (the bottom row of the block stays put, so nothing tears)
+function liftRows(g, x0, x1, y0, y1) {
+  for (let y = y0; y < y1; y++) for (let x = x0; x <= x1; x++) g[y][x] = g[y + 1][x];
+}
+
+// happy closed eyes (^ ^): she smiles at her drawing now and then
+function happyEyes(g) {
+  for (const b of DRAW_EYES) {
+    for (let y = b.y0; y <= b.y1; y++) for (let x = b.x0; x <= b.x1; x++) {
+      const c = get(g, x, y);
+      if ('anbqguvxPTKI'.includes(c)) set(g, x, y, 'e');
+    }
+    const cx = Math.round((b.x0 + b.x1) / 2), y = 42;
+    for (const [dx, dy] of [[-3, 2], [-2, 1], [-1, 0], [0, 0], [1, 0], [2, 1], [3, 2]]) rect(g, cx + dx, y + dy, 1, 2, 'a');
+  }
+}
+
+// wavy steam: each pixel sways sideways with height and time, and the curl drifts up
+function curlSteam(g, box, f) {
+  const steam = [];
+  for (let y = box.y0; y <= box.y1; y++) for (let x = box.x0; x <= box.x1; x++) if (box.chars.includes(get(g, x, y))) { steam.push([x, y, get(g, x, y)]); set(g, x, y, '.'); }
+  const rise = f % 4 < 2 ? 0 : 1;
+  steam.forEach(([x, y, c]) => set(g, x + Math.round(Math.sin(y * 0.8 + f * 0.6)), y - rise, c));
+}
+
+// timing (frames are 140 ms; the loop is 64 frames, about 9 s)
+const breathingIn = (f) => (f % 32) >= 10 && (f % 32) < 26;   // her head and shoulders lift for ~2 s of every ~4.5 s
+const catBreathingIn = (f) => ((f + 16) % 40) < 18;          // the cat breathes slower, out of step with her
+const smiling = (f) => (f % 64) >= 54;                        // a happy little pause once per loop
+
 function drawingFrame(f, blink) {
   const g = DRAWING.map((r) => [...r]);
-  if (blink) blinkIn(g, DRAW_EYES, 44);
-  penStroke(g, f);
-  riseSteam(g, DRAW_STEAM, f);
-  twinkle(g, DRAW_SPARKLES, f);
+  if (smiling(f)) happyEyes(g);
+  else if (blink) blinkIn(g, DRAW_EYES, 44);
+  if (!smiling(f)) penStroke(g, f); // she pauses her pen while she smiles
+  twinkle(g, DRAW_SPARKLES, f);      // before breathing, so the resting sparkle is fully inside its box
+  if (breathingIn(f)) liftRows(g, 20, 95, 0, 54);
+  if (catBreathingIn(f)) liftRows(g, 82, 97, 77, 88);
+  curlSteam(g, DRAW_STEAM, f);
   g.viewBox = '-0.01 -0.38 114.84 100.39';
   return g;
 }
@@ -642,7 +676,6 @@ function readingSparkles(g, f) {
   const off = f % 3; // one sparkle rests while the other two shine
   const b = READ_SPARKLES[off];
   for (let y = b.y0; y <= b.y1; y++) for (let x = b.x0; x <= b.x1; x++) if (get(g, x, y) !== '.' && !HAIR_CHARS.includes(get(g, x, y))) set(g, x, y, '.');
-  set(g, b.c[0], b.c[1], 'G');
 }
 
 // a page lifts from the right, arcs over the spine, and settles on the left
@@ -685,7 +718,7 @@ export const ACTIVITIES = {
   coffee: { label: 'sipping coffee', frames: 8, speed: 360 },
   reading: { label: 'reading', frames: 12, speed: 260 },
   ramen: { label: 'eating ramen', frames: 8, speed: 280 },
-  drawing: { label: 'drawing', frames: 16, speed: 140 },
+  drawing: { label: 'drawing', frames: 64, speed: 140 },
 };
 
 export function buildFrame(activity = 'coffee', f = 0, { blink = false } = {}) {

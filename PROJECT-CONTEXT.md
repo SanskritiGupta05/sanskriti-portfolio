@@ -337,7 +337,13 @@ Bracketed names point to the references in section 7.
 - **Known small issue:** a 1px dark mark stays beside the left eye when the eyes are closed. That's the hair edge in the reference.
 - **All four poses are exact copies of her references.** Any new pose should come from a new reference image, extracted the same way: find the art-pixel size, sample cell centres over the shared frame, map colours to the palette, and add new keys for new colours.
 - **Extraction tool:** `node assets/mascot/tools/extract.mjs <image.png> <cellX> <cellY> <originX> <originY> <cols> <rows> <out.json>`. It uses only Node built-ins. Read at the image's **native art-pixel size** (not 2×): Sanskriti wants the chunky pixel look.
-- **Drawing motion (2026-11-15):** Sanskriti's screen recording showed the old version looked static: the hand only bobbed up and down a pixel. **Now** her fist glides left and right in short writing strokes (`STROKE` offsets, 140 ms per frame), the pen cap redraws so it stays attached, and small pencil marks build up on the page, then reset. **Waiting on her feedback.** Other ideas not built yet: her breathing (head and shoulders), occasionally looking up and smiling, the cat breathing or twitching an ear, the steam curling.
+- **Drawing motion (2026-11-15):** Sanskriti's screen recording showed the old version looked static: the hand only bobbed up and down. Now the drawing pose (64 frames × 140 ms, about a 9 s loop) has:
+  - **Writing strokes:** her fist glides left and right (`STROKE`), the pen cap stays attached, and pencil marks build up on the page, then reset.
+  - **Breathing:** her head, hair and shoulders lift 1 px for about 2 s of every 4.5 s (rows 0–54, x 20–95; the bottom row stays put so nothing tears).
+  - **Smile:** once per loop she pauses her pen and smiles with happy closed eyes (^ ^) for about 1 s.
+  - **Cat breathing:** its back rises 1 px on a slower rhythm, out of step with her.
+  - **Wavy steam:** the curl from her mug sways side to side as it rises.
+  - **Blinks and sparkles:** she blinks at random, and resting sparkles disappear fully (no leftover dot) in every pose.
 - **Performance note:** on the real site, render the sprites to a `<canvas>` (or pre-render frames to PNG) instead of rebuilding SVG every tick.
 - **Ideas for later:** clay modelling, painting, rangoli, vibe coding on a laptop, at a design meetup; using her inside the stamp logo and the footer scene.
 - **Superseded:** v1 (40×40, glasses on her head) and v2 (64×64, hand-drawn) were replaced because she must look exactly like the reference.
@@ -363,3 +369,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-15:** Drawing pose re-read at 2× resolution: the sketchbook painting, cat and props now match the reference closely. Precise closed-eye blink, sparkles hide fully when resting, and a reusable extraction tool added (`assets/mascot/tools/extract.mjs`).
 - **2026-11-15:** Rolled the drawing pose back to the 1× version: Sanskriti prefers the chunkier 16-bit look over the sharper 2× read. The drawing hand motion is to be redone from her video. The extraction tool is kept.
 - **2026-11-15:** Drawing motion redone after Sanskriti's screen recording: short side-to-side writing strokes with marks appearing, instead of the hand bobbing up and down.
+- **2026-11-15:** Drawing pose brought to life: breathing, an occasional happy smile, the cat breathing, wavy steam. The resting-sparkle dot is removed in all poses.
