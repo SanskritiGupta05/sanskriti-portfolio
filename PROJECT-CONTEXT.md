@@ -318,6 +318,24 @@ Bracketed names point to the references in section 7.
 - Navigation: top bar, bottom dock, or command bar only?
 - Which reference ideas does she like or reject?
 
+## 8b. Assets
+
+### Mascot: pixel Sanskriti (v1, 2026-11-14)
+
+- **Source:** `assets/mascot/mascot.js` (no framework). It builds a 40×40 pixel sprite from simple shapes, so every pose stays consistent. `buildFrame(activity, frame, { blink })` returns a pixel grid, and `toSVG(grid, scale)` renders crisp SVG.
+- **Style reference:** a chibi pixel bust (big round head, 1px dark outline, warm palette), based on Sanskriti's photo:
+  - long, dark, wavy hair parted slightly left, with strands framing the face
+  - black glasses pushed up on her head
+  - warm brown skin and brown eyes, soft smile, pink blush
+  - red top under a cream ribbed jacket
+- **Activities** (she keeps changing what she's doing; auto mode cycles every ~6 s):
+  - **Ramen:** bowl with egg and nori, hands on the bowl. Chopsticks lift noodles to her open mouth with happy closed eyes, and steam curls rise beside her.
+  - **Drawing:** sketchbook with a spiral binding. A Mount Fuji doodle appears stroke by stroke while the pencil moves, and her eyes look down.
+  - **Reading:** an open blue book with text lines, a page turning now and then, and eyes looking down.
+  - She also blinks at random every 2.5–5 s.
+- **Preview:** `explorations/mascot.html`, served by the "portfolio-explorations" config in `../.claude/launch.json` (port 3015). It has Auto / Ramen / Drawing / Reading buttons, 32px and 64px size checks, and a sheet of every frame. The preview stays local; only the asset is pushed.
+- **Ideas for later:** more activities (clay modelling, painting, rangoli, vibe coding on a laptop, at a design meetup), a pixel cursor next to her like the reference, and using her inside the stamp logo and the footer scene.
+
 ## 9. Change log
 
 - **2026-11-13:** Wiped the old portfolio (code, GitHub history reset to one empty commit, Figma Page 14 cleared, old notes deleted).
@@ -331,3 +349,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-13:** Body ink changed from Soft to **Printed** (gentle edge roughening, displacement scale 0.6).
 - **2026-11-14:** Analysed Sanskriti's first batch of 16 inspiration links (11 sites + X posts): interactions, details, tech and patterns, in section 7.
 - **2026-11-14:** Added Sanskriti's sitemap and a first round of section ideas based on the references (section 8).
+- **2026-11-14:** Made the pixel mascot v1 (ramen, drawing and reading poses, random blinks, auto cycling) in `assets/mascot/mascot.js` (section 8b).
