@@ -30,15 +30,55 @@ function bud(x, y, rot) {
     `<ellipse cy="-11" rx="4.2" ry="5.8" fill="${RED}"/><path d="M-3.4-7Q0-4.5 3.4-7" stroke="${BRANCH}" stroke-width="1.6" fill="none"/></g>`;
 }
 
-// seigaiha: rows of overlapping circles, each with concentric rings
+// ---------- wrapping the art around the lantern ----------
+// The art is laid out flat (u, v), then wrapped onto the barrel: u becomes an angle around the lantern,
+// so things squeeze together towards the sides, and every horizontal line bows slightly (we look up at it).
+const CX = 190, RREF = 124, BOW = 3;
+const hw = (y) => { const t = Math.max(-1, Math.min(1, (y - 332) / 158)); return 64 + 60 * (1 - Math.pow(Math.abs(t), 4)); }; // half-width of the barrel
+function warp(u, v) { const th = (u - CX) / RREF; return [CX + hw(v) * Math.sin(th), v + BOW * Math.cos(th), Math.cos(th)]; }
+const P = (pts) => pts.map((p) => f(p[0]) + ' ' + f(p[1])).join('L');
+
+// smooth curve through points (Catmull-Rom), sampled
+function spline(pts, n = 8) {
+  const out = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+    for (let k = 0; k < n; k++) {
+      const t = k / n, t2 = t * t, t3 = t2 * t;
+      out.push([0, 1].map((j) => 0.5 * (2 * p1[j] + (-p0[j] + p2[j]) * t + (2 * p0[j] - 5 * p1[j] + 4 * p2[j] - p3[j]) * t2 + (-p0[j] + 3 * p1[j] - 3 * p2[j] + p3[j]) * t3)));
+    }
+  }
+  out.push(pts[pts.length - 1]);
+  return out;
+}
+// a branch: a curved, tapering limb wrapped onto the lantern
+function limb(pts, w0, w1) {
+  const sp = spline(pts).map(([u, v]) => warp(u, v)), L = [], R = [];
+  sp.forEach((p, i) => {
+    const a = sp[Math.max(0, i - 1)], b = sp[Math.min(sp.length - 1, i + 1)], l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+    const nx = -(b[1] - a[1]) / l, ny = (b[0] - a[0]) / l, w = (w0 + (w1 - w0) * i / (sp.length - 1)) / 2;
+    L.push([p[0] + nx * w, p[1] + ny * w]); R.push([p[0] - nx * w, p[1] - ny * w]);
+  });
+  return `<path d="M${P([...L, ...R.reverse()])}Z" fill="${BRANCH}" stroke="${BRANCH}" stroke-width=".5" stroke-linejoin="round"/>`;
+}
+// a flat shape (polygon) wrapped onto the lantern, with its edges densified so they bend
+function shape(pts, fill) {
+  const dense = [];
+  pts.forEach((p, i) => { const q = pts[(i + 1) % pts.length], n = Math.max(1, Math.ceil(Math.hypot(q[0] - p[0], q[1] - p[1]) / 4)); for (let k = 0; k < n; k++) dense.push(warp(p[0] + (q[0] - p[0]) * k / n, p[1] + (q[1] - p[1]) * k / n)); });
+  return `<path d="M${P(dense)}Z" fill="${fill}"/>`;
+}
+// place a small motif (blossom, bud) on the lantern: moved, and narrowed as it turns away from us
+function onLantern(u, v, inner) { const [x, y, c] = warp(u, v); return c < 0.15 ? '' : `<g transform="translate(${f(x)} ${f(y)}) scale(${f(c)} 1)">${inner}</g>`; }
+
+// seigaiha: rows of overlapping circles, each with concentric rings (ellipses once wrapped)
 function waves() {
   const R = 18; let s = '', row = 0;
-  for (let y = 444; y <= 520; y += R * 0.5, row++) {
-    for (let x = 46 - (row % 2) * R; x <= 350; x += 2 * R) {
-      s += `<circle cx="${x}" cy="${y}" r="${R}" fill="#f2d6ae" stroke="${RED}" stroke-width="1.7"/>` +
-        `<circle cx="${x}" cy="${y}" r="${R * .68}" fill="none" stroke="${RED}" stroke-width="1.7"/>` +
-        `<circle cx="${x}" cy="${y}" r="${f(R * .4)}" fill="none" stroke="${RED}" stroke-width="1.7"/>` +
-        `<circle cx="${x}" cy="${y}" r="${f(R * .14)}" fill="${RED}"/>`;
+  for (let v = 444; v <= 520; v += R * 0.5, row++) {
+    for (let u = 0 - (row % 2) * R; u <= 380; u += 2 * R) {
+      const [x, y, c] = warp(u, v); if (c < 0.08) continue;
+      const e = (r, extra) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * c)}" ry="${f(r)}" ${extra}/>`;
+      s += e(R, `fill="#f2d6ae" stroke="${RED}" stroke-width="1.7"`) + e(R * .68, `fill="none" stroke="${RED}" stroke-width="1.7"`) +
+        e(R * .4, `fill="none" stroke="${RED}" stroke-width="1.7"`) + e(R * .14, `fill="${RED}"`);
     }
   }
   return s;
@@ -54,22 +94,38 @@ function strands() {
 }
 
 function svgMarkup(id, bracket) {
-  const ribs = Array.from({ length: 28 }, (_, i) => 185 + i * 11)
-    .map((y) => `<path d="M50 ${y}Q190 ${y + 3} 330 ${y}" stroke="#b8763c" stroke-opacity=".32" stroke-width="1.1" fill="none"/>`).join('');
-  const seams = [96, 140, 190, 240, 284]
-    .map((x) => `<path d="M${x} 174Q${190 + (x - 190) * 1.28} 332 ${x} 490" stroke="#b8763c" stroke-opacity=".1" stroke-width="1" fill="none"/>`).join('');
+  // ribs run around the barrel; seams run top to bottom along it
+  const ribs = Array.from({ length: 28 }, (_, i) => 185 + i * 11).map((y) => {
+    const pts = []; for (let th = -1.62; th <= 1.63; th += 0.135) pts.push([CX + (hw(y) + 3) * Math.sin(th), y + BOW * Math.cos(th)]);
+    return `<path d="M${P(pts)}" stroke="#b8763c" stroke-opacity=".32" stroke-width="1.1" fill="none"/>`;
+  }).join('');
+  const seams = [-1.15, -0.58, 0, 0.58, 1.15].map((th) => {
+    const pts = []; for (let y = 174; y <= 490; y += 6) pts.push([CX + hw(y) * Math.sin(th), y + BOW * Math.cos(th)]);
+    return `<path d="M${P(pts)}" stroke="#b8763c" stroke-opacity=".1" stroke-width="1" fill="none"/>`;
+  }).join('');
+
+  // the cherry branch, drawn as a gnarled curve with twigs (flat layout, then wrapped)
+  const MAIN = [[24, 392], [46, 372], [66, 364], [84, 349], [100, 334], [116, 323], [134, 316], [152, 301], [166, 290], [186, 282], [206, 270], [222, 256], [242, 245], [262, 230], [280, 222]];
+  const TWIGS = [
+    [[116, 323], [112, 307], [117, 292], [121, 278]],
+    [[166, 290], [168, 272], [174, 256], [177, 244]],
+    [[206, 270], [214, 265], [221, 266]],
+    [[222, 256], [233, 247], [237, 234]],
+    [[84, 349], [78, 340], [75, 331]],
+    [[100, 334], [103, 352], [99, 368], [94, 382]],
+    [[262, 230], [266, 220], [264, 212]],
+  ];
   const art =
     // Fuji with a snow cap, its base hidden by the waves
-    `<path d="M100 452L210 386Q230 370 250 386L330 448L330 520L100 520Z" fill="${RED}"/>` +
-    `<path d="M196 394L210 386Q230 370 250 386L264 397L257 402L250 396L244 409L238 398L231 413L224 399L216 407L210 398L203 404Z" fill="#fbf1e2"/>` +
+    shape([[100, 452], [210, 386], [220, 377], [230, 374], [240, 377], [250, 386], [330, 448], [330, 520], [100, 520]], RED) +
+    shape([[196, 394], [210, 386], [220, 377], [230, 374], [240, 377], [250, 386], [264, 397], [257, 402], [250, 396], [244, 409], [238, 398], [231, 413], [224, 399], [216, 407], [210, 398], [203, 404]], '#fbf1e2') +
     waves() +
-    // cherry branch with twigs, blossoms and buds
-    `<path d="M48 370C90 340 122 312 160 290C196 270 228 250 266 228" stroke="${BRANCH}" stroke-width="4.2" fill="none" stroke-linecap="round"/>` +
-    `<path d="M118 318Q116 296 122 278M162 289Q170 262 176 242M200 268Q212 262 222 266M236 248Q244 236 238 226M84 345Q76 338 74 330M98 334Q100 360 94 380" stroke="${BRANCH}" stroke-width="2.2" fill="none" stroke-linecap="round"/>` +
-    bud(222, 266, 70) + bud(238, 226, -10) + bud(266, 228, 60) + bud(256, 236, 120) + bud(74, 330, -30) + bud(94, 380, 190) + bud(206, 258, 20) +
-    blossom(178, 228, 19, 8) + blossom(121, 266, 20, -12) + blossom(150, 314, 16, 22);
+    limb(MAIN, 5.2, 1.6) + TWIGS.map((t) => limb(t, 2.4, 1.1)).join('') +
+    onLantern(221, 266, bud(0, 0, 70)) + onLantern(237, 234, bud(0, 0, 0)) + onLantern(280, 222, bud(0, 0, 60)) + onLantern(264, 212, bud(0, 0, 10)) +
+    onLantern(75, 331, bud(0, 0, -30)) + onLantern(94, 382, bud(0, 0, 190)) + onLantern(246, 243, bud(0, 0, 130)) +
+    onLantern(178, 230, blossom(0, 0, 19, 8)) + onLantern(121, 265, blossom(0, 0, 20, -12)) + onLantern(148, 314, blossom(0, 0, 16, 22));
 
-  return `<svg class="ltn" viewBox="${bracket ? '0 12 384 688' : '0 40 400 660'}" xmlns="http://www.w3.org/2000/svg" aria-hidden="false">
+  return `<svg class="ltn" viewBox="${bracket ? '0 12 384 704' : '0 40 400 676'}" xmlns="http://www.w3.org/2000/svg" aria-hidden="false">
   <defs>
     <clipPath id="${id}-body"><path d="${BODY}"/></clipPath>
     <radialGradient id="${id}-paper" cx=".5" cy=".45" r=".62"><stop offset="0" stop-color="#fdf0d8"/><stop offset="1" stop-color="#ecc795"/></radialGradient>
@@ -122,8 +178,8 @@ function svgMarkup(id, bracket) {
     <ellipse cx="190" cy="512" rx="56" ry="4.5" fill="#2a1a0e"/><ellipse class="ltn-lit" cx="190" cy="512" rx="56" ry="4.5" fill="#ffd58a"/>
 
     </g>
-    <line class="ltn-cordline" x1="190" y1="514" x2="190" y2="542" stroke="#b8402b" stroke-width="2.8"/>
-    <g class="ltn-pull">
+    <line class="ltn-cordline" x1="190" y1="514" x2="190" y2="558" stroke="#b8402b" stroke-width="2.8"/>
+    <g class="ltn-pull"><g transform="translate(0 16)">
       <g class="ltn-cord" role="button" tabindex="0" aria-label="Pull the lantern cord" aria-pressed="false">
         <rect x="140" y="524" width="100" height="168" fill="transparent"/>
         <rect class="ltn-focus" x="152" y="530" width="76" height="156" rx="12" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
@@ -138,7 +194,7 @@ function svgMarkup(id, bracket) {
           <rect x="181.5" y="593" width="17" height="5" rx="1.5" fill="#8e2c1c"/>
         </g>
       </g>
-    </g>
+    </g></g>
   </g>
 </svg>`;
 }
@@ -228,7 +284,7 @@ export function mountLantern(host, { lit = false, bracket = true, sound = true, 
     if (reduce) { a = 0; tz = 0; }
     swing.setAttribute('transform', `rotate(${f(a)} 190 46)`);
     pull.setAttribute('transform', `translate(0 ${f(p)})`);
-    cordLine.setAttribute('y2', f(542 + p));
+    cordLine.setAttribute('y2', f(558 + p));
     tassel.setAttribute('transform', `rotate(${f(Math.max(-14, Math.min(14, tz)))} 190 588)`);
     if (lit && !reduce) flame.setAttribute('opacity', f(0.86 + Math.sin(now / 130) * 0.05 + Math.sin(now / 47) * 0.04 + (Math.random() - 0.5) * 0.05));
     raf = requestAnimationFrame(frame);
