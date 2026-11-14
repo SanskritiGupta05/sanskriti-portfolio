@@ -410,6 +410,10 @@ Bracketed names point to the references in section 7.
       - **Lady:** a four-frame walk cycle with a step bob, a two-frame throw, and a soft shadow.
       - **Lake:** clicking makes ripples, and sometimes a **koi leaps** and lands with a splash.
     - **New sounds** in `scene-audio.js`: `suzu()`, `rustle()` and `splash()`.
+    - **Lady made more visible (2026-11-15):**
+      - A bigger **14×28 sprite** in a **pink kimono** (darker pink shading, white flower dots), with a white collar, a deep-red obi with a gold cord, a black hair bun with a pink kanzashi, a visible eye, tabi and zori.
+      - The path is now a polyline that **enters from the left edge**, runs along the front of the lake, through the torii, up to the hall, so her whole walk stays on screen. She feeds the sparrows at x≈150 and rings the torii bell as she passes.
+      - The bottom edge fade was shortened to the last 6%.
   - **Polish after choosing pixel (v1):**
     - **Trees:** lumpy outlines, dark rims underneath and speckled highlights, with slim dark pines mixed in on the pagoda's hill.
     - **Sun rays:** faint diagonal rays from the top right, gently pulsing.
@@ -443,3 +447,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-15:** Built a painterly version of the Fuji scene next to the pixel one, with the same interactions. Added lake ripples, cloud shadows and shared ambient sound with birdsong and chimes to both. Comparison page set up.
 - **2026-11-15:** Sanskriti chose the pixel Fuji scene. Removed the painterly version, then polished the pixel one: richer trees and pines, sun rays, grass tufts.
 - **2026-11-15:** Fuji scene v2: Pixel-Play-style swaying cherry trees, a more detailed Fuji, a wide temple hall and wider pagoda, the torii moved in front of the hall with a shrine bell, hover reactions, refined bird, sparrow and lady motion, and a koi that leaps from the lake. Canvas widened to 440×170.
+- **2026-11-15:** The lady is bigger (14×28), in a pink kimono, and walks in from the left along a longer path that stays fully in view. The bottom fade is smaller.

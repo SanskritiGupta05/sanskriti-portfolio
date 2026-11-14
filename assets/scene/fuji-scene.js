@@ -35,7 +35,7 @@ const C = Object.fromEntries(Object.entries({
   bark: '#4a302a', barkD: '#2f1e1b', barkL: '#6a4a40',
   bl0: '#fff6f8', bl1: '#fbe3ea', bl2: '#f5cbd8', bl3: '#eab0c3', bl4: '#d891a8',
   ink: '#2a2324', stone: '#a49c92', stoneL: '#bdb6ac', stoneD: '#7f776e',
-  kimono: '#3f5b8c', kimonoL: '#8fa6d6', obi: '#cc4436', hair: '#1f1717', hairL: '#3a2c2a', skin: '#f2c8a7', skinS: '#e2aa8a', kanzashi: '#f4a6bb', tabi: '#fbf6ee', zori: '#5b3e37',
+  kimono: '#ea8dab', kimonoD: '#c9677f', kimonoL: '#fff1f4', collar: '#fbf6ee', obi: '#9c2f2a', hair: '#1f1717', hairL: '#3a2c2a', skin: '#f2c8a7', skinS: '#e2aa8a', kanzashi: '#f4a6bb', tabi: '#fbf6ee', zori: '#5b3e37',
   bird: '#3c3331', sparrow: '#8b6a4f', sparrowD: '#5b4535', sparrowL: '#d4b896', seed: '#d4a94e',
   koi: '#e8743c', koiL: '#fbe9dc', rope: '#f3efe6', ropeR: '#cc4436',
 }).map(([k, v]) => [k, hex(v)]));
@@ -75,14 +75,31 @@ const lakeRight = (y) => 268 - (y - LAKE_TOP) * 3 + Math.sin(y) * 2;
 const HALL = { cx: 336, base: 129, w: 50 };
 const PAGODA = { cx: 400, base: 120 };
 const TORII = { cx: 292, base: 142, w: 34, h: 32 };
-// the path: from the bottom of the frame, through the torii, to the hall steps
-const PATH = [[150, H + 2], [TORII.cx, TORII.base], [HALL.cx - 2, HALL.base + 4]];
-function pathAt(t) { // t: 0 (bottom) … 1 (hall); returns [x, y]
-  const seg = t < 0.82 ? 0 : 1, k = seg === 0 ? t / 0.82 : (t - 0.82) / 0.18;
-  const [a, b] = [PATH[seg], PATH[seg + 1]];
-  return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
+// the path: enters from the left, runs along the front of the lake, through the torii, up to the hall steps
+const PATH = [[-6, 157], [140, 153], [TORII.cx, TORII.base], [HALL.cx - 2, HALL.base + 4]];
+const SEG_LEN = PATH.slice(1).map((p, i) => Math.hypot(p[0] - PATH[i][0], p[1] - PATH[i][1]));
+const PATH_LEN = SEG_LEN.reduce((a, b) => a + b, 0);
+function pathAt(t) { // t: 0 (left edge) … 1 (hall); returns [x, y]
+  let d = t * PATH_LEN;
+  for (let i = 0; i < SEG_LEN.length; i++) {
+    if (d <= SEG_LEN[i] || i === SEG_LEN.length - 1) { const k = Math.min(1, d / SEG_LEN[i]); return [PATH[i][0] + (PATH[i + 1][0] - PATH[i][0]) * k, PATH[i][1] + (PATH[i + 1][1] - PATH[i][1]) * k]; }
+    d -= SEG_LEN[i];
+  }
 }
-const pathXAtY = (y) => (y >= TORII.base ? TORII.cx - ((y - TORII.base) / (H + 2 - TORII.base)) * (TORII.cx - 150) : TORII.cx + ((TORII.base - y) / (TORII.base - HALL.base - 4)) * (HALL.cx - 2 - TORII.cx));
+const tAtX = (x) => { let lo = 0, hi = 1; for (let i = 0; i < 30; i++) { const m = (lo + hi) / 2; if (pathAt(m)[0] < x) lo = m; else hi = m; } return lo; };
+// distance from a point to the path, and how far along it the nearest point is (0…1)
+function nearPath(x, y) {
+  let best = 1e9, bt = 0, acc = 0;
+  for (let i = 0; i < SEG_LEN.length; i++) {
+    const [ax, ay] = PATH[i], [bx, by] = PATH[i + 1], vx = bx - ax, vy = by - ay;
+    const k = Math.max(0, Math.min(1, ((x - ax) * vx + (y - ay) * vy) / (vx * vx + vy * vy)));
+    const d = Math.hypot(x - (ax + vx * k), y - (ay + vy * k));
+    if (d < best) { best = d; bt = (acc + k * SEG_LEN[i]) / PATH_LEN; }
+    acc += SEG_LEN[i];
+  }
+  return [best, bt];
+}
+const pathHalfWidth = (t) => 7 - t * 3.5;
 
 // ---------- static painting ----------
 function paintSky(b) {
@@ -191,23 +208,22 @@ function paintGround(b, r) {
     b.px(x, y, n > 1.1 ? C.grassL : n < -1.2 ? C.grassD : C.grass);
   }
   // path with soft edges and a few pebbles
-  for (let y = HALL.base + 2; y < H; y++) {
-    const cx = pathXAtY(y), hw = y < TORII.base ? 5 : 5 + ((y - TORII.base) / (H - TORII.base)) * 24;
-    for (let x = Math.round(cx - hw); x <= Math.round(cx + hw); x++) {
-      const edge = Math.abs(x - cx) > hw - 1.5;
-      b.px(x, y, edge && dither(x, y, 0.5) ? C.grassD : hash(x, y, 4) < 0.05 ? C.pathD : dither(x, y, 0.15) ? C.pathL : C.path);
-    }
+  for (let y = HALL.base + 1; y < H; y++) for (let x = 0; x < W; x++) {
+    const [d, t] = nearPath(x, y), hw = pathHalfWidth(t);
+    if (d > hw) continue;
+    const edge = d > hw - 1.5;
+    b.px(x, y, edge && dither(x, y, 0.5) ? C.grassD : hash(x, y, 4) < 0.05 ? C.pathD : dither(x, y, 0.15) ? C.pathL : C.path);
   }
   // grass tufts (denser at the front), fallen petals and tiny flowers
   for (let i = 0; i < 260; i++) {
     const x = r() * W | 0, y = GROUND_Y + 6 + ((1 - Math.pow(r(), 2)) * (H - GROUND_Y - 6) | 0);
-    if (Math.abs(x - pathXAtY(y)) < 8 + (y - GROUND_Y) * 0.8) continue;
+    if (nearPath(x, y)[0] < 9) continue;
     const h = 2 + (r() * 3 | 0) + ((y - GROUND_Y) > 25 ? 1 : 0);
     for (let k = 0; k < h; k++) { b.px(x, y - k, k === h - 1 ? C.grassL : C.grassD); if (k > 0 && r() < 0.5) b.px(x + (r() < 0.5 ? -1 : 1), y - k + 1, C.grassD); }
   }
   for (let i = 0; i < 30; i++) {
     const x = r() * W | 0, y = GROUND_Y + 4 + (r() * (H - GROUND_Y - 6) | 0);
-    if (Math.abs(x - pathXAtY(y)) < 10 + (y - GROUND_Y) * 0.7) continue;
+    if (nearPath(x, y)[0] < 9) continue;
     b.px(x, y, C.wall); b.px(x, y - 1, C.gold); b.px(x - 1, y, C.wall); b.px(x + 1, y, C.wall);
   }
 }
@@ -341,19 +357,45 @@ function drawCherry(out, tree, t, wind) {
 }
 
 // ---------- sprites ----------
+// lady in a pink kimono (14 × 28), three-quarter view facing right
+// h hair · H hair shine · k kanzashi · s skin · S skin shade · e eye · c white collar · K kimono · D kimono shade
+// d kimono flowers · o obi · G obi cord · w tabi · z zori
 const LADY_BODY = [
-  '...hhh.....', '..hhHhh.k..', '..hhhhhhk..', '..hhhsss...', '..hhsSss...', '...hsss....', '....ss.....',
-  '..KKKKKK...', '.KKKKKKKK..', '.KKdKKKKKs.', '.KKoooooK..', '.KKoGoooK..', '..KKKKKK...', '..KKKdKK...',
-  '..KKKKKK...', '..KKKKKdK..', '..KKKKKKK..', '..KKKKKKK..',
+  '.....hhh......',
+  '....hhHhh.kk..',
+  '....hhhhhhkk..',
+  '...hhhhhhh....',
+  '...hhhhhsss...',
+  '...hhhhSses...',
+  '...hhhhsssss..',
+  '....hhhssss...',
+  '.....hssss....',
+  '......ss......',
+  '....cKKKKc....',
+  '...DKKcKKKK...',
+  '..DDKKKcKKKK..',
+  '..DKKdKKKKKss.',
+  '..DooooooooK..',
+  '..DoGGGGGGoK..',
+  '..DooooooooK..',
+  '..DKKKKKdKKK..',
+  '..DKdKKKKKKK..',
+  '..DKKKKKKdKK..',
+  '..DKKKdKKKKKK.',
+  '..DKKKKKKKKKK.',
+  '..DdKKKKKdKKK.',
+  '..DKKKKKKKKKK.',
+  '...DKKKKKKKK..',
 ];
 const LADY_FEET = [
-  ['...KKKKK...', '...w..w....', '...z..z....'],
-  ['..KKK.KK...', '..w....w...', '..z....z...'],
-  ['...KKKKK...', '....ww.....', '....zz.....'],
-  ['...KK.KKK..', '...w....w..', '...z....z..'],
+  ['....w...w.....', '....z...z.....', '..............'],
+  ['...w.....w....', '...z.....z....', '..............'],
+  ['.....ww.......', '.....zz.......', '..............'],
+  ['....w....w....', '....z....z....', '..............'],
 ];
-const LADY_THROW = [['.KKKKKKKs..', '.KKdKKKK...'], ['.KKKKKKKKss', '.KKdKKKK...']];
-const LADY_PAL = { h: C.hair, H: C.hairL, k: C.kanzashi, s: C.skin, S: C.skinS, K: C.kimono, d: C.kimonoL, o: C.obi, G: C.gold, w: C.tabi, z: C.zori };
+const LADY_THROW = [['..DDKKKcKKKKss', '..DKKdKKKKK...'], ['..DDKKKcKKKKKK', '..DKKdKKKKK.ss']];
+const LADY_PAL = { h: C.hair, H: C.hairL, k: C.kanzashi, s: C.skin, S: C.skinS, e: C.ink, c: C.collar, K: C.kimono, D: C.kimonoD, d: C.kimonoL, o: C.obi, G: C.gold, w: C.tabi, z: C.zori };
+const LADY_W = 14, LADY_H = LADY_BODY.length + 3; // 28
 
 const BIRD = [['b...b', '.b.b.', '..b..'], ['.....', 'bbbbb', '..b..'], ['.....', '.bbb.', 'b.b.b']];
 const SPARROW_STAND = ['...ss.', '..sDse', 'sssss.', '.sLL..', '..l.l.'];
@@ -393,9 +435,9 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
   }
   spawnFlock();
 
-  const lady = { t: 0.02, state: 'walk', clock: 0, alpha: 1, bow: 0, x: 0, y: 0 };
-  const FEED_T = 0.36, TORII_T = 0.8;
-  const placeLady = () => { const [x, y] = pathAt(lady.t); lady.x = x - 5; lady.y = y - 20; };
+  const lady = { t: 0, state: 'walk', clock: 0, alpha: 0, bow: 0, x: 0, y: 0 };
+  const FEED_T = tAtX(150), TORII_T = tAtX(TORII.cx - 2);
+  const placeLady = () => { const [x, y] = pathAt(lady.t); lady.x = Math.round(x - LADY_W / 2); lady.y = Math.round(y - LADY_H + 1); };
   placeLady();
   let nextFeed = 300, rangTorii = false;
 
@@ -412,11 +454,11 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
   function feed() {
     if (!['walk', 'idle'].includes(lady.state) || lady.alpha < 0.5) return;
     lady.state = 'throw'; lady.clock = 0;
-    const hx = lady.x + 10, hy = lady.y + 9, groundY = lady.y + 20;
+    const hx = lady.x + 13, hy = lady.y + 13, groundY = lady.y + LADY_H - 1;
     for (let i = 0; i < 10; i++) seeds.push({ x: hx, y: hy, vx: 0.5 + rand() * 1.3, vy: -0.9 - rand() * 0.7, gy: groundY + rand() * 2, landed: false });
     const n = 2 + ((rand() * 2) | 0);
     for (let i = 0; i < n; i++) {
-      const side = rand() < 0.5 ? -1 : 1, tx = lady.x + 16 + i * 7 + rand() * 4;
+      const side = rand() < 0.5 ? -1 : 1, tx = lady.x + 18 + i * 7 + rand() * 4;
       sparrows.push({ x: tx + side * (70 + rand() * 40), y: lady.y - 50 - rand() * 20, sx: 0, sy: 0, tx, ty: groundY - 4, state: 'arrive', clock: -i * 8, k: 0, flip: side > 0, hop: 0 });
     }
     setTimeout(() => chirp(0.3), 500);
@@ -437,7 +479,7 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
   // ---- hit testing ----
   const toScene = (e) => { const rc = canvas.getBoundingClientRect(); return [(e.clientX - rc.left) / rc.width * W, (e.clientY - rc.top) / rc.height * H]; };
   const inBox = (b, x, y) => b && x >= b.x0 && x <= b.x1 && y >= b.y0 && y <= b.y1;
-  const ladyBox = () => ({ x0: lady.x - 2, x1: lady.x + 12, y0: lady.y - 1, y1: lady.y + 21 });
+  const ladyBox = () => ({ x0: lady.x - 2, x1: lady.x + LADY_W + 1, y0: lady.y - 1, y1: lady.y + LADY_H });
   const inLake = (x, y) => y >= LAKE_TOP && y < GROUND_Y && x < lakeRight(y);
   function targetAt(x, y) {
     if (sparrows.some((s) => s.state !== 'leave' && Math.abs(s.x + 3 - x) < 6 && Math.abs(s.y + 2 - y) < 5)) return { kind: 'sparrow' };
@@ -500,11 +542,11 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
     lady.bow = hover?.kind === 'lady' && lady.state !== 'throw' ? Math.min(1, lady.bow + 0.15) : Math.max(0, lady.bow - 0.1);
     const paused = lady.bow > 0.5;
     if (lady.state === 'walk' && !paused) {
-      lady.t += 0.0007; lady.alpha = Math.min(1, lady.alpha + 0.03);
+      lady.t += 0.0008; lady.alpha = Math.min(1, lady.alpha + 0.03);
       if (lady.t >= FEED_T && nextFeed !== 9999) { lady.state = 'idle'; lady.clock = 0; }
       if (lady.t >= TORII_T && !rangTorii) { rangTorii = true; ringTorii(); }
       if (lady.t > 0.93) lady.alpha = Math.max(0, lady.alpha - 0.05);
-      if (lady.t >= 1) { lady.t = 0.02; lady.alpha = 0; nextFeed = 300; rangTorii = false; }
+      if (lady.t >= 1) { lady.t = 0; lady.alpha = 0; nextFeed = 300; rangTorii = false; }
     } else if (lady.state === 'throw') {
       if (lady.clock > 24) { lady.state = lady.t < FEED_T ? 'walk' : 'idle'; lady.clock = 0; }
     } else if (lady.state === 'idle') {
@@ -576,11 +618,11 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
     if (lady.alpha > 0) {
       const walking = lady.state === 'walk' && lady.bow < 0.5, a = Math.round(lady.alpha * 255);
       const rows = LADY_BODY.slice();
-      if (lady.state === 'throw') { const f = LADY_THROW[lady.clock < 8 ? 0 : 1]; rows[8] = f[0]; rows[9] = f[1]; }
+      if (lady.state === 'throw') { const f = LADY_THROW[lady.clock < 8 ? 0 : 1]; rows[12] = f[0]; rows[13] = f[1]; }
       const wf = walking ? Math.floor(lady.clock / 7) % 4 : 0, feet = LADY_FEET[wf];
       const bob = walking && wf % 2 ? 1 : 0, bow = lady.bow > 0.5 ? 1 : 0;
-      [4, 5, 6].forEach((dx) => out.px(lady.x + dx, lady.y + 21, C.grassDD, Math.round(a * 0.45))); // soft shadow
-      rows.forEach((row, j) => [...row].forEach((ch, i) => { if (ch !== '.') out.px(lady.x + i, lady.y + j + bob + (j < 7 ? bow : 0), LADY_PAL[ch], a); }));
+      for (let dx = 3; dx <= 10; dx++) out.px(lady.x + dx, lady.y + LADY_H - 1, C.grassDD, Math.round(a * (dx === 3 || dx === 10 ? 0.25 : 0.45))); // soft shadow
+      rows.forEach((row, j) => [...row].forEach((ch, i) => { if (ch !== '.') out.px(lady.x + i, lady.y + j + bob + (j < 10 ? bow : 0), LADY_PAL[ch], a); }));
       feet.forEach((row, j) => [...row].forEach((ch, i) => { if (ch !== '.') out.px(lady.x + i, lady.y + rows.length + j, LADY_PAL[ch], a); }));
     }
     sparrows.forEach((s) => {
