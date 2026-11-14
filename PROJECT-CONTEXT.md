@@ -436,6 +436,7 @@ Bracketed names point to the references in section 7.
 - **Unlit:** warm cream paper with horizontal ribs, faint seams, and edge shading.
 - **Lit:** a multiply layer turns the paper amber, and a screen layer adds a bright core with a gentle candle flicker. A soft orange glow spreads around the lantern, the bottom opening glows, and the bracket dims. The light flickers on over about 0.9 s.
 - **Interaction:** drag the tassel down: the cord stretches with resistance and the light switches once it's pulled past about half way. A tap, Enter or Space also pulls it. The cord springs back with a bounce, the lantern swings from the pull and sways gently in a breeze all the time, and the tassel trails behind. Hovering nudges it. Sound: `cordPull(on)` in `scene-audio.js`, a soft click plus a small rising (on) or falling (off) tone. Reduced motion turns off the sway.
+- **Placement:** the bracket sits flush in the page's top-right corner, with no gap above or to the right (Sanskriti's call). The SVG viewBox is cropped to the bracket (`0 12 384 688`), and the host is `position: absolute; top: 0; right: 0`, outside any centred column.
 - **Gotcha:** the lantern must sit above other content (`z-index`), or the page text catches the clicks.
 
 ## 9. Change log
@@ -474,3 +475,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-15:** Fuji scene night version, switched by the lantern: moonlight grading, stars, moon and moon path, glowing hall, pagoda and stone lanterns, fireflies, the lady carries a lantern, birds roost, crickets replace birdsong.
 - **2026-11-15:** Night scene: moonlight falls on the trees (silvery blossoms on the side facing the moon, a cool rim on bark and foliage); the moon moved lower so it isn't lost in the top fade.
 - **2026-11-15:** Night scene: the lady is lit by her lantern and the moon so she stays clearly visible.
+- **2026-11-15:** Lantern bracket now meets the top and right edges of the page with no spacing.

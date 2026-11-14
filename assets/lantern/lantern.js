@@ -69,7 +69,7 @@ function svgMarkup(id, bracket) {
     bud(222, 266, 70) + bud(238, 226, -10) + bud(266, 228, 60) + bud(256, 236, 120) + bud(74, 330, -30) + bud(94, 380, 190) + bud(206, 258, 20) +
     blossom(178, 228, 19, 8) + blossom(121, 266, 20, -12) + blossom(150, 314, 16, 22);
 
-  return `<svg class="ltn" viewBox="0 0 400 700" xmlns="http://www.w3.org/2000/svg" aria-hidden="false">
+  return `<svg class="ltn" viewBox="${bracket ? '0 12 384 688' : '0 40 400 660'}" xmlns="http://www.w3.org/2000/svg" aria-hidden="false">
   <defs>
     <clipPath id="${id}-body"><path d="${BODY}"/></clipPath>
     <radialGradient id="${id}-paper" cx=".5" cy=".45" r=".62"><stop offset="0" stop-color="#fdf0d8"/><stop offset="1" stop-color="#ecc795"/></radialGradient>
@@ -181,7 +181,7 @@ export function mountLantern(host, { lit = false, bracket = true, sound = true, 
   }
   apply(lit, false);
 
-  const toSvgY = (clientY) => clientY * (700 / svg.getBoundingClientRect().height);
+  const toSvgY = (clientY) => clientY * (svg.viewBox.baseVal.height / svg.getBoundingClientRect().height);
 
   function down(e) {
     dragging = true; pulled = false; startY = toSvgY(e.clientY); startT = performance.now();
