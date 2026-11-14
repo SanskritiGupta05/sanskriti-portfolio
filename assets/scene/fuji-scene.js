@@ -12,7 +12,7 @@
 // Usage: const scene = mountFujiScene(canvas); … scene.destroy();
 // Renders at W × H pixels; scale it up with `image-rendering: pixelated`. Soft edges come from a CSS mask.
 
-import { chime, chirp, suzu, rustle, splash } from './scene-audio.js';
+import { chime, chirp, suzu, rustle, splash, templeBell, clap } from './scene-audio.js';
 
 export const W = 440;
 export const H = 170;
@@ -37,7 +37,7 @@ const C = Object.fromEntries(Object.entries({
   ink: '#2a2324', stone: '#a49c92', stoneL: '#bdb6ac', stoneD: '#7f776e',
   kimono: '#3f5b8c', kimonoD: '#2e4268', kimonoL: '#8fa6d6', collar: '#fbf6ee', obi: '#cc4436', hair: '#1f1717', hairL: '#3a2c2a', skin: '#f2c8a7', skinS: '#e2aa8a', kanzashi: '#f4a6bb', tabi: '#fbf6ee', zori: '#5b3e37',
   bird: '#3c3331', sparrow: '#8b6a4f', sparrowD: '#5b4535', sparrowL: '#d4b896', seed: '#d4a94e',
-  koi: '#e8743c', koiL: '#fbe9dc', rope: '#f3efe6', ropeR: '#cc4436',
+  koi: '#e8743c', koiL: '#fbe9dc', rope: '#f3efe6', ropeR: '#cc4436', birdFar: '#8a8f9e', doorGlow: '#f4c46a',
 }).map(([k, v]) => [k, hex(v)]));
 
 // ---------- helpers ----------
@@ -385,11 +385,40 @@ const LADY_FEET = [
   ['.....ww.......', '.....zz.......', '..............'],
   ['....w....w....', '....z....z....', '..............'],
 ];
+// seen from behind as she faces the temple: hair bun, white collar, and a drum-knot (taiko musubi) obi bow on her back
+const LADY_BACK = [
+  '.....hhh......',
+  '....hhHhh.kk..',
+  '....hhhhhhkk..',
+  '...hhhhhhhh...',
+  '...hhHhhhhh...',
+  '...hhhhhhhh...',
+  '...hhhhhhhh...',
+  '....hhhhhh....',
+  '.....hhhh.....',
+  '......ss......',
+  '....cKKKKc....',
+  '...DKKKKKKK...',
+  '..DDKKKKKKKK..',
+  '..DKKKKKKKKK..',
+  '..DooooooooK..',
+  '..DoGGGGGGoK..',
+  '..DoOOOOOOoK..',
+  '...oOOOOOOo...',
+  '..DoOOOOOOoK..',
+  '..DKdKKKKKKK..',
+  '..DKKKKKKdKK..',
+  '..DKKKdKKKKK..',
+  '..DdKKKKKdKK..',
+  '..DKKKKKKKKK..',
+  '...DKKKKKKK...',
+];
 const LADY_THROW = [['..DDKKKcKKKKss', '..DKKdKKKKK...'], ['..DDKKKcKKKKKK', '..DKKdKKKKK.ss']];
-const LADY_PAL = { h: C.hair, H: C.hairL, k: C.kanzashi, s: C.skin, S: C.skinS, e: C.ink, c: C.collar, K: C.kimono, D: C.kimonoD, d: C.kimonoL, o: C.obi, G: C.gold, w: C.tabi, z: C.zori };
+const LADY_PAL = { h: C.hair, H: C.hairL, k: C.kanzashi, s: C.skin, S: C.skinS, e: C.ink, c: C.collar, K: C.kimono, D: C.kimonoD, d: C.kimonoL, o: C.obi, O: C.redD, G: C.gold, w: C.tabi, z: C.zori };
 const LADY_W = 14, LADY_H = LADY_BODY.length + 3; // 28
 
 const BIRD = [['b...b', '.b.b.', '..b..'], ['.....', 'bbbbb', '..b..'], ['.....', '.bbb.', 'b.b.b']];
+const BIRD_FAR = [['b.b', '.b.'], ['...', 'bbb'], ['...', 'b.b']]; // tiny distant birds
 const SPARROW_STAND = ['...ss.', '..sDse', 'sssss.', '.sLL..', '..l.l.'];
 const SPARROW_PECK = ['......', 'sss...', '.ssss.', '..sDse', '..l.l.'];
 const SPARROW_LOOK = ['..ss..', '.sDse.', 'sssss.', '.sLL..', '..l.l.'];
@@ -424,11 +453,13 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
   const toriiBell = { a: 0, v: 0 };
   let hover = null, pointer = null;
 
-  function spawnFlock() {
-    const n = 3 + ((rand() * 3) | 0), y = 18 + rand() * 30, dir = rand() < 0.5 ? 1 : -1, x = dir > 0 ? -12 : W + 12;
-    for (let i = 0; i < n; i++) flock.push({ x: x - dir * Math.abs(i - n / 2) * 7, y: y + Math.abs(i - n / 2) * 3, vx: dir * (0.5 + rand() * 0.1), vy: 0, ph: rand() * 6, flap: 0, flee: false });
+  // flocks fly in a loose V; distant ones are smaller, paler and slower
+  function spawnFlock(far = rand() < 0.45, anywhere = false) {
+    const n = far ? 2 + ((rand() * 4) | 0) : 3 + ((rand() * 3) | 0), y = far ? 8 + rand() * 40 : 16 + rand() * 34, dir = rand() < 0.5 ? 1 : -1;
+    const x = anywhere ? 40 + rand() * (W - 80) : dir > 0 ? -12 : W + 12, gap = far ? 4 : 7;
+    for (let i = 0; i < n; i++) flock.push({ x: x - dir * Math.abs(i - n / 2) * gap, y: y + Math.abs(i - n / 2) * (far ? 2 : 3), vx: dir * (far ? 0.22 + rand() * 0.06 : 0.5 + rand() * 0.1), vy: 0, ph: rand() * 6, flap: 0, flee: false, far });
   }
-  spawnFlock();
+  spawnFlock(false, true); spawnFlock(true, true); spawnFlock(true, true);
 
   const lady = { t: 0, state: 'walk', clock: 0, alpha: 0, bow: 0, x: 0, y: 0 };
   const FEED_T = tAtX(150), TORII_T = tAtX(TORII.cx - 2);
@@ -439,6 +470,8 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
   // ---- actions ----
   const ringBells = (strength = 1) => { bells.forEach((bl, i) => { bl.v += (0.25 + (i % 3) * 0.05) * strength * (i % 2 ? 1 : -1); }); };
   function templeChime(x, y) { ringBells(1); chime(); for (let i = 0; i < 8; i++) notes.push({ x: x + (rand() - 0.5) * 30, y: y + (rand() - 0.5) * 20, life: 40 + rand() * 20 }); }
+  let doorGlow = 0; // the hall doorway glows warm when the temple bell rings
+  function hallBell() { templeBell(); ringBells(0.5); doorGlow = 1; for (let i = 0; i < 6; i++) notes.push({ x: HALL.cx + (rand() - 0.5) * 24, y: HALL.base - 16 + (rand() - 0.5) * 6, life: 50 + rand() * 20 }); }
   function ringTorii() { toriiBell.v += 0.5 * (rand() < 0.5 ? 1 : -1); suzu(); const [ax, ay] = TORII.bellAnchor; for (let i = 0; i < 5; i++) notes.push({ x: ax + (rand() - 0.5) * 12, y: ay + 8, life: 30 + rand() * 15 }); }
   function newPetal(x, y, vx = 0.3 + rand() * 0.3, vy = 0.15 + rand() * 0.2) { return { x, y, vx, vy, ph: rand() * 6, c: rand() < 0.5 ? C.bl1 : C.bl2, life: 600 }; }
   function shakeTree(tree) {
@@ -482,7 +515,7 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
     if (lady.alpha > 0.5 && inBox(ladyBox(), x, y)) return { kind: 'lady' };
     const [ax, ay] = TORII.bellAnchor; if (Math.abs(x - ax) < 5 && y > ay - 2 && y < ay + 13) return { kind: 'toriiBell' };
     if (inBox(PAGODA.box, x, y)) return { kind: 'temple', x: PAGODA.cx, y: PAGODA.top + 40 };
-    if (inBox(HALL.box, x, y)) return { kind: 'temple', x: HALL.cx, y: HALL.base - 18 };
+    if (inBox(HALL.box, x, y)) return { kind: 'hall', x: HALL.cx, y: HALL.base - 18 };
     if (inLake(x, y)) return { kind: 'lake' };
     const tree = trees.find((t) => inBox(t.box, x, y)); if (tree) return { kind: 'tree', tree };
     return null;
@@ -490,7 +523,7 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
   function onClick(e) {
     const [x, y] = toScene(e), t = targetAt(x, y);
     if (!t) return;
-    ({ sparrow: () => scareSparrows(x), bird: () => scareFlock(x, y), lady: feed, toriiBell: ringTorii, temple: () => templeChime(t.x, t.y), lake: () => lakeClick(x, y), tree: () => shakeTree(t.tree) })[t.kind]();
+    ({ sparrow: () => scareSparrows(x), bird: () => scareFlock(x, y), lady: feed, toriiBell: ringTorii, temple: () => templeChime(t.x, t.y), hall: () => hallBell(), lake: () => lakeClick(x, y), tree: () => shakeTree(t.tree) })[t.kind]();
   }
   function onMove(e) {
     pointer = toScene(e); hover = targetAt(...pointer);
@@ -520,36 +553,48 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
     shadows.forEach((s) => { s.x += 0.12; if (s.x - s.w > W) s.x = -s.w; });
 
     // bells: damped pendulums; hovering the temple or the torii bell nudges them
-    bells.forEach((bl) => { bl.v += -bl.a * 0.08 + (hover?.kind === 'temple' ? (rand() - 0.5) * 0.02 : 0) + (rand() - 0.5) * 0.004 * wind; bl.v *= 0.95; bl.a += bl.v; });
+    bells.forEach((bl) => { bl.v += -bl.a * 0.08 + (hover?.kind === 'temple' || hover?.kind === 'hall' ? (rand() - 0.5) * 0.02 : 0) + (rand() - 0.5) * 0.004 * wind; bl.v *= 0.95; bl.a += bl.v; });
     toriiBell.v += -toriiBell.a * 0.06 + (hover?.kind === 'toriiBell' ? (rand() - 0.5) * 0.03 : 0) + (rand() - 0.5) * 0.003 * wind; toriiBell.v *= 0.965; toriiBell.a += toriiBell.v;
 
     // sky birds: flap, glide, flee
     flock.forEach((bd) => {
-      bd.ph += bd.flee ? 0.7 : 0.3;
+      bd.ph += bd.flee ? 0.7 : bd.far ? 0.2 : 0.3;
       bd.flap = bd.flee ? Math.floor(bd.ph) % 3 : (Math.sin(bd.ph * 0.25) > 0.3 ? 1 : Math.floor(bd.ph) % 3); // they glide now and then
       if (bd.flee) { bd.vy -= 0.04; bd.vx *= 1.02; }
       bd.x += bd.vx; bd.y += bd.vy + (bd.flee ? 0 : Math.sin(time + bd.x * 0.05) * 0.05);
     });
     for (let i = flock.length - 1; i >= 0; i--) { const b = flock[i]; if (b.x < -20 || b.x > W + 20 || b.y < -15) flock.splice(i, 1); }
-    if (!flock.length && rand() < 0.006) spawnFlock();
+    if (flock.length < 14 && rand() < 0.012) spawnFlock();
+    if (!flock.some((b) => !b.far) && rand() < 0.02) spawnFlock(false);
 
     // the lady: walk to her spot, feed the birds, walk on through the torii (ringing its bell), into the hall
     lady.clock++;
-    lady.bow = hover?.kind === 'lady' && lady.state !== 'throw' ? Math.min(1, lady.bow + 0.15) : Math.max(0, lady.bow - 0.1);
+    if (lady.state !== 'enter') lady.bow = hover?.kind === 'lady' && lady.state !== 'throw' ? Math.min(1, lady.bow + 0.15) : Math.max(0, lady.bow - 0.1);
     const paused = lady.bow > 0.5;
     if (lady.state === 'walk' && !paused) {
       lady.t += 0.0008; lady.alpha = Math.min(1, lady.alpha + 0.03);
       if (lady.t >= FEED_T && nextFeed !== 9999) { lady.state = 'idle'; lady.clock = 0; }
       if (lady.t >= TORII_T && !rangTorii) { rangTorii = true; ringTorii(); }
-      if (lady.t > 0.93) lady.alpha = Math.max(0, lady.alpha - 0.05);
-      if (lady.t >= 1) { lady.t = 0; lady.alpha = 0; nextFeed = 300; rangTorii = false; }
+      if (lady.t >= 1) { lady.t = 1; lady.state = 'enter'; lady.clock = 0; }
+    } else if (lady.state === 'enter') {
+      // 0–30: climb the steps to the doorway · 36, 48: two claps · 50–80: bow · 70: the temple bell · 90–150: step inside
+      const k = Math.min(1, lady.clock / 30);
+      lady.x = Math.round(HALL.cx - LADY_W / 2); lady.y = Math.round(HALL.base + 4 - LADY_H + 1 - k * 5);
+      if (lady.clock === 36 || lady.clock === 48) clap();
+      lady.bow = lady.clock >= 50 && lady.clock < 80 ? 1 : 0;
+      if (lady.clock === 70) hallBell();
+      if (lady.clock > 90) { lady.alpha = Math.max(0, lady.alpha - 0.017); if (lady.clock % 20 === 0) lady.y -= 1; }
+      if (lady.clock > 150) { lady.state = 'inside'; lady.clock = 0; }
+    } else if (lady.state === 'inside') {
+      if (lady.clock > 360) { lady.t = 0; lady.state = 'walk'; lady.alpha = 0; nextFeed = 300; rangTorii = false; }
     } else if (lady.state === 'throw') {
       if (lady.clock > 24) { lady.state = lady.t < FEED_T ? 'walk' : 'idle'; lady.clock = 0; }
     } else if (lady.state === 'idle') {
       if (lady.clock > nextFeed && nextFeed !== 9999 && !sparrows.length) { feed(); nextFeed = 9999; }
       else if (lady.clock > 420 && !sparrows.length && !paused) { lady.state = 'walk'; nextFeed = 9999; }
     }
-    placeLady();
+    if (lady.state !== 'enter' && lady.state !== 'inside') placeLady();
+    doorGlow = lady.state === 'inside' || (lady.state === 'enter' && lady.clock > 70) ? Math.min(1, doorGlow + 0.05) : Math.max(0, doorGlow - 0.01);
 
     // seeds arc and bounce once
     seeds.forEach((s) => { if (s.landed) return; s.x += s.vx; s.y += s.vy; s.vy += 0.12; if (s.y >= s.gy) { if (Math.abs(s.vy) > 0.6) { s.vy *= -0.3; s.vx *= 0.5; s.y = s.gy; } else { s.y = s.gy; s.landed = true; } } });
@@ -614,6 +659,7 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
       out.rect(Math.round(bx) - 1, Math.round(by), 3, 3, C.gold); out.px(bx - 1, by, C.goldL); out.px(bx, by + 2, C.goldD); out.px(bx + 1, by + 2, C.goldD);
       if (hover?.kind === 'toriiBell') out.px(bx + 2, by - 1, C.goldL); // a tiny glint when hovered
     }
+    if (doorGlow > 0) { const y0 = HALL.base - 15; for (let y = y0 + 3; y < y0 + 12; y++) for (let x = HALL.cx - 4; x < HALL.cx + 5; x++) if (dither(x, y, doorGlow * (0.55 + 0.15 * Math.sin(time * 3)))) out.px(x, y, C.doorGlow, 220); }
     notes.forEach((n) => { const al = Math.min(255, n.life * 9); out.px(n.x, n.y, C.goldL, al); out.px(n.x + 1, n.y - 1, C.gold, al * 0.6); });
     // cherry trees (canopies sway in the wind)
     trees.forEach((t) => drawCherry(out, t, time, wind));
@@ -621,7 +667,8 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
     seeds.forEach((s) => out.px(s.x, s.y, C.seed));
     if (lady.alpha > 0) {
       const walking = lady.state === 'walk' && lady.bow < 0.5, a = Math.round(lady.alpha * 255);
-      const rows = LADY_BODY.slice();
+      const facingTemple = lady.state === 'inside' || (lady.state === 'enter' && lady.clock >= 26);
+      const rows = (facingTemple ? LADY_BACK : LADY_BODY).slice();
       if (lady.state === 'throw') { const f = LADY_THROW[lady.clock < 8 ? 0 : 1]; rows[12] = f[0]; rows[13] = f[1]; }
       const wf = walking ? Math.floor(lady.clock / 7) % 4 : 0, feet = LADY_FEET[wf];
       const bob = walking && wf % 2 ? 1 : 0, bow = lady.bow > 0.5 ? 1 : 0;
@@ -636,7 +683,7 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
       out.sprite(fr, s.x, s.y - (s.hop ? Math.round(Math.sin(s.hop * Math.PI) * 2) : 0), SPARROW_PAL, s.flip);
     });
     // sky birds
-    flock.forEach((bd) => out.sprite(BIRD[bd.flap], bd.x, bd.y, { b: C.bird }));
+    flock.forEach((bd) => bd.far ? out.sprite(BIRD_FAR[bd.flap], bd.x, bd.y, { b: C.birdFar }) : out.sprite(BIRD[bd.flap], bd.x, bd.y, { b: C.bird }));
     // petals
     petals.forEach((p) => { out.px(p.x, p.y, p.c); if ((frame + p.ph * 10) % 16 < 8) out.px(p.x + 1, p.y, C.bl3); });
 
@@ -654,6 +701,7 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
   raf = requestAnimationFrame(loop);
 
   return {
+    _debug: { lady, flock }, // for testing in the browser console
     destroy() { cancelAnimationFrame(raf); canvas.removeEventListener('click', onClick); canvas.removeEventListener('pointermove', onMove); canvas.removeEventListener('pointerleave', onLeave); },
   };
 }

@@ -415,6 +415,7 @@ Bracketed names point to the references in section 7.
       - The path is now a polyline that **enters from the left edge**, runs along the front of the lake, through the torii, up to the hall, so her whole walk stays on screen. She feeds the sparrows at x≈150 and rings the torii bell as she passes.
       - The bottom edge fade was shortened to the last 6%.
     - **Clouds move with the wind (2026-11-15):** the cloud bank on Fuji's shoulders is now drawn live instead of painted into the backdrop. It drifts slowly across the mountain (x 30–330) and fades in and out at the ends. The sky clouds move faster, each at its own speed, and both layers speed up in gusts.
+    - **More birds and the lady enters the temple (2026-11-15):** small grey far-off birds now fly in loose flocks across the sky (three at the start, up to 14 birds, a nearer flock always around). After the torii the lady no longer vanishes: she turns her back to us (a back-view sprite with her hair bun and a red drum-knot obi bow), climbs the steps, claps twice, bows, and the deep temple bell (bonshō) rings while the doorway glows warm. She then fades inside, and after about 12 seconds she starts the walk again from the left. Clicking the hall also rings the temple bell; the pagoda keeps its wind chimes. New sounds in `scene-audio.js`: `templeBell()` (a low 98 Hz strike with beating partials and a long tail) and `clap()`. `mountFujiScene` returns a `_debug` handle (`lady`, `flock`) for testing.
   - **Polish after choosing pixel (v1):**
     - **Trees:** lumpy outlines, dark rims underneath and speckled highlights, with slim dark pines mixed in on the pagoda's hill.
     - **Sun rays:** faint diagonal rays from the top right, gently pulsing.
@@ -451,3 +452,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-15:** The lady is bigger (14×28), in a pink kimono, and walks in from the left along a longer path that stays fully in view. The bottom fade is smaller.
 - **2026-11-15:** Kimono colours set back to indigo with a red obi (pink was tried; Sanskriti preferred the original). The bigger size stays.
 - **2026-11-15:** Clouds now drift with the wind: Fuji's cloud bank moves slowly, the sky clouds faster, and both quicken in gusts.
+- **2026-11-15:** More background birds (far-off flocks). The lady now enters the temple: back view, two claps, a bow, the deep temple bell with a glowing doorway, then she goes inside and later restarts. Clicking the hall rings the temple bell.

@@ -97,3 +97,22 @@ function noiseBurst(dur, type, freq, q, peak) {
 export function rustle() { try { noiseBurst(0.6, 'bandpass', 2600, 0.8, 0.08); } catch { /* no audio */ } }
 // a small splash when a fish jumps
 export function splash() { try { noiseBurst(0.35, 'lowpass', 1400, 0.7, 0.12); } catch { /* no audio */ } }
+
+// bonshō: the deep temple bell. A low strike with inharmonic partials, slow beating and a long tail.
+export function templeBell() {
+  try {
+    const a = audio(), t0 = a.currentTime + 0.02, base = 98;
+    [[1, 0.28, 7], [2.0, 0.12, 5], [2.76, 0.09, 4.5], [4.07, 0.05, 3], [5.4, 0.03, 2.2], [0.5, 0.1, 8]].forEach(([mult, amp, dur]) => {
+      [0, 0.6].forEach((detune) => { // two slightly detuned copies give the slow "wah-wah" beating of a big bell
+        const o = a.createOscillator(), g = a.createGain();
+        o.type = 'sine'; o.frequency.value = base * mult + detune;
+        g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(amp * 0.6, t0 + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        o.connect(g).connect(master); o.start(t0); o.stop(t0 + dur + 0.1);
+      });
+    });
+    noiseBurst(0.12, 'lowpass', 600, 0.7, 0.05); // the wooden striker's thud
+  } catch { /* no audio */ }
+}
+
+// a hand clap (kashiwade), as visitors do at a shrine
+export function clap() { try { noiseBurst(0.09, 'bandpass', 1800, 1.4, 0.22); } catch { /* no audio */ } }
