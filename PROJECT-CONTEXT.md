@@ -348,6 +348,18 @@ Bracketed names point to the references in section 7.
 - **Ideas for later:** clay modelling, painting, rangoli, vibe coding on a laptop, at a design meetup; using her inside the stamp logo and the footer scene.
 - **Superseded:** v1 (40×40, glasses on her head) and v2 (64×64, hand-drawn) were replaced because she must look exactly like the reference.
 
+### Stamp asset (2026-11-15, first round)
+
+- **Brief:** a stamp asset with an "S" embossed on it, in the same chunky pixel style and palette as the mascot.
+- **Source:** `assets/stamp/stamp.js` (no framework). `buildStamp(kind)` returns a pixel grid; `toSVG(grid, size)` renders crisp SVG. The S is a bold 10×12 pixel glyph. Embossed = light catches its top edges, with a dark cast shadow down-right.
+- **Three versions to choose from:**
+  - **Postage stamp** (30×36): cream paper with round perforation bites every 3 px, a red panel (the mascot's red) with a fine frame, a raised S, and a tiny gold mark in the corner.
+  - **Wax seal** (34×34): an irregular red blob with drips, darker on the bottom-right, a pressed ring, a raised S and a glossy glint.
+  - **Hanko** (30×30): a Japanese name-seal impression, red ink in a double ring with the S carved out, uneven ink speckles and dry gaps.
+- **Interaction in the demo:** on hover the stamp lifts and tilts with a hard pixel shadow. On click it presses down with a little bounce.
+- **Preview:** `explorations/stamp.html` (local only), served by the "portfolio-explorations" config, port 3015.
+- **Waiting on:** Sanskriti to pick a version (or mix them).
+
 ## 9. Change log
 
 - **2026-11-13:** Wiped the old portfolio (code, GitHub history reset to one empty commit, Figma Page 14 cleared, old notes deleted).
@@ -370,3 +382,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-15:** Rolled the drawing pose back to the 1× version: Sanskriti prefers the chunkier 16-bit look over the sharper 2× read. The drawing hand motion is to be redone from her video. The extraction tool is kept.
 - **2026-11-15:** Drawing motion redone after Sanskriti's screen recording: short side-to-side writing strokes with marks appearing, instead of the hand bobbing up and down.
 - **2026-11-15:** Drawing pose brought to life: breathing, an occasional happy smile, the cat breathing, wavy steam. The resting-sparkle dot is removed in all poses.
+- **2026-11-15:** Stamp asset, first round: postage stamp, wax seal and hanko, each with an S, in the mascot palette (`assets/stamp/stamp.js`).
