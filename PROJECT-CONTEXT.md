@@ -323,19 +323,19 @@ Bracketed names point to the references in section 7.
 ### Mascot: pixel Sanskriti (v3, 2026-11-14)
 
 - **Look:** must match Sanskriti's chosen reference **exactly**: a chibi pixel bust with big, dark, wavy hair and brown streaks, a peach face, large dark eyes, round orange blush, a small smile and a visible ear. She wears a cream cardigan over a red top and holds a mug with a red heart, with steam curls and gold four-point sparkles around her. **No glasses.**
-- **How it's built:** the reference image was read cell by cell (the original pixel art is about 15.8 screen pixels per art pixel, a 79×79 grid). Its colours were grouped into a palette, and the result was cropped and padded to **64×64**. That grid is stored as text in `BASE` inside `assets/mascot/mascot.js`. The reference PNGs (`mascot-ref.png`, `mascot-reading-ref.png`, `mascot-ramen-ref.png`) are kept locally in `explorations/_ref/` (not pushed).
+- **How it's built:** the reference image was read cell by cell (the original pixel art is about 15.8 screen pixels per art pixel, a 79×79 grid). Its colours were grouped into a palette, and the result was cropped and padded to **64×64**. That grid is stored as text in `BASE` inside `assets/mascot/mascot.js`. The reference PNGs (`mascot-ref.png`, `mascot-reading-ref.png`, `mascot-ramen-ref.png`, `mascot-drawing-ref.png`) are kept locally in `explorations/_ref/` (not pushed).
 - **API:** `buildFrame(activity, frame, { blink })` returns a pixel grid; `toSVG(grid, scale)` renders crisp SVG.
 - **Activities** (auto mode cycles every ~6 s):
   - **Coffee:** the reference pose. The steam drifts and she sips with happy closed eyes now and then.
   - **Reading:** its own exact sprite, read pixel by pixel from Sanskriti's second reference: a red book with a leaf emblem, a stack of books on the left, the heart mug on the right, and a wooden table. It's 93×86 at about 11.4 px per art pixel, a finer grid than the coffee pose. **Pages flip:** every ~3 s a curved cream page lifts from the right, arcs over the spine and settles on the left. She also blinks, and one of the three sparkles rests at a time so they twinkle.
   - **Ramen:** its own exact sprite, read pixel by pixel from Sanskriti's ramen reference (97×92, 11 px per art pixel). She slurps noodles with chopsticks from a red patterned bowl with egg, greens and narutomaki, sitting at the wooden table. **Animation:** the hanging noodles wiggle (slurp), the steam curl on the left rises and settles, she blinks, and the sparkles twinkle.
-  - **Drawing:** drawn on the coffee base. A sketchbook where a Mount Fuji doodle appears stroke by stroke; the pencil is held from the right and angled down.
+  - **Drawing:** its own exact sprite, read pixel by pixel from Sanskriti's drawing reference (115×100, about 10.6 px per art pixel). She draws Mount Fuji, a pagoda, cherry blossoms and a red sun in a sketchbook, with a heart mug on books, a pencil cup and a sleeping calico cat. **Animation:** the pen hand bobs as if mid-stroke, the steam rises, she blinks, and the sparkles twinkle.
   - She blinks at random in every pose, and the sparkles twinkle.
-- **Shared frame:** every pose renders over the same area of its original 1254px artwork (source x 96.5–1157, y ~146–1157). `toSVG(grid, height)` uses each grid's `viewBox` with `preserveAspectRatio="none"` and a 1060.5:1011 aspect, so switching poses doesn't jump.
+- **Shared frame:** every pose renders over the same area of its original 1254px artwork (source x 20–1235, y 140–1180; widened so the drawing pose's books and cat fit). `toSVG(grid, height)` uses each grid's `viewBox` with `preserveAspectRatio="none"` and a 1215:1040 aspect, so switching poses doesn't jump.
 - **How coffee-based poses are made:** each prop is drawn over the mug-and-hands area of the base. Eyes and mouth are swapped by clearing fixed boxes: left eye x19–25, right eye x33–38, rows 23–29; mouth at rows 31–32, x27–31. Steam pixels are removed for non-coffee poses.
 - **Preview:** `explorations/mascot.html` (local only), served by the "portfolio-explorations" config, port 3015.
 - **Known small issue:** a 1px dark mark stays beside the left eye when the eyes are closed. That's the hair edge in the reference.
-- **Next:** Sanskriti may send an exact reference for the drawing pose (currently hand-drawn on the coffee base). Each one becomes its own exact sprite, like reading.
+- **All four poses are exact copies of her references.** Any new pose should come from a new reference image, extracted the same way (find the art-pixel size, sample cell centres over the shared frame, map colours to the palette, add new keys for new colours).
 - **Ideas for later:** clay modelling, painting, rangoli, vibe coding on a laptop, at a design meetup; using her inside the stamp logo and the footer scene.
 - **Superseded:** v1 (40×40, glasses on her head) and v2 (64×64, hand-drawn) were replaced because she must look exactly like the reference.
 
@@ -356,3 +356,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-14:** Mascot v3: rebuilt pixel-for-pixel from Sanskriti's reference image (coffee pose), with ramen, drawing and reading poses on top.
 - **2026-11-14:** Reading pose rebuilt pixel-for-pixel from Sanskriti's reading reference, with flipping pages, blinks and twinkling sparkles.
 - **2026-11-14:** Ramen pose rebuilt pixel-for-pixel from Sanskriti's ramen reference, with a noodle slurp wiggle, rising steam, blinks and twinkling sparkles.
+- **2026-11-14:** Drawing pose rebuilt pixel-for-pixel from Sanskriti's drawing reference (pen stroke, steam, blinks, sparkles). The shared frame was widened for all poses. All four mascot poses now match her references.
