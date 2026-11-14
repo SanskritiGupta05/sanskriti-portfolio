@@ -50,6 +50,9 @@ export const PALETTE = {
   '%': '#9c5948', '&': '#efbd89', '*': '#e2c69e', '+': '#c56b27', '=': '#ffbc66', '?': '#66431f', '@': '#d8ad70', '^': '#df863c',
   '~': '#b55823', '<': '#907e35', '>': '#4d4020', '{': '#f18a85', '}': '#f26972', '|': '#fa8b2a', ';': '#7c7030', ':': '#f3a696',
   '!': '#c3bab9', $: '#ac4329', '#': '#ee7048',
+  // extra colours from the drawing reference
+  'À': '#ff9b71', 'Á': '#efd2ad', 'Â': '#e57232', 'Ã': '#eca568', 'Ä': '#8c6e74', 'Å': '#f29343', 'Æ': '#faa756', 'Ç': '#c54e36',
+  'È': '#846c59', 'É': '#dd583e', 'Ê': '#de6656', 'Ë': '#a08695', 'Ì': '#d8c1b4', 'Í': '#e85662', 'Î': '#9f8068',
   0: '#5b4e4b', 1: '#ce6a47', 2: '#6d5b46', 3: '#8d402f', 4: '#882c24', 5: '#677c57', 6: '#7a8d60', 7: '#4d5f44', 8: '#3f4e3b', 9: '#8d9b63',
 };
 
@@ -349,8 +352,9 @@ function riseSteam(g, box, f) {
   const moved = [];
   for (let y = box.y0; y <= box.y1; y++) for (let x = box.x0; x <= box.x1; x++) if (box.chars.includes(get(g, x, y))) moved.push([x, y, get(g, x, y)]);
   moved.forEach(([x, y]) => {
-    const hairy = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([dx, dy]) => HAIR_CHARS.includes(get(g, x + dx, y + dy))).length;
-    set(g, x, y, hairy >= 2 ? 't' : 'a');
+    const near = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dy]) => get(g, x + dx, y + dy));
+    const hairy = near.filter((c) => HAIR_CHARS.includes(c)).length, empty = near.filter((c) => c === '.').length;
+    set(g, x, y, empty >= 2 ? '.' : hairy >= 2 ? 't' : 'a');
   });
   moved.forEach(([x, y, c]) => set(g, x, y - 1, c));
 }
@@ -369,34 +373,140 @@ function wiggleNoodles(g, box, f) {
 }
 
 function ramenFrame(f, blink) {
-  const g = RAMEN.map((r) => r.split(''));
+  const g = RAMEN.map((r) => [...r]);
   if (blink) blinkIn(g, RAMEN_EYES, 41);
   wiggleNoodles(g, RAMEN_NOODLES, f);
   riseSteam(g, RAMEN_STEAM, f);
   twinkle(g, RAMEN_SPARKLES, f);
-  g.viewBox = '0.05 -0.12 96.41 91.9';
+  g.viewBox = '-6.91 -0.64 110.45 94.55';
   return g;
 }
 
-const FUJI = [
-  [11, 51], [12, 50], [13, 49], [14, 48], [15, 47], [16, 46], [17, 45], [18, 45], [19, 45], [20, 45],
-  [21, 46], [22, 47], [23, 48], [24, 49], [25, 50], [26, 51],
-  [16, 47], [17, 48], [18, 47], [19, 48], [20, 47], [21, 48],
-  [25, 43], [26, 42], [27, 43], [26, 44],
+// ---------- drawing pose: its own exact sprite (from Sanskriti's drawing reference) ----------
+
+// read cell by cell from the reference (about 10.6 × 10.4 screen px per art pixel), 115×100
+const DRAWING = [
+  '...................................................................................................................',
+  '...................................................................................................................',
+  '...................................................................................................................',
+  '...................................................................................................................',
+  '...................................................................................................................',
+  '...............................................................aaaaaaa.............................................',
+  '.......................................................TaaaaaaaaaaaaaaTa...........................................',
+  '.....................................................aaaaaaaaaaHHHHHHHuaaa.........................................',
+  '...................................................FaaaaaaaaaaHHHHHHHHHtaaj........................................',
+  '..................................................aaaattiiittttHHaaHHHH>taa........................................',
+  '................................................TaaatHHiitttttttaaaatHiitaa........................................',
+  '..............................................aaaat%%iitttttttttttaaattttaa........................................',
+  '.............................................aaai%%rHttttaaaaaatttTaaatttaaaaaa....................................',
+  '............................................aau%%%%tttttttttaaaatttaaaataaaaaaaaF..................................',
+  '...........................................aa3%%%HttttaaaaaaaaaaattaaaaaaatiHiHaaa.................................',
+  '..........................................aaH%%%ttttuaaaaaaaaaaaaataaaaatttttHHHaaa................................',
+  '.........................................aaT%%%ttttaaaatttttaaaaaaaaaaatttttttHHHaaa...............................',
+  '............................z...........aaH%%%%tttaaTHtttttttaaaaaaaatttttttttttHHuaa..............................',
+  '............................G..........aau%%i%%ttaa%%vttttttttaaaattttttttttttttt%Haaa.............................',
+  '............................G.........iaa%%%tt%iai%%Httttttttttaatttttuaattttttttt%%uai............................',
+  '...........................G.G........aaH%%HttiTH%%itttttaaaattatttttttaautttttttt%%%aaS...........................',
+  '.........................GG..qGG......aa%%%Httti%%tttttuaaaaauutttttttttaaatttttt%%%%taa...........................',
+  '...........................GqG.......aa%%%%tttt%%%ttttaaaaaaaatttttttttttaaatittt%%%%Haaa..........................',
+  '............................G.......aau%%%tttt%%%tttttaaaaaaaattatttttttttaaai%%%%%iiitaa..........................',
+  '............................G.......aar%%ttttt%%%%tiiaaaaaaaaataaatttttttttaaii%%%ttiiitaa.........................',
+  '............................R.......aa%%tttta%%%%%iiTaakkeeee&aaaaatttttttttaatt%ttttiiiaa.........................',
+  '....................................aT%itttaa%%%%%%%aaI&eeeeeee#aaatttttttttaaattttttiiiaaXa.......................',
+  '......................G............aaiitttaai%%tt%%%aak&eeeeeeeeaaa%tttttttttaaattttttiiauXa.......................',
+  '......................G...........aaaittttaaH%tti%%HaIeeeeeeeeeeIaa%%tttitttttaaatttttiitaXa.......................',
+  '......................G.........aaaaiitttaatHtttiiiauIeeeeeeeeeeeaa%%%tr%ttttttaatttttti>aaa.......................',
+  '....................GG.GG.....aaaaaaitttaaatttttiiiaa&eeeeeeeeeeeaa%%%%%%ttttttaaattttttiaa........................',
+  '......................G......aaa..attttaaaattttaitta?&eeeeeeeeeeekat%%%%%tattttaaaattttttiaa.......................',
+  '......................G.....!aa..iaittaaaatttttattta2eeeeeeeeeee&&aa%%%tiiatttttaaaatttttiaaa......................',
+  '............................aa...aattaaaatttttaaTttar&eeeeeee&aaaaaaiH%tttaatttttaaaaTttttaaaa.....................',
+  '............................aa...ataaaaatttttiaaataaaweeeeeeeu&eeekaaiHittaaatttttaaaaaattaa.TT....................',
+  '............................aaa..aaaaaatttttitaaataau?eeeeeeeeeeeeeIaTiitttaaatttttaaaaaataa..aa...................',
+  '............................iaaaaaaaattttttiiaaaItaueeeeeeeeeeeeeeeeaaiiitttaaaatttttaaaaaaa...aa..................',
+  '.............................aaaaattttttttiiaaaktTakeeeeeeeeeeeeeeeekaaiitttuaaaatttttTaaaaaT..aa..................',
+  '............................aaaT%%%iittiiiiaaaIIaakeeeeeeeeeeeeaaaaaaaaaiittttaaaatttttttaaaa..aa..................',
+  '...........................aaa%%%%iiiiiiiiaaaakaaaaaaeeeeeeeeeaaaaaaaaaaaiiittttttttttttttaaaa.aa..................',
+  '..........................aaa%%%%iiiiiiiaaaaaaaaaaaaapeeeeeeeeaaaanbnaaaaaiiiiiiiiiiitttattaaaaaa..................',
+  '..........................aa%%%%iiiaaaaaaaaaaaaannbaaaeeeeeeeeaaaabbbbaaaaaauiiiiiiiiiiiaaTtaaaa...................',
+  '.........................aa%%%%iaaaaaaaaautaaIaabbnaaaeeeeeeeeaaaaabbbbaoIaaaaaaaaaiiiiiiaaaaaa....................',
+  '.........................at%%TaaaaaaaaaatttaaI3abbbaaaaeeeeeeeuaaaabbbbaaaaaaaaaaaaaatiiiiaaaaa....................',
+  '........................aa%%iaaaaaTTaattttaaaaaabbbaaaaeeeeeee&uauabbbbaaIauta4IIkaaaauiiiiaaaa....................',
+  '........................ai3Haaaaattaatttttaaaaauqbbauuueeeeeeeeuuuubbb&&&&kaaak$KIaaaaaaiiiiaa.....................',
+  '........................aiiaaaaaattatttttaaaaaaKabbquuueeeeeeeeeuuubnkkkk&&aa&IleIaaaaaaaiiiaaa....................',
+  '........................aitaa.aattaattttaaaaaaae&kbbaua&eeeeeeeee&e&kkkkkeeau&&&&aaaaaaaatiiiaa......G.............',
+  '........................aata..auttaiittaaaaaaaaekkkKeeeeeeeeeeeeeeeKkkkkkeKaaDDwaaaaataaaatiiaa......G.............',
+  '.........................ata..atttaiitaaaaaaaaa&kkkk&eeeeeeeeeeeeee&kkkkeeaaaaaaaaaaattaaatiiaa.....G.G............',
+  '.........................aaT..atttaiitaaaaaTaaa%kkkkKeeee3eeee4eeeeeeee&ekaaaaTaaaaaatttaatiiaa...*G...GG..........',
+  '..........................uaa.atttaiitaaaatTaaaaKÀÀÀeeeeee4444eeeeeeeeeeÀaaaatttaaaattttaatiaaa.....G.G............',
+  '...........................aaaaattaiittaaatTaaaaaIeeeeeeeeeeeeeeeeeeeeKaaaaattttaaaattttaTtaaa.......G.............',
+  '.............................aaaaTaaiittaaaTtaaaaaaeeeeeeeeeeeeeeeee&uaaaaattttaaaattttaattaa........G.............',
+  '.......................au.....aaattaatitTaaaTuaaaaaaaJ&eeeeeeeeeee%aaaaaaattttaaenaautaataaa...aTa.................',
+  '......................aa.....aaattttaaTtttaaTaaaaaaaaaaaaaaaaaaaaaaIIaaattttaauneenaaTtTaaaa.....aa................',
+  '..............wc.....jaj....aaaTttTaaaaattTaaaaooa&DaaaaaaaaaaaIIIII#aaH>ttuaeeeeBneaatTTaaaa....aa................',
+  '.............Dc......aa....aaaaittaaaaaaatTaaaKKaJeeaaaattaaaamIIIIkaa%HHitaeneBBene*aaTtTataaaaaaa................',
+  '.............c.......aau.OaaaarittaaaaaaaTaaaaKKaeeDaaaTttaaa#IIK&e&a%%%itaKneBcnnnnnaauttttTaaataa................',
+  '.............c.......aTaaaaut%Hiuaaaaniaataaaeeea&&aaatttaaak&&&&&&a>%%tTaanne1nnnnnntaaatttttttTa.................',
+  '.............nccw....aatttta%HitaaTaPbTaaaaaeeneKaaatatttaaaa&e&&&aa%3ttta2nnBennnnnnnaaTaauttTaa........aa........',
+  '................cw....aatta%%iiaataaatXxaaannnne@aaTutttaaadaa&&&&aaiitaTa*nn1nnnnnnnneaTttaaaaa........a^za.......',
+  '..............c..c.....aaaH3itaattaaa0SXaannnnnn&aaTaitTaa4d$aaaaaaaittaaannBnnnnnnnnnnTaTttttaaaF..aa..a^^a.......',
+  '.............wc.cc......aHHttaaTTaaaaa0XSaBBBnnn&aaTatttaad$ddddd$aaittaaaÁÁ1ÁnnoBBBBeÁÁaatttttuaau.avj.a+1a.......',
+  '............cn.cc......aaittaaaTTaaaaat0XanÁeBBÁeeaTutttaa$dddddd$aattttuaR&BÁn1BÁÁnÁcKnaatttTtaÂaaa^^a.a1a........',
+  '............c.wq.......atHttaataauÁnnna0XSuÁÁe11eeauTatttaa$dddd$daatttuTaa&1ÁB*ÁnnnnÁÁnnaattttsÂÂaaeÁa.aRaWaaa....',
+  '.............w........aaiitaaaaannÁnnnHaSXaÁÁÁe11eeaaTTtttaadddddd4aatttuaaaaaacÁnÁÁnnnnnaaattTaÂmaaÃKa.aRaSu&a....',
+  '......................aaittaaaannnnBcaaa0Äaaaeee1e&aaaattttaddddddauatttaaaÁnÁnÁ111ÁÁnnnÁÁaaaTTa3YsaY^a.uTaaeKa....',
+  '.........uaaaaaaaaaÄ..aaitaaaaaÁneBBaaeeaaÄu&aeee1eeaaaatttaaddddsa4aaaaaanÁÁnnnnn11BcnÁÁnaaaTTaY^ÃazÅaallaae>a....',
+  '........aanÁ&&&ee&naa.aaitaaaannÁBeaaeeeeoaa&caee1e&aaaaatttamddda44uannÁn1Bcnnnnnnncc1nnÁaaaaTTaÆÆauÅaaÇÇa2ea.....',
+  '......aaanb3333333nna.aattaaaÁnnBeÁa&eeee&Ia&eaeeeCaaTaaaattaadddaaaaaÁÁÁÁÁnBBnnnnnneeÁBÁÁ2aaatTaÆ^auÅaaÇ3aKKa.....',
+  '.....anÁabnnnnnnnnnÁa..aattaanÁnBÁaaeeek&&&uc&aee&1aaTaaaattaa44aaK&anÁÁÁÁnnÁÁBÁnnnnnnnÁeÁÈaaaTTTaÆÆaÅuuÇau&a......',
+  '....annÁannnnnnnnnnea...aataannBÁnaeeeeKueeeaKaee&&aTTaaaattaa4aae&&aÁnÁÁnnnnnÁBnnnnnnnÁÁnÈaaaTTaaÅÅaÅ^$ÇaKKa......',
+  '....angaannnÇ1nÇcnnea....aaaanÁBnÁaeeeeeKa&Kaaaaaaaaaaaaaaaaauuae&&KaÁÁÁÁcÁnnnnnBnnnnnnnnÁÈaaTTanaM^?^^ÇÇaÃa*a.....',
+  '....anÄ.annnÇÇÇÇÇnneaaaaaaaaaÁÁBneaKeee&eeaa0abnbbnbnnnbPaaaaaaaaaaaaaÁnÁcÁnnnnnBcnnnnnnnÁuaaTTaÁnxaaaaaaaaÁÁa.....',
+  '....anÄ.annnÇÇÇÇÇnneaIIIII11auee&aaaee&Ieeka0iÁnnnnnbbbbbbbbbbbbbbbnbaannIÁnnnnnnBnnnnnnÁnaaTTTaennnnnnnnnneea.....',
+  '....abnaannnnÇÇÇnnneaIIIIIIBuaeeaaeaueeeIIaa0nannnnnbbnnnnÁnbbbnnÁbbbnaaecÁnnnnnnnnnnnÁÁ&oaaaaaaÁnnnnnnnnnÁeea.....',
+  '.....annpnnnnnÇnnnn&aaaaarII1aaaaeeeaa%JuaHeananbnnbbbbnbbbeÉÉÉÉbnnbbDea&ccÁnnnnnnnnne&KKaaaaaaaÁnnnnnÁ1nn<Dea.....',
+  '.....aabannnnnnnnnnea33aaaaI11aabbbeeeaaaee&&aanbbbbbbqbbbb####Énbnbb%&awÃI&eeeeeÁÁaaaaaaaIBIIIaÁnnnnn11IÁ<eea.....',
+  '...XaauaaKnnnnnnnneaddlld4aIIIanbb}Kbn:ÁnÁÁÁeeanbbbbbbbPbbb#####bbbbb%eaaaa2pRRRaaav^^^^MaaauIIaÁnnnÊÊÊÊeÊÊeea.....',
+  '.Faa11ld3aa&nnnnn@a3l1d444aIIaTbbb{{b}Êbb}nbbbbnbËbbbbbb!bbb###:bbbbleaa1luaaaaaabbÂ^^^^^^Â^aaHaÁnnÊÊÊÊ=ÊÊÊeea.....',
+  '.a4411ÇÇ1llaaaaaal11d44444aIaabbÊbbqtbbbbe{ÊbbbbXqbbFbbÁqXbbbbbbbbbblÁa1IIIIBcaqbbbe^^^^^^^^^^aaennnÊÊ$=1ÊÊeea.....',
+  '.aÁÁcJ4443ll111ll1d444444uaaaqb}K}bbbb}}Rb}{bbËFFgF!FÌFFFtgbbnbbbbbleaa1uauI%abbbbbtau^^Âbb^^^^aannnnÊÊ1ÊÊÁeea.....',
+  '.aaÁeenÁÁÁe44m41ddd44d4uaaaabbbÊlbbHb>3qnbbqË!FFF!!!!!!!t0itÌbbbbbblÁau1a^uaabbbbbaa^anbbbbb^^^ÂaÌnnÊÊÊeÊÊÁeea.....',
+  '.aTÁÁnnÁÁÁÁnÁÁe44ddddaaCk1aqq{bbqbHpbbbek}!!ÌÌ!Ì!!!!ÄTtS0S000tabbbDCDa1a1^^aabbbba?^^MÈbbbbbe^^^^annÊÊenÊÊÁeea.....',
+  '.a&ÁnÁÁÁÁÁÁÁÁÁÁ44ddaaYÃ11aabÊeÍb?ÌbbbbbbbbqnbÌÌ!!ÌÌÌÌÌÇkeK$1$Ì!!bb%eaa1aII^^aaaaau^^À^abbbbbbb^^^aTnnnnnnnÁeeaI....',
+  'aaauu3$JeÁÁnÁee444a?ÃIB1aaqb{m}HRbb}}bÍbbbÍebbÌ!ÌÌÌÌÌÌÇ::eÇÇ$ÌÌÌbbJ*a11a^I^^^bbb^^^KK^abbbbbbbbo^^annnnnnneeea11...',
+  'akkkCkaaaaum$$ImavÃk1B1aabbbbvHHqbÊ}{}qbbbvbbbbbbbbTT00000000iTÌbleaa13a^^^^^bbb^^^^^^abbTabbbbbbbabnnnnnneeea111..',
+  'akÁÁÁeeeeÃÃÃaaaKKÃ1111uaqbbqRHmqbqqe::itvbbn}KbbbbbbbÉeK:ÇÇÇ$$!bblea?1aÂ^^^^bbbbÃ^^^^^^aTabbbbbbbbnaÁÁÁÁÁeeaa1111..',
+  'aIÁnÁÁnÁÁÁÁÁeKKÃI1BB1BagbbbHHÌbbbbbbbbbbXbbbbbbqbXXg!ÉÇnÇÁÇÃoÌbblÁ2a11a^^^^bbbbbb^^^^^^aaqbbbbbbbbnaaaaaaaa?1lBBB..',
+  'akeeeeeeÁnÁÁÁÁÁC1BB1aaaqbbqbqbbbbbbbbbbbbb}}bbjXËXËXSRÎÎÎÎ%ÎÄxqbleau1anbbbbbbbbbbbb^^^nbabbbbbbbbbKa111111B1IIIB...',
+  'taaaaKÁÁÁÁÁeeeÁCB1Baaabbbbbbbbbqbbbqbbbbbb}bËÌFgËÄÄÎRÎÎÎÎÎÎÎÎÎbbcÁa31abbbbbbbbbbbbbbbbbbabbbbbbbbÃka111111111111...',
+  '.BI1aaaaaa2DÁÁÁÁ1aa1aa1B11111111111111RbbbÁbbbbbbbbqbbbbbqqRRbbleaa11abq0b0bbbabbabbbbbKaIbbbbbI^^ÅaBIIIBIBBBIB&...',
+  '..IIIIIBaaaaaaaaaaBuaoÁnnnnnnnnnnnÁÁÁÁelnbÁlJ11l1BBbbbbbbbbbbbblÁaaBIaTbtaFbÊbbaagbaaaaaaaaaaau^^^au11IIIIIBIIB....',
+  '...IIIIIIIIBIIIccIIauauTtTTTTTuuuuuaaaoÁ&1lnnÁnÁÁÁÁeeoc1BB1coeDÁaa1BBaX{bbbbbbbbbÀaTbbbbbbbb^^^^^^a11BBBB11BI......',
+  '.....IIIIIIIIIIIIIIIaaaaaaaaaaaaaaaaaaaieÁe&aaaaaaaa2ÁÁÁnÁeÁeÁeeaa1IJananbbbbbbbbbabbbbbbbbb^^^^Âaa1IIBIIIc........',
+  '...........IIIIIIIIIIIIIIIIIIIIB111111aaaaaaav?v???aaaaaaaaaaaaaa1IIBaÄFaaÁbbbbbKJabbbbbbbbn^ÂsaavIIIII............',
+  '............IIIIIIIIIIIIBIBIIIIIIIIIIIIIIIIIIIBIIIIIIIIIIBIaaaaaaIIIIIaaaaaaaaaaaaaaaaaaaaaaaaa?IIIIII.............',
+  '.........................IBIIIIIIIIIIIIIIIIIIBIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIBusvv?3%JBBIIIIII................',
+  '....................................................................IIIIIIIIIIIIIIIIIIIIIIIIIIq....................',
 ];
 
-function drawing(g, f) {
-  oRect(g, 7, 41, 24, 13, 'Q');
-  for (let x = 8; x <= 29; x += 2) set(g, x, 40, 'T');
-  const shown = Math.min(FUJI.length, 6 + (f % 12) * 2);
-  pts(g, FUJI.slice(0, shown), 'X');
-  hand(g, 6, 49);
-  // pencil held from the right, angled down so it never covers her face
-  const [tx, ty] = FUJI[shown - 1];
-  line(g, tx + 1, ty + 1, tx + 9, ty + 5, 'y');
-  set(g, tx, ty, 'T');
-  pts(g, [[tx + 10, ty + 5], [tx + 10, ty + 6], [tx + 9, ty + 6]], 'E');
-  hand(g, tx + 6, ty + 4);
+const DRAW_EYES = [{ x0: 45, x1: 52, y0: 38, y1: 46 }, { x0: 61, x1: 70, y0: 37, y1: 46 }];
+const DRAW_SPARKLES = [{ x0: 24, x1: 32, y0: 16, y1: 25, c: [28, 21] }, { x0: 19, x1: 25, y0: 25, y1: 32, c: [22, 29] }, { x0: 96, x1: 106, y0: 45, y1: 52, c: [101, 49] }];
+const DRAW_STEAM = { x0: 12, x1: 19, y0: 55, y1: 66, chars: 'wcDnq' };
+const DRAW_PEN = { x0: 32, x1: 44, y0: 55, y1: 72 };
+
+// the pen hand bobs a pixel, like she's mid-stroke
+function penStroke(g, box, f) {
+  if (f % 2 === 0) return;
+  for (let y = box.y1; y > box.y0; y--) for (let x = box.x0; x <= box.x1; x++) g[y][x] = g[y - 1][x];
+}
+
+function drawingFrame(f, blink) {
+  const g = DRAWING.map((r) => [...r]);
+  if (blink) blinkIn(g, DRAW_EYES, 44);
+  penStroke(g, DRAW_PEN, f);
+  riseSteam(g, DRAW_STEAM, f);
+  twinkle(g, DRAW_SPARKLES, f);
+  g.viewBox = '-0.01 -0.38 114.84 100.39';
+  return g;
 }
 
 // ---------- reading pose: its own exact sprite (from Sanskriti's reading reference) ----------
@@ -535,11 +645,11 @@ function pageFlip(g, step) {
 }
 
 function readingFrame(f, blink) {
-  const g = READING.map((r) => r.split(''));
+  const g = READING.map((r) => [...r]);
   if (blink) readingBlink(g);
   pageFlip(g, f % 12 < 6 ? f % 12 : 0);
   readingSparkles(g, f);
-  g.viewBox = '0 -0.34 92.7 86.4';
+  g.viewBox = '-6.69 -0.82 106.21 88.89';
   return g;
 }
 
@@ -549,33 +659,32 @@ export const ACTIVITIES = {
   coffee: { label: 'sipping coffee', frames: 8, speed: 360 },
   reading: { label: 'reading', frames: 12, speed: 260 },
   ramen: { label: 'eating ramen', frames: 8, speed: 280 },
-  drawing: { label: 'drawing', frames: 24, speed: 200 },
+  drawing: { label: 'drawing', frames: 12, speed: 300 },
 };
 
 export function buildFrame(activity = 'coffee', f = 0, { blink = false } = {}) {
   if (activity === 'reading') return readingFrame(f, blink);
   if (activity === 'ramen') return ramenFrame(f, blink);
-  const g = BASE.map((r) => r.split(''));
-  g.viewBox = '-3.11 0 67.12 64';
+  if (activity === 'drawing') return drawingFrame(f, blink);
+  const g = BASE.map((r) => [...r]);
+  g.viewBox = '-7.96 -0.36 76.9 65.82';
   const lift = false;
   const sip = activity === 'coffee' && f % 8 === 5;
 
   if (activity === 'coffee') driftSteam(g, f);
   else removeSteam(g);
 
-  const eyeMode = blink ? 'blink' : (lift || sip) ? 'happy' : activity === 'drawing' ? 'down' : 'open';
+  const eyeMode = blink ? 'blink' : (lift || sip) ? 'happy' : 'open';
   eyes(g, eyeMode);
-  mouth(g, lift ? 'open' : activity === 'drawing' ? 'flat' : 'smile');
 
-  if (activity === 'drawing') drawing(g, f);
 
   sparkles(g, f);
   return g;
 }
 
-// Every pose is shown in the same frame (the same area of the original 1254px artwork),
+// Every pose is shown in the same frame (source px x 20–1235, y 140–1180 of the original 1254px artwork),
 // so switching poses never jumps. `height` is the rendered height in px.
-export const ASPECT = 1060.5 / 1011;
+export const ASPECT = 1215 / 1040;
 
 export function toSVG(grid, height = 320) {
   const H = grid.length, W = grid[0].length;
