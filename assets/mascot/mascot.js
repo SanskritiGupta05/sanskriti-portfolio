@@ -43,6 +43,10 @@ export const PALETTE = {
   L: '#3b6ea8', // book cover
   V: '#2c5585', // book cover shadow
   E: '#e98aa0', // eraser
+  // extra colours from the reading reference
+  A: '#e7dad7', B: '#c08550', D: '#d7b392', F: '#b5aba7', H: '#6d3f35', I: '#e88056', J: '#ad7757', K: '#faac80',
+  M: '#9b5321', R: '#b3896e', S: '#69615d', u: '#3f1815', v: '#5f2916', w: '#c09882', x: '#766e6a', z: '#ae7136',
+  0: '#5b4e4b', 1: '#ce6a47', 2: '#6d5b46', 3: '#8d402f', 4: '#882c24', 5: '#677c57', 6: '#7a8d60', 7: '#4d5f44', 8: '#3f4e3b', 9: '#8d9b63',
 };
 
 // 64×64, read from the reference image (one letter per pixel, '.' = transparent)
@@ -120,9 +124,10 @@ const STEAM = { x0: 5, x1: 19, y0: 31, y1: 41 };
 const EYE_CHARS = 'aqngb';
 const HAIR_CHARS = 'atirp';
 
-const inside = (x, y) => x >= 0 && x < SIZE && y >= 0 && y < SIZE;
-const set = (g, x, y, c) => { if (inside(x, y)) g[y][x] = c; };
-const get = (g, x, y) => (inside(x, y) ? g[y][x] : '.');
+// grids can be different sizes (each pose keeps the resolution of its reference)
+const inside = (g, x, y) => y >= 0 && y < g.length && x >= 0 && x < g[0].length;
+const set = (g, x, y, c) => { if (inside(g, x, y)) g[y][x] = c; };
+const get = (g, x, y) => (inside(g, x, y) ? g[y][x] : '.');
 const pts = (g, list, c) => list.forEach(([x, y]) => set(g, x, y, c));
 const rect = (g, x, y, w, h, c) => { for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) set(g, i, j, c); };
 const ellipse = (g, cx, cy, rx, ry, c, clip = () => true) => {
@@ -131,17 +136,20 @@ const ellipse = (g, cx, cy, rx, ry, c, clip = () => true) => {
     if (dx * dx + dy * dy <= 1 && clip(x, y)) set(g, x, y, c);
   }
 };
-const line = (g, x0, y0, x1, y1, c) => {
+const linePts = (x0, y0, x1, y1) => {
+  const out = [];
   const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
   let err = dx + dy;
   for (;;) {
-    set(g, x0, y0, c);
+    out.push([x0, y0]);
     if (x0 === x1 && y0 === y1) break;
     const e2 = 2 * err;
     if (e2 >= dy) { err += dy; x0 += sx; }
     if (e2 <= dx) { err += dx; y0 += sy; }
   }
+  return out;
 };
+const line = (g, x0, y0, x1, y1, c) => pts(g, linePts(x0, y0, x1, y1), c);
 const oEllipse = (g, cx, cy, rx, ry, c, clip) => { ellipse(g, cx, cy, rx + 1, ry + 1, 'a', clip); ellipse(g, cx, cy, rx, ry, c, clip); };
 const oRect = (g, x, y, w, h, c) => { rect(g, x - 1, y - 1, w + 2, h + 2, 'a'); rect(g, x, y, w, h, c); };
 const hand = (g, cx, cy) => { oEllipse(g, cx, cy, 2.6, 3.1, 'e'); set(g, Math.round(cx) + 1, Math.round(cy) + 2, 'o'); };
@@ -252,58 +260,198 @@ function drawing(g, f) {
   hand(g, tx + 6, ty + 4);
 }
 
-function reading(g, f) {
-  const flip = f % 6 === 3;
-  oRect(g, 5, 41, 35, 13, 'L');
-  rect(g, 6, 41, 15, 11, 'W'); rect(g, 24, 41, 15, 11, 'W');
-  rect(g, 21, 41, 3, 13, 'T');
-  for (let y = 43; y <= 49; y += 2) { rect(g, 8, y, 11, 1, 'X'); rect(g, 26, y, 11, 1, 'X'); }
-  rect(g, 5, 53, 35, 1, 'V');
-  if (flip) for (let i = 0; i < 9; i++) rect(g, 24 + i, 40 - Math.round(Math.sin((i / 8) * Math.PI) * 4), 1, 2, 'W');
-  hand(g, 4, 47); hand(g, 41, 47);
+// ---------- reading pose: its own exact sprite (from Sanskriti's reading reference) ----------
+
+// read cell by cell from the reference (about 11.4 screen px per art pixel), 93×86
+const READING = [
+  '.............................................................................................',
+  '.............................................................................................',
+  '.............................................................................................',
+  '...............................................aaaaaaaaa.....................................',
+  '..............................................Oaaaaaaaaa.....................................',
+  '......................................AAaaaaaaaiiiiiiiitaaj..................................',
+  '...................................gggaaaiiiittttiTtTiiiitaX.................................',
+  '..................................aaaaiiiitttttttttaaaTittTa.................................',
+  '................................aaaaippittttttttttttaaattttaa................................',
+  '...............................aaatprittttttttaaaatttaaattTaaaaa.............................',
+  '..............................aaapppitttttttttaaaaaTtaaattaaaaaaaa...........................',
+  '.............................aaapppittttaaaaaaaaaaaataaaaaautiiiaaa..........................',
+  '............................aatpppttttaaaaaaaaaaaaaaaaaaaatttttiiaaa.........................',
+  '.................G.........aaippptttTaaatttttaaaaaaaaaaattttttttiitaa........................',
+  '.................G........aaappptttaaaTtttttttaaaaaaTttttttttttttiiaaa.......................',
+  '................oGC.......aapppptttaatittttttttaaaatttttttttttttttiiaa.......................',
+  '..............qqB.Cbq....aaHppppitaatttttttttttTaattttttaaatttttttiiiaa......................',
+  '..............owB.BDD....aappprpptatiittttaaaatTattttttttaaatttttttiHuaa.....................',
+  '................OC......XappptttttiiitttTaaaaaaTtttttttttttaaatittppppiaF....................',
+  '.................G.....OaTppptttttiittttaaaaaaaTttttttttttttaatirHppppraa....................',
+  '.................G.....aappptttttpiptiiaaaaaaaataaattttttttttaatpppppppaaT...................',
+  '.......................aapptttatppppHitaaIKeeeeJaaaattttttttttaatppttpptaa...................',
+  '.......................aiptttTatpppppraaIeeeeeeekaaautttttttttaaatttttiiaa...................',
+  '..........G...........aaiitttatpppttppaaIeeeeeeeeIaapttttttttttaattttttiaa...................',
+  '..........Gb..........aaitttaatrptttppaIeeeeeeeeeKaapptttittttttaatttttiaa...................',
+  '.........GnMG......aaaaitttaaairtttaiiaIeeeeeeeeeeaappptprttttttaaattttiiaa..................',
+  '..........G......jaaaatittaaatittttattaIeeeeeeeeeeBatppppptaTttttaaaTtttiuaa.................',
+  '................Taa.Tatttaaattttttaattaeeeeeeeeeeeeaaippttiaatttttaaaattttaaag...............',
+  '...............aaa..aattaaaattttttaattaeeeeeeeeRaaaaatiptttaaattttaaaaatttaaaaX..............',
+  '...............aaa..attaaaattttttaaattaeeeeeeeTaaTTuaaiitttTaaattttuaaaatta.aaa..............',
+  '...............aaa..ataaaatttttitaaataaaeeeeeeeeeeeeaatiitttaaaatttttaaaaaa..TaS.............',
+  '...............aaaagaaaattttttiiaaaITaeeeeeeeeeeeeeekaatittttaaaatttttTaaaaa..aat............',
+  '................aaaaaTtttttttiiaaaITaIeeeeeeeeeeeeeeeIaaiittttaaaattttttaaaaa.aaT............',
+  '.................aatrpittttiiiaaaIuaveeeeeeeeeeeaaaaaaaaaiittttaaaatttttttaaa.aaT............',
+  '...............aaapppiiiiiiiiaaaaIaaaaaeeeeeeeewaaaaaaaaaaiiiitttttttttttttaa.aaT............',
+  '..............aarpppiiiiiiiaaaaaaaaaaaaaeeeeeeeRaaanbnaaaaaaiiiiiiiiiittaaTtaaaaT............',
+  '.............aappppiiiaaaaaaaaaaaannnaaaeeeeeeeeaaatbbqaaaaaaaiiiiiiiiiiiTaaaaax.............',
+  '.............atppptaaaaaaaaataauaanbbaaaaeeeeeeeaaaabbbbaKIaaaaaaaaaaiiiiiaaaaa..............',
+  '.............arppaaaaaaaaattTaaaIaqbbaaaaeeeeeeeaaaabbbbaaaaaTaammmaaaaiiiiaaaa..............',
+  '............aarHaaaaaaaattttaaaaaabbbaaaaeeeeeeeuaaaqbbeeKeaaTaIIIIaaaaaiiiiaa...............',
+  '............atiaaaaaTaattttaaaaaaKaqbbaaaeeeeeeeeaaabnkkkKeeaaaIleIaaaaaatiiaa......G........',
+  '............aTtaaaataattttaaaaaaaeKknbuuueeeeeeeeeeeekkkkkeeaaeIeKaaaaaaaatitaa.....G........',
+  '............aTaa.aaTaatttaaaaaaaaekkkkeeeeeeeeeeeeeeekkkkkeeaKeeeaaaaataaatitaa....G.G.......',
+  '............aaaa.aataitttaaaaaaaaekkkkeeeeeeeeeeeeeeekkkkeeaaaaaaaaaaataaattiaa..GG...Gz.....',
+  '.............aTa.aaTiittaaaaTtaaaKkkkkeeee4eeee3eeeeeeeeeekaaaaaaaaaatttaatttaa....GqG.......',
+  '.............aaa.0aTiitTaaaattaaaaeeeeeeeee4434eeeeeeeeeeIaaaaataaaaatttaattaaS.....G........',
+  '..............aaaaaTiitTaaatttaaaaa1eeeeeeeeeeeeeeeeeeeIaaaaaatttaaattttaattaa......G........',
+  '................aaaTaittaaattttaaaaaaHeeeeeeeeeeeeeeevaaaaaaattttaattttaattaa...0............',
+  '.................taaaaitaaaatttaaaaaaaaa1keeeeeeeI1aaaaaaaaTttttaaattttataaa....aa...........',
+  '.................taataaiTaaaattTaaaTaaaaaaaaaaaaaaHJIIaaaatttttaaaatttaaaaaa.....aa..........',
+  '...........ga....aattTaaaaaaaattaaattaaaaaaaaaaaIIIIIIaaaittttaaaaatttaaatTaa....aa..........',
+  '..........aa....aatitaaaaaaaaattaaattaaaaaccaaaaIIIkKeaairritaaaaaattttaatttaaaaaaa..........',
+  '.........Sa...AaaiHtagnnnb22aaTaattttaaaaaaa2222sIeeeDatrrttavnnbgaatttTaaTttttttaF..........',
+  '.........Saa.TaaHHaa2CoCoonnnnaaatttaaaaannnnnoCeaaeeaaittTaabnneoaaattiitaaauTaax...........',
+  '.........SaaaaaHHiaannnnnoCcbnnaattaaaabnnCCConnnnaaIaaittaaobbccnnaaaTtiiiaaaaaj............',
+  '.........SaTtaurttamvmnnnbnnCcbbaataanbnoknnnbnnvvmaaaatttaabncBbnbaaaaatiintTaaaaa..........',
+  '..........aaTaiittaa444vvvbnnnConaaannCCnnnbmvmm444aaaatttaannBbbbbnaaaaaaanniiiuaaa.........',
+  '...........Faaitttaa44mmmmvmvbnnonabCobnevmvm4m4444aa4atttaanBcnbbbbbaaTaaaHnaiiiiaaa........',
+  '............aitttaaaammmmmmm4ssbnoonnnmv44m4mm44m444amaatttaaBbbbbbbnaattaannaaiiiiaaa.......',
+  '...........xaittaaaaammmmmmmmmmsnbnnsm4mm444m443Bm44aa4aattaabbbbcccbaaaTTnnaaaniiiiaaj......',
+  '...........aittaaaaaaummmmmmmmmmsvvssm444m4mmmlB1m44mam4attaanbccccccnaaaTbaaaabaiiiiaaT.....',
+  '..........aatttaaaaaaammmmmmmmmmu4444s444mBB4mBB4m44maamataannccnbbbboaaaTnaabnaaaiiiaaT.....',
+  '..........aatttaaaaaaaammmmmmmmms4444s4444BBBm1lm444maaataaKncBnbbbbbbnaaatnanaTaaaiiaaT.....',
+  '....aaaaaaaaaaaaaaaaaaamaaammmmmss444sm444mBB44mBBm44maaaaeKlBbnnbbbbbbaaaanaqaTaaaiiaaT.....',
+  '...aa55666666666777777aaeeea4mmmms4444s44mmmm1411mmmaaaaaaellBBBcobbbbbaaaaaaaaaaaaiiaaT.....',
+  '..aT5795777776582KKKKoaeee4aammmms4444sm4mBBBm1BB4aaeeeeeaalnnnnbccnbbaannnnnnnnaaaiia0......',
+  '..aU579777777688eeeeea1eeIeeuammmms444s4m44BB1B44maeeeeeeeaxCcbbbnccnbabb344444wnaaaaag......',
+  '..aT579777777688ekoooaeeeeeeKammmms444ss444m1B144sa31eeeee4abncbbbnccnabbbbbbbbbbcbnaa.......',
+  '..aa579777777688onnnKaKeeeek1ammmmss444sm44m4mBlma2eeeeeee4annbcbbbbcbabbbbbbbbbbaanbaa......',
+  '...aaaaaaaaaaaaaaaaaaaaeeeeeeasmmmms444sm44mmmmmmareeeeeee4abbncbbbbnnabbbddbd3bnaaunaa......',
+  '...aa111111111111l1Haea3eeeeaammmmms444smm4mmmmmmmakeeeeee4anbncbbbbbnabbndddddbnaganaa......',
+  '..aannnnnnnnnnnnC11zaeoaHkIuaauvmmmss444s4mmmm4mmmaaeeeeeIannnncbbbbnoabbbndddnbnaannaa......',
+  '..aannbbbbbbbnbne111aKKKaaaaccaaaumms444smmmmmaaaaaaauuuuaannncnbbbnooabbbbodbbbncnnna.......',
+  '..aaeoooooooeooee111aaKeKKKcccCcaaams444ssmmaaaaaaaaaaaaaanbnCCbnoooooanbbbbbbbbecnnaa.......',
+  '..aannnnnnnnnnnn111MaaauKKKcCCccaaaaam44maaaaaaaaaaavaaaoonncCnnoooooaaebbbbbbbbeaaaaaaaaa...',
+  'Xalaummmmmmm43333muaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaobbbbbbKaa1zz111zza..',
+  'Xa111111111111111z111111zzzz11111111111111111111111111111111111111111zB1aaaaaaaaa1z11111z1a..',
+  'l1111111111111111111111111111111111111111111111111111111111111111111111111111111z111111111...',
+  '...1111111111111111z11111111111111111111111111111111111111111111111111z11111111z1111111......',
+  '.........111111111111111111111111111111111111111111111111111111111111111111111111............',
+  '.............................................................................................',
+  '.............................................................................................',
+  '.............................................................................................',
+  '.............................................................................................',
+  '.............................................................................................',
+  '.............................................................................................',
+];
+
+const READ_EYES = [{ x0: 34, x1: 40, y0: 33, y1: 41 }, { x0: 48, x1: 56, y0: 33, y1: 41 }];
+const READ_SPARKLES = [{ x0: 14, x1: 21, y0: 13, y1: 20, c: [17, 16] }, { x0: 9, x1: 12, y0: 23, y1: 26, c: [10, 25] }, { x0: 81, x1: 87, y0: 40, y1: 46, c: [84, 43] }];
+
+function readingBlink(g) {
+  for (const b of READ_EYES) {
+    for (let y = b.y0; y <= b.y1; y++) for (let x = b.x0; x <= b.x1; x++) if ('anbqtuvTwIKk'.includes(get(g, x, y))) set(g, x, y, 'e');
+    rect(g, b.x0 + 1, 39, b.x1 - b.x0 - 1, 1, 'a');
+    pts(g, [[b.x0, 38], [b.x1, 38]], 'a');
+  }
+}
+
+function readingSparkles(g, f) {
+  const off = f % 3; // one sparkle rests while the other two shine
+  const b = READ_SPARKLES[off];
+  for (let y = b.y0; y <= b.y1; y++) for (let x = b.x0; x <= b.x1; x++) if (get(g, x, y) !== '.' && !HAIR_CHARS.includes(get(g, x, y))) set(g, x, y, '.');
+  set(g, b.c[0], b.c[1], 'G');
+}
+
+// a page lifts from the right, arcs over the spine, and settles on the left
+const FLIP_TIPS = [null, [48, 51], [45, 46], [38, 44], [31, 46], [27, 51]];
+function pageFlip(g, step) {
+  const tip = FLIP_TIPS[step];
+  if (!tip) return;
+  const [sx, sy] = [37, 55];
+  const [cx, cy] = [(sx + tip[0]) / 2, Math.min(sy, tip[1]) - 3]; // curve control point
+  const page = [];
+  for (let i = 0; i <= 24; i++) {
+    const t = i / 24, u = 1 - t;
+    const x = Math.round(u * u * sx + 2 * u * t * cx + t * t * tip[0]);
+    const y = Math.round(u * u * sy + 2 * u * t * cy + t * t * tip[1]);
+    for (let k = 0; k < 4; k++) page.push([x, y + k]);
+  }
+  const key = (x, y) => x + ',' + y;
+  const onPage = new Set(page.map(([x, y]) => key(x, y)));
+  page.forEach(([x, y]) => [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dx, dy]) => { if (!onPage.has(key(x + dx, y + dy))) set(g, x + dx, y + dy, 'a'); }));
+  page.forEach(([x, y]) => set(g, x, y, 'b'));
+  // a faint line of text on the page
+  for (let i = 6; i <= 18; i += 2) {
+    const t = i / 24, u = 1 - t;
+    set(g, Math.round(u * u * sx + 2 * u * t * cx + t * t * tip[0]), Math.round(u * u * sy + 2 * u * t * cy + t * t * tip[1]) + 2, 'D');
+  }
+}
+
+function readingFrame(f, blink) {
+  const g = READING.map((r) => r.split(''));
+  if (blink) readingBlink(g);
+  pageFlip(g, f % 12 < 6 ? f % 12 : 0);
+  readingSparkles(g, f);
+  g.viewBox = '0 -0.34 92.7 86.4';
+  return g;
 }
 
 // ---------- frames ----------
 
 export const ACTIVITIES = {
   coffee: { label: 'sipping coffee', frames: 8, speed: 360 },
+  reading: { label: 'reading', frames: 12, speed: 260 },
   ramen: { label: 'eating ramen', frames: 8, speed: 260 },
   drawing: { label: 'drawing', frames: 24, speed: 200 },
-  reading: { label: 'reading', frames: 12, speed: 380 },
 };
 
 export function buildFrame(activity = 'coffee', f = 0, { blink = false } = {}) {
+  if (activity === 'reading') return readingFrame(f, blink);
   const g = BASE.map((r) => r.split(''));
+  g.viewBox = '-3.11 0 67.12 64';
   const lift = activity === 'ramen' && (f % 4 === 1 || f % 4 === 2);
   const sip = activity === 'coffee' && f % 8 === 5;
 
   if (activity === 'coffee') driftSteam(g, f);
   else removeSteam(g);
 
-  const eyeMode = blink ? 'blink' : (lift || sip) ? 'happy' : (activity === 'drawing' || activity === 'reading') ? 'down' : 'open';
+  const eyeMode = blink ? 'blink' : (lift || sip) ? 'happy' : activity === 'drawing' ? 'down' : 'open';
   eyes(g, eyeMode);
   mouth(g, lift ? 'open' : activity === 'drawing' ? 'flat' : 'smile');
 
   if (activity === 'ramen') ramen(g, f);
   if (activity === 'drawing') drawing(g, f);
-  if (activity === 'reading') reading(g, f);
 
   sparkles(g, f);
   return g;
 }
 
-export function toSVG(grid, scale = 5) {
+// Every pose is shown in the same frame (the same area of the original 1254px artwork),
+// so switching poses never jumps. `height` is the rendered height in px.
+export const ASPECT = 1060.5 / 1011;
+
+export function toSVG(grid, height = 320) {
+  const H = grid.length, W = grid[0].length;
   let rects = '';
-  for (let y = 0; y < SIZE; y++) {
+  for (let y = 0; y < H; y++) {
     let x = 0;
-    while (x < SIZE) {
+    while (x < W) {
       const c = grid[y][x];
       if (c === '.') { x++; continue; }
       let run = 1;
-      while (x + run < SIZE && grid[y][x + run] === c) run++;
+      while (x + run < W && grid[y][x + run] === c) run++;
       rects += `<rect x="${x}" y="${y}" width="${run}" height="1" fill="${PALETTE[c] || '#f0f'}"/>`;
       x += run;
     }
   }
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE}" width="${SIZE * scale}" height="${SIZE * scale}" shape-rendering="crispEdges" role="img" aria-label="Pixel-art Sanskriti">${rects}</svg>`;
+  const vb = grid.viewBox || `0 0 ${W} ${H}`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" preserveAspectRatio="none" width="${Math.round(height * ASPECT)}" height="${height}" shape-rendering="crispEdges" role="img" aria-label="Pixel-art Sanskriti">${rects}</svg>`;
 }
