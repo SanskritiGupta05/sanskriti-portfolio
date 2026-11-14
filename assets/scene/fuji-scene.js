@@ -38,7 +38,7 @@ const C = Object.fromEntries(Object.entries({
   kimono: '#3f5b8c', kimonoD: '#2e4268', kimonoL: '#8fa6d6', collar: '#fbf6ee', obi: '#cc4436', hair: '#1f1717', hairL: '#3a2c2a', skin: '#f2c8a7', skinS: '#e2aa8a', kanzashi: '#f4a6bb', tabi: '#fbf6ee', zori: '#5b3e37',
   bird: '#3c3331', sparrow: '#8b6a4f', sparrowD: '#5b4535', sparrowL: '#d4b896', seed: '#d4a94e',
   koi: '#e8743c', koiL: '#fbe9dc', rope: '#f3efe6', ropeR: '#cc4436', birdFar: '#8a8f9e', doorGlow: '#f4c46a',
-  moon: '#fbf5e0', moonS: '#e6dcbc', star: '#fdf8e6', starD: '#b9c3e6', glowW: '#ffd27a', glowO: '#f2a548', glowY: '#fff0b8', firefly: '#e9f7a0', fireflyD: '#b8d46a', lampCap: '#3a2a26',
+  moon: '#fbf5e0', moonS: '#e6dcbc', star: '#fdf8e6', starD: '#b9c3e6', glowW: '#ffd27a', glowO: '#f2a548', glowY: '#fff0b8', firefly: '#e9f7a0', fireflyD: '#b8d46a', lampCap: '#3a2a26', moonLit: '#e4e7f8', moonLitD: '#aab3dc',
 }).map(([k, v]) => [k, hex(v)]));
 
 // ---------- helpers ----------
@@ -333,11 +333,13 @@ function makeCherry(b, r, x, base, size, lean) {
   return { x, base, size, clusters, shake: 0, box: { x0: x - size * 0.9, x1: x + size * 0.9, y0: minY - 4, y1: base } };
 }
 
-function drawCherry(out, tree, t, wind) {
+// moon: { x, y, list } at night: blossom pixels facing the moon are collected so the night pass can light them
+function drawCherry(out, tree, t, wind, moon = null) {
   tree.clusters.forEach((c) => {
     if (c.gone > 0.98) return;
     const sway = Math.sin(t * 0.9 + c.y * 0.08 + c.x * 0.02) * (0.6 + wind) * (0.3 + c.h) + (tree.shake ? (hash(c.seed, Math.floor(t * 10), 7) - 0.5) * 3 * tree.shake : 0);
     const ox = Math.round(c.x + sway), oy = Math.round(c.y), rr = c.r;
+    let mx = 0, my = 0; if (moon) { const dx = moon.x - ox, dy = moon.y - oy, dl = Math.hypot(dx, dy) || 1; mx = dx / dl; my = dy / dl; }
     for (let yy = -3; yy <= 3; yy++) for (let xx = -3; xx <= 3; xx++) {
       const d = Math.sqrt(xx * xx + yy * yy) / rr;
       if (d > 1.15 || hash(c.seed + xx, yy, 2) < d * 0.55 + c.gone) continue; // airy, ragged edges
@@ -345,6 +347,7 @@ function drawCherry(out, tree, t, wind) {
       const l = -(xx + yy) / (rr * 2) + c.h * 0.6 + (hash(c.seed, xx * 7 + yy, 1) - 0.5) * 0.5;
       const col = l > 0.75 ? C.bl0 : l > 0.35 ? C.bl1 : l > 0 ? C.bl2 : l > -0.35 ? C.bl3 : C.bl4;
       out.px(ox + xx, oy + yy, col);
+      if (moon) { const face = (xx * mx + yy * my) / rr - 0.2 + c.h * 0.35 + (hash(c.seed, xx * 5 + yy, 3) - 0.5) * 0.3; if (face > 0) moon.list.push(ox + xx, oy + yy, Math.min(1, face * 1.3), col); }
     }
   });
 }
@@ -449,9 +452,11 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30, night = false } = {
     const k = (y * W + x) * 4; if (same(k, C.wall)) windows.push([x, y, C.glowW]); else if (same(k, C.wallD)) windows.push([x, y, C.glowO]);
   }
   const stoneLamps = [[TORII.cx - 26, TORII.base + 8], [TORII.cx + 24, TORII.base + 8]].map(([x, base]) => [x + 1, base - 14]);
+  const moonRim = []; // [x, y, strength]: lit bark edges and the lighter foliage catch the moonlight
+  for (let y = 40; y < H; y++) for (let x = 0; x < W; x++) { const k = (y * W + x) * 4; if (same(k, C.barkL)) moonRim.push([x, y, 0.75]); else if (same(k, C.forestL)) moonRim.push([x, y, 0.3]); else if (same(k, C.grassL) && y > GROUND_Y) moonRim.push([x, y, 0.18]); }
   const stars = [];
   for (let n = 0; n < 400 && stars.length < 70; n++) { const x = (r() * W) | 0, y = (r() * 78) | 0; if (isSky[y * W + x]) stars.push({ x, y, ph: r() * 6, big: r() < 0.12 }); }
-  const MOON = { x: 64, y: 22 };
+  const MOON = { x: 70, y: 46 }, treeMoon = { x: 70, y: 46, list: [] }; // low enough to clear the faded top edge
   let nightK = night ? 1 : 0, nightTarget = night ? 1 : 0;
   const fireflies = Array.from({ length: 16 }, () => ({ x: r() * W, y: 118 + r() * 46, vx: 0, vy: 0, ph: r() * 6 }));
 
@@ -682,7 +687,8 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30, night = false } = {
     if (doorGlow > 0) { const y0 = HALL.base - 15; for (let y = y0 + 3; y < y0 + 12; y++) for (let x = HALL.cx - 4; x < HALL.cx + 5; x++) if (dither(x, y, doorGlow * (0.55 + 0.15 * Math.sin(time * 3)))) out.px(x, y, C.doorGlow, 220); }
     notes.forEach((n) => { const al = Math.min(255, n.life * 9); out.px(n.x, n.y, C.goldL, al); out.px(n.x + 1, n.y - 1, C.gold, al * 0.6); });
     // cherry trees (canopies sway in the wind)
-    trees.forEach((t) => drawCherry(out, t, time, wind));
+    treeMoon.list.length = 0;
+    trees.forEach((t) => drawCherry(out, t, time, wind, nightK > 0 ? treeMoon : null));
     // seeds, lady, sparrows
     seeds.forEach((s) => out.px(s.x, s.y, C.seed));
     if (lady.alpha > 0) {
@@ -724,6 +730,9 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30, night = false } = {
     const uncovered = (x, y) => { const i = (y * W + x) * 4; return d[i] === bg.d[i] && d[i + 1] === bg.d[i + 1] && d[i + 2] === bg.d[i + 2]; };
     const shownStars = stars.filter((st) => uncovered(st.x, st.y));
     const shownWindows = windows.filter(([x, y]) => uncovered(x, y)); // not behind a tree or the lady
+    const shownRim = moonRim.filter(([x, y]) => uncovered(x, y));
+    const tl = treeMoon.list, shownBloom = [];
+    for (let n = 0; n < tl.length; n += 4) { const x = tl[n], y = tl[n + 1], c = tl[n + 3]; if (x < 0 || y < 0 || x >= W || y >= H) continue; const i = (y * W + x) * 4; if (d[i] === c[0] && d[i + 1] === c[1] && d[i + 2] === c[2]) shownBloom.push(x, y, tl[n + 2]); }
     for (let y = 0; y < H; y++) {
       const m = y < 120 ? 0.52 + 0.5 * (y / 120) : 0.9; // the sky darkens towards the top
       for (let x = 0; x < W; x++) {
@@ -741,6 +750,9 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30, night = false } = {
     for (let y = -6; y <= 6; y++) for (let x = -6; x <= 6; x++) { const dd = x * x + y * y; if (dd <= 34) out.px(MOON.x + x, MOON.y + y, dd > 20 && x > 1 ? C.moonS : C.moon, a); }
     out.px(MOON.x - 2, MOON.y - 1, C.moonS, a * 0.7); out.px(MOON.x + 1, MOON.y + 2, C.moonS, a * 0.7); out.px(MOON.x - 1, MOON.y + 3, C.moonS, a * 0.5);
     for (let y = LAKE_TOP + 1; y < GROUND_Y - 1; y++) { const hw = 2 + (y - LAKE_TOP) * 0.5; for (let x = MOON.x - hw; x <= MOON.x + hw; x++) if ((y + Math.floor(time * 4 + x * 0.7)) % 3 === 0 && dither(x, y, 0.6)) out.px(x, y, C.moon, a * 0.8); }
+    // moonlight on the trees: blossoms facing the moon turn silvery, bark edges and foliage catch a cool rim
+    for (let n = 0; n < shownBloom.length; n += 3) { const st = shownBloom[n + 2]; out.px(shownBloom[n], shownBloom[n + 1], st > 0.6 ? C.moonLit : C.moonLitD, a * (0.25 + st * 0.45)); }
+    shownRim.forEach(([x, y, st]) => out.px(x, y, C.moonLitD, a * st * 0.6));
     // lit paper walls in the hall and pagoda, with a slow flicker
     const fl = 0.85 + 0.15 * Math.sin(time * 2.3) * Math.sin(time * 3.7);
     shownWindows.forEach(([x, y, c]) => out.px(x, y, c, a * fl));
