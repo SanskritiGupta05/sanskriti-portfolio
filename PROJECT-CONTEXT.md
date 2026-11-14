@@ -393,7 +393,24 @@ Bracketed names point to the references in section 7.
   - **Shared sound:** `assets/scene/scene-audio.js` has `chime()`, `chirp()`, and `setAmbient(on)` for a breeze with occasional birdsong, like Mythili's "park sound". The comparison page has a Sound on/off toggle.
   - **Comparison page:** `explorations/scene.html` (local only).
   - **Decision (2026-11-15): A · Pixel.** The painterly version (`fuji-scene-painted.js`) was deleted; it's still in git history. The scene keeps lake ripples, cloud shadows and the shared ambient sound.
-  - **Polish after choosing pixel:**
+  - **v2 rewrite (2026-11-15), after Sanskriti's feedback** that the interactions felt unrefined, the cherry trees weren't good enough, and Fuji and the temple needed work. The torii should be near the temple, with a bell.
+    - **Canvas:** now **440×170** (wider), running at 30 fps with time-based motion.
+    - **Cherry trees in the Pixel Play style** (from the Twitter video): a recursive dark branch skeleton drawn into the backdrop, plus hundreds of tiny pale-pink blossom clusters drawn every frame. The clusters are airy with ragged edges, lit from the top left and paler higher up. The canopy **sways in the wind** with occasional gusts, and petals pool under each tree. **Clicking a tree** shakes it and sheds a burst of petals; a few clusters thin out, then grow back. Hovering makes it rustle.
+    - **Fuji:** four-tone lighting, gullies and sunlit ridges fanning from the summit, rocky speckle, and a snow cap with fingers down the gullies and rocks poking through. There's a belt of forest at the base, then haze.
+    - **Temple complex on the right:**
+      - A **wide main hall**: stone platform and steps, red pillars, white walls with lattice doors, a big swept hip-and-gable roof with tiles, gold ridge ornaments and a name plaque.
+      - A **wider five-storey pagoda** with tiled swept roofs, balconies and a bronze spire.
+      - Wind bells on both work as damped pendulums.
+    - **The torii sits on the path just in front of the hall**, flanked by two stone lanterns, with a **shrine bell (suzu) on a red-and-white rope** hanging from its beam. Clicking it makes the bell swing with pendulum physics and play a jingly `suzu()` sound. The lady rings it on her way into the hall.
+    - **Hover reactions:** temple bells sway, the torii bell glints, a tree rustles, the lady pauses and bows, and **sparrows fly off if the pointer gets too close**. The cursor is a pointer over anything clickable.
+    - **Refined motion:**
+      - **Birds:** three-frame flaps with glides; they flee by climbing and speeding up, with a chirp.
+      - **Sparrows:** glide in on an eased arc, land with a hop, then peck, look around and hop between grains.
+      - **Seeds:** arc out of her hand and bounce once.
+      - **Lady:** a four-frame walk cycle with a step bob, a two-frame throw, and a soft shadow.
+      - **Lake:** clicking makes ripples, and sometimes a **koi leaps** and lands with a splash.
+    - **New sounds** in `scene-audio.js`: `suzu()`, `rustle()` and `splash()`.
+  - **Polish after choosing pixel (v1):**
     - **Trees:** lumpy outlines, dark rims underneath and speckled highlights, with slim dark pines mixed in on the pagoda's hill.
     - **Sun rays:** faint diagonal rays from the top right, gently pulsing.
     - **Grass:** taller tufts, denser toward the front.
@@ -425,3 +442,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-15:** Fuji scene v1: an interactive pixel-art banner with Fuji, the pagoda, a torii, cherry trees, the lady in a kimono, birds and sparrows, bell sounds, and soft transparent edges (`assets/scene/fuji-scene.js`).
 - **2026-11-15:** Built a painterly version of the Fuji scene next to the pixel one, with the same interactions. Added lake ripples, cloud shadows and shared ambient sound with birdsong and chimes to both. Comparison page set up.
 - **2026-11-15:** Sanskriti chose the pixel Fuji scene. Removed the painterly version, then polished the pixel one: richer trees and pines, sun rays, grass tufts.
+- **2026-11-15:** Fuji scene v2: Pixel-Play-style swaying cherry trees, a more detailed Fuji, a wide temple hall and wider pagoda, the torii moved in front of the hall with a shrine bell, hover reactions, refined bird, sparrow and lady motion, and a koi that leaps from the lake. Canvas widened to 440×170.

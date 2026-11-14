@@ -67,3 +67,33 @@ export function setAmbient(on) {
 }
 
 export const ambientOn = () => !!ambient;
+
+// suzu: the bright, jingly shrine bell that hangs from a torii (many high partials, a fast shimmer)
+export function suzu() {
+  try {
+    const a = audio(), now = a.currentTime;
+    for (let n = 0; n < 7; n++) {
+      const t0 = now + n * 0.045 + Math.random() * 0.03, f = 2400 + Math.random() * 1800;
+      [[1, 0.06], [1.51, 0.03], [2.3, 0.015]].forEach(([mult, amp]) => {
+        const o = a.createOscillator(), g = a.createGain();
+        o.type = 'triangle'; o.frequency.value = f * mult;
+        g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(amp, t0 + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.5 + Math.random() * 0.4);
+        o.connect(g).connect(master); o.start(t0); o.stop(t0 + 1);
+      });
+    }
+  } catch { /* no audio */ }
+}
+
+function noiseBurst(dur, type, freq, q, peak) {
+  const a = audio(), t0 = a.currentTime;
+  const buf = a.createBuffer(1, Math.ceil(a.sampleRate * dur), a.sampleRate), d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  const src = a.createBufferSource(); src.buffer = buf;
+  const f = a.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+  const g = a.createGain(); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(peak, t0 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  src.connect(f).connect(g).connect(master); src.start(t0); src.stop(t0 + dur);
+}
+// leaves rustling when a cherry tree is shaken
+export function rustle() { try { noiseBurst(0.6, 'bandpass', 2600, 0.8, 0.08); } catch { /* no audio */ } }
+// a small splash when a fish jumps
+export function splash() { try { noiseBurst(0.35, 'lowpass', 1400, 0.7, 0.12); } catch { /* no audio */ } }
