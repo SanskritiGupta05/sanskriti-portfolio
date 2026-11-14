@@ -358,6 +358,27 @@ Bracketed names point to the references in section 7.
 - **Superseded:** the first round of pixel-art stamps (postage, wax seal, hanko in `assets/stamp/stamp.js`) was removed when Sanskriti chose this image instead.
 - **Likely uses:** the logo or brand mark, the envelope interaction from the sitemap, the favicon (check it reads at 32px), and section accents.
 
+### Fuji scene: an interactive pixel-art banner (v1, 2026-11-15)
+
+- **Brief:** a Japanese take on Sam's pixel waterfall banner (samworks.vercel.app). It has Mount Fuji, a temple, a lady in a kimono, cherry blossoms and birds. The edges are soft so the **top fades into the page**, like the feathered footer scene on mythili.site. Sanskriti's photo references: Fuji framed by cherry blossoms over Lake Kawaguchi, the Chureito pagoda with Fuji, and torii gates in front of Fuji.
+- **Source:** `assets/scene/fuji-scene.js` (no framework). `mountFujiScene(canvas, { seed, fps })` paints a **400×170** pixel canvas, which is scaled up with `image-rendering: pixelated`, and returns `{ destroy() }`. The soft edges are a CSS mask on the canvas: the top fades from transparent to 34%, the bottom fades out over the last 12%, and the sides over 7%. See `explorations/scene.html` (local only, port 3015).
+- **What's in it, back to front:**
+  - **Sky:** calm colour bands with a dither only where they meet.
+  - **Fuji:** concave slopes lit from the left, ridges and gullies fanning from the summit, a jagged snow cap with snow fingers running down the ridges, haze at the base, and a cloud bank on its shoulders.
+  - **Hills and lake:** three hill ranges, and a lake with Fuji's snow reflected and twinkling sparkles.
+  - **Right side:** a wooded rise with green and blossom treetops, and a red five-storey pagoda (Chureito-style) with dark swept roofs, gold eave bells and a bronze spire.
+  - **Left side:** a red torii gate.
+  - **Foreground:** a meadow with a path that climbs to the pagoda's stone steps, a stone lantern, three cherry trees, fallen petals and tiny white flowers.
+- **Life (14 fps):**
+  - **Movement:** drifting clouds, falling petals that sway, and flocks of birds that flap across the sky.
+  - **The lady:** she walks up the path, stops, and every so often scatters food. Sparrows fly down to peck at it, then leave. After a while she walks up to the pagoda and fades into the temple, then the loop starts again from the bottom of the path.
+- **Clicks:**
+  - **Pagoda:** its wind bells ring (a Web Audio chime with three bell partials and random pentatonic notes), the bells sway, and gold sparkles rise.
+  - **A bird** (in the sky or on the ground): it and its neighbours fly off.
+  - **The lady:** she throws food, and sparrows come down to eat.
+  - The cursor turns into a pointer over anything clickable.
+- **Ideas for later:** a night mode tied to the lantern idea (lit pagoda windows, a glowing stone lantern, the moon, fireflies), the lady sitting on a bench, ripples on the lake, a mute toggle, reduced motion for people who turn animations off, and pausing when the scene is off-screen.
+
 ## 9. Change log
 
 - **2026-11-13:** Wiped the old portfolio (code, GitHub history reset to one empty commit, Figma Page 14 cleared, old notes deleted).
@@ -382,3 +403,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-15:** Drawing pose brought to life: breathing, an occasional happy smile, the cat breathing, wavy steam. The resting-sparkle dot is removed in all poses.
 - **2026-11-15:** Stamp asset, first round: postage stamp, wax seal and hanko, each with an S, in the mascot palette (`assets/stamp/stamp.js`).
 - **2026-11-15:** The S stamp asset is now Sanskriti's own stamp image, saved with a transparent background (`assets/stamp/stamp-s.png` + web copy `public/assets/stamp-s.png`). The pixel stamp versions were removed.
+- **2026-11-15:** Fuji scene v1: an interactive pixel-art banner with Fuji, the pagoda, a torii, cherry trees, the lady in a kimono, birds and sparrows, bell sounds, and soft transparent edges (`assets/scene/fuji-scene.js`).
