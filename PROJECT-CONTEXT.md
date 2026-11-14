@@ -392,7 +392,11 @@ Bracketed names point to the references in section 7.
   - **Same life and clicks in both:** bells on the pagoda, birds flying off, the lady feeding sparrows (now even mid-walk: she stops to feed them), and **ripples where you click the lake** (new). **Drifting cloud shadows** over the meadow are also new.
   - **Shared sound:** `assets/scene/scene-audio.js` has `chime()`, `chirp()`, and `setAmbient(on)` for a breeze with occasional birdsong, like Mythili's "park sound". The comparison page has a Sound on/off toggle.
   - **Comparison page:** `explorations/scene.html` (local only).
-  - **Waiting on:** Sanskriti to pick A or B.
+  - **Decision (2026-11-15): A · Pixel.** The painterly version (`fuji-scene-painted.js`) was deleted; it's still in git history. The scene keeps lake ripples, cloud shadows and the shared ambient sound.
+  - **Polish after choosing pixel:**
+    - **Trees:** lumpy outlines, dark rims underneath and speckled highlights, with slim dark pines mixed in on the pagoda's hill.
+    - **Sun rays:** faint diagonal rays from the top right, gently pulsing.
+    - **Grass:** taller tufts, denser toward the front.
 
 ## 9. Change log
 
@@ -420,3 +424,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-15:** The S stamp asset is now Sanskriti's own stamp image, saved with a transparent background (`assets/stamp/stamp-s.png` + web copy `public/assets/stamp-s.png`). The pixel stamp versions were removed.
 - **2026-11-15:** Fuji scene v1: an interactive pixel-art banner with Fuji, the pagoda, a torii, cherry trees, the lady in a kimono, birds and sparrows, bell sounds, and soft transparent edges (`assets/scene/fuji-scene.js`).
 - **2026-11-15:** Built a painterly version of the Fuji scene next to the pixel one, with the same interactions. Added lake ripples, cloud shadows and shared ambient sound with birdsong and chimes to both. Comparison page set up.
+- **2026-11-15:** Sanskriti chose the pixel Fuji scene. Removed the painterly version, then polished the pixel one: richer trees and pines, sun rays, grass tufts.

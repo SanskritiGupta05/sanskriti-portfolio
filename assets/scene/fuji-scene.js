@@ -148,16 +148,29 @@ function paintLake(b) {
 }
 
 function tree(b, x, y, h, r, bloom = false) {
-  // a small round tree (green or blossom) used for the forested hill
+  // a small round tree (green or blossom) used for the forested hill: lumpy outline, lit from the top-left,
+  // a dark rim underneath and a few bright specks so it reads as foliage rather than a ball
   const cols = bloom ? [C.bloomD, C.bloomM, C.bloom, C.bloomL] : [C.forestDD, C.forestD, C.forest, C.forestL];
   const rx = h * 0.55, ry = h * 0.5;
-  for (let yy = -ry; yy <= ry; yy++) for (let xx = -rx; xx <= rx; xx++) {
-    const d = (xx * xx) / (rx * rx) + (yy * yy) / (ry * ry);
-    if (d > 1 || (d > 0.75 && r() < 0.35)) continue;
-    const light = -(xx / rx) * 0.5 - (yy / ry) * 0.6; // lit from the top-left
-    const k = light > 0.45 ? 3 : light > 0.05 ? 2 : light > -0.4 ? 1 : 0;
+  const lump = (a) => 1 + Math.sin(a * 5 + x) * 0.12 + Math.sin(a * 9 + y) * 0.06;
+  for (let yy = -ry - 1; yy <= ry + 1; yy++) for (let xx = -rx - 1; xx <= rx + 1; xx++) {
+    const d = Math.sqrt((xx * xx) / (rx * rx) + (yy * yy) / (ry * ry)) / lump(Math.atan2(yy, xx));
+    if (d > 1) continue;
+    const light = -(xx / rx) * 0.5 - (yy / ry) * 0.6;
+    let k = light > 0.45 ? 3 : light > 0.05 ? 2 : light > -0.4 ? 1 : 0;
+    if (d > 0.86 && yy > 0) k = 0;                 // dark rim underneath
+    if (k >= 2 && r() < 0.06) k = 3;               // speckled highlights
     b.px(x + xx, y + yy, cols[k]);
   }
+}
+
+function pine(b, x, y, h) {
+  // a slim dark conifer for variety on the hill
+  for (let j = 0; j < h; j++) {
+    const w = Math.max(0, Math.round((j / h) * h * 0.32 + (j % 3 === 0 ? 1 : 0)));
+    for (let i = -w; i <= w; i++) b.px(x + i, y - h + j, i < 0 ? C.forestD : C.forestDD);
+  }
+  b.px(x, y - h - 1, C.forestD);
 }
 
 function paintHillRight(b, r) {
@@ -169,7 +182,8 @@ function paintHillRight(b, r) {
   for (let i = 0; i < 70; i++) {
     const x = 238 + r() * 165, top = 118 - Math.min(22, (x - 236) * 0.42);
     if (Math.abs(x - PAGODA.cx) < 15 && r() < 0.8) continue; // keep the pagoda clear
-    tree(b, x, top + r() * 16, 5 + r() * 5, r, r() < 0.28);
+    if (r() < 0.16) pine(b, x, top + 10 + r() * 8, 9 + r() * 6);
+    else tree(b, x, top + r() * 16, 5 + r() * 5, r, r() < 0.28);
   }
 }
 
@@ -205,6 +219,13 @@ function paintLantern(b, x, base) {
 
 // fallen petals and little flowers scattered in the grass
 function paintGroundDetails(b, r) {
+  // tufts of taller grass, denser toward the front
+  for (let i = 0; i < 220; i++) {
+    const x = r() * W | 0, y = GROUND_Y + 6 + ((1 - Math.pow(r(), 2)) * (H - GROUND_Y - 6) | 0);
+    if (Math.abs(x - pathX(y)) < 6 + (y - GROUND_Y) * 0.8) continue;
+    const hgt = 2 + (r() * 3 | 0) + ((y - GROUND_Y) > 25 ? 1 : 0);
+    for (let k = 0; k < hgt; k++) { b.px(x, y - k, k === hgt - 1 ? C.grassL : C.grassD); if (k > 0 && r() < 0.5) b.px(x + (r() < 0.5 ? -1 : 1), y - k + 1, C.grassD); }
+  }
   for (let i = 0; i < 160; i++) {
     const x = r() * W | 0, y = GROUND_Y + 1 + (r() * (H - GROUND_Y - 1) | 0);
     if (Math.abs(x - pathX(y)) < 8 + (y - GROUND_Y) * 0.7) continue; // keep the path clean-ish
@@ -362,6 +383,8 @@ export function mountFujiScene(canvas, { seed = 7, fps = 14 } = {}) {
   const grains = [];
   const notes = [];   // little sparkles rising from the bells
   const ripples = []; // rings on the lake where it's clicked
+  // sun rays: diagonal bands from the top-right, drawn every frame with a slow pulse
+  const RAYS = [[300, 10], [338, 13], [372, 8], [262, 7]].map(([x, w]) => ({ x, w }));
   const shadows = [{ x: 60, y: 150, w: 70 }, { x: 260, y: 160, w: 90 }]; // cloud shadows drifting over the meadow
   let bellSwing = 0;
 
@@ -458,6 +481,17 @@ export function mountFujiScene(canvas, { seed = 7, fps = 14 } = {}) {
       for (let yy = -4; yy <= 4; yy++) for (let xx = -c.w / 2; xx <= c.w / 2; xx++) {
         const d = (xx * xx) / ((c.w / 2) ** 2) + (yy * yy) / 16 + (yy > 0 ? 0.2 : 0);
         if (d < 1 && dither(Math.round(c.x + xx), Math.round(c.y + yy), 1.1 - d)) out.px(c.x + xx, c.y + yy, yy > 1 ? C.cloud2 : C.cloud, 200);
+      }
+    });
+    // sun rays: light diagonal bands, strongest high up, dithered so they stay pixel-crisp
+    RAYS.forEach((ray, i) => {
+      const pulse = 0.55 + 0.45 * Math.sin(frame * 0.03 + i * 1.7);
+      for (let y = 0; y < 126; y++) {
+        const cx = ray.x - y * 0.62, fade = (1 - y / 126) * pulse;
+        for (let x = Math.round(cx - ray.w / 2); x <= cx + ray.w / 2; x++) {
+          const edge = 1 - Math.abs(x - cx) / (ray.w / 2);
+          if (dither(x, y, edge * fade * 0.5)) out.px(x, y, C.cloud, 46);
+        }
       }
     });
     // cloud shadows: a soft darker patch sliding across the meadow
