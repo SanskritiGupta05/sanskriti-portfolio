@@ -91,7 +91,8 @@ function svgMarkup(id, bracket) {
     <rect x="180" y="42" width="20" height="6" rx="1.5" fill="url(#${id}-bronze)"/>
   </g>` : ''}
   <g class="ltn-swing">
-    <ellipse class="ltn-lit" cx="190" cy="330" rx="235" ry="250" fill="url(#${id}-glow)"/>
+    <ellipse class="ltn-lit ltn-halo" cx="190" cy="330" rx="235" ry="250" fill="url(#${id}-glow)"/>
+    <g class="ltn-hit">
     <g stroke-linecap="round" fill="none">
       <line x1="190" y1="46" x2="190" y2="59" stroke="#5a3a1f" stroke-width="4.5"/>
       <circle cx="190" cy="70" r="11" stroke="#6a4322" stroke-width="4.2"/><circle cx="190" cy="70" r="11" stroke="#c08a52" stroke-width="1.2" stroke-dasharray="9 60"/>
@@ -120,6 +121,7 @@ function svgMarkup(id, bracket) {
     <circle cx="137" cy="498" r="2.6" fill="#e3b47c"/><circle cx="243" cy="498" r="2.6" fill="#e3b47c"/>
     <ellipse cx="190" cy="512" rx="56" ry="4.5" fill="#2a1a0e"/><ellipse class="ltn-lit" cx="190" cy="512" rx="56" ry="4.5" fill="#ffd58a"/>
 
+    </g>
     <line class="ltn-cordline" x1="190" y1="514" x2="190" y2="542" stroke="#b8402b" stroke-width="2.8"/>
     <g class="ltn-pull">
       <g class="ltn-cord" role="button" tabindex="0" aria-label="Pull the lantern cord" aria-pressed="false">
@@ -148,6 +150,8 @@ const CSS = `
 @keyframes ltn-ignite{0%{opacity:0}12%{opacity:.7}22%{opacity:.15}40%{opacity:.95}52%{opacity:.5}100%{opacity:1}}
 .ltn .ltn-bracket{transition:filter .7s ease}
 .ltn.is-lit .ltn-bracket{filter:brightness(.72) saturate(.9)}
+.ltn .ltn-halo{pointer-events:none}
+.ltn .ltn-hit{cursor:pointer}
 .ltn .ltn-cord{cursor:grab;outline:none;touch-action:none}
 .ltn .ltn-cord:active{cursor:grabbing}
 .ltn .ltn-focus{opacity:0}
@@ -209,6 +213,11 @@ export function mountLantern(host, { lit = false, bracket = true, sound = true, 
   window.addEventListener('pointercancel', up);
   cord.addEventListener('keydown', key);
   cord.addEventListener('pointerenter', hover);
+  const body = svg.querySelector('.ltn-hit');
+  const bodyClick = () => tap();
+  const bodyHover = () => { va += 0.06; vtz += 0.5; };
+  body.addEventListener('click', bodyClick);
+  body.addEventListener('pointerenter', bodyHover);
 
   function frame(now) {
     const dt = Math.min(2.5, (now - last) / 16.67); last = now;
