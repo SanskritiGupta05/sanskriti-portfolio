@@ -491,18 +491,44 @@ const DRAWING = [
 const DRAW_EYES = [{ x0: 45, x1: 52, y0: 38, y1: 46 }, { x0: 61, x1: 70, y0: 37, y1: 46 }];
 const DRAW_SPARKLES = [{ x0: 24, x1: 32, y0: 16, y1: 25, c: [28, 21] }, { x0: 19, x1: 25, y0: 25, y1: 32, c: [22, 29] }, { x0: 96, x1: 106, y0: 45, y1: 52, c: [101, 49] }];
 const DRAW_STEAM = { x0: 12, x1: 19, y0: 55, y1: 66, chars: 'wcDnq' };
-const DRAW_PEN = { x0: 32, x1: 44, y0: 55, y1: 72 };
+// Writing motion: her fist glides left and right in short strokes (like writing a line),
+// the pen cap follows, and small pencil marks appear on the page as she goes.
+const FIST = { x0: 35, x1: 46, y0: 64, y1: 77 };          // fist + pen tip
+const PEN_CAP = { x0: 34, x1: 41, y0: 58, y1: 63, chars: 'XxS0PbÄ' };
+const STROKE = [0, 1, 1, 1, 0, -1, -1, -1];                  // fist offset per frame (px)
+const MARKS = [[47, 77], [48, 77], [49, 78], [50, 78]];      // pencil marks that build up on the page
 
-// the pen hand bobs a pixel, like she's mid-stroke
-function penStroke(g, box, f) {
-  if (f % 2 === 0) return;
-  for (let y = box.y1; y > box.y0; y--) for (let x = box.x0; x <= box.x1; x++) g[y][x] = g[y - 1][x];
+function shiftRect(g, b, dx) {
+  if (!dx) return;
+  const src = g.map((r) => r.slice());
+  for (let y = b.y0; y <= b.y1; y++) for (let x = b.x0; x <= b.x1; x++) {
+    const sx = Math.min(b.x1 + 1, Math.max(b.x0 - 1, x - dx)); // pull from the neighbour column at the edges
+    g[y][x] = src[y][sx];
+  }
+}
+
+function inpaintRow(g, x, y, skip) {
+  for (let d = 1; d < 6; d++) for (const nx of [x - d, x + d]) { const c = get(g, nx, y); if (c !== '.' && !skip(nx, y)) return set(g, x, y, c); }
+}
+
+function penStroke(g, f) {
+  const dx = STROKE[f % STROKE.length];
+  shiftRect(g, FIST, dx);
+  // redraw the pen cap so it stays attached to the moving fist
+  const cap = [];
+  for (let y = PEN_CAP.y0; y <= PEN_CAP.y1; y++) for (let x = PEN_CAP.x0; x <= PEN_CAP.x1; x++) if (PEN_CAP.chars.includes(get(g, x, y))) cap.push([x, y]);
+  const onCap = new Set(cap.map(([x, y]) => x + ',' + y));
+  cap.forEach(([x, y]) => inpaintRow(g, x, y, (nx, ny) => onCap.has(nx + ',' + ny)));
+  line(g, 38 + dx, 59, 40 + dx, 63, 'X'); line(g, 37 + dx, 59, 39 + dx, 63, '0');
+  set(g, 37 + dx, 58, 'P'); set(g, 38 + dx, 58, 'b');
+  // marks build up over the cycle, then the page "resets"
+  pts(g, MARKS.slice(0, Math.floor((f % 16) / 4) + 1), 'X');
 }
 
 function drawingFrame(f, blink) {
   const g = DRAWING.map((r) => [...r]);
   if (blink) blinkIn(g, DRAW_EYES, 44);
-  penStroke(g, DRAW_PEN, f);
+  penStroke(g, f);
   riseSteam(g, DRAW_STEAM, f);
   twinkle(g, DRAW_SPARKLES, f);
   g.viewBox = '-0.01 -0.38 114.84 100.39';
@@ -659,7 +685,7 @@ export const ACTIVITIES = {
   coffee: { label: 'sipping coffee', frames: 8, speed: 360 },
   reading: { label: 'reading', frames: 12, speed: 260 },
   ramen: { label: 'eating ramen', frames: 8, speed: 280 },
-  drawing: { label: 'drawing', frames: 12, speed: 300 },
+  drawing: { label: 'drawing', frames: 16, speed: 140 },
 };
 
 export function buildFrame(activity = 'coffee', f = 0, { blink = false } = {}) {
