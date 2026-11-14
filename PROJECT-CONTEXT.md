@@ -421,6 +421,15 @@ Bracketed names point to the references in section 7.
     - **Sun rays:** faint diagonal rays from the top right, gently pulsing.
     - **Grass:** taller tufts, denser toward the front.
 
+### Lantern: the light/dark switch (2026-11-15)
+
+- **Brief:** Sanskriti's reference is a paper chōchin lantern hanging from a wooden wall bracket on a bronze hook and ring. It has bronze rims, a cherry branch with blossoms and buds, a red Fuji with a snow cap over seigaiha waves, and a red knot, bead and tassel below. **The site starts in light mode with the lantern unlit. Pulling the tassel lights the lantern and switches the whole site to dark mode. Pulling again switches back.**
+- **Source:** `assets/lantern/lantern.js`, built in SVG (not the reference image). `mountLantern(host, { lit, bracket, sound, onToggle })` returns `{ setLit, lit, destroy }`. The page sets its own theme in `onToggle(lit)`; the demo sets `data-theme="dark"` on `<html>` and swaps CSS colour variables with a 0.7 s fade. See `explorations/lantern.html` (local only, port 3015).
+- **Unlit:** warm cream paper with horizontal ribs, faint seams, and edge shading.
+- **Lit:** a multiply layer turns the paper amber, and a screen layer adds a bright core with a gentle candle flicker. A soft orange glow spreads around the lantern, the bottom opening glows, and the bracket dims. The light flickers on over about 0.9 s.
+- **Interaction:** drag the tassel down: the cord stretches with resistance and the light switches once it's pulled past about half way. A tap, Enter or Space also pulls it. The cord springs back with a bounce, the lantern swings from the pull and sways gently in a breeze all the time, and the tassel trails behind. Hovering nudges it. Sound: `cordPull(on)` in `scene-audio.js`, a soft click plus a small rising (on) or falling (off) tone. Reduced motion turns off the sway.
+- **Gotcha:** the lantern must sit above other content (`z-index`), or the page text catches the clicks.
+
 ## 9. Change log
 
 - **2026-11-13:** Wiped the old portfolio (code, GitHub history reset to one empty commit, Figma Page 14 cleared, old notes deleted).
@@ -453,3 +462,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-15:** Kimono colours set back to indigo with a red obi (pink was tried; Sanskriti preferred the original). The bigger size stays.
 - **2026-11-15:** Clouds now drift with the wind: Fuji's cloud bank moves slowly, the sky clouds faster, and both quicken in gusts.
 - **2026-11-15:** More background birds (far-off flocks). The lady now enters the temple: back view, two claps, a bow, the deep temple bell with a glowing doorway, then she goes inside and later restarts. Clicking the hall rings the temple bell.
+- **2026-11-15:** Lantern asset: an SVG paper lantern from Sanskriti's reference. Pulling the tassel lights it (glow + flicker) and switches the page to dark mode (`assets/lantern/lantern.js`, `cordPull` sound).

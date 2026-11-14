@@ -114,5 +114,17 @@ export function templeBell() {
   } catch { /* no audio */ }
 }
 
+// the lantern's pull cord: a soft click, then a small rising (on) or falling (off) tone
+export function cordPull(on) {
+  try {
+    noiseBurst(0.05, 'highpass', 3200, 0.7, 0.1);
+    const a = audio(), t0 = a.currentTime + 0.05, o = a.createOscillator(), g = a.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(on ? 440 : 330, t0); o.frequency.exponentialRampToValueAtTime(on ? 660 : 220, t0 + 0.14);
+    g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.06, t0 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.35);
+    o.connect(g).connect(master); o.start(t0); o.stop(t0 + 0.4);
+  } catch { /* no audio */ }
+}
+
 // a hand clap (kashiwade), as visitors do at a shrine
 export function clap() { try { noiseBurst(0.09, 'bandpass', 1800, 1.4, 0.22); } catch { /* no audio */ } }
