@@ -140,14 +140,6 @@ function paintFuji(b, r) {
       b.px(x, y, c);
     }
   }
-  // cloud bank on the shoulders
-  for (let i = 0; i < 30; i++) {
-    const x = 30 + r() * 300, y = 80 + r() * 14, rx = 6 + r() * 13, ry = 2 + r() * 3;
-    for (let yy = -ry; yy <= ry; yy++) for (let xx = -rx; xx <= rx; xx++) {
-      const d = (xx * xx) / (rx * rx) + (yy * yy) / (ry * ry);
-      if (d < 1 && dither(Math.round(x + xx), Math.round(y + yy), 1 - d * 0.7)) b.px(x + xx, y + yy, yy < 0 ? C.cloud : C.cloud2, 215);
-    }
-  }
 }
 
 function paintHills(b) {
@@ -421,7 +413,10 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
   const rand = Math.random;
   let time = 0, frame = 0, wind = 0.4, gust = 0, raf = 0, last = 0;
   const petals = [];
-  const clouds = [{ x: 40, y: 16, w: 36 }, { x: 260, y: 9, w: 26 }, { x: 350, y: 30, w: 20 }];
+  const clouds = [{ x: 40, y: 16, w: 36, v: 1 }, { x: 260, y: 9, w: 26, v: 1.3 }, { x: 350, y: 30, w: 20, v: 0.8 }, { x: 150, y: 44, w: 16, v: 1.15 }];
+  // the cloud bank wrapped around Fuji's shoulders drifts slowly within the mountain's span (x 30–330)
+  const BANK = { x0: 30, x1: 330 }, bankPuffs = [];
+  for (let i = 0; i < 30; i++) bankPuffs.push({ x: BANK.x0 + r() * (BANK.x1 - BANK.x0), y: 80 + r() * 14, rx: 6 + r() * 13, ry: 2 + r() * 3, sp: 0.8 + r() * 0.5 });
   const shadows = [{ x: 60, y: 152, w: 70 }, { x: 290, y: 160, w: 90 }];
   const flock = [], sparrows = [], seeds = [], notes = [], ripples = [], splashes = [];
   let koi = null;
@@ -520,7 +515,8 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
     for (let i = petals.length - 1; i >= 0; i--) if (petals[i].y > H || petals[i].x > W + 3 || petals[i].life <= 0) petals.splice(i, 1);
     trees.forEach((t) => { t.shake *= 0.94; if (t.shake < 0.02) t.shake = 0; t.clusters.forEach((c) => { if (c.gone > 0) c.gone = Math.max(0, c.gone - 0.0015); }); });
     if (hover?.kind === 'tree' && rand() < 0.08) hover.tree.shake = Math.max(hover.tree.shake, 0.25);
-    clouds.forEach((c) => { c.x += 0.05; if (c.x > W + 40) c.x = -c.w - 10; });
+    clouds.forEach((c) => { c.x += (0.08 + wind * 0.12) * c.v; if (c.x - c.w / 2 > W + 4) c.x = -c.w; });
+    bankPuffs.forEach((p) => { p.x += (0.03 + wind * 0.05) * p.sp; if (p.x > BANK.x1 + p.rx) p.x = BANK.x0 - p.rx; });
     shadows.forEach((s) => { s.x += 0.12; if (s.x - s.w > W) s.x = -s.w; });
 
     // bells: damped pendulums; hovering the temple or the torii bell nudges them
@@ -591,6 +587,14 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
     RAYS.forEach((ray, i) => {
       const pulse = 0.55 + 0.45 * Math.sin(time * 0.6 + i * 1.7);
       for (let y = 0; y < 124; y++) { const cx = ray.x - y * 0.62, fade = (1 - y / 124) * pulse; for (let x = Math.round(cx - ray.w / 2); x <= cx + ray.w / 2; x++) { const edge = 1 - Math.abs(x - cx) / (ray.w / 2); if (dither(x, y, edge * fade * 0.45)) out.px(x, y, C.ray, 50); } }
+    });
+    // the cloud bank on Fuji's shoulders, fading out at both ends of its span
+    bankPuffs.forEach((p) => {
+      const fade = Math.max(0, Math.min(1, (p.x - BANK.x0) / 40, (BANK.x1 - p.x) / 40));
+      for (let yy = -p.ry; yy <= p.ry; yy++) for (let xx = -p.rx; xx <= p.rx; xx++) {
+        const d = (xx * xx) / (p.rx * p.rx) + (yy * yy) / (p.ry * p.ry), x = Math.round(p.x + xx), y = Math.round(p.y + yy);
+        if (d < 1 && dither(x, y, (1 - d * 0.7) * fade)) out.px(x, y, yy < 0 ? C.cloud : C.cloud2, 215);
+      }
     });
     // drifting clouds
     clouds.forEach((c) => { for (let yy = -4; yy <= 4; yy++) for (let xx = -c.w / 2; xx <= c.w / 2; xx++) { const d = (xx * xx) / ((c.w / 2) ** 2) + (yy * yy) / 16 + (yy > 0 ? 0.2 : 0); if (d < 1 && dither(Math.round(c.x + xx), Math.round(c.y + yy), 1.1 - d)) out.px(c.x + xx, c.y + yy, yy > 1 ? C.cloud2 : C.cloud, 205); } });
