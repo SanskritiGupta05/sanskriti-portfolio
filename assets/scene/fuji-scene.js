@@ -35,7 +35,7 @@ const C = Object.fromEntries(Object.entries({
   bark: '#4a302a', barkD: '#2f1e1b', barkL: '#6a4a40',
   bl0: '#fff6f8', bl1: '#fbe3ea', bl2: '#f5cbd8', bl3: '#eab0c3', bl4: '#d891a8',
   ink: '#2a2324', stone: '#a49c92', stoneL: '#bdb6ac', stoneD: '#7f776e',
-  kimono: '#ea8dab', kimonoD: '#c9677f', kimonoL: '#fff1f4', collar: '#fbf6ee', obi: '#9c2f2a', hair: '#1f1717', hairL: '#3a2c2a', skin: '#f2c8a7', skinS: '#e2aa8a', kanzashi: '#f4a6bb', tabi: '#fbf6ee', zori: '#5b3e37',
+  kimono: '#3f5b8c', kimonoD: '#2e4268', kimonoL: '#8fa6d6', collar: '#fbf6ee', obi: '#cc4436', hair: '#1f1717', hairL: '#3a2c2a', skin: '#f2c8a7', skinS: '#e2aa8a', kanzashi: '#f4a6bb', tabi: '#fbf6ee', zori: '#5b3e37',
   bird: '#3c3331', sparrow: '#8b6a4f', sparrowD: '#5b4535', sparrowL: '#d4b896', seed: '#d4a94e',
   koi: '#e8743c', koiL: '#fbe9dc', rope: '#f3efe6', ropeR: '#cc4436',
 }).map(([k, v]) => [k, hex(v)]));
