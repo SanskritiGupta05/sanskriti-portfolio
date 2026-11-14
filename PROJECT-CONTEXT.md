@@ -179,7 +179,52 @@ imagery, careful type, room to breathe. It does not mean little content or bare 
 
 ## 7. Reference feedback
 
-_Nothing yet. Add likes and dislikes here as Sanskriti reviews the list._
+### Batch 1: Sanskriti's own picks (2026-11-14)
+
+I opened each one in a browser at 1440px, hovered and clicked through the interactions, and checked what it's built with.
+
+| Site | What stands out (small details included) | Built with |
+|---|---|---|
+| [piyushjain.in](https://piyushjain.in) | The whole page is a **postage stamp** with perforated edges. Click a tile in the pattern strip to "pick up" a stamp, which leaves a white perforated hole; it follows the cursor and you click to stick it anywhere. Keyboard support and a reset button. Condensed italic display name with a small photo. | Custom JS; Roobert + Morganite |
+| [siddique26.vercel.app](https://siddique26.vercel.app/) | **Word-by-word reveal**: each word appears behind a sliding highlight block. Company names are monospace tags with tinted backgrounds. A **"/ Jump anywhere" command bar** styled like a terminal (`/siddique work microsoft`, `open the case-study deck`, `email`), with coloured verb tags. Cursor-following spotlight on cards; accordion rows. | Next.js; Basier Square + Roboto Mono |
+| [prabhavs.com](https://prabhavs.com/) | Greeting changes with the time of day ("Good morning…"). Hovering the company name swaps it for its logo; hovering his name shows a photo stack. A **pixel character walks into a scene for each hobby** (running, then a marathon arch) with a lesson under each. Folder-style project cards. Footer is an **animated illustrated chai stall** with steam, a flickering lamp, a moth, and a man on a bench nodding, plus "Ek chai ho jaaye? Text me". | Rive + Lottie, CSS keyframes; Cirka serif + Geist Mono |
+| [karidesign.studio/work/claims](https://karidesign.studio/work/claims) | Case study: a row of phone screens up top, a metadata grid (role, timeline, team, scope, skills) as grey chips, and **big results in an italic serif** (−50%, Oct 2025). Sticky left contents list with an active dot, a thin **scroll progress bar** at the top, a **Before / After toggle** on the screenshots, a "Notes" switch (coming soon), and a next-case-study footer. Tiny labels in a **pixel font**. | Next.js; PP Neue Montreal + PP Editorial Old + PP NeueBit |
+| [janehou.ca](https://www.janehou.ca/) | Dark, small intro with a year/company/role table. Scrolling moves the project cards sideways on a **curved, cylinder-like WebGL surface**, and the cards autoplay video. **"Leave feedback" mode** shrinks the site into a rounded card and opens a Figma-style comments panel; click anywhere to comment. | Astro + WebGL; TeX Gyre Heros |
+| [mythili.site](https://www.mythili.site/) | Keywords in the bio ("interface", "motion", "3D") each get their own **colour and tiny icon**. Hovering a project icon **blurs the page** while the icon grows and real product screens fan out from it with a one-liner and "View" button. Work history is a **flight path**: a plane icon travels down a curved dotted line. Bottom dock with links and a **sound toggle**. Handwritten accent font. | Next.js; Public Sans + DM Mono + handwriting |
+| [henribredt.de](https://henribredt.de/) | **All monospace** (IBM Plex Mono) on near-black. **Live clock** ("07:12:46 CET"). Linked words sit in grey highlight boxes. Hovering the black-and-white photo **turns it to colour** and shows a small caption ("Henri, eating. A little surprised. Shot on Olympus…"). Logo line-draws on hover. Footer has a **colophon** dialog listing the fonts, plus theme and text-size toggles. Handwriting font for notes. | Astro; IBM Plex Mono + Reenie Beanie |
+| [knowspace.si](https://knowspace.si/?k=airplane-windows) | Landing: a **ring of photographed museum objects slowly drifting** around a serif headline. Inside: an **infinite canvas** of fact cards you drag around, zoom %, ⌘K search, "Surprise me", a daily counter ("0 of 20 today"), and a side scrubber. | Custom; Newsreader + Geist |
+| [samworks.vercel.app](https://samworks.vercel.app/) | **Pixel-art banner** and avatar. Job title **cycles letter by letter** (Design Engineer ↔ Frontend Developer). Visitor counter. Thin full-width rule lines frame every section like a blueprint grid. Project cards with live status dots and tech tags. "Tech stack: hover to play". | Next.js + Motion + Tailwind; Instrument Serif + Inter |
+| [dutilh.net](https://dutilh.net/) | Header is a **mosaic-tile picture** (Sutro Tower) drawn on a canvas. Big italic serif headline. Live status ("I'm away from my laptop right now"). **Tiny hand-drawn doodles** inline next to words, and a live counter in an accent colour. **Scattered polaroids** at slight angles with handwritten captions. Sound and theme toggles. | Next.js; Cormorant Garamond + Inter |
+| [kshv.me](https://www.kshv.me/) | Around "design engineer" sits a **Figma-style selection box** with a dimension label (118 × 23): a design-tool joke inside a sentence. A **3D pixel/dithered temple scene** with a **time-of-day slider** (labels दिन / रात, Devanagari numerals, and a **postage-stamp slider handle**) that relights the scene. GitHub stars roll like an **odometer**. Section icons are **stamps**. "Hover to preview, click to try it live" sandbox. | Next.js + Three.js; Geist + Rozha One |
+| [benlau.design](https://benlau.design/) | Pages stacked like **sheets of paper** peeking at the top. A **hand-drawn red circle** around "fractional design", and a **signature** under the bio. **Custom cursor.** Hovering a list row **dims all other rows**; tooltips like "Copy email" and "Draw something". Playground projects are Japanese-inspired: Ink (calligraphy), Sumi, Washi. | Next.js; Geist |
+| [X: Pixel Play](https://x.com/SolutionB2u/status/2119458988165370270) | **Interactive pixel-art trees** (cherry blossom, bush, autumn tree) that sway with wind. Controls for weather, wind direction, speed and gusts, plus skeleton and sound toggles; "Grow back" after leaves fall. | Asset pack by feralui.dev |
+| [X: Line art animation](https://x.com/dhruvtwt_/status/2119845363058426066) | A **Japanese street in thin line art** (machiya shopfronts, a canal with a boat, cyclists, umbrellas, power lines). It moves through a **day → dusk → night cycle**: windows light up warm, the moon rises, lanterns glow and reflect in the water, and bikes get headlights. A small clock sits in the corner. | Made with Claude; inspired by @zzzzshawn |
+| [X: WebGL butterfly](https://x.com/Navedux/status/2119808000768741439) | A **dot-matrix butterfly** in WebGL with a technical HUD: "TRACKING 25 POINTS", live X/Y coordinate pins following the wing flutter, and a target box on the cursor. | WebGL + illos.dev shader style |
+
+### Patterns across the batch
+
+1. **One hand-made "world" moment per site:** an illustrated or pixel scene that's clearly personal (chai stall, temple, mosaic tower, Japanese street, sakura trees). The rest of the page stays quiet.
+2. **Time and liveness:** time-of-day greetings, live clocks, day/night sliders, "away from my laptop" status, visitor counters. The site feels alive right now.
+3. **Rich details inside sentences:** highlighted tags, keyword icons, a selection box, hand-drawn circles and doodles. The text is simple, but words carry small surprises. This fits our Redaction 35 highlights.
+4. **Design-tool and terminal jokes as UI:** command bar, comment mode, before/after toggle, selection box, HUD coordinates. They show "I make interfaces" without saying it.
+5. **Hover is where the richness lives:** photo turns to colour, icons fan out, siblings dim, logos swap in. Layouts are calm; the delight is in the interaction.
+6. **Text motion:** word-by-word reveals, letter cycling, odometer digits.
+7. **Paper and object metaphors:** postage stamps (two sites), polaroids, stacked sheets, signatures, folders.
+8. **Type:** almost all pair a serif or display face with a mono or neutral sans, often plus a handwriting accent for notes. That's very close to our Redaction + Courier.
+9. **Sound toggles** on several sites (Mythili, Dutilh, Pixel Play).
+10. **Tech:** mostly Next.js (some Astro). Delight comes mostly from CSS transitions plus one heavier piece where it matters: Rive/Lottie, Three.js or WebGL.
+
+### Ideas that fit our direction (white, Redaction, Courier typewriter)
+
+- A **typewriter command bar** ("/sanskriti open work…") set in Courier.
+- **Inline highlights** in Redaction 35, plus small hand-drawn marks (circles, arrows) for key words.
+- A **live detail**, such as a local-time clock or a "currently…" line.
+- **Hover reveals**: a black-and-white photo turning to colour with a typed caption, and project rows dimming their siblings.
+- One **hand-made scene** as the signature moment, for example a line-art street with a day → night cycle or interactive pixel cherry trees. To be decided section by section.
+- A **case-study template** like Kari's: metadata chips, big serif results, sticky contents list, before/after toggle.
+- A **colophon** listing the fonts and tools: a nice nod for a type-led site.
+
+_Still waiting on Sanskriti's own likes and dislikes from this batch._
 
 ## 8. Sections
 
@@ -196,3 +241,4 @@ _Not started. Sanskriti will describe each section; record its content and decis
 - **2026-11-13:** Stack decided: Next.js + Tailwind (no vanilla CSS), with libraries such as Motion and Three.js used freely (section 5b).
 - **2026-11-13:** Highlight cut changed from Redaction 50 to **Redaction 35** (less broken, Sanskriti preferred it).
 - **2026-11-13:** Body ink changed from Soft to **Printed** (gentle edge roughening, displacement scale 0.6).
+- **2026-11-14:** Analysed Sanskriti's first batch of 16 inspiration links (11 sites + X posts): interactions, details, tech and patterns, in section 7.
