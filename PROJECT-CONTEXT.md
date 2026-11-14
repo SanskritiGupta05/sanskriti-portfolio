@@ -226,9 +226,97 @@ I opened each one in a browser at 1440px, hovered and clicked through the intera
 
 _Still waiting on Sanskriti's own likes and dislikes from this batch._
 
-## 8. Sections
+## 8. Sitemap and section ideas
 
-_Not started. Sanskriti will describe each section; record its content and decisions here._
+Source: Sanskriti's sitemap (`docs/portfolio-sitemap.pdf`, 2026-11-14). The ideas below are **proposals, not decisions yet**.
+Bracketed names point to the references in section 7.
+
+### Sitemap
+
+- **Home:** logo · top scene (Mount Fuji + Japanese temple, lantern = dark/light mode) · intro (floating design objects, visual work showcase, intro text, CTA: resume + work) · tech stack · case studies (primary, vibe-coded; other projects live on the Work page) · visual experiments · why I like Japanese design (archive) · what I'm learning these days (archive) · footer
+- **About:** pictures + journey · interests · design meetups · why I like Japanese design
+- **Work:** primary · vibe-coded · other (GFG, Keploy, Dualite)
+- **Playground**
+
+**Content from the sitemap:**
+- Primary projects: AppX, DreamLaunch × Bounce, eight.money.
+- Vibe-coded projects: Uxie, Spiderman cards, "Little lights" for Diwali.
+- Intro text mentions: where she works now, previous employers, B.Tech CSE graduate.
+- **Journey:**
+  1. Dad was the first in the family to get a computer and loved digital gadgets; that's where the interest in tech came from.
+  2. Started with MS Paint and Photoshop; always the kid drawing teachers loved, and got sent to drawing competitions.
+  3. Was amazed by how much information was on the internet, and got curious about how tech works.
+  4. Started on Twitter, attended tech meetups, wrote blogs, did 100 Days of Code (a lot of frontend dev).
+  5. Internship at GFG, one of the biggest tech-education platforms ("a dream come true"). Picked up design there, learned and explored a lot of visual design, and got a really nice farewell. Childhood creative instincts mixed with tech and creative direction gave her a head start.
+  6. "Then, sky was the limit": lots of freelance gigs to understand the industry, mostly with Bangalore tech startups such as Keploy and Dualite.
+  7. Worked with some of the best Bangalore startup founders and a design studio; now at AppX, a YC-backed company.
+- **Interests:** painting, anime, movies, clay modelling, rangoli, cafe hopping, sketching, and now vibe coding.
+- **One thing she especially likes:** going to design meetups.
+- **Footer copy idea:** "Reach out / hire me so I can fund my dream Japan trip" + Calendly + a Japanese illustration.
+
+### Ideas: Home
+
+- **Logo:** a postage-stamp mark with perforated edges and a small Ghibli-style mascot inside [Piyush, Keshav]. **Envelope interaction:** click the stamp and it peels off and lands on an envelope, which opens to show contact links. A small detail: the stamp gets a circular Japanese postmark with today's date and time, so it's slightly different every visit [Henri's live clock].
+- **Top scene:** Mount Fuji and a temple in thin line art [Dhruv line art]. **Pulling the lantern switches day → night:** the sky dims, windows and lanterns glow warm, the moon rises, and reflections appear. The page loads in the visitor's own time of day [Prabhav greeting, Keshav day/night slider]. Light mode keeps the white page; dark mode is "night". Small ambient motion: drifting clouds, birds, a swaying lantern tassel.
+- **Floating design objects:** a loose ring of her real objects drifting slowly (pen-tool cursor, colour swatch, sketchbook, clay piece, rangoli powder, ramen bowl). Each has a Courier label on hover and can be dragged [Knowspace]. They can double as the visual work showcase: click one to open that work.
+- **Intro text:**
+  - Types itself out in Courier, typewriter style, word by word [Siddique reveal].
+  - Inline details inside the sentence:
+    - "product designer" wrapped in a Figma-style selection box with its size label [Keshav].
+    - "AppX" swaps to its logo on hover [Prabhav].
+    - A few keywords in Redaction 35 with tiny icons [Mythili].
+    - "B.Tech CSE" as a typed footnote marker¹ that expands on hover.
+- **CTA (Resume + Work):**
+  - "Work" scrolls to the case studies.
+  - "Résumé" is a sheet of paper that slides up, as if pulled out of a typewriter.
+- **Tech stack:** each tool printed on a mini postage stamp, in a short row or a stamp-album strip. On hover a stamp lifts and tilts; optional typewriter-key click sound [Keshav stamps, Sam "hover to play"].
+- **Case studies:**
+  - **Primary** (AppX, DreamLaunch × Bounce, eight.money): large rows. On hover the page softly blurs and real screens fan out from the project [Mythili], or the other rows dim [Ben].
+  - **Vibe-coded** (Uxie, Spiderman cards, Little lights): "hover to preview, click to try it live" cards that play the actual project [Keshav sandbox].
+- **Case study page template:** metadata chips (role, timeline, team, scope), big results in Redaction, sticky contents list with an active dot, a reading-progress line, and a before/after toggle on screens [Kari].
+- **Visual experiments:** polaroids scattered at slight angles with handwritten captions, draggable [Dutilh]. On hover a photo straightens and turns from black-and-white to colour [Henri].
+- **Archive notes** (why Japanese design, what I'm learning): dated, typed index cards or journal entries, each with a "read more" to the long read. Margin notes in a handwriting accent.
+- **Footer:**
+  - An illustrated Japanese scene with her mascot, for example a small ramen stall or a train passing Fuji [Prabhav chai stall, Dhruv]. It changes with day/night mode.
+  - **"Japan trip fund"** joke: a tiny savings jar or progress meter, with "Hire me so I can fund my dream Japan trip".
+  - Calendly as "Book a chat", like a seat at the stall [Prabhav "bench pe jagah hai"].
+
+### Ideas: About
+
+- **Journey as a train line:** each milestone is a station. Scrolling moves a small train or her mascot along the line [Mythili flight path, Prabhav walking character]. Photos hang at stations as polaroids [Dutilh].
+- **Each era styled in its own tool:**
+  - The MS Paint / Photoshop station looks like MS Paint pixels.
+  - The Twitter station looks like a tweet.
+  - The 100 Days of Code station looks like a terminal.
+  - GFG shows the farewell note.
+- **Interests:** one small interactive moment each, instead of a list:
+  - **Rangoli:** a symmetry drawing pad where visitors draw a rangoli with mirrored strokes.
+  - **Clay:** a 3D clay piece you can spin (Three.js).
+  - **Painting and sketching:** sketchbook pages that flip.
+  - **Anime and movies:** ticket stubs.
+  - **Cafe hopping:** a mini map with pins.
+  - **Vibe coding:** a blinking cursor.
+- **Design meetups:** a wall of real meetup lanyards and name badges you can swing or drag.
+- **Why I like Japanese design:** the long read, typed in Courier with handwritten margin notes and Redaction highlights.
+
+### Ideas: Work and Playground
+
+- **Work:** an index list with filters (Primary / Vibe-coded / Other: GFG, Keploy, Dualite). Hovering a row dims the others and shows a small preview near the cursor [Ben].
+- **Playground:** an infinite canvas of experiments you drag around, with "Surprise me" [Knowspace].
+
+### Global ideas
+
+- **Command bar** in Courier, opened with "/" (for example `/sanskriti open work`, `/sanskriti email`, `/sanskriti résumé`) [Siddique].
+- **Live detail:** her local time in India.
+- **Colophon:** the fonts and tools used.
+- **Sound toggle:** typewriter clicks, and a wind chime in night mode.
+
+### Open questions
+
+- Dark mode: the lantern implies a night theme. Is white only the day theme?
+- Mascot: who is it (her as a character, an animal, or an object), and how Ghibli-like?
+- Navigation: top bar, bottom dock, or command bar only?
+- Which reference ideas does she like or reject?
 
 ## 9. Change log
 
@@ -242,3 +330,4 @@ _Not started. Sanskriti will describe each section; record its content and decis
 - **2026-11-13:** Highlight cut changed from Redaction 50 to **Redaction 35** (less broken, Sanskriti preferred it).
 - **2026-11-13:** Body ink changed from Soft to **Printed** (gentle edge roughening, displacement scale 0.6).
 - **2026-11-14:** Analysed Sanskriti's first batch of 16 inspiration links (11 sites + X posts): interactions, details, tech and patterns, in section 7.
+- **2026-11-14:** Added Sanskriti's sitemap and a first round of section ideas based on the references (section 8).
