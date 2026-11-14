@@ -456,6 +456,7 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30, night = false } = {
   for (let y = 40; y < H; y++) for (let x = 0; x < W; x++) { const k = (y * W + x) * 4; if (same(k, C.barkL)) moonRim.push([x, y, 0.75]); else if (same(k, C.forestL)) moonRim.push([x, y, 0.3]); else if (same(k, C.grassL) && y > GROUND_Y) moonRim.push([x, y, 0.18]); }
   const stars = [];
   for (let n = 0; n < 400 && stars.length < 70; n++) { const x = (r() * W) | 0, y = (r() * 78) | 0; if (isSky[y * W + x]) stars.push({ x, y, ph: r() * 6, big: r() < 0.12 }); }
+  const ladyPx = []; // her pixels this frame (x, y, r, g, b), so the night pass can light her
   const MOON = { x: 70, y: 46 }, treeMoon = { x: 70, y: 46, list: [] }; // low enough to clear the faded top edge
   let nightK = night ? 1 : 0, nightTarget = night ? 1 : 0;
   const fireflies = Array.from({ length: 16 }, () => ({ x: r() * W, y: 118 + r() * 46, vx: 0, vy: 0, ph: r() * 6 }));
@@ -687,7 +688,7 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30, night = false } = {
     if (doorGlow > 0) { const y0 = HALL.base - 15; for (let y = y0 + 3; y < y0 + 12; y++) for (let x = HALL.cx - 4; x < HALL.cx + 5; x++) if (dither(x, y, doorGlow * (0.55 + 0.15 * Math.sin(time * 3)))) out.px(x, y, C.doorGlow, 220); }
     notes.forEach((n) => { const al = Math.min(255, n.life * 9); out.px(n.x, n.y, C.goldL, al); out.px(n.x + 1, n.y - 1, C.gold, al * 0.6); });
     // cherry trees (canopies sway in the wind)
-    treeMoon.list.length = 0;
+    treeMoon.list.length = 0; ladyPx.length = 0;
     trees.forEach((t) => drawCherry(out, t, time, wind, nightK > 0 ? treeMoon : null));
     // seeds, lady, sparrows
     seeds.forEach((s) => out.px(s.x, s.y, C.seed));
@@ -699,8 +700,9 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30, night = false } = {
       const wf = walking ? Math.floor(lady.clock / 7) % 4 : 0, feet = LADY_FEET[wf];
       const bob = walking && wf % 2 ? 1 : 0, bow = lady.bow > 0.5 ? 1 : 0;
       for (let dx = 3; dx <= 10; dx++) out.px(lady.x + dx, lady.y + LADY_H - 1, C.grassDD, Math.round(a * (dx === 3 || dx === 10 ? 0.25 : 0.45))); // soft shadow
-      rows.forEach((row, j) => [...row].forEach((ch, i) => { if (ch !== '.') out.px(lady.x + i, lady.y + j + bob + (j < 10 ? bow : 0), LADY_PAL[ch], a); }));
-      feet.forEach((row, j) => [...row].forEach((ch, i) => { if (ch !== '.') out.px(lady.x + i, lady.y + rows.length + j, LADY_PAL[ch], a); }));
+      const put = (x, y, c) => { out.px(x, y, c, a); if (nightK > 0 && x >= 0 && y >= 0 && x < W && y < H) { const i = (y * W + x) * 4; ladyPx.push(x, y, out.d[i], out.d[i + 1], out.d[i + 2]); } };
+      rows.forEach((row, j) => [...row].forEach((ch, i) => { if (ch !== '.') put(lady.x + i, lady.y + j + bob + (j < 10 ? bow : 0), LADY_PAL[ch]); }));
+      feet.forEach((row, j) => [...row].forEach((ch, i) => { if (ch !== '.') put(lady.x + i, lady.y + rows.length + j, LADY_PAL[ch]); }));
     }
     sparrows.forEach((s) => {
       if (s.state === 'arrive' && s.clock < 0) return;
@@ -731,6 +733,8 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30, night = false } = {
     const shownStars = stars.filter((st) => uncovered(st.x, st.y));
     const shownWindows = windows.filter(([x, y]) => uncovered(x, y)); // not behind a tree or the lady
     const shownRim = moonRim.filter(([x, y]) => uncovered(x, y));
+    const shownLady = [];
+    for (let n = 0; n < ladyPx.length; n += 5) { const x = ladyPx[n], y = ladyPx[n + 1], i = (y * W + x) * 4; if (d[i] === ladyPx[n + 2] && d[i + 1] === ladyPx[n + 3] && d[i + 2] === ladyPx[n + 4]) shownLady.push(n); }
     const tl = treeMoon.list, shownBloom = [];
     for (let n = 0; n < tl.length; n += 4) { const x = tl[n], y = tl[n + 1], c = tl[n + 3]; if (x < 0 || y < 0 || x >= W || y >= H) continue; const i = (y * W + x) * 4; if (d[i] === c[0] && d[i + 1] === c[1] && d[i + 2] === c[2]) shownBloom.push(x, y, tl[n + 2]); }
     for (let y = 0; y < H; y++) {
@@ -760,11 +764,24 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30, night = false } = {
     glow(PAGODA.cx, PAGODA.base - 26, 22, C.glowO, 0.1 * k * fl);
     // stone lanterns by the torii
     stoneLamps.forEach(([x, y], n) => { const f2 = 0.8 + 0.2 * Math.sin(time * 5 + n * 2); glow(x + 1, y + 1, 9, C.glowW, 0.45 * k * f2); out.rect(x, y, 3, 2, C.glowY, a); });
+    // the lady, lit by her own lantern and the moon
+    if (lady.alpha > 0) { const back = lady.state === 'inside' || (lady.state === 'enter' && lady.clock >= 26); glow(lady.x + (back ? 12 : 13), lady.y + 17, 14, C.glowW, 0.55 * k * lady.alpha); } // her lantern's halo, behind her
+    if (lady.alpha > 0 && shownLady.length) {
+      const back = lady.state === 'inside' || (lady.state === 'enter' && lady.clock >= 26), lx = lady.x + (back ? 12 : 13), ly = lady.y + 17;
+      const onLady = new Set(shownLady.map((n) => ladyPx[n + 1] * W + ladyPx[n]));
+      shownLady.forEach((n) => {
+        const x = ladyPx[n], y = ladyPx[n + 1], s = Math.max(0, 1 - Math.hypot(x - lx, (y - ly) * 0.8) / 18); // how close to her lantern
+        const lit = 0.6 + 0.4 * s, warm = 38 * s;
+        const c = [Math.min(255, ladyPx[n + 2] * lit + warm), Math.min(255, ladyPx[n + 3] * lit + warm * 0.7), Math.min(255, ladyPx[n + 4] * (lit - 0.08 * s) + warm * 0.2)];
+        out.px(x, y, c, a * lady.alpha * 0.9);
+        // a cool moonlit edge on her outline facing the moon (up and to the left)
+        if (!onLady.has((y - 1) * W + x) || !onLady.has(y * W + x - 1)) out.px(x, y, C.moonLitD, a * lady.alpha * 0.35);
+      });
+    }
     // the lady carries a little paper lantern
     if (lady.alpha > 0) {
       const back = lady.state === 'inside' || (lady.state === 'enter' && lady.clock >= 26);
       const lx = lady.x + (back ? 11 : 12), ly = lady.y + 15 + Math.round(Math.sin(time * 4) * 0.6), la = a * lady.alpha;
-      glow(lx + 1, ly + 2, 10, C.glowW, 0.5 * k * lady.alpha);
       out.px(lx + 1, ly - 1, C.lampCap, la);
       out.rect(lx, ly, 3, 4, C.glowW, la); out.px(lx + 1, ly + 1, C.glowY, la); out.px(lx + 1, ly + 2, C.glowY, la);
       out.hline(lx, lx + 2, ly, C.glowO, la); out.hline(lx, lx + 2, ly + 3, C.glowO, la); out.px(lx + 1, ly + 4, C.lampCap, la);
