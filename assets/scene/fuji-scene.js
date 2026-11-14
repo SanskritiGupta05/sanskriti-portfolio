@@ -38,6 +38,7 @@ const C = Object.fromEntries(Object.entries({
   kimono: '#3f5b8c', kimonoD: '#2e4268', kimonoL: '#8fa6d6', collar: '#fbf6ee', obi: '#cc4436', hair: '#1f1717', hairL: '#3a2c2a', skin: '#f2c8a7', skinS: '#e2aa8a', kanzashi: '#f4a6bb', tabi: '#fbf6ee', zori: '#5b3e37',
   bird: '#3c3331', sparrow: '#8b6a4f', sparrowD: '#5b4535', sparrowL: '#d4b896', seed: '#d4a94e',
   koi: '#e8743c', koiL: '#fbe9dc', rope: '#f3efe6', ropeR: '#cc4436', birdFar: '#8a8f9e', doorGlow: '#f4c46a',
+  moon: '#fbf5e0', moonS: '#e6dcbc', star: '#fdf8e6', starD: '#b9c3e6', glowW: '#ffd27a', glowO: '#f2a548', glowY: '#fff0b8', firefly: '#e9f7a0', fireflyD: '#b8d46a', lampCap: '#3a2a26',
 }).map(([k, v]) => [k, hex(v)]));
 
 // ---------- helpers ----------
@@ -56,8 +57,8 @@ class Buf {
     for (let j = 0; j < 3; j++) this.d[i + j] = (c[j] * k + this.d[i + j] * ia * (1 - k)) / (oa || 1);
     this.d[i + 3] = oa * 255;
   }
-  rect(x, y, w, h, c) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) this.px(x + i, y + j, c); }
-  hline(x0, x1, y, c) { for (let x = Math.round(x0); x <= Math.round(x1); x++) this.px(x, y, c); }
+  rect(x, y, w, h, c, a = 255) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) this.px(x + i, y + j, c, a); }
+  hline(x0, x1, y, c, a = 255) { for (let x = Math.round(x0); x <= Math.round(x1); x++) this.px(x, y, c, a); }
   line(x0, y0, x1, y1, c, w = 1) {
     const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0), 1);
     for (let k = 0; k <= n; k++) { const x = x0 + (x1 - x0) * k / n, y = y0 + (y1 - y0) * k / n; for (let i = 0; i < w; i++) this.px(x - (w >> 1) + i, y, c); }
@@ -426,7 +427,7 @@ const SPARROW_PAL = { s: C.sparrow, D: C.ink, e: C.goldD, L: C.sparrowL, l: C.sp
 const KOI = [['.ooo.', 'ooWoo'], ['..oo.', '.oWoo', 'oo...']];
 
 // ---------- the scene ----------
-export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
+export function mountFujiScene(canvas, { seed = 7, fps = 30, night = false } = {}) {
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
   const r = rng(seed);
@@ -437,6 +438,22 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
   paintPagoda(bg); paintHall(bg); paintTorii(bg);
   lantern(bg, TORII.cx - 26, TORII.base + 8); lantern(bg, TORII.cx + 24, TORII.base + 8);
   const trees = [makeCherry(bg, r, 34, H + 2, 68, 0.1), makeCherry(bg, r, 414, H + 2, 60, -0.12), makeCherry(bg, r, 238, GROUND_Y + 4, 30, 0.05)];
+
+  // ---- night: what is sky (for stars), what glows (paper walls of the hall and pagoda, stone lantern windows) ----
+  const skyRef = new Buf(); paintSky(skyRef);
+  const isSky = new Uint8Array(W * H);
+  for (let i = 0; i < W * 120; i++) { const k = i * 4; isSky[i] = bg.d[k] === skyRef.d[k] && bg.d[k + 1] === skyRef.d[k + 1] && bg.d[k + 2] === skyRef.d[k + 2] ? 1 : 0; }
+  const same = (k, c) => bg.d[k] === c[0] && bg.d[k + 1] === c[1] && bg.d[k + 2] === c[2];
+  const windows = []; // [x, y, colour]: the white paper walls light up warm from inside
+  for (const box of [HALL.box, PAGODA.box]) for (let y = box.y0; y <= box.y1; y++) for (let x = box.x0; x <= box.x1; x++) {
+    const k = (y * W + x) * 4; if (same(k, C.wall)) windows.push([x, y, C.glowW]); else if (same(k, C.wallD)) windows.push([x, y, C.glowO]);
+  }
+  const stoneLamps = [[TORII.cx - 26, TORII.base + 8], [TORII.cx + 24, TORII.base + 8]].map(([x, base]) => [x + 1, base - 14]);
+  const stars = [];
+  for (let n = 0; n < 400 && stars.length < 70; n++) { const x = (r() * W) | 0, y = (r() * 78) | 0; if (isSky[y * W + x]) stars.push({ x, y, ph: r() * 6, big: r() < 0.12 }); }
+  const MOON = { x: 64, y: 22 };
+  let nightK = night ? 1 : 0, nightTarget = night ? 1 : 0;
+  const fireflies = Array.from({ length: 16 }, () => ({ x: r() * W, y: 118 + r() * 46, vx: 0, vy: 0, ph: r() * 6 }));
 
   // ---- state ----
   const rand = Math.random;
@@ -539,6 +556,9 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
   // ---- simulation ----
   function step(dt) {
     frame++; time += dt;
+    nightK += Math.sign(nightTarget - nightK) * Math.min(Math.abs(nightTarget - nightK), dt * 0.8); // ~1.3 s fade
+    if (nightK > 0) fireflies.forEach((ff) => { ff.ph += 0.05; ff.vx = ff.vx * 0.96 + (rand() - 0.5) * 0.05; ff.vy = ff.vy * 0.96 + (rand() - 0.5) * 0.04; ff.x += ff.vx + wind * 0.05; ff.y += ff.vy;
+      if (ff.x < -4) ff.x = W + 3; if (ff.x > W + 4) ff.x = -3; if (ff.y < 112) ff.vy += 0.03; if (ff.y > 166) ff.vy -= 0.03; });
     // wind with occasional gusts
     if (rand() < 0.004) gust = 1;
     gust *= 0.985; wind = 0.35 + gust * 0.9 + Math.sin(time * 0.3) * 0.1;
@@ -564,8 +584,8 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
       bd.x += bd.vx; bd.y += bd.vy + (bd.flee ? 0 : Math.sin(time + bd.x * 0.05) * 0.05);
     });
     for (let i = flock.length - 1; i >= 0; i--) { const b = flock[i]; if (b.x < -20 || b.x > W + 20 || b.y < -15) flock.splice(i, 1); }
-    if (flock.length < 14 && rand() < 0.012) spawnFlock();
-    if (!flock.some((b) => !b.far) && rand() < 0.02) spawnFlock(false);
+    if (flock.length < (nightK > 0.5 ? 3 : 14) && rand() < (nightK > 0.5 ? 0.002 : 0.012)) spawnFlock(); // birds roost at night
+    if (nightK < 0.5 && !flock.some((b) => !b.far) && rand() < 0.02) spawnFlock(false);
 
     // the lady: walk to her spot, feed the birds, walk on through the torii (ringing its bell), into the hall
     lady.clock++;
@@ -630,7 +650,7 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
     out.d.set(bg.d);
     // sun rays
     RAYS.forEach((ray, i) => {
-      const pulse = 0.55 + 0.45 * Math.sin(time * 0.6 + i * 1.7);
+      const pulse = (0.55 + 0.45 * Math.sin(time * 0.6 + i * 1.7)) * (1 - nightK); if (pulse <= 0) return;
       for (let y = 0; y < 124; y++) { const cx = ray.x - y * 0.62, fade = (1 - y / 124) * pulse; for (let x = Math.round(cx - ray.w / 2); x <= cx + ray.w / 2; x++) { const edge = 1 - Math.abs(x - cx) / (ray.w / 2); if (dither(x, y, edge * fade * 0.45)) out.px(x, y, C.ray, 50); } }
     });
     // the cloud bank on Fuji's shoulders, fading out at both ends of its span
@@ -644,7 +664,7 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
     // drifting clouds
     clouds.forEach((c) => { for (let yy = -4; yy <= 4; yy++) for (let xx = -c.w / 2; xx <= c.w / 2; xx++) { const d = (xx * xx) / ((c.w / 2) ** 2) + (yy * yy) / 16 + (yy > 0 ? 0.2 : 0); if (d < 1 && dither(Math.round(c.x + xx), Math.round(c.y + yy), 1.1 - d)) out.px(c.x + xx, c.y + yy, yy > 1 ? C.cloud2 : C.cloud, 205); } });
     // cloud shadows over the meadow
-    shadows.forEach((sh) => { for (let y = GROUND_Y; y < H; y++) for (let x = Math.max(0, Math.round(sh.x - sh.w)); x < Math.min(W, sh.x + sh.w); x++) { const d = ((x - sh.x) / sh.w) ** 2 + ((y - sh.y) / 14) ** 2; if (d < 1 && dither(x, y, (1 - d) * 0.5)) out.px(x, y, C.ink, 24); } });
+    shadows.forEach((sh) => { for (let y = GROUND_Y; y < H; y++) for (let x = Math.max(0, Math.round(sh.x - sh.w)); x < Math.min(W, sh.x + sh.w); x++) { const d = ((x - sh.x) / sh.w) ** 2 + ((y - sh.y) / 14) ** 2; if (d < 1 && dither(x, y, (1 - d) * 0.5 * (1 - nightK))) out.px(x, y, C.ink, 24); } });
     // lake: sparkles, ripples, koi
     for (let i = 0; i < 12; i++) { const x = ((i * 53 + frame * 0.35) % 250) | 0, y = LAKE_TOP + 2 + ((i * 7) % 9); if ((frame + i * 9) % 24 < 12 && x < lakeRight(y)) out.px(x, y, C.lakeL); }
     ripples.forEach((rp) => { const a = Math.max(0, 255 - rp.r * 17); for (let th = 0; th < Math.PI * 2; th += 0.15) { const x = rp.x + Math.cos(th) * rp.r, y = rp.y + Math.sin(th) * rp.r * 0.35; if (inLake(x, y)) out.px(x, y, C.lakeL, a); } });
@@ -687,8 +707,59 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
     // petals
     petals.forEach((p) => { out.px(p.x, p.y, p.c); if ((frame + p.ph * 10) % 16 < 8) out.px(p.x + 1, p.y, C.bl3); });
 
+    if (nightK > 0) night_(); 
     img.data.set(out.d);
     ctx.putImageData(img, 0, 0);
+  }
+
+  // ---- night pass: grade the day picture to moonlight, then add everything that glows ----
+  function glow(cx, cy, rad, c, strength) { // a dithered halo of light
+    for (let y = Math.round(cy - rad); y <= cy + rad; y++) for (let x = Math.round(cx - rad); x <= cx + rad; x++) {
+      const d = Math.hypot(x - cx, (y - cy) * 1.15) / rad; if (d < 1 && dither(x, y, (1 - d) * strength)) out.px(x, y, c, 70 + (1 - d) * 90);
+    }
+  }
+  function night_() {
+    const k = nightK, d = out.d, a = Math.round(255 * k);
+    // stars only where nothing (cloud, bird) covers the sky
+    const uncovered = (x, y) => { const i = (y * W + x) * 4; return d[i] === bg.d[i] && d[i + 1] === bg.d[i + 1] && d[i + 2] === bg.d[i + 2]; };
+    const shownStars = stars.filter((st) => uncovered(st.x, st.y));
+    const shownWindows = windows.filter(([x, y]) => uncovered(x, y)); // not behind a tree or the lady
+    for (let y = 0; y < H; y++) {
+      const m = y < 120 ? 0.52 + 0.5 * (y / 120) : 0.9; // the sky darkens towards the top
+      for (let x = 0; x < W; x++) {
+        const i = (y * W + x) * 4, R = d[i], G = d[i + 1], B = d[i + 2];
+        const lum = 0.3 * R + 0.59 * G + 0.11 * B, boost = Math.max(0, lum - 185) * 0.6; // snow and white walls stay moonlit
+        d[i] = R + (R * 0.3 * m + boost * 0.85 - R) * k;
+        d[i + 1] = G + (G * 0.36 * m + boost * 0.9 - G) * k;
+        d[i + 2] = B + (B * 0.6 * m + boost - B) * k;
+      }
+    }
+    // stars twinkle
+    shownStars.forEach((st) => { const tw = 0.5 + 0.5 * Math.sin(time * 1.6 + st.ph * 3); if (tw > 0.25) { out.px(st.x, st.y, tw > 0.7 ? C.star : C.starD, a * tw); if (st.big && tw > 0.8) { out.px(st.x - 1, st.y, C.starD, a * 0.5); out.px(st.x + 1, st.y, C.starD, a * 0.5); out.px(st.x, st.y - 1, C.starD, a * 0.5); out.px(st.x, st.y + 1, C.starD, a * 0.5); } } });
+    // the moon with a soft halo, and its light on the lake
+    glow(MOON.x, MOON.y, 15, C.starD, 0.35 * k);
+    for (let y = -6; y <= 6; y++) for (let x = -6; x <= 6; x++) { const dd = x * x + y * y; if (dd <= 34) out.px(MOON.x + x, MOON.y + y, dd > 20 && x > 1 ? C.moonS : C.moon, a); }
+    out.px(MOON.x - 2, MOON.y - 1, C.moonS, a * 0.7); out.px(MOON.x + 1, MOON.y + 2, C.moonS, a * 0.7); out.px(MOON.x - 1, MOON.y + 3, C.moonS, a * 0.5);
+    for (let y = LAKE_TOP + 1; y < GROUND_Y - 1; y++) { const hw = 2 + (y - LAKE_TOP) * 0.5; for (let x = MOON.x - hw; x <= MOON.x + hw; x++) if ((y + Math.floor(time * 4 + x * 0.7)) % 3 === 0 && dither(x, y, 0.6)) out.px(x, y, C.moon, a * 0.8); }
+    // lit paper walls in the hall and pagoda, with a slow flicker
+    const fl = 0.85 + 0.15 * Math.sin(time * 2.3) * Math.sin(time * 3.7);
+    shownWindows.forEach(([x, y, c]) => out.px(x, y, c, a * fl));
+    glow(HALL.cx, HALL.base - 9, 30, C.glowO, 0.13 * k * fl);
+    glow(PAGODA.cx, PAGODA.base - 26, 22, C.glowO, 0.1 * k * fl);
+    // stone lanterns by the torii
+    stoneLamps.forEach(([x, y], n) => { const f2 = 0.8 + 0.2 * Math.sin(time * 5 + n * 2); glow(x + 1, y + 1, 9, C.glowW, 0.45 * k * f2); out.rect(x, y, 3, 2, C.glowY, a); });
+    // the lady carries a little paper lantern
+    if (lady.alpha > 0) {
+      const back = lady.state === 'inside' || (lady.state === 'enter' && lady.clock >= 26);
+      const lx = lady.x + (back ? 11 : 12), ly = lady.y + 15 + Math.round(Math.sin(time * 4) * 0.6), la = a * lady.alpha;
+      glow(lx + 1, ly + 2, 10, C.glowW, 0.5 * k * lady.alpha);
+      out.px(lx + 1, ly - 1, C.lampCap, la);
+      out.rect(lx, ly, 3, 4, C.glowW, la); out.px(lx + 1, ly + 1, C.glowY, la); out.px(lx + 1, ly + 2, C.glowY, la);
+      out.hline(lx, lx + 2, ly, C.glowO, la); out.hline(lx, lx + 2, ly + 3, C.glowO, la); out.px(lx + 1, ly + 4, C.lampCap, la);
+    }
+    if (doorGlow > 0) glow(HALL.cx, HALL.base - 8, 12, C.glowY, doorGlow * 0.6 * k);
+    // fireflies
+    fireflies.forEach((ff) => { const b = Math.sin(ff.ph); if (b > 0.2) { out.px(ff.x, ff.y, C.firefly, a * b); if (b > 0.75) { out.px(ff.x + 1, ff.y, C.fireflyD, a * 0.4 * b); out.px(ff.x - 1, ff.y, C.fireflyD, a * 0.4 * b); } } });
   }
 
   function loop(ts) {
@@ -701,6 +772,8 @@ export function mountFujiScene(canvas, { seed = 7, fps = 30 } = {}) {
   raf = requestAnimationFrame(loop);
 
   return {
+    setNight(on, instant = false) { nightTarget = on ? 1 : 0; if (instant) nightK = nightTarget; }, // fades over ~1.3 s
+    get night() { return nightTarget === 1; },
     _debug: { lady, flock }, // for testing in the browser console
     destroy() { cancelAnimationFrame(raf); canvas.removeEventListener('click', onClick); canvas.removeEventListener('pointermove', onMove); canvas.removeEventListener('pointerleave', onLeave); },
   };

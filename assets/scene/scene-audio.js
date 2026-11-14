@@ -1,9 +1,10 @@
 // Sound for the Fuji scenes, made with Web Audio (no audio files).
 //   chime()          wind bells: a few soft bell strikes on a pentatonic scale
 //   setAmbient(on)   a gentle breeze with occasional birdsong, like Mythili's "park sound"
+//   setNightSound(on) birdsong becomes crickets at night
 // Browsers only allow sound after the visitor clicks or taps, so call these from a click handler.
 
-let ctx = null, master = null, ambient = null;
+let ctx = null, master = null, ambient = null, isNight = false;
 
 function audio() {
   if (!ctx) {
@@ -58,7 +59,8 @@ export function setAmbient(on) {
       const lfo = a.createOscillator(), lfoGain = a.createGain(); lfo.frequency.value = 0.08; lfoGain.gain.value = 0.02;
       lfo.connect(lfoGain).connect(g.gain); src.connect(lp).connect(g).connect(master); src.start(); lfo.start();
       // birdsong every few seconds
-      const timer = setInterval(() => { if (Math.random() < 0.6) chirp(Math.random() * 1.6 - 0.8); }, 2600);
+      // birdsong by day, crickets by night
+      const timer = setInterval(() => { if (isNight) { if (Math.random() < 0.8) cricket(Math.random() * 1.6 - 0.8); } else if (Math.random() < 0.6) chirp(Math.random() * 1.6 - 0.8); }, 2600);
       ambient = { src, lfo, timer };
     } else if (!on && ambient) {
       ambient.src.stop(); ambient.lfo.stop(); clearInterval(ambient.timer); ambient = null;
@@ -67,6 +69,25 @@ export function setAmbient(on) {
 }
 
 export const ambientOn = () => !!ambient;
+// switch the ambience between day (birdsong) and night (crickets)
+export function setNightSound(on) { isNight = !!on; }
+
+// a cricket: a high tone pulsed in quick bursts of three or four chirps
+export function cricket(pan = 0) {
+  try {
+    const a = audio(), p = a.createStereoPanner ? a.createStereoPanner() : null; if (p) { p.pan.value = pan; p.connect(master); }
+    const f0 = 4300 + Math.random() * 600, t0 = a.currentTime + Math.random() * 0.2;
+    for (let c = 0; c < 2 + ((Math.random() * 2) | 0); c++) {
+      const tc = t0 + c * 0.42;
+      for (let k = 0; k < 4; k++) {
+        const t = tc + k * 0.045, o = a.createOscillator(), g = a.createGain();
+        o.type = 'sine'; o.frequency.value = f0;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.022, t + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.035);
+        o.connect(g).connect(p || master); o.start(t); o.stop(t + 0.04);
+      }
+    }
+  } catch { /* no audio */ }
+}
 
 // suzu: the bright, jingly shrine bell that hangs from a torii (many high partials, a fast shimmer)
 export function suzu() {
