@@ -46,6 +46,10 @@ export const PALETTE = {
   // extra colours from the reading reference
   A: '#e7dad7', B: '#c08550', D: '#d7b392', F: '#b5aba7', H: '#6d3f35', I: '#e88056', J: '#ad7757', K: '#faac80',
   M: '#9b5321', R: '#b3896e', S: '#69615d', u: '#3f1815', v: '#5f2916', w: '#c09882', x: '#766e6a', z: '#ae7136',
+  // extra colours from the ramen reference
+  '%': '#9c5948', '&': '#efbd89', '*': '#e2c69e', '+': '#c56b27', '=': '#ffbc66', '?': '#66431f', '@': '#d8ad70', '^': '#df863c',
+  '~': '#b55823', '<': '#907e35', '>': '#4d4020', '{': '#f18a85', '}': '#f26972', '|': '#fa8b2a', ';': '#7c7030', ':': '#f3a696',
+  '!': '#c3bab9', $: '#ac4329', '#': '#ee7048',
   0: '#5b4e4b', 1: '#ce6a47', 2: '#6d5b46', 3: '#8d402f', 4: '#882c24', 5: '#677c57', 6: '#7a8d60', 7: '#4d5f44', 8: '#3f4e3b', 9: '#8d9b63',
 };
 
@@ -219,24 +223,159 @@ function steamCurl(g, x, y, f) {
 
 // ---------- props (each one covers the mug and hands) ----------
 
-function ramen(g, f) {
-  const lift = f % 4 === 1 || f % 4 === 2;
-  oEllipse(g, 20, 46, 13, 9, 'O', (x, y) => y >= 45);
-  oEllipse(g, 20, 45, 13, 3.6, 'O');
-  ellipse(g, 20, 45, 11.2, 2.4, 'Y');
-  for (let x = 6; x <= 34; x++) if (get(g, x, 50) === 'O') set(g, x, 50, 'd');
-  for (let y = 46; y < SIZE; y++) for (let x = 26; x <= 34; x++) if (get(g, x, y) === 'O') set(g, x, y, 'P');
-  pts(g, [[11, 45], [12, 44], [13, 45], [14, 44], [15, 45], [16, 44], [17, 45], [19, 44], [20, 45]], 'N');
-  rect(g, 22, 44, 3, 2, 'W'); set(g, 23, 44, 'Z');
-  oRect(g, 27, 42, 3, 3, 'U');
-  hand(g, 7, 49); hand(g, 34, 49);
-  if (lift) {
-    line(g, 34, 47, 30, 34, 'C'); line(g, 35, 47, 31, 34, 'C');
-    for (let y = 35; y <= 44; y++) { set(g, 29 - (y % 2), y, 'N'); set(g, 27 + (y % 2), y, 'N'); }
-  } else {
-    line(g, 35, 48, 29, 39, 'C'); line(g, 36, 48, 30, 39, 'C');
-    steamCurl(g, 13, 41, f); steamCurl(g, 18, 40, f + 1);
+// ---------- ramen pose: its own exact sprite (from Sanskriti's ramen reference) ----------
+
+// read cell by cell from the reference (11 screen px per art pixel), 97×92
+const RAMEN = [
+  '.................................................................................................',
+  '.................................................................................................',
+  '.................................................................................................',
+  '.................................................................................................',
+  '....................................................aaaaaaa......................................',
+  '............................................aaaaaaaaaaaaaaaaaa...................................',
+  '.........................................FXXaaaaaaaaHHHHHHtaaaF..................................',
+  '........................................aaaaatttttttHHHHHHittaa..................................',
+  '......................................TaaatiiitttttttaaaatittTa..................................',
+  '.....................................aaaiiiitttaaaattttaaattttaa.................................',
+  '..................................aaaaalHitttttaaaatttttaaatttaa.................................',
+  '.................................aaaap%itttttaaaataaaattaaatttaaaaaT.............................',
+  '................................aaa%%%tttttaaaaaaaaaaaataaaaaaaaaaaaa............................',
+  '...............................aaa%%%ttttTaaaaaaaaaaaaaaaaaaaaTiiiiaaaa..........................',
+  '..............................aaa%%%%tttaaaatttttaaaaaaaaaattttttiiiiaaa.........................',
+  '..................G..........Taa%%%Htttaaattttttttaaaaaatttttttttttiiiuai........................',
+  '..................G.........Faa%%%%tttaaTttttttttttaaautttttttttttttiiiaat.......................',
+  '.................zDz........aau%%%%ttTatitttttaaattaaatttttttttttttttiiuaaF......................',
+  '...............&cn.R&&.....aaTr%%%%HtuiiitttTaaaaataTttttttTuaTtttttttiiTaag.....................',
+  '...............BB*.*BB.....aaH%%rr%%tiHitttTaaaaaauutttttttttTaTtttttttHHaaaF....................',
+  '.................Gbz.......aa%%Httttt%%ttttaaaaaaaatttttttttttaattttttt%%uaaa....................',
+  '..................G......0aa%%%tttt%%%%rHiaaaaaaaaataaattttttttaatttt%%%%%aaaj...................',
+  '..................G......aat%%ttttt%%%%%%iaaaIeeeeIaaaaattttttttaat%%%%%%%taaa...................',
+  '.........................aa%%%ttat%%%it%%aaIKeeeeeeeIaaatttttttttaat%%%t%iiaaa...................',
+  '.........................aT%%ttaat%%ttt%%aakeeeeeeeeeaaatttttttttaattttttiiaaa...................',
+  '............Gq..........aaH%ttuat%%ttttttaIeeeeeeeeeeIaa%tttttttttaattttttitaaa..................',
+  '............Bc.........aaaHittaat%rttatttaIeeeeeeeeeeeaa%tttitttttaattttttitaaa..................',
+  '..........qGDcG........aaiittaaTtttttatttaIeeeeeeeeeeeaa%%H%%%tttttaattttttiaaa..................',
+  '............Gq........aauittaaattttttatttakeeeeeeeeeeeuar%%%%%tttttaaTttttttTaa..................',
+  '............Bq......aaaaittaaaatttttaatttaeeeeeeeeee&eeat%%%%%tttttaaattttttiaaaO................',
+  '..................xaaTaattaaaattttttaattaaeeeeeeeeaaaaaaa%%vt%TtttttaaaTttttiaaaa................',
+  '..................aa..attaaaattttttaaattaaDeeeeee&ueeeeaai%ittatttttaaaatttttaaaaa...............',
+  '................Oaa..aataaaatttttiaaaItaaeeeeeeeeeeeeeeIaaiittattttttaaaaatttaaaaaa..............',
+  '................jaa..aaaaatttttiHiaaukTaIeeeeeeeeeeeeeeeaaiitttattttttaaaaattaaa.aaa.............',
+  '.................aaa.aaaattttttiiaaakTaveeeeeeeeeeeeeeeeIaaiittaattttttaaaaataaa..aaa............',
+  '.................aaaaaaTtttttiiiaaa1aaaaa*eeeeeeeeeaaaaaaaaiitttaattttttuaaaaaaa...aaO...........',
+  '.................jaaaaHittttHiiaaaaaaaaaaaeeeeeeeeTaaaaaaaaaiitttaattttttTaaaaaaa..aaa...........',
+  '................xtaT%%3iiiiiiiuaaaaannbaaaeeeeeeeeaaaabbnaaaTiiittTaauuttttuaaaaa..aaa...........',
+  '...............iaam%%riiiiiitaaaaIaabbbaaa2eeeeeeeaaaabbbqaaauiitttTTuuttttttaaaaF.aaa...........',
+  '..............aaaH%%%iitaaaaaaaaa3abbbbaaaieeeeeeeaaaabbbbgaaaaTiiiiiiiititTTtTaaaSuaa...........',
+  '.............aaa%%%%%TaaaaaaaauaaaaPbbbaaaTeeeeeeeuaaubbbbbTaIaaaiiiiiiiiiiaattaaaaaa............',
+  '............0aa%%%%aaaaaaaaattaaaavxbbbuuuTeeeeeeeeuuubbbbbTaaaaaaaaaaaiiiiiaaataaaa.............',
+  '............aaa%%%aaaaaaT&&DtuaaaakkbbbuuuteeeeeeeeuuubbbbbvIkaauaaaaaaaaiiiiaaaaaa..............',
+  '............aa%%%aaaaaattt**&aaaaaeekqbnuueeeeeeeeeiuuqbbkkkeeIataIIIIaaaaiiiiaaaaa..............',
+  '............aa%%iaaaaatttT&&&aaaaaekkkKeeeeeeeeeeeeeeeeekkkkkeeaaaIlkkaaaaaiiiiaaaa..............',
+  '............aatiaaaaatttT**&aaaaaaekkkkeeeeeeeeeeeeeeeekkkkkkeeaaK1l&kaaaaaaiiiua................',
+  '............aaaiaaTaattt&*&aaaaaaa&kkkkeeeeeeeeeeeeeeeekkkkkkeeaa&&&eaaaaaaatiiiaa.....G.........',
+  '.............aata.iattT**&aaaaaaaaa&kk&eeeeedeeee3eeeeeekkkkeeIaa&&&aaaaTtaaaiiiaa.....G.........',
+  '..............aau.tatt&&&aaaaauaaaaeeeeeeeeee34d3eeeeeeeeeeeeeaaaaaaaaaattuaatiiaa....G.G........',
+  '...............aaa.atti&*eaaaTuaaaaakeeeeeeeeM++Meeeeeeeeeeeeaaaaaaaaaaattuaatiiaa..GG...GG......',
+  '................aaaaatt**&&*&TTaaaaaa+eeeeeevy==MeeeeeeeeeeIaaaaaataaaatttTaatiTaa....G.G........',
+  '..................aaaattaaa&*iTaaaaaaaaaaaTu=++=MeeeeeeeeIaaaaaaTttaaaatttaaatiaaa.....G.........',
+  '............taa....aaatttaaa*uaaeeeuau3====m=++=leeeekIaaaaaaaautttaaattttaattaaa......G.........',
+  '...........aajT....aaTattaaaaaa&eeeea==uaau==++=aaaaaaaaaaaaaaattttaaatttaaataaa.................',
+  '..........Taa.....aaataaaa?&=aee&aaaaa@====a=++=aaaaaIIIaaaaatttttaaattttaaaaaa...aaa............',
+  '..........aa.....aaatta==&=&aeeeaeeeea=@aaaa=++=aaaIIIIIaaatttttttaaattttaaaaaa....aaa...........',
+  '..........aaa..0aaatituaaaaaaeeeeeeeeaaaaaaa==y^aaaIIIIKaa%HtHittaaaattttaaaaaa0...aaa...........',
+  '..........taaaaaaatritta&===aeeeeeeeIaaaaaaaY==^aaIk&eeaa%%%%Httaaaaattttttttaaaaaaaaa...........',
+  '...........atttTat%Httaa=@aaaeeeeeeeaaaaaaaa?=+=aIkeeeeat%%%itaaaaaaaatttttttttaaaataa...........',
+  '...........Taaaai%ittaaaaaaaaeeeeeeIaaaataaa=++=akeee&aa%%tttaaaeeeaaaattttaTttttttaa............',
+  '............0aa%%tttaaaTTaanaaeeee1aaaattaaa=++=aKeee&aT%ttataanenenaaaaiittaattttaa.............',
+  '...........aav%%iiiaaattaanenaakk1aaaatttaav^=+=aae&&aaiitttaaeneeneeaaatiiiitaaaaa..............',
+  '..........aa%%%iitaaattaaoeeenaaaanaaTttaa3v^=+=auaaaaaittataaeeecBBBaaaaaiiiiitaaaaa............',
+  '..........ar%%iiTaaattaaeceeeeneeeeaaTttaaIu^=+=a4mmmaatttaaaneeBBeeeaaaaaaTtiiiitaaaaa..........',
+  '..........arHtTaaaattaaeecoeeeeeee&aattaaIIu=++=amm4maatttaaaeeBBeeeeeaataaaaaiiiiitaaaa.........',
+  '........tarituaaaattTaeeeecceneeecCeaaaaaaaa=+==vaaaaaaatttaan11eeeeeeaattaaaaaaitttttaaS........',
+  '........aaHttaaaaattaaeeeneeBcccce&aaaaauauu=+=+=3?suaaaaatTa&1eeeeeeenauttaaaaaaatttttaaX.......',
+  '........aattuaaaaTttaaeeeeneeeeeeaaaIkk%3Ml~=^^+^~~muvkkTaaaaleeeeeeeneaattaaataaaattttaaT.......',
+  '........aattaa.aaTttaaeeeenneeenavkl44aaauuY+Yu<u^anbPau4kCaaleeee&BceeeaattaatTaaaatttaaT.......',
+  '........0aTtaa.aaaTTaaeeeenenenaKl44aabnnbna^u<><ab{}nbaa44KaJeeeBBBBBceaattaatttaaaattaaT.......',
+  '.........jataa..aataaeceeenenneakuaYabb||||ba;?<>b:en::baaakaeeelJneeeecaaataatttaaaattaaa.......',
+  '..........aaaaT.aaTaanceeennneoakva^abb||||nv?;><J}}{nn&aakuaaallenneneenaauaattttaaattaaT.......',
+  '...........aaaaaaaaannccennnncBadkkaaaCneen3+~>;33nc1aaakkaaaaaaee1BBeeeeaaaaattttaaataaT........',
+  '.............aaaaaaannecceencc*amdkkkkaaaaaaaaaaaaaaaukkIaae&e&alllB1BoenHaaatttttaaiiaaF........',
+  '...............taaaannnneccceenavddddkkkkkkkkkkkkkkkkkdddaeeeeeeannBneBonnaaattttaaaiaaa.........',
+  '...........a....aataTnnneennnneuaddddddddddddddddddddddddaa1eeeeaaenBnnBeneaatttaaataaa..........',
+  '..........aa....aataanenennneeooa4dddddddddddddddddddddda1eeeeeeaanneBnnBnnaatttaaaaaO...........',
+  '..........ax..aaatttaaennnnneoooaadddddIIIddddddIII~ddddaeeeeeeeaaneeBneBBnaattaaaaa.............',
+  '..........aa!aaattttaa>nene&@ooo@addd$Iddd$Idd1Iddd$IddIakeeeeeeaannnBnneBeaataaa................',
+  '..........aaaaattttaaaaooooooooooaaI1Id$IIdlIIId$Ikd$IId$aeeeee#annneBnnneeaaTTaa................',
+  '...........aatttttaaaaaaaooooooaaaaadd$Id$Iddddl1ddIdd$daaueeeIannnneBnnnnnaaatuaa..a............',
+  '...........Aaaaaaaaaaaaaaaaaaaaaaaaaaddd$ddIIIIIdIdddddaaaaaaaanennncBnnnniaaaaaaaaaa............',
+  '.........TaT%%%%%M%MMMMMMMMMMMMMMMMMaavdddIddddI1ddddmaa%333awennnnccnnnn*aaMMMMMMl%%?a..........',
+  '.........z+llllllllllllllllllllllllllaaam44mmmmmm4mmsaaMllllaaannekCennnaaallll~llllllz..........',
+  '.........1111zlllllllllllllll~llllllllaaddddddddddddaallllllllaaaaaaaaaaaaMlllllllzll1+..........',
+  '............111111111111111111111lz1lllaaaaaaaaaaaaaaMlllllll~Mvuuuuuuua111111111111.............',
+  '...................111111111111111111111111lz11111111111111111111111111111111....................',
+  '..................................1111111111111111111111111111...................................',
+  '.................................................................................................',
+  '.................................................................................................',
+  '.................................................................................................',
+  '.................................................................................................',
+];
+
+const RAMEN_EYES = [{ x0: 34, x1: 41, y0: 35, y1: 43 }, { x0: 51, x1: 60, y0: 35, y1: 43 }];
+const RAMEN_SPARKLES = [{ x0: 14, x1: 22, y0: 15, y1: 22, c: [18, 19] }, { x0: 10, x1: 15, y0: 25, y1: 29, c: [12, 27] }, { x0: 82, x1: 92, y0: 46, y1: 52, c: [87, 49] }];
+const RAMEN_STEAM = { x0: 18, x1: 30, y0: 41, y1: 52, chars: '&*D' };
+const RAMEN_NOODLES = { x0: 42, x1: 50, y0: 52, y1: 66 };
+
+function blinkIn(g, boxes, lidRow, keep = 'k') {
+  for (const b of boxes) {
+    for (let y = b.y0; y <= b.y1; y++) for (let x = b.x0; x <= b.x1; x++) {
+      const c = get(g, x, y);
+      if ('anbqguvxPTKI'.includes(c) && !keep.includes(c)) set(g, x, y, 'e');
+    }
+    rect(g, b.x0 + 1, lidRow, b.x1 - b.x0 - 1, 1, 'a');
+    pts(g, [[b.x0, lidRow - 1], [b.x1, lidRow - 1]], 'a');
   }
+}
+
+function twinkle(g, boxes, f) {
+  const b = boxes[f % boxes.length];
+  for (let y = b.y0; y <= b.y1; y++) for (let x = b.x0; x <= b.x1; x++) if (get(g, x, y) !== '.' && !HAIR_CHARS.includes(get(g, x, y))) set(g, x, y, '.');
+  set(g, b.c[0], b.c[1], 'G');
+}
+
+// the steam curl rises a pixel and settles back
+function riseSteam(g, box, f) {
+  if (f % 2 === 0) return;
+  const moved = [];
+  for (let y = box.y0; y <= box.y1; y++) for (let x = box.x0; x <= box.x1; x++) if (box.chars.includes(get(g, x, y))) moved.push([x, y, get(g, x, y)]);
+  moved.forEach(([x, y]) => {
+    const hairy = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([dx, dy]) => HAIR_CHARS.includes(get(g, x + dx, y + dy))).length;
+    set(g, x, y, hairy >= 2 ? 't' : 'a');
+  });
+  moved.forEach(([x, y, c]) => set(g, x, y - 1, c));
+}
+
+// slurp: the hanging noodles wiggle side to side
+function wiggleNoodles(g, box, f) {
+  if (f % 2 === 0) return;
+  for (let y = box.y0; y <= box.y1; y++) {
+    const dir = y % 2 ? 1 : -1;
+    const row = g[y].slice(box.x0, box.x1 + 1);
+    for (let i = 0; i < row.length; i++) {
+      const src = Math.min(row.length - 1, Math.max(0, i - dir));
+      g[y][box.x0 + i] = row[src];
+    }
+  }
+}
+
+function ramenFrame(f, blink) {
+  const g = RAMEN.map((r) => r.split(''));
+  if (blink) blinkIn(g, RAMEN_EYES, 41);
+  wiggleNoodles(g, RAMEN_NOODLES, f);
+  riseSteam(g, RAMEN_STEAM, f);
+  twinkle(g, RAMEN_SPARKLES, f);
+  g.viewBox = '0.05 -0.12 96.41 91.9';
+  return g;
 }
 
 const FUJI = [
@@ -409,15 +548,16 @@ function readingFrame(f, blink) {
 export const ACTIVITIES = {
   coffee: { label: 'sipping coffee', frames: 8, speed: 360 },
   reading: { label: 'reading', frames: 12, speed: 260 },
-  ramen: { label: 'eating ramen', frames: 8, speed: 260 },
+  ramen: { label: 'eating ramen', frames: 8, speed: 280 },
   drawing: { label: 'drawing', frames: 24, speed: 200 },
 };
 
 export function buildFrame(activity = 'coffee', f = 0, { blink = false } = {}) {
   if (activity === 'reading') return readingFrame(f, blink);
+  if (activity === 'ramen') return ramenFrame(f, blink);
   const g = BASE.map((r) => r.split(''));
   g.viewBox = '-3.11 0 67.12 64';
-  const lift = activity === 'ramen' && (f % 4 === 1 || f % 4 === 2);
+  const lift = false;
   const sip = activity === 'coffee' && f % 8 === 5;
 
   if (activity === 'coffee') driftSteam(g, f);
@@ -427,7 +567,6 @@ export function buildFrame(activity = 'coffee', f = 0, { blink = false } = {}) {
   eyes(g, eyeMode);
   mouth(g, lift ? 'open' : activity === 'drawing' ? 'flat' : 'smile');
 
-  if (activity === 'ramen') ramen(g, f);
   if (activity === 'drawing') drawing(g, f);
 
   sparkles(g, f);
