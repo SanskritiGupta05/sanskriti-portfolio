@@ -320,21 +320,22 @@ Bracketed names point to the references in section 7.
 
 ## 8b. Assets
 
-### Mascot: pixel Sanskriti (v1, 2026-11-14)
+### Mascot: pixel Sanskriti (v3, 2026-11-14)
 
-- **Source:** `assets/mascot/mascot.js` (no framework). It builds a 40×40 pixel sprite from simple shapes, so every pose stays consistent. `buildFrame(activity, frame, { blink })` returns a pixel grid, and `toSVG(grid, scale)` renders crisp SVG.
-- **Style reference:** a chibi pixel bust (big round head, 1px dark outline, warm palette), based on Sanskriti's photo:
-  - long, dark, wavy hair parted slightly left, with strands framing the face
-  - black glasses pushed up on her head
-  - warm brown skin and brown eyes, soft smile, pink blush
-  - red top under a cream ribbed jacket
-- **Activities** (she keeps changing what she's doing; auto mode cycles every ~6 s):
-  - **Ramen:** bowl with egg and nori, hands on the bowl. Chopsticks lift noodles to her open mouth with happy closed eyes, and steam curls rise beside her.
-  - **Drawing:** sketchbook with a spiral binding. A Mount Fuji doodle appears stroke by stroke while the pencil moves, and her eyes look down.
-  - **Reading:** an open blue book with text lines, a page turning now and then, and eyes looking down.
-  - She also blinks at random every 2.5–5 s.
-- **Preview:** `explorations/mascot.html`, served by the "portfolio-explorations" config in `../.claude/launch.json` (port 3015). It has Auto / Ramen / Drawing / Reading buttons, 32px and 64px size checks, and a sheet of every frame. The preview stays local; only the asset is pushed.
-- **Ideas for later:** more activities (clay modelling, painting, rangoli, vibe coding on a laptop, at a design meetup), a pixel cursor next to her like the reference, and using her inside the stamp logo and the footer scene.
+- **Look:** must match Sanskriti's chosen reference **exactly**: a chibi pixel bust with big, dark, wavy hair and brown streaks, a peach face, large dark eyes, round orange blush, a small smile and a visible ear. She wears a cream cardigan over a red top and holds a mug with a red heart, with steam curls and gold four-point sparkles around her. **No glasses.**
+- **How it's built:** the reference image was read cell by cell (the original pixel art is about 15.8 screen pixels per art pixel, a 79×79 grid). Its colours were grouped into a palette, and the result was cropped and padded to **64×64**. That grid is stored as text in `BASE` inside `assets/mascot/mascot.js`. The reference PNG is kept locally in `explorations/_ref/` (not pushed).
+- **API:** `buildFrame(activity, frame, { blink })` returns a pixel grid; `toSVG(grid, scale)` renders crisp SVG.
+- **Activities** (auto mode cycles every ~6 s):
+  - **Coffee:** the reference pose. The steam drifts and she sips with happy closed eyes now and then.
+  - **Ramen:** a bowl with egg and nori. Chopsticks lift noodles to her open mouth with happy eyes, and steam curls rise.
+  - **Drawing:** a sketchbook where a Mount Fuji doodle appears stroke by stroke. The pencil is held from the right and angled down, away from her face.
+  - **Reading:** an open blue book, with a page turning now and then.
+  - Eyes look down while drawing or reading. She blinks at random, and the sparkles twinkle.
+- **How poses are made:** each prop is drawn over the mug-and-hands area of the base. Eyes and mouth are swapped by clearing fixed boxes: left eye x19–25, right eye x33–38, rows 23–29; mouth at rows 31–32, x27–31. Steam pixels are removed for non-coffee poses.
+- **Preview:** `explorations/mascot.html` (local only), served by the "portfolio-explorations" config, port 3015.
+- **Known small issue:** a 1px dark mark stays beside the left eye when the eyes are closed. That's the hair edge in the reference.
+- **Ideas for later:** clay modelling, painting, rangoli, vibe coding on a laptop, at a design meetup; using her inside the stamp logo and the footer scene.
+- **Superseded:** v1 (40×40, glasses on her head) and v2 (64×64, hand-drawn) were replaced because she must look exactly like the reference.
 
 ## 9. Change log
 
@@ -350,3 +351,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-14:** Analysed Sanskriti's first batch of 16 inspiration links (11 sites + X posts): interactions, details, tech and patterns, in section 7.
 - **2026-11-14:** Added Sanskriti's sitemap and a first round of section ideas based on the references (section 8).
 - **2026-11-14:** Made the pixel mascot v1 (ramen, drawing and reading poses, random blinks, auto cycling) in `assets/mascot/mascot.js` (section 8b).
+- **2026-11-14:** Mascot v3: rebuilt pixel-for-pixel from Sanskriti's reference image (coffee pose), with ramen, drawing and reading poses on top.

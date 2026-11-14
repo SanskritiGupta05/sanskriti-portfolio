@@ -1,44 +1,125 @@
-// Sanskriti pixel mascot.
-// A 40×40 pixel sprite built from simple shapes, so poses and frames stay consistent.
+// Sanskriti pixel mascot (v3).
+// The base sprite is read pixel-for-pixel from Sanskriti's chosen reference (cup of coffee pose),
+// so she looks exactly like it. Other activities swap the mug for a new prop and change
+// the eyes/mouth; sparkles, steam and blinks are animated in code.
 // Framework-free: buildFrame() returns a grid of palette keys, toSVG() turns it into crisp SVG.
 
-export const SIZE = 40;
+export const SIZE = 64;
 
 export const PALETTE = {
-  K: '#1c110d', // outline
-  H: '#3a2520', // hair
-  h: '#6a4434', // hair highlight
-  S: '#c98d68', // skin
-  s: '#ad7352', // skin shadow
-  B: '#de7c6c', // blush
-  E: '#22140f', // eyes
-  W: '#ffffff', // eye shine / egg white
-  G: '#141414', // glasses frame
-  g: '#c9dbe6', // glasses lens
-  M: '#8a3b2f', // mouth
-  R: '#c4303a', // red top
-  r: '#9e242d', // red top shadow
-  J: '#efe3cb', // cream jacket
-  j: '#d6c3a2', // jacket shadow
-  O: '#f4efe6', // bowl
-  o: '#d9d1c3', // bowl shadow
-  P: '#c4303a', // bowl pattern
-  Y: '#e2a24c', // broth
-  N: '#f5d98a', // noodles
-  n: '#2f4a2c', // nori
-  Z: '#f0b63c', // egg yolk
-  C: '#cf9c63', // chopsticks (light wood, so they show against the hair)
-  w: '#c3bdb4', // steam
-  Q: '#fbf8f1', // paper
-  q: '#9a948a', // pencil marks / text lines
-  y: '#f2c14e', // pencil body
-  T: '#3a2a22', // pencil tip / book spine
+  // from the reference
+  a: '#251513', // outline
+  t: '#402b2b', // hair
+  i: '#583c3b', // hair highlight
+  r: '#86574e', // hair light streak
+  p: '#9a665a', // hair lightest streak
+  e: '#fdc69f', // skin
+  o: '#e3a784', // skin shadow
+  k: '#f08f66', // blush
+  d: '#9d2e30', // red top / mouth
+  s: '#551518', // red shadow
+  m: '#712923', // coffee
+  b: '#fde7c9', // cardigan / mug
+  n: '#f8ddbe', // cardigan light
+  c: '#cc8c6a', // cardigan creases
+  l: '#b25b3e', // warm accent
+  q: '#fbead9', // eye shine / steam
+  j: '#dbd0c7', // steam shadow
+  g: '#aa9b8d', // grey accent
+  // added for props
+  G: '#a25a0c', // sparkle gold
+  O: '#f6f0e5', // bowl
+  P: '#dcd2c2', // bowl shadow
+  Y: '#e5a54e', // broth
+  N: '#f6dc8e', // noodles
+  Z: '#f2b43a', // egg yolk
+  W: '#ffffff', // egg white / page
+  U: '#2f4a2c', // nori
+  C: '#cf9c63', // chopsticks
+  X: '#8f877c', // pencil marks / text lines
+  Q: '#fbf6ec', // paper
+  y: '#f2c14e', // pencil
+  T: '#3a2a22', // pencil tip / spine
   L: '#3b6ea8', // book cover
-  l: '#2c5585', // book cover shadow
-  p: '#e98aa0', // eraser
+  V: '#2c5585', // book cover shadow
+  E: '#e98aa0', // eraser
 };
 
-const blank = () => Array.from({ length: SIZE }, () => Array(SIZE).fill('.'));
+// 64×64, read from the reference image (one letter per pixel, '.' = transparent)
+const BASE = [
+  '................................................................',
+  '................................................................',
+  '.................................aaaaa..........................',
+  '..........................aaaaaaaiiiiiaa........................',
+  '........................aatiitttttaatitta.......................',
+  '.......................aatitttaaataaaatta.......................',
+  '....................gaaaittttttaaaaaaaataatii...................',
+  '....................aaiittaaaaaaaaataaaaaaaaaa..................',
+  '..................aaarittaaattttaaaaaaaaatiiaaa.................',
+  '.................aappittattttttttaaatttttttttiaa................',
+  '................aarppttattttttaaaaatttttttttttiaa...............',
+  '...............aaippptttitttaaaaaatttttaattttttiat..............',
+  '..............aatrrtttipptiiaaaaataaattttaattttppaq.............',
+  '..............aarrtttrpprriaaceeelaaaattttattttpitq.............',
+  '..............arrrtatrtttptakeeeeeoaaatttttatppttia.............',
+  '.............arrrtttttttttaaeeeeeeekaatttttaatttttaa............',
+  '.............arrttattttattaaeeeeeeekarttttttatttttta............',
+  '............atittatttttattaaeeeeeeeearprttttaattttta............',
+  '............aitaaattttaattakeeeeeeeekapppptttaatttiaa...........',
+  '...........aataaattttaaattaeeeeeeaaaaaippptttaattttiai..........',
+  '..........aataaatttttaaataceeeeeeeeecattraatttaatttiaa..........',
+  '.........aataaattttitaalaaeeeeeeeeeeeaatitatttaaaattaaa.........',
+  '........aa.aaaatttiiaalaakeeeeeeeeeeekaaitattttaaattaaaa........',
+  '........aaaattttiiiaaaaaaeeeeeeeetaaaaaaittattttaaaaaa.aa.......',
+  '........aaiitttiiiaaannaaaeeeeeeeaaanpaatittatttttaaaa.aa.......',
+  '......aairpiiiiiaaaagqqaaaeeeeeeeaaaqqaaaiittaattttaaa.aa.......',
+  '......aarpiitaaaaacabqqaaaeeeeeeeaaaqqqaaaiittaattttaaaaa.......',
+  '.....aarriiaaaaaaaaaqqqaaaeeeeeeeaaaqqqbaaaaiiiiiitttaaa........',
+  '.....arraaaaattaaakknqqaaaeeeeeeeaaaqqqkkkaaaaaaiiiiaaat........',
+  '.....arraaaattaaaakekbqaaeeeeeeeeaaqqqkkekataaaaaaiiiaa.........',
+  '.....araaaattaaaaaekkkkeeeeeeeeeeeeekkkkkeeakkkcaaaiiia.........',
+  '.....ataaattaaaaaakkkkkeeeedeeedeeeekkkkkekrklecaaaatiaa........',
+  '......aqaattaatataaekkeeeeeodddeeeeeekkkeeaeeekaaaaatiaa........',
+  '......a.tataattqqaaaeeeeeeeeeeeeeeeeeeeeeaaaaaaaaaaaataa........',
+  '......aaaataatqqaaaaaeeeeeeeeeeeeeeeeeeeaaaaaaaaataaataa........',
+  '........qatattqqaaaaaaakeeeeeeeeeeeeeeaaaaaaaaaattaaata.........',
+  '.........aaattqqqqaaaaaaaceeeeeeeekkaaaaattaataattaata..........',
+  '....a...aaaattaaq.qaaaaaaaaaaaaaaaaaaaaatttaatatttaaaa..........',
+  '...a..aaaaiitaattaqaaaataaaaaakkkkkaaatttttattatttaa............',
+  '...a.aaarrrttaattqqaaattaaaaaakkkeeaatttttaattatttaa...ai.......',
+  '...aaaarrittaattq.aaatttaaaaakkeeeaaiititaaatttatttaaaaai.......',
+  '...jaaiitttatttaaaaaaaaaannaeeeeeaaiiittaaaaatttatttttaa........',
+  '....aaitttaattaabbbbbbaanbaaeeeeeatitttaabaaaatttatttaa.........',
+  '....arttaaattaabommmmmnnabasaeeekaitataabbbaaattttitttaa........',
+  '....aittaattaaabbbbbbbbbaaddaaaaaattatacbcctaaaitaiiiiiaa.......',
+  '...aiitaaattaaaabbbbbbeoaaamdddddattatabncbbaaaiitaaiiiita......',
+  '...aittaaataaeeabblblbeaeeeadddddattaanncbbbaaaaiiaaatiiiag.....',
+  '...aata.jataeedabbdddbeameeeaddddaattancbbbbaaaattaaaaaiiia.....',
+  '....att..ataeeeabbbdbbeaeeeeeaddddattaanbbbnoaaaataataaaiia.....',
+  '.....ata..aaeelabbbbbbeaeeeeeadddattaabbbooonaaaataattaaiia.....',
+  '......aaaaaaaeeaabbbbegaeeeeeaaaataaabcccbbbbaaattaattaaiia.....',
+  '.........aaaaoeoaaaaaaaaoeeeklbbnaannccbbbbbbaaataatttaaia......',
+  '....a...aaaabaamaacoaassaaokaobbcngacbbbbbbobbaaaaatttataa......',
+  '.......aattabbaabbcbnasssaaacbbbcbbbabbbbbbobbaaaatttaaaa.......',
+  '......aatttabbbbbbcbnadddaccbbbbcbbbbabbbbonbjaattttaaa.........',
+  '....aaatttaaabbbocbbnadddanbbbbccbbbbbcoooobbaaattata...........',
+  '....iatttaaaabbccebbaddddajbbbcebbbbbbccbbbbiaaattata...a.......',
+  '.....atttaaabbccnbbbaddddmabbbcbbbbbbbccbbbbaaaattaaaqqja.......',
+  '......aaaaaabbcbbbbaadddddaabbcbbbbbbbbcbbbaaaaaata.aaa.........',
+  '........aaaaabcbbbbaaaaaaaaabbcbbbbbbbbbbbbaaaaaaaa.............',
+  '............aaaaaaaa.......aaaaaaaaaaaaaaaaa....................',
+  '................................................................',
+  '................................................................',
+  '................................................................',
+];
+
+// where things are in BASE
+const EYE_L = { x0: 19, x1: 25, y0: 23, y1: 29 };
+const EYE_R = { x0: 33, x1: 38, y0: 23, y1: 29 };
+const STEAM = { x0: 5, x1: 19, y0: 31, y1: 41 };
+const EYE_CHARS = 'aqngb';
+const HAIR_CHARS = 'atirp';
+
 const inside = (x, y) => x >= 0 && x < SIZE && y >= 0 && y < SIZE;
 const set = (g, x, y, c) => { if (inside(x, y)) g[y][x] = c; };
 const get = (g, x, y) => (inside(x, y) ? g[y][x] : '.');
@@ -61,227 +142,157 @@ const line = (g, x0, y0, x1, y1, c) => {
     if (e2 <= dx) { err += dx; y0 += sy; }
   }
 };
-// 1px outer outline around everything drawn so far.
-const outline = (g) => {
-  const out = g.map((r) => r.slice());
-  for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++) {
-    if (g[y][x] !== '.') continue;
-    const n = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => { const v = get(g, x + dx, y + dy); return v !== '.' && v !== 'w'; });
-    if (n) out[y][x] = 'K';
+const oEllipse = (g, cx, cy, rx, ry, c, clip) => { ellipse(g, cx, cy, rx + 1, ry + 1, 'a', clip); ellipse(g, cx, cy, rx, ry, c, clip); };
+const oRect = (g, x, y, w, h, c) => { rect(g, x - 1, y - 1, w + 2, h + 2, 'a'); rect(g, x, y, w, h, c); };
+const hand = (g, cx, cy) => { oEllipse(g, cx, cy, 2.6, 3.1, 'e'); set(g, Math.round(cx) + 1, Math.round(cy) + 2, 'o'); };
+
+// ---------- face ----------
+
+function clearEyes(g) {
+  for (const b of [EYE_L, EYE_R]) for (let y = b.y0; y <= b.y1; y++) for (let x = b.x0; x <= b.x1; x++) {
+    if (EYE_CHARS.includes(get(g, x, y))) set(g, x, y, 'e');
   }
-  return out;
-};
-
-// ---------- body parts ----------
-
-// left edge of the hair silhouette per row (mirrored on the right) — wavy, flaring out
-const HAIR_EDGE = { 12: 8, 13: 7, 14: 7, 15: 7, 16: 6, 17: 6, 18: 7, 19: 6, 20: 5, 21: 6, 22: 6, 23: 5, 24: 5, 25: 6, 26: 5, 27: 4, 28: 5, 29: 5, 30: 4, 31: 5, 32: 6, 33: 6, 34: 8 };
-
-function backHair(g) {
-  ellipse(g, 20, 13, 12.5, 10, 'H');
-  for (const [y, l] of Object.entries(HAIR_EDGE)) {
-    const yy = +y, r = 39 - l + (yy % 3 === 0 ? 1 : 0);
-    rect(g, l, yy, r - l + 1, 1, 'H');
-  }
-  // ragged ends
-  pts(g, [[7, 35], [9, 35], [31, 35], [33, 35]], 'H');
-}
-
-function torso(g) {
-  ellipse(g, 20, 39, 13, 12, 'J', (x, y) => y >= 27);
-  rect(g, 18, 23, 5, 5, 's'); // neck
-  // red top with a square neckline
-  rect(g, 16, 28, 9, 12, 'R');
-  rect(g, 18, 27, 5, 2, 'S');
-  pts(g, [[16, 28], [24, 28]], 'J');
-  rect(g, 23, 30, 2, 10, 'r');
-  // jacket lapels
-  line(g, 15, 28, 12, 39, 'j');
-  line(g, 25, 28, 28, 39, 'j');
-  line(g, 31, 31, 32, 39, 'j');
-}
-
-function frontHair(g) {
-  for (let y = 24; y <= 35; y++) {
-    const wave = [0, 1, 1, 0][(y + 1) % 4];
-    const end = y > 32 ? (y - 32) : 0;
-    rect(g, 9 + wave + end, y, 4 - end, 1, 'H');
-    rect(g, 27 + end, y, 4 - wave - end, 1, 'H');
-  }
-  pts(g, [[10, 27], [11, 30], [28, 28], [29, 31]], 'h');
-}
-
-function face(g) {
-  ellipse(g, 20, 17.5, 9, 8, 'S');
-  // jaw shading
-  pts(g, [[15, 24], [16, 25], [17, 25], [23, 25], [24, 25], [25, 24]], 's');
-}
-
-function bangs(g) {
-  ellipse(g, 20, 9, 11, 3.6, 'H');
-  // parted slightly left: hair sweeps down on both sides, a sliver of forehead shows
-  const left = { 11: [11, 18], 12: [11, 16], 13: [11, 14], 14: [11, 13] };
-  const right = { 11: [21, 29], 12: [23, 29], 13: [25, 29], 14: [26, 29], 15: [27, 29] };
-  for (const [y, [a, b]] of Object.entries(left)) rect(g, a, +y, b - a + 1, 1, 'H');
-  for (const [y, [a, b]] of Object.entries(right)) rect(g, a, +y, b - a + 1, 1, 'H');
-  // strands framing the face
-  for (let y = 15; y <= 23; y++) { set(g, 11, y, 'H'); set(g, 29, y, 'H'); }
-  pts(g, [[12, 15], [12, 16], [28, 16], [28, 17], [12, 22], [28, 21]], 'H');
-  // highlights
-  pts(g, [[14, 6], [15, 6], [16, 6], [13, 7], [23, 6], [24, 6], [25, 7], [13, 11], [14, 12], [26, 12], [27, 13], [7, 20], [6, 27], [33, 22], [34, 28]], 'h');
-}
-
-function glasses(g) {
-  // pushed up on the head
-  rect(g, 12, 4, 7, 4, 'G'); rect(g, 13, 5, 5, 2, 'g');
-  rect(g, 22, 4, 7, 4, 'G'); rect(g, 23, 5, 5, 2, 'g');
-  rect(g, 19, 5, 3, 1, 'G');
-  pts(g, [[10, 6], [11, 6], [29, 6], [30, 6]], 'G');
-  pts(g, [[13, 5], [23, 5]], 'W');
 }
 
 function eyes(g, mode) {
-  const L = 14, R = 24; // left x of each 3px-wide eye
-  if (mode === 'blink') { rect(g, L, 18, 3, 1, 'E'); rect(g, R, 18, 3, 1, 'E'); return; }
-  if (mode === 'down') {
-    // lids lowered, looking at what she's holding
-    rect(g, L, 18, 3, 1, 'E'); rect(g, L + 1, 19, 2, 1, 'E');
-    rect(g, R, 18, 3, 1, 'E'); rect(g, R, 19, 2, 1, 'E');
-    return;
+  if (mode === 'open') return; // the reference eyes
+  clearEyes(g);
+  for (const x0 of [19, 33]) {
+    if (mode === 'blink') { rect(g, x0, 27, 6, 1, 'a'); continue; }
+    if (mode === 'happy') { pts(g, [[x0, 27], [x0 + 1, 26], [x0 + 2, 25], [x0 + 3, 25], [x0 + 4, 26], [x0 + 5, 27]], 'a'); continue; }
+    if (mode === 'down') { rect(g, x0, 27, 6, 1, 'a'); rect(g, x0 + 1, 28, 4, 1, 'a'); continue; }
   }
-  if (mode === 'happy') {
-    pts(g, [[L, 18], [L + 1, 17], [L + 2, 18], [R, 18], [R + 1, 17], [R + 2, 18]], 'E');
-    return;
-  }
-  for (const x of [L, R]) {
-    rect(g, x, 16, 3, 3, 'E');
-    set(g, x, 16, 'S');
-    set(g, x + 1, 16, 'W');
-  }
-}
-
-function cheeks(g) {
-  pts(g, [[13, 20], [14, 20], [13, 21], [26, 20], [27, 20], [27, 21]], 'B');
-  set(g, 20, 20, 's'); // nose
 }
 
 function mouth(g, mode) {
-  if (mode === 'open') { rect(g, 19, 22, 3, 2, 'M'); set(g, 20, 23, 'B'); return; }
-  if (mode === 'flat') { pts(g, [[19, 22], [20, 23], [21, 22]], 'M'); return; }
-  pts(g, [[18, 22], [19, 23], [20, 23], [21, 23], [22, 22]], 'M');
+  if (mode === 'smile') return; // the reference smile
+  pts(g, [[27, 31], [31, 31], [28, 32], [29, 32], [30, 32]], 'e');
+  if (mode === 'open') { rect(g, 28, 31, 3, 2, 'd'); set(g, 29, 32, 's'); }
+  if (mode === 'flat') rect(g, 28, 32, 3, 1, 'd');
 }
 
-function hand(g, x, y) {
-  rect(g, x, y, 3, 3, 'S');
-  set(g, x + 2, y + 2, 's');
-}
+// ---------- extras ----------
 
-// ---------- props ----------
-
-function ramen(g, f) {
-  const lift = f % 4 === 1 || f % 4 === 2;
-  // bowl
-  ellipse(g, 20, 37, 10, 6.5, 'O', (x, y) => y >= 32);
-  ellipse(g, 20, 32, 10, 2.6, 'O');
-  ellipse(g, 20, 32, 8.4, 1.7, 'Y');
-  for (let x = 11; x <= 29; x++) if (get(g, x, 35) === 'O') set(g, x, 35, 'P');
-  for (let y = 33; y <= 39; y++) for (let x = 25; x <= 30; x++) if (get(g, x, y) === 'O') set(g, x, y, 'o');
-  // noodles, egg, nori
-  pts(g, [[14, 32], [15, 31], [16, 32], [17, 31], [18, 32], [20, 32], [21, 31]], 'N');
-  pts(g, [[23, 31], [24, 31], [23, 32]], 'W'); pts(g, [[24, 32]], 'Z');
-  rect(g, 26, 30, 2, 2, 'n');
-  // hands holding the bowl
-  hand(g, 9, 32); hand(g, 29, 33);
-  // chopsticks: resting in the bowl, or lifting noodles to the mouth
-  if (lift) {
-    // noodles hang from the chopstick tips down to the bowl
-    line(g, 30, 32, 24, 25, 'C'); line(g, 31, 32, 25, 25, 'C');
-    pts(g, [[23, 25], [22, 26], [23, 27], [22, 28], [23, 29], [22, 30], [21, 26], [20, 27], [21, 28], [20, 29], [21, 30]], 'N');
-  } else {
-    line(g, 30, 33, 25, 28, 'C'); line(g, 31, 33, 26, 28, 'C');
+function removeSteam(g) {
+  for (let y = STEAM.y0; y <= STEAM.y1; y++) for (let x = STEAM.x0; x <= STEAM.x1; x++) {
+    if (!'qjg'.includes(get(g, x, y))) continue;
+    const hairy = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([dx, dy]) => HAIR_CHARS.includes(get(g, x + dx, y + dy))).length;
+    set(g, x, y, hairy >= 2 ? 't' : '.');
   }
 }
 
-// steam curls rising beside her, outside the hair so it reads clearly
-function steam(g, f) {
-  const s = f % 2;
-  const curl = (x, y) => (s ? [[x, y], [x - 1, y - 1], [x - 1, y - 2], [x, y - 3], [x, y - 4]] : [[x - 1, y], [x, y - 1], [x, y - 2], [x - 1, y - 3], [x - 1, y - 4]]);
-  pts(g, curl(3, 31), 'w'); pts(g, curl(37, 29), 'w');
+// the steam rising from the mug drifts up and down by a pixel
+function driftSteam(g, f) {
+  if (f % 2 === 0) return;
+  const moved = [];
+  for (let y = STEAM.y0; y <= STEAM.y1; y++) for (let x = STEAM.x0; x <= STEAM.x1; x++) if ('qj'.includes(get(g, x, y))) moved.push([x, y, get(g, x, y)]);
+  removeSteam(g);
+  moved.forEach(([x, y, c]) => set(g, x, y - 1, c));
+}
+
+function sparkle(g, x, y, r, on) {
+  if (!on) { set(g, x, y, 'G'); return; }
+  for (let i = 1; i <= r; i++) pts(g, [[x + i, y], [x - i, y], [x, y + i], [x, y - i]], 'G');
+}
+
+function sparkles(g, f) {
+  const t = f % 4;
+  sparkle(g, 8, 11, 3, t !== 2);
+  sparkle(g, 4, 18, 2, t !== 0);
+  sparkle(g, 59, 33, 3, t !== 1);
+}
+
+function steamCurl(g, x, y, f) {
+  const s = f % 2 ? 1 : 0;
+  const curl = [[x + s, y], [x - 1 + s, y - 1], [x - 1 + s, y - 2], [x + s, y - 3], [x + 1 + s, y - 4], [x + 1 + s, y - 5], [x + s, y - 6]];
+  pts(g, curl, 'q');
+  curl.forEach(([cx, cy]) => [-1, 1].forEach((dx) => { if (get(g, cx + dx, cy) !== 'q') set(g, cx + dx, cy, 'a'); }));
+}
+
+// ---------- props (each one covers the mug and hands) ----------
+
+function ramen(g, f) {
+  const lift = f % 4 === 1 || f % 4 === 2;
+  oEllipse(g, 20, 46, 13, 9, 'O', (x, y) => y >= 45);
+  oEllipse(g, 20, 45, 13, 3.6, 'O');
+  ellipse(g, 20, 45, 11.2, 2.4, 'Y');
+  for (let x = 6; x <= 34; x++) if (get(g, x, 50) === 'O') set(g, x, 50, 'd');
+  for (let y = 46; y < SIZE; y++) for (let x = 26; x <= 34; x++) if (get(g, x, y) === 'O') set(g, x, y, 'P');
+  pts(g, [[11, 45], [12, 44], [13, 45], [14, 44], [15, 45], [16, 44], [17, 45], [19, 44], [20, 45]], 'N');
+  rect(g, 22, 44, 3, 2, 'W'); set(g, 23, 44, 'Z');
+  oRect(g, 27, 42, 3, 3, 'U');
+  hand(g, 7, 49); hand(g, 34, 49);
+  if (lift) {
+    line(g, 34, 47, 30, 34, 'C'); line(g, 35, 47, 31, 34, 'C');
+    for (let y = 35; y <= 44; y++) { set(g, 29 - (y % 2), y, 'N'); set(g, 27 + (y % 2), y, 'N'); }
+  } else {
+    line(g, 35, 48, 29, 39, 'C'); line(g, 36, 48, 30, 39, 'C');
+    steamCurl(g, 13, 41, f); steamCurl(g, 18, 40, f + 1);
+  }
 }
 
 const FUJI = [
-  [16, 36], [17, 35], [18, 34], [19, 33], [20, 33], [21, 34], [22, 35], [23, 36], // mountain
-  [18, 33], [21, 33], // snow cap edge
-  [14, 31], [15, 31], [16, 32], // cloud
-  [24, 31], // sun
+  [11, 51], [12, 50], [13, 49], [14, 48], [15, 47], [16, 46], [17, 45], [18, 45], [19, 45], [20, 45],
+  [21, 46], [22, 47], [23, 48], [24, 49], [25, 50], [26, 51],
+  [16, 47], [17, 48], [18, 47], [19, 48], [20, 47], [21, 48],
+  [25, 43], [26, 42], [27, 43], [26, 44],
 ];
 
 function drawing(g, f) {
-  // sketchbook, slightly tilted toward us
-  rect(g, 10, 29, 17, 10, 'Q');
-  for (let x = 11; x <= 25; x += 2) set(g, x, 29, 'T'); // spiral binding
-  // the doodle appears stroke by stroke
-  const shown = Math.min(FUJI.length, 4 + (f % 8) * 2);
-  pts(g, FUJI.slice(0, shown), 'q');
-  // left hand holds the book, right hand draws
-  hand(g, 8, 33);
-  const tip = [[17, 35], [19, 33], [21, 34], [23, 36]][f % 4];
-  const [tx, ty] = tip;
-  line(g, tx + 1, ty - 1, tx + 6, ty - 6, 'y');
+  oRect(g, 7, 41, 24, 13, 'Q');
+  for (let x = 8; x <= 29; x += 2) set(g, x, 40, 'T');
+  const shown = Math.min(FUJI.length, 6 + (f % 12) * 2);
+  pts(g, FUJI.slice(0, shown), 'X');
+  hand(g, 6, 49);
+  // pencil held from the right, angled down so it never covers her face
+  const [tx, ty] = FUJI[shown - 1];
+  line(g, tx + 1, ty + 1, tx + 9, ty + 5, 'y');
   set(g, tx, ty, 'T');
-  pts(g, [[tx + 7, ty - 7], [tx + 6, ty - 7]], 'p');
-  hand(g, tx + 3, ty - 3);
+  pts(g, [[tx + 10, ty + 5], [tx + 10, ty + 6], [tx + 9, ty + 6]], 'E');
+  hand(g, tx + 6, ty + 4);
 }
 
 function reading(g, f) {
   const flip = f % 6 === 3;
-  // open book: cover, two pages, spine
-  rect(g, 9, 30, 23, 9, 'L');
-  rect(g, 10, 30, 10, 8, 'Q'); rect(g, 21, 30, 10, 8, 'Q');
-  rect(g, 20, 30, 1, 9, 'T');
-  for (let y = 32; y <= 36; y += 2) { rect(g, 11, y, 7, 1, 'q'); rect(g, 22, y, 7, 1, 'q'); }
-  rect(g, 9, 38, 23, 1, 'l');
-  if (flip) {
-    // a page mid-turn
-    pts(g, [[21, 29], [22, 28], [23, 27], [24, 27], [25, 28], [21, 28], [22, 27]], 'Q');
-    rect(g, 22, 29, 4, 1, 'Q');
-  }
-  hand(g, 7, 33); hand(g, 31, 33);
+  oRect(g, 5, 41, 35, 13, 'L');
+  rect(g, 6, 41, 15, 11, 'W'); rect(g, 24, 41, 15, 11, 'W');
+  rect(g, 21, 41, 3, 13, 'T');
+  for (let y = 43; y <= 49; y += 2) { rect(g, 8, y, 11, 1, 'X'); rect(g, 26, y, 11, 1, 'X'); }
+  rect(g, 5, 53, 35, 1, 'V');
+  if (flip) for (let i = 0; i < 9; i++) rect(g, 24 + i, 40 - Math.round(Math.sin((i / 8) * Math.PI) * 4), 1, 2, 'W');
+  hand(g, 4, 47); hand(g, 41, 47);
 }
 
 // ---------- frames ----------
 
 export const ACTIVITIES = {
+  coffee: { label: 'sipping coffee', frames: 8, speed: 360 },
   ramen: { label: 'eating ramen', frames: 8, speed: 260 },
-  drawing: { label: 'drawing', frames: 16, speed: 220 },
+  drawing: { label: 'drawing', frames: 24, speed: 200 },
   reading: { label: 'reading', frames: 12, speed: 380 },
 };
 
-export function buildFrame(activity = 'ramen', f = 0, { blink = false } = {}) {
-  const g = blank();
-  backHair(g);
-  torso(g);
-  frontHair(g);
-  face(g);
-  bangs(g);
-  glasses(g);
-  cheeks(g);
-
+export function buildFrame(activity = 'coffee', f = 0, { blink = false } = {}) {
+  const g = BASE.map((r) => r.split(''));
   const lift = activity === 'ramen' && (f % 4 === 1 || f % 4 === 2);
-  const eyeMode = blink ? 'blink' : activity === 'ramen' ? (lift ? 'happy' : 'open') : 'down';
+  const sip = activity === 'coffee' && f % 8 === 5;
+
+  if (activity === 'coffee') driftSteam(g, f);
+  else removeSteam(g);
+
+  const eyeMode = blink ? 'blink' : (lift || sip) ? 'happy' : (activity === 'drawing' || activity === 'reading') ? 'down' : 'open';
   eyes(g, eyeMode);
-  mouth(g, activity === 'ramen' ? (lift ? 'open' : 'smile') : activity === 'drawing' ? 'flat' : 'smile');
+  mouth(g, lift ? 'open' : activity === 'drawing' ? 'flat' : 'smile');
 
   if (activity === 'ramen') ramen(g, f);
   if (activity === 'drawing') drawing(g, f);
   if (activity === 'reading') reading(g, f);
 
-  const out = outline(g);
-  if (activity === 'ramen') steam(out, f);
-  return out;
+  sparkles(g, f);
+  return g;
 }
 
-export function toSVG(grid, scale = 8) {
+export function toSVG(grid, scale = 5) {
   let rects = '';
   for (let y = 0; y < SIZE; y++) {
     let x = 0;
