@@ -378,6 +378,14 @@ Bracketed names point to the references in section 7.
   - **The lady:** she throws food, and sparrows come down to eat.
   - The cursor turns into a pointer over anything clickable.
 - **Ideas for later:** a night mode tied to the lantern idea (lit pagoda windows, a glowing stone lantern, the moon, fireflies), the lady sitting on a bench, ripples on the lake, a mute toggle, reduced motion for people who turn animations off, and pausing when the scene is off-screen.
+- **Feedback (2026-11-15):** Sanskriti says v1 doesn't look as good as Sam's banner. The code-drawn art is flatter than hand-made art.
+- **How Mythili's footer scene is built (inspected 2026-11-15):**
+  - A top-down park, drawn on a **WebGL canvas** with no image files loaded, plus **two 2D canvases** on top for the small moving things: people walking with soft shadows, ducks and swans.
+  - A soft, painterly, felt-like texture with film grain over everything. Drifting **cloud shadows**, and an umbrella casting a shadow.
+  - The edge is **feathered and blurred**, like torn paper.
+  - **Clicking the pond makes ripple rings.** There's a "Turn park sound on" button for ambient park audio, and the cursor is a pointer over the scene.
+  - Its aspect is 4:5 on mobile and wider on desktop.
+- **Proposed rebuild:** the quality in both Sam's and Mythili's scenes comes from art made by hand or with tools, then brought to life in code. Plan: Sanskriti makes or generates the base illustration (pixel like Sam's, or painterly like Mythili's), and I add the life on top (petals, birds, the lady, bells, lake ripples, cloud shadows, grain, feathered edges, an ambient sound toggle). **Waiting on her choice of style.**
 
 ## 9. Change log
 
