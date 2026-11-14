@@ -12,6 +12,8 @@
 // The canvas renders at a low resolution (W × H) and should be scaled up with `image-rendering: pixelated`.
 // Soft, transparent edges are done with a CSS mask on the canvas (see the demo).
 
+import { chime, chirp } from './scene-audio.js';
+
 export const W = 400;
 export const H = 170;
 
@@ -359,6 +361,8 @@ export function mountFujiScene(canvas, { seed = 7, fps = 14 } = {}) {
   const sparrows = []; // on the ground
   const grains = [];
   const notes = [];   // little sparkles rising from the bells
+  const ripples = []; // rings on the lake where it's clicked
+  const shadows = [{ x: 60, y: 150, w: 70 }, { x: 260, y: 160, w: 90 }]; // cloud shadows drifting over the meadow
   let bellSwing = 0;
 
   const START_X = 132, FEED_X = 196;
@@ -367,35 +371,16 @@ export function mountFujiScene(canvas, { seed = 7, fps = 14 } = {}) {
   placeLady();
   let frame = 0, last = 0, raf = 0, idleFeed = 220;
 
-  // ---- sound: a small wind-bell chime made with Web Audio ----
-  let audio = null;
-  function chime() {
-    try {
-      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
-      const notesHz = [659.3, 783.99, 880, 987.77, 1174.66, 1318.51]; // E5 G5 A5 B5 D6 E6
-      const now = audio.currentTime;
-      for (let n = 0; n < 4; n++) {
-        const f = notesHz[(Math.random() * notesHz.length) | 0], t0 = now + n * (0.09 + Math.random() * 0.12);
-        [[1, 0.22], [2.76, 0.07], [5.4, 0.03]].forEach(([mult, amp]) => {
-          const o = audio.createOscillator(), g = audio.createGain();
-          o.type = 'sine'; o.frequency.value = f * mult;
-          g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(amp, t0 + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 2.4 / mult);
-          o.connect(g).connect(audio.destination); o.start(t0); o.stop(t0 + 2.6);
-        });
-      }
-    } catch { /* audio not available */ }
-  }
-
   // ---- interactions ----
   const toScene = (e) => { const rc = canvas.getBoundingClientRect(); return [(e.clientX - rc.left) / rc.width * W, (e.clientY - rc.top) / rc.height * H]; };
   const near = (a, x, y, d) => Math.abs(a.x - x) < d && Math.abs(a.y - y) < d;
   const inBox = (bx, x, y) => x >= bx.x0 && x <= bx.x1 && y >= bx.y0 && y <= bx.y1;
   const ladyBox = () => ({ x0: lady.x - 2, x1: lady.x + 13, y0: lady.y - 2, y1: lady.y + 22 });
 
-  function scareSkyBirds(x, y) { flock.forEach((bd) => { if (near(bd, x, y, 28)) { bd.flee = true; bd.vy = -1.2 - Math.random(); bd.vx *= 2.5; } }); }
-  function scareSparrows() { sparrows.forEach((s) => { s.state = 'leave'; s.vy = -1.4 - Math.random(); s.vx = (Math.random() < 0.5 ? -1 : 1) * (1 + Math.random()); }); }
+  function scareSkyBirds(x, y) { chirp((x / W) * 2 - 1); flock.forEach((bd) => { if (near(bd, x, y, 28)) { bd.flee = true; bd.vy = -1.2 - Math.random(); bd.vx *= 2.5; } }); }
+  function scareSparrows() { if (sparrows.length) chirp(); sparrows.forEach((s) => { s.state = 'leave'; s.vy = -1.4 - Math.random(); s.vx = (Math.random() < 0.5 ? -1 : 1) * (1 + Math.random()); }); }
   function feed() {
-    if (lady.state !== 'idle') return;
+    if (lady.state !== 'idle' && lady.state !== 'walk') return; // she stops walking to feed them
     lady.state = 'throw'; lady.t = 0;
     for (let i = 0; i < 9; i++) grains.push({ x: lady.x + 10, y: lady.y + 8, vx: 0.4 + Math.random() * 1.1, vy: -0.6 - Math.random() * 0.6, landed: false });
     const n = 2 + ((Math.random() * 2) | 0);
@@ -408,6 +393,7 @@ export function mountFujiScene(canvas, { seed = 7, fps = 14 } = {}) {
     if (hitSparrow) return scareSparrows();
     if (hitSky) return scareSkyBirds(x, y);
     if (inBox(ladyBox(), x, y)) return feed();
+    if (y >= 120 && y < GROUND_Y && x < 262 - (y - 120) * 3) { ripples.push({ x, y, r: 0 }); return; }
     if (PAGODA.box && inBox(PAGODA.box, x, y)) { bellSwing = 1; chime(); for (let i = 0; i < 6; i++) notes.push({ x: PAGODA.cx + (Math.random() - 0.5) * 30, y: PAGODA.top + 20 + Math.random() * 40, life: 30 + Math.random() * 20 }); }
   }
   function onMove(e) {
@@ -456,6 +442,8 @@ export function mountFujiScene(canvas, { seed = 7, fps = 14 } = {}) {
     if (!sparrows.length && grains.length) for (let i = grains.length - 1; i >= 0; i--) if (grains[i].landed && Math.random() < 0.05) grains.splice(i, 1);
     // bells and notes
     bellSwing *= 0.96; if (bellSwing < 0.02) bellSwing = 0;
+    ripples.forEach((rp) => { rp.r += 0.35; }); for (let i = ripples.length - 1; i >= 0; i--) if (ripples[i].r > 14) ripples.splice(i, 1);
+    shadows.forEach((sh) => { sh.x += 0.12; if (sh.x - sh.w > W) sh.x = -sh.w; });
     notes.forEach((n) => { n.y -= 0.4; n.x += Math.sin(n.y * 0.2) * 0.2; n.life--; });
     for (let i = notes.length - 1; i >= 0; i--) if (notes[i].life <= 0) notes.splice(i, 1);
   }
@@ -471,6 +459,18 @@ export function mountFujiScene(canvas, { seed = 7, fps = 14 } = {}) {
         const d = (xx * xx) / ((c.w / 2) ** 2) + (yy * yy) / 16 + (yy > 0 ? 0.2 : 0);
         if (d < 1 && dither(Math.round(c.x + xx), Math.round(c.y + yy), 1.1 - d)) out.px(c.x + xx, c.y + yy, yy > 1 ? C.cloud2 : C.cloud, 200);
       }
+    });
+    // cloud shadows: a soft darker patch sliding across the meadow
+    shadows.forEach((sh) => {
+      for (let y = GROUND_Y; y < H; y++) for (let x = Math.max(0, sh.x - sh.w); x < Math.min(W, sh.x + sh.w); x++) {
+        const d = ((x - sh.x) / sh.w) ** 2 + ((y - sh.y) / 14) ** 2;
+        if (d < 1 && dither(x, y, (1 - d) * 0.55)) out.px(x, y, C.ink, 26);
+      }
+    });
+    // ripples where the lake was clicked
+    ripples.forEach((rp) => {
+      const a = Math.max(0, 255 - rp.r * 18);
+      for (let t = 0; t < Math.PI * 2; t += 0.18) { const x = rp.x + Math.cos(t) * rp.r, y = rp.y + Math.sin(t) * rp.r * 0.35; if (y >= 120 && y < GROUND_Y) out.px(x, y, C.lakeL, a); }
     });
     // lake sparkles
     for (let i = 0; i < 10; i++) { const x = ((i * 53 + frame * 0.7) % 260) | 0, y = 122 + ((i * 7) % 8); if ((frame + i * 5) % 12 < 6) out.px(x, y, C.lakeL); }
@@ -514,6 +514,6 @@ export function mountFujiScene(canvas, { seed = 7, fps = 14 } = {}) {
 
   return {
     ringBells: () => onClick({ clientX: 0, clientY: 0 }),
-    destroy() { cancelAnimationFrame(raf); canvas.removeEventListener('click', onClick); canvas.removeEventListener('pointermove', onMove); audio?.close?.(); },
+    destroy() { cancelAnimationFrame(raf); canvas.removeEventListener('click', onClick); canvas.removeEventListener('pointermove', onMove); },
   };
 }

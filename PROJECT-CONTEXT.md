@@ -386,6 +386,13 @@ Bracketed names point to the references in section 7.
   - **Clicking the pond makes ripple rings.** There's a "Turn park sound on" button for ambient park audio, and the cursor is a pointer over the scene.
   - Its aspect is 4:5 on mobile and wider on desktop.
 - **Proposed rebuild:** the quality in both Sam's and Mythili's scenes comes from art made by hand or with tools, then brought to life in code. Plan: Sanskriti makes or generates the base illustration (pixel like Sam's, or painterly like Mythili's), and I add the life on top (petals, birds, the lady, bells, lake ripples, cloud shadows, grain, feathered edges, an ambient sound toggle). **Waiting on her choice of style.**
+- **Both versions built to compare (2026-11-15).** Sanskriti meant the live, interactive scene, not generated images. AI image previews were also made in Canva (in her Canva uploads), but the comparison that matters is the code:
+  - **A · Pixel:** `assets/scene/fuji-scene.js`, 400×170 pixels.
+  - **B · Painterly:** `assets/scene/fuji-scene-painted.js`, a 1200×510 logical space at 3× the pixel layout, so everything lines up. It uses soft gradient shapes, blur, fluffy blossom clusters, a reflected Fuji in the lake, a film-grain overlay and a vector lady and sparrows. It renders at the device's pixel density at 30 fps.
+  - **Same life and clicks in both:** bells on the pagoda, birds flying off, the lady feeding sparrows (now even mid-walk: she stops to feed them), and **ripples where you click the lake** (new). **Drifting cloud shadows** over the meadow are also new.
+  - **Shared sound:** `assets/scene/scene-audio.js` has `chime()`, `chirp()`, and `setAmbient(on)` for a breeze with occasional birdsong, like Mythili's "park sound". The comparison page has a Sound on/off toggle.
+  - **Comparison page:** `explorations/scene.html` (local only).
+  - **Waiting on:** Sanskriti to pick A or B.
 
 ## 9. Change log
 
@@ -412,3 +419,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-15:** Stamp asset, first round: postage stamp, wax seal and hanko, each with an S, in the mascot palette (`assets/stamp/stamp.js`).
 - **2026-11-15:** The S stamp asset is now Sanskriti's own stamp image, saved with a transparent background (`assets/stamp/stamp-s.png` + web copy `public/assets/stamp-s.png`). The pixel stamp versions were removed.
 - **2026-11-15:** Fuji scene v1: an interactive pixel-art banner with Fuji, the pagoda, a torii, cherry trees, the lady in a kimono, birds and sparrows, bell sounds, and soft transparent edges (`assets/scene/fuji-scene.js`).
+- **2026-11-15:** Built a painterly version of the Fuji scene next to the pixel one, with the same interactions. Added lake ripples, cloud shadows and shared ambient sound with birdsong and chimes to both. Comparison page set up.
