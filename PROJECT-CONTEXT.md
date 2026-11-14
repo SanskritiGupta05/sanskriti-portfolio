@@ -348,17 +348,15 @@ Bracketed names point to the references in section 7.
 - **Ideas for later:** clay modelling, painting, rangoli, vibe coding on a laptop, at a design meetup; using her inside the stamp logo and the footer scene.
 - **Superseded:** v1 (40×40, glasses on her head) and v2 (64×64, hand-drawn) were replaced because she must look exactly like the reference.
 
-### Stamp asset (2026-11-15, first round)
+### Stamp asset: the S stamp (2026-11-15)
 
-- **Brief:** a stamp asset with an "S" embossed on it, in the same chunky pixel style and palette as the mascot.
-- **Source:** `assets/stamp/stamp.js` (no framework). `buildStamp(kind)` returns a pixel grid; `toSVG(grid, size)` renders crisp SVG. The S is a bold 10×12 pixel glyph. Embossed = light catches its top edges, with a dark cast shadow down-right.
-- **Three versions to choose from:**
-  - **Postage stamp** (30×36): cream paper with round perforation bites every 3 px, a red panel (the mascot's red) with a fine frame, a raised S, and a tiny gold mark in the corner.
-  - **Wax seal** (34×34): an irregular red blob with drips, darker on the bottom-right, a pressed ring, a raised S and a glossy glint.
-  - **Hanko** (30×30): a Japanese name-seal impression, red ink in a double ring with the S carved out, uneven ink speckles and dry gaps.
-- **Interaction in the demo:** on hover the stamp lifts and tilts with a hard pixel shadow. On click it presses down with a little bounce.
-- **Preview:** `explorations/stamp.html` (local only), served by the "portfolio-explorations" config, port 3015.
-- **Waiting on:** Sanskriti to pick a version (or mix them).
+- **The asset is Sanskriti's own image**, used as-is (not redrawn): a red postage stamp with cream perforated edges, an embossed cream **S** inside a scalloped frame, cherry blossoms, Mount Fuji with a rising sun, and a seigaiha wave pattern, all with a paper texture.
+- **Files:**
+  - `assets/stamp/stamp-s.png`: the master, 996×1073, transparent background, trimmed.
+  - `public/assets/stamp-s.png`: the web copy, 557×600, about 800 KB. On the real site, serve it through Next `<Image>` so it's converted to WebP or AVIF and resized automatically.
+- **Interaction idea (demo):** on hover it lifts and tilts with a soft drop shadow; on click it presses down with a small bounce. Preview: `explorations/stamp.html` (local only).
+- **Superseded:** the first round of pixel-art stamps (postage, wax seal, hanko in `assets/stamp/stamp.js`) was removed when Sanskriti chose this image instead.
+- **Likely uses:** the logo or brand mark, the envelope interaction from the sitemap, the favicon (check it reads at 32px), and section accents.
 
 ## 9. Change log
 
@@ -383,3 +381,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-15:** Drawing motion redone after Sanskriti's screen recording: short side-to-side writing strokes with marks appearing, instead of the hand bobbing up and down.
 - **2026-11-15:** Drawing pose brought to life: breathing, an occasional happy smile, the cat breathing, wavy steam. The resting-sparkle dot is removed in all poses.
 - **2026-11-15:** Stamp asset, first round: postage stamp, wax seal and hanko, each with an S, in the mascot palette (`assets/stamp/stamp.js`).
+- **2026-11-15:** The S stamp asset is now Sanskriti's own stamp image, saved with a transparent background (`assets/stamp/stamp-s.png` + web copy `public/assets/stamp-s.png`). The pixel stamp versions were removed.
