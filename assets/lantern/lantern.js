@@ -214,6 +214,10 @@ const CSS = `
 .ltn .ltn-cord:focus-visible .ltn-focus{opacity:.6}
 `;
 
+/**
+ * @param {HTMLElement} host
+ * @param {{ lit?: boolean, bracket?: boolean, sound?: boolean, onToggle?: (lit: boolean) => void }} [options]
+ */
 export function mountLantern(host, { lit = false, bracket = true, sound = true, onToggle } = {}) {
   if (!document.getElementById('ltn-css')) {
     const st = document.createElement('style'); st.id = 'ltn-css'; st.textContent = CSS; document.head.appendChild(st);

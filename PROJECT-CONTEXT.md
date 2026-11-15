@@ -29,6 +29,7 @@ in any new Claude account or conversation.
 | Figma file | key `ltepqkFPU0HVYh7CChNZty`, **Page 14** (node `1422:1412`), currently empty |
 | Type demo | `explorations/type-demo.html` (open in a browser) |
 | Local dev server | Config "portfolio" in `../.claude/launch.json`, port 3014 (`cd sanskriti-portfolio && npm run dev -- --port 3014`) |
+| Site code | `src/app/` (layout, page, `globals.css` with the Tailwind tokens) and `src/components/` (Nav, Clock, Mascot, Lantern, FujiScene, Footer, SoundToggle, ThemeProvider). The asset engines stay plain JS in `assets/` and are imported by the components. |
 
 ## 3. Locked decisions
 
@@ -102,7 +103,9 @@ text-shadow: 0 0 .5px rgba(0,0,0,.35);
 
 ## 5b. Tech stack
 
-- **Framework:** Next.js (React). Set it up when we start building the first section.
+- **Framework:** Next.js 16 (App Router, TypeScript, `src/`), set up 2026-11-15 from `create-next-app@16.4.6`. Tailwind 4 through `@tailwindcss/turbopack`. Fonts from `@fontsource/redaction` and `@fontsource/redaction-35`.
+- **Tokens (in `src/app/globals.css`):** colours `bg / ink / head / muted / line` are CSS variables that flip under `html[data-theme="dark"]`; fonts `font-serif` (Redaction), `font-worn` (Redaction 35), `font-mono` (Courier New); the **only** text sizes are `text-h1` 72, `text-h2` 36, `text-lg` 20, `text-base` 16, `text-sm` 13, plus mobile `text-h1m` 48, `text-h2m` 28, `text-lgm` 18 (all other Tailwind sizes are removed). Utilities `printed` (the ink effect) and `label` (small caps labels).
+- **Gotcha (Next 16 cacheComponents):** don't call `new Date()` in a server component (it breaks prerendering); compute times on the client (see `Clock.tsx`).
 - **Styling: Tailwind CSS. No hand-written vanilla CSS.** Put the colours, fonts, the 5 type sizes and the Printed ink styles in the Tailwind theme (the SVG filter lives once in the root layout) as tokens, so the size rules are enforced in one place.
 - **Use libraries freely** instead of hand-rolling things:
   - **Motion (Framer Motion)** for animation and page transitions.
@@ -453,7 +456,18 @@ All six are live, with the real assets, in `explorations/hero.html` (local only,
 | **E · In the scene** (custom) | The scene is the whole hero. The headline floats in its sky; the mascot sits in the meadow drawing, with a typed speech bubble ("Psst. I'm the one drawing all this…"). The lead line and buttons come below. |
 | **F · Postcard** (custom) | The hero is a postcard from her: Fuji on the picture side ("Kawaguchiko, someday: the trip this portfolio is saving for"), a "Dear visitor," letter signed in Redaction 35 on the other side, the S stamp with a live postmark, and the mascot peeking from behind. |
 
-_Waiting for Sanskriti to pick a version (or mix them). The chosen one becomes the first real section in Next.js + Tailwind._
+_Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
+
+## 8d. Home page as built (2026-11-15)
+
+- **Layout:** one narrow centred column, `max-w-[720px]`, with wide empty margins on both sides, like Sam's and Mythili's sites (Sanskriti's call). The lantern hangs outside the column from the page's top-right corner.
+- **Hero = version A without the scene banner** (Sanskriti chose A, with the Fuji scene moved to the footer and "mascot + intro only" on top):
+  - nav: S stamp + "Sanskriti", Work / About / Playground, "India · live time";
+  - the pixel mascot at 300px, cycling poses (click to change);
+  - label "Product designer · builds in code", the H1 "Hi, I'm Sanskriti." (name in Redaction 35), a lead line in Printed Courier, and the Résumé / See work buttons. The Résumé and nav links don't point anywhere yet.
+- **Footer:** the Fuji scene at column width (it follows day/night), "Hire me, so I can fund my dream Japan trip." (H2, "Japan trip" in Redaction 35), a line inviting people to click around the scene, then links, a Sound toggle (breeze and birds by day, crickets by night), and "Set in Redaction & Courier New · © 2026 Sanskriti".
+- **Day/night:** `ThemeProvider` holds `night`; the lantern sets it, which flips `data-theme`, the Fuji scene (`setNight`) and the ambient sound together.
+- **Intro copy is a first draft** written from the notes; Sanskriti may want to rewrite it.
 
 ## 9. Change log
 
@@ -496,3 +510,4 @@ _Waiting for Sanskriti to pick a version (or mix them). The chosen one becomes t
 - **2026-11-15:** Lantern: the art now wraps around the cylinder (the branch curves and tapers, things squeeze towards the sides, ribs and seams follow the barrel), and the tassel hangs on a slightly longer string.
 - **2026-11-15:** Made a local all-assets page, `explorations/assets.html` (port 3015, not in git). It shows the mascot (4 poses), the stamp, the Fuji scene and the lantern together, and the lantern switches the whole page and the scene to night.
 - **2026-11-15:** Built six hero versions with the real assets (A banner, B horizon, C postage, plus custom D moon window, E in the scene, F postcard) in `explorations/hero.html` for Sanskriti to choose from (section 8c).
+- **2026-11-15:** Set up the real site (Next.js 16 + Tailwind 4, tokens for the type scale and day/night colours). Built the home page: a narrow 720px column with wide margins, hero A without the banner (nav, mascot, intro, buttons), the corner lantern switching the whole site to night, and the Fuji scene in the footer.
