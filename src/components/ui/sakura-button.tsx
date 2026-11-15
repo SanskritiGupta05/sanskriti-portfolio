@@ -20,9 +20,9 @@ const PAL = {
   paper: { edge: "#fbd3c8", mid: "#f2a998", base: "#df7a68", line: "#b9584a", eye: "#b8463a", pollen: "#e9b45a", branch: "#8c5a47", branchD: "#6d4235", bud: "#f0a495", budD: "#d36f5f", sepal: "#7a3a2c" },
 };
 
-// a sakura petal: rounded, widest near the tip, with a small notch
+// a sakura petal: round and full, swelling out from the centre, with a soft notch at the tip
 const petalPath = (r: number, w: number) =>
-  `M0 0C${-r * w} ${-r * 0.22} ${-r * w * 1.05} ${-r * 0.92} ${-r * 0.2} ${-r * 1.02}Q${-r * 0.06} ${-r * 0.98} 0 ${-r * 0.86}Q${r * 0.06} ${-r * 0.98} ${r * 0.2} ${-r * 1.02}C${r * w * 1.05} ${-r * 0.92} ${r * w} ${-r * 0.22} 0 0Z`;
+  `M0 0C${-r * w * 1.05} ${-r * 0.12} ${-r * w * 1.2} ${-r * 0.9} ${-r * 0.24} ${-r * 1.04}Q${-r * 0.08} ${-r * 1.0} 0 ${-r * 0.88}Q${r * 0.08} ${-r * 1.0} ${r * 0.24} ${-r * 1.04}C${r * w * 1.2} ${-r * 0.9} ${r * w * 1.05} ${-r * 0.12} 0 0Z`;
 
 const jitter = (i: number, seed: number) => Math.sin(i * 12.9898 + seed * 78.233) * 0.5; // -0.5…0.5, stable
 // round so the server and the browser render identical numbers (avoids hydration mismatches)
@@ -38,11 +38,11 @@ function Blossom({ x, y, r, rot = 0, seed, gid, tone, sway = 6 }: { x: number; y
     >
       <g transform={`translate(${x} ${y}) rotate(${rot})`}>
         {[0, 1, 2, 3, 4].map((i) => {
-          const a = q(i * 72 + jitter(i, seed) * 14), s = q(1 + jitter(i + 7, seed) * 0.16), w = q(0.78 + jitter(i + 3, seed) * 0.14);
+          const a = q(i * 72 + jitter(i, seed) * 16), s = q(1 + jitter(i + 7, seed) * 0.16), w = q(0.98 + jitter(i + 3, seed) * 0.16), k = q(jitter(i + 11, seed) * 18);
           return (
-            <g key={i} transform={`rotate(${a}) scale(${s})`}>
+            <g key={i} transform={`rotate(${a}) skewX(${k}) scale(${s})`}>
               <path d={petalPath(q(r), w)} fill={`url(#${gid}-petal)`} stroke={c.line} strokeOpacity={0.35} strokeWidth={0.45} />
-              <path d={`M0 ${-r * 0.3}Q${r * 0.05} ${-r * 0.55} 0 ${-r * 0.78}`} stroke={c.line} strokeOpacity={0.25} strokeWidth={0.5} fill="none" />
+              <path d={`M0 ${-r * 0.28}Q${r * 0.16} ${-r * 0.55} ${r * 0.02} ${-r * 0.8}`} stroke={c.line} strokeOpacity={0.25} strokeWidth={0.5} fill="none" />
             </g>
           );
         })}
@@ -65,8 +65,8 @@ function Bud({ x, y, rot, s = 1, gid, tone }: { x: number; y: number; rot: numbe
   const c = PAL[tone];
   return (
     <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s})`}>
-      <path d="M0 0Q0.4-2.5 0-4.5" stroke={c.branch} strokeWidth={0.9} fill="none" />
-      <path d="M0-4.2C-2.6-5-3.2-9 0-12.5C3.2-9 2.6-5 0-4.2Z" fill={`url(#${gid}-bud)`} />
+      <path d="M0 0Q1.8-2.4 0.2-4.6" stroke={c.branch} strokeWidth={0.9} fill="none" strokeLinecap="round" />
+      <path d="M0-4.2C-3-5-3.4-9.6 0.8-12.8C3.2-9.4 2.8-5.4 0-4.2Z" fill={`url(#${gid}-bud)`} />
       <path d="M-2.2-4.6Q-1.2-7 0-5.4Q1.2-7 2.2-4.6Q0-3.4-2.2-4.6Z" fill={c.sepal} />
     </g>
   );
@@ -92,27 +92,37 @@ function Sprig({ tone, gid }: { tone: Tone; gid: string }) {
         </filter>
       </defs>
       <g filter={`url(#${gid}-soft)`}>
-        {/* tapered branch: thick at the bottom-left, thin at the tip */}
-        <path d="M-2 60C7 50 15 43 25 37C37 30 48 21 60 13C64 10.5 68 8.5 73 6.6L73.6 7.8C69 9.8 65.2 12 61.6 14.6C49.6 23 38.6 31.8 26.6 39.4C17.4 45.2 9.6 52 1.8 61.5Z" fill={c.branch} />
-        <path d="M-2 60C7 50 15 43 25 37C37 30 48 21 60 13" stroke={c.branchD} strokeWidth={0.6} strokeOpacity={0.6} fill="none" />
-        {/* twigs */}
-        <path d="M43 25.5C46 21 47.5 17 47 12.5M30 34C27 29.5 26 26 26.5 21M15 46.5C11.5 49 9.5 52.5 9.5 56.5M57 15.5C61 16 63.5 18 65 21" stroke={c.branch} strokeWidth={1.1} fill="none" strokeLinecap="round" />
-        {/* buds at the tips */}
-        <Bud x={73} y={6.6} rot={62} s={0.95} gid={gid} tone={tone} />
-        <Bud x={47} y={12.5} rot={8} s={0.85} gid={gid} tone={tone} />
-        <Bud x={65} y={21} rot={150} s={0.8} gid={gid} tone={tone} />
-        <Bud x={9.5} y={56.5} rot={200} s={0.8} gid={gid} tone={tone} />
-        {/* open flowers */}
+        {/* the branch arcs like in the references: it rises from the bottom-left, bends over to the right and
+            droops at the tip. It's drawn in pieces that get thinner towards the tip, so it tapers smoothly. */}
+        {[
+          ["M-3 62C1 54 5 47 10 40", 3.8],
+          ["M10 40C14 33 17 27 23 21", 3],
+          ["M23 21C28 16 33 12.5 40 10.5", 2.3],
+          ["M40 10.5C47 8.5 54 8 60 9.5", 1.7],
+          ["M60 9.5C66 11 71 13.5 76 17.5", 1.1],
+        ].map(([d, w]) => (
+          <path key={d} d={d as string} stroke={c.branch} strokeWidth={w as number} fill="none" strokeLinecap="round" />
+        ))}
+        {/* a darker edge on the underside of the thick part, for a bit of roundness */}
+        <path d="M-1.6 63C2.4 55 6.4 48 11.4 41C15.4 34 18.4 28.4 24.2 22.4" stroke={c.branchD} strokeWidth={0.8} strokeOpacity={0.5} fill="none" strokeLinecap="round" />
+        {/* curving twigs, each ending in a bud */}
+        <path d="M47 8.8C49.5 5.8 52.5 3.6 56 2.8M58 9.2C61 12.5 61.5 16.5 59.5 20.5M37 11.5C39.5 14.5 43 16.5 47 17M7.5 44C4.5 46 3 49 3.5 52.5" stroke={c.branch} strokeWidth={1.1} fill="none" strokeLinecap="round" />
+        <Bud x={56} y={2.8} rot={72} s={0.85} gid={gid} tone={tone} />
+        <Bud x={59.5} y={20.5} rot={172} s={0.8} gid={gid} tone={tone} />
+        <Bud x={76} y={17.5} rot={128} s={0.9} gid={gid} tone={tone} />
+        <Bud x={47} y={17} rot={112} s={0.75} gid={gid} tone={tone} />
+        <Bud x={3.5} y={52.5} rot={200} s={0.75} gid={gid} tone={tone} />
+        {/* open flowers, tucked along the curve */}
         {lacquer ? (
           <>
-            <Blossom x={34} y={20} r={10.5} rot={10} seed={1} gid={gid} tone={tone} />
-            <Blossom x={17} y={37} r={7.5} rot={-24} seed={2} gid={gid} tone={tone} sway={8} />
+            <Blossom x={29} y={24} r={10.5} rot={10} seed={1} gid={gid} tone={tone} />
+            <Blossom x={13} y={42} r={7.5} rot={-24} seed={2} gid={gid} tone={tone} sway={8} />
           </>
         ) : (
           <>
-            <Blossom x={32} y={17} r={9} rot={4} seed={3} gid={gid} tone={tone} />
-            <Blossom x={16} y={33} r={8.5} rot={-30} seed={4} gid={gid} tone={tone} sway={8} />
-            <Blossom x={29} y={41} r={7} rot={22} seed={5} gid={gid} tone={tone} sway={9} />
+            <Blossom x={27} y={22} r={9} rot={4} seed={3} gid={gid} tone={tone} />
+            <Blossom x={11} y={39} r={8.5} rot={-30} seed={4} gid={gid} tone={tone} sway={8} />
+            <Blossom x={26} y={39} r={7} rot={22} seed={5} gid={gid} tone={tone} sway={9} />
           </>
         )}
       </g>
@@ -156,7 +166,7 @@ export function SakuraButtonLink({ className, children, tone = "lacquer", arrow,
       {/* the sprig: sways gently on its own, and more when hovered */}
       <motion.svg
         viewBox="0 0 80 60"
-        className="pointer-events-none absolute -top-0.5 left-2 h-[60px] w-20"
+        className="pointer-events-none absolute top-1 left-2 h-[60px] w-20"
         style={{ originX: 0, originY: 1 }}
         variants={{ rest: { rotate: 0 }, hover: { rotate: [0, -4, 2.5, -1, 0] }, press: { rotate: -2 } }}
         transition={{ duration: 1.2, ease: "easeInOut" }}
