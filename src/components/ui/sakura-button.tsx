@@ -92,37 +92,36 @@ function Sprig({ tone, gid }: { tone: Tone; gid: string }) {
         </filter>
       </defs>
       <g filter={`url(#${gid}-soft)`}>
-        {/* the branch arcs like in the references: it rises from the bottom-left, bends over to the right and
-            droops at the tip. It's drawn in pieces that get thinner towards the tip, so it tapers smoothly. */}
+        {/* a flowing, gently S-curved branch, thick at the bottom-left and thinning to the tip
+            (Sanskriti's pick; a stronger arch made it look droopy) */}
         {[
-          ["M-3 62C1 54 5 47 10 40", 3.8],
-          ["M10 40C14 33 17 27 23 21", 3],
-          ["M23 21C28 16 33 12.5 40 10.5", 2.3],
-          ["M40 10.5C47 8.5 54 8 60 9.5", 1.7],
-          ["M60 9.5C66 11 71 13.5 76 17.5", 1.1],
+          ["M-3 61C3 53 6 47 14 42", 3.6],
+          ["M14 42C20 38.5 26 38 32 33", 2.8],
+          ["M32 33C37 29 38.5 24 46 20", 2.1],
+          ["M46 20C52 17 56 17.5 61 13", 1.5],
+          ["M61 13C65 9.5 69 7 75 5.5", 1],
         ].map(([d, w]) => (
           <path key={d} d={d as string} stroke={c.branch} strokeWidth={w as number} fill="none" strokeLinecap="round" />
         ))}
-        {/* a darker edge on the underside of the thick part, for a bit of roundness */}
-        <path d="M-1.6 63C2.4 55 6.4 48 11.4 41C15.4 34 18.4 28.4 24.2 22.4" stroke={c.branchD} strokeWidth={0.8} strokeOpacity={0.5} fill="none" strokeLinecap="round" />
-        {/* curving twigs, each ending in a bud */}
-        <path d="M47 8.8C49.5 5.8 52.5 3.6 56 2.8M58 9.2C61 12.5 61.5 16.5 59.5 20.5M37 11.5C39.5 14.5 43 16.5 47 17M7.5 44C4.5 46 3 49 3.5 52.5" stroke={c.branch} strokeWidth={1.1} fill="none" strokeLinecap="round" />
-        <Bud x={56} y={2.8} rot={72} s={0.85} gid={gid} tone={tone} />
-        <Bud x={59.5} y={20.5} rot={172} s={0.8} gid={gid} tone={tone} />
-        <Bud x={76} y={17.5} rot={128} s={0.9} gid={gid} tone={tone} />
-        <Bud x={47} y={17} rot={112} s={0.75} gid={gid} tone={tone} />
-        <Bud x={3.5} y={52.5} rot={200} s={0.75} gid={gid} tone={tone} />
-        {/* open flowers, tucked along the curve */}
+        <path d="M-2 62C4 54 7 48.5 15 43.5C21 40 27 39.5 33 34.5" stroke={c.branchD} strokeWidth={0.7} strokeOpacity={0.55} fill="none" strokeLinecap="round" />
+        {/* curving twigs */}
+        <path d="M39 26.5C37 24.5 35.5 23 34.5 20.5M12.5 43.5C9 46.5 7.5 50.5 9.5 55M46 20C47.5 16.5 46 13.5 48 10.5M59.5 14.5C62.5 16 63.5 18.5 65.5 21M25 37.5C22 36 20 35 18 36.5" stroke={c.branch} strokeWidth={1.1} fill="none" strokeLinecap="round" />
+        {/* buds at the tips */}
+        <Bud x={75} y={5.5} rot={66} s={0.95} gid={gid} tone={tone} />
+        <Bud x={48} y={10.5} rot={14} s={0.85} gid={gid} tone={tone} />
+        <Bud x={65.5} y={21} rot={150} s={0.8} gid={gid} tone={tone} />
+        <Bud x={9.5} y={55} rot={196} s={0.8} gid={gid} tone={tone} />
+        {/* open flowers */}
         {lacquer ? (
           <>
-            <Blossom x={29} y={24} r={10.5} rot={10} seed={1} gid={gid} tone={tone} />
-            <Blossom x={13} y={42} r={7.5} rot={-24} seed={2} gid={gid} tone={tone} sway={8} />
+            <Blossom x={34} y={20} r={10.5} rot={10} seed={1} gid={gid} tone={tone} />
+            <Blossom x={17} y={37} r={7.5} rot={-24} seed={2} gid={gid} tone={tone} sway={8} />
           </>
         ) : (
           <>
-            <Blossom x={27} y={22} r={9} rot={4} seed={3} gid={gid} tone={tone} />
-            <Blossom x={11} y={39} r={8.5} rot={-30} seed={4} gid={gid} tone={tone} sway={8} />
-            <Blossom x={26} y={39} r={7} rot={22} seed={5} gid={gid} tone={tone} sway={9} />
+            <Blossom x={32} y={17} r={9} rot={4} seed={3} gid={gid} tone={tone} />
+            <Blossom x={16} y={33} r={8.5} rot={-30} seed={4} gid={gid} tone={tone} sway={8} />
+            <Blossom x={29} y={41} r={7} rot={22} seed={5} gid={gid} tone={tone} sway={9} />
           </>
         )}
       </g>
@@ -130,9 +129,35 @@ function Sprig({ tone, gid }: { tone: Tone; gid: string }) {
   );
 }
 
-type Props = HTMLMotionProps<"a"> & { tone?: Tone; arrow?: "up-right" | "down" };
+// Finishes (skeuomorphic options). The paper button's border always stays in its own cream hue, not dark red.
+//  flat        the original look, with a tone-on-tone border
+//  gloss       soft lacquer: a glossy highlight across the top, a gentle bevel and a soft cast shadow
+//  stitched    embroidered patch: a raised rim, a dashed stitch line just inside the edge, letterpress-style label
+//  raised      a physical key: visible thickness underneath (a darker band in the same hue) that compresses when pressed
+export type Finish = "flat" | "gloss" | "stitched" | "raised";
 
-export function SakuraButtonLink({ className, children, tone = "lacquer", arrow, ...props }: Props) {
+const SHELL: Record<Finish, Record<Tone, string>> = {
+  flat: {
+    lacquer: "shadow-[inset_0_1px_0_rgba(255,225,210,0.28),inset_0_-2px_3px_rgba(60,10,5,0.28),0_10px_20px_-10px_rgba(120,30,20,0.6)]",
+    paper: "border-[1.5px] border-[#e2cdaf] shadow-[inset_0_1px_0_rgba(255,255,255,0.7),inset_0_-2px_3px_rgba(140,80,40,0.12),0_10px_20px_-12px_rgba(120,60,30,0.4)]",
+  },
+  gloss: {
+    lacquer: "border border-[#c2564a] shadow-[inset_0_1px_0_rgba(255,232,220,0.5),inset_0_-4px_8px_rgba(60,8,4,0.4),0_1px_1px_rgba(80,15,10,0.35),0_12px_24px_-10px_rgba(120,30,20,0.65)]",
+    paper: "border-[1.5px] border-[#e6d2b4] shadow-[inset_0_1px_0_#ffffff,inset_0_-4px_8px_rgba(150,100,50,0.16),0_1px_1px_rgba(120,80,40,0.2),0_12px_24px_-12px_rgba(120,70,30,0.45)]",
+  },
+  stitched: {
+    lacquer: "shadow-[inset_0_0_0_3px_#b2443a,inset_0_2px_0_3px_rgba(255,220,205,0.18),inset_0_-3px_6px_rgba(50,6,3,0.35),0_2px_2px_rgba(80,15,10,0.3),0_10px_20px_-10px_rgba(120,30,20,0.6)] [text-shadow:0_-1px_0_rgba(60,8,4,0.55)]",
+    paper: "shadow-[inset_0_0_0_3px_#efe0c8,inset_0_0_0_4px_#e2cdab,inset_0_-3px_6px_rgba(150,100,50,0.14),0_2px_2px_rgba(120,80,40,0.18),0_10px_20px_-12px_rgba(120,70,30,0.4)] [text-shadow:0_1px_0_rgba(255,255,255,0.85)]",
+  },
+  raised: {
+    lacquer: "shadow-[inset_0_1px_0_rgba(255,232,220,0.45),inset_0_-2px_4px_rgba(60,8,4,0.3),0_5px_0_#6d1d16,0_12px_18px_-6px_rgba(90,20,12,0.55)] active:shadow-[inset_0_1px_0_rgba(255,232,220,0.3),inset_0_2px_5px_rgba(60,8,4,0.4),0_1px_0_#6d1d16,0_4px_8px_-4px_rgba(90,20,12,0.5)]",
+    paper: "border-[1.5px] border-[#e6d2b4] shadow-[inset_0_1px_0_#ffffff,inset_0_-2px_4px_rgba(150,100,50,0.12),0_5px_0_#dcc39e,0_12px_18px_-8px_rgba(120,70,30,0.4)] active:shadow-[inset_0_1px_0_#ffffff,inset_0_2px_5px_rgba(150,100,50,0.18),0_1px_0_#dcc39e,0_4px_8px_-4px_rgba(120,70,30,0.35)]",
+  },
+};
+
+type Props = HTMLMotionProps<"a"> & { tone?: Tone; arrow?: "up-right" | "down"; finish?: Finish };
+
+export function SakuraButtonLink({ className, children, tone = "lacquer", arrow, finish = "flat", ...props }: Props) {
   const gid = `sk${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
   const c = PAL[tone], lacquer = tone === "lacquer";
   return (
@@ -142,13 +167,17 @@ export function SakuraButtonLink({ className, children, tone = "lacquer", arrow,
       animate="rest"
       whileHover="hover"
       whileTap="press"
-      variants={{ rest: { y: 0, scale: 1 }, hover: { y: -2, scale: 1 }, press: { y: 0, scale: 0.97 } }}
+      variants={finish === "raised"
+        ? { rest: { y: 0, scale: 1 }, hover: { y: -1, scale: 1 }, press: { y: 4, scale: 1 } } // the key sinks into its base
+        : { rest: { y: 0, scale: 1 }, hover: { y: -2, scale: 1 }, press: { y: 0, scale: 0.97 } }}
       transition={{ type: "spring", stiffness: 420, damping: 24, mass: 0.6 }}
       className={cn(
         "relative isolate inline-flex h-14 items-center gap-3 overflow-hidden rounded-full pl-[92px] font-serif text-lg outline-none",
         lacquer
-          ? "pr-[72px] bg-[radial-gradient(140%_120%_at_25%_0%,#b8443a_0%,#a2352b_45%,#8c2a22_100%)] text-[#f7e9d6] shadow-[inset_0_1px_0_rgba(255,225,210,0.28),inset_0_-2px_3px_rgba(60,10,5,0.28),0_10px_20px_-10px_rgba(120,30,20,0.6)]"
-          : "pr-9 border-[1.5px] border-[#8e2f24] bg-[radial-gradient(140%_120%_at_30%_0%,#fbf3e6_0%,#f5e7d3_60%,#efdcc4_100%)] text-[#7a2a20] shadow-[inset_0_1px_0_rgba(255,255,255,0.7),inset_0_-2px_3px_rgba(140,80,40,0.12),0_10px_20px_-12px_rgba(120,60,30,0.4)]",
+          ? "pr-[72px] bg-[radial-gradient(140%_120%_at_25%_0%,#b8443a_0%,#a2352b_45%,#8c2a22_100%)] text-[#f7e9d6]"
+          : "pr-9 bg-[radial-gradient(140%_120%_at_30%_0%,#fbf3e6_0%,#f5e7d3_60%,#efdcc4_100%)] text-[#7a2a20]",
+        SHELL[finish][tone],
+        "transition-shadow duration-150",
         "focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         className,
       )}
@@ -166,7 +195,7 @@ export function SakuraButtonLink({ className, children, tone = "lacquer", arrow,
       {/* the sprig: sways gently on its own, and more when hovered */}
       <motion.svg
         viewBox="0 0 80 60"
-        className="pointer-events-none absolute top-1 left-2 h-[60px] w-20"
+        className="pointer-events-none absolute -top-0.5 left-2 h-[60px] w-20"
         style={{ originX: 0, originY: 1 }}
         variants={{ rest: { rotate: 0 }, hover: { rotate: [0, -4, 2.5, -1, 0] }, press: { rotate: -2 } }}
         transition={{ duration: 1.2, ease: "easeInOut" }}
@@ -215,6 +244,15 @@ export function SakuraButtonLink({ className, children, tone = "lacquer", arrow,
             }),
           )}
         </motion.svg>
+      )}
+
+      {/* gloss: a soft highlight across the top half */}
+      {finish === "gloss" && (
+        <span aria-hidden="true" className={cn("pointer-events-none absolute inset-x-4 top-[3px] z-10 h-[46%] rounded-full bg-gradient-to-b to-transparent", lacquer ? "from-white/25" : "from-white/80")} />
+      )}
+      {/* stitched: a dashed stitch line just inside the rim */}
+      {finish === "stitched" && (
+        <span aria-hidden="true" className={cn("pointer-events-none absolute inset-[6px] z-10 rounded-full border border-dashed", lacquer ? "border-[#eab59a]/55" : "border-[#c9a67c]/70")} />
       )}
 
       <span className="relative">{children as React.ReactNode}</span>
