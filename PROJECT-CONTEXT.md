@@ -481,7 +481,12 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
   - The mascot sits 16px under the nav (Sanskriti found the first gap too big).
 - **Footer:** the Fuji scene at column width (it follows day/night), "Hire me, so I can fund my dream Japan trip." (H2, "Japan trip" in Redaction 35), a line inviting people to click around the scene, then links, a Sound toggle (breeze and birds by day, crickets by night), and "Set in Redaction & Courier New · © 2026 Sanskriti".
 - **Day/night:** `ThemeProvider` holds `night`; the lantern sets it, which flips `data-theme`, the Fuji scene (`setNight`) and the ambient sound together.
-- **Intro copy is a first draft** written from the notes; Sanskriti may want to rewrite it.
+- **Hero copy now comes from her Framer portfolio** (2026-11-16, hero section only, at her request; see `docs/framer-content.md`):
+  - label: "Product Designer · Engineer turned Designer";
+  - H1: "I design products, that people actually use!" (her exact wording, comma included), on two lines with "actually use!" in Redaction 35. On desktop the heading extends 64px past the column on each side (`md:-mx-16`) so the second line fits;
+  - lead: "Turning complex ideas into simple, scalable digital experiences.";
+  - a label under the buttons: "Delhi NCR, India · Open to work · Trusted by 20+ startups".
+  The other Framer content (experience, case studies, testimonials, projects) is saved but not used yet.
 
 ## 9. Change log
 
@@ -537,3 +542,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-16:** Removed the ↓ arrow from the See work button.
 - **2026-11-16:** Hero made a bit smaller: H1 token 72 → 60px, intro text 20 → 16px, buttons 56 → 48px tall with 16px labels and a scaled-down sprig and waves.
 - **2026-11-16:** Connected Framer and pulled the real content from "New folio 2026" into `docs/framer-content.md` (read-only; nothing changed in Framer). Waiting for Sanskriti to choose what to use.
+- **2026-11-16:** Hero text replaced with the hero copy from her Framer portfolio ("I design products, that people actually use!" and friends).

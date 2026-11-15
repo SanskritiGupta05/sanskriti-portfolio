@@ -15,18 +15,18 @@ export default function Home() {
         <section className="pt-4 pb-32 text-center">
           <Mascot start="coffee" className="mx-auto w-[210px]" />
           <div className="mt-3 grid justify-items-center gap-6">
-            <span className="label">Product designer · builds in code</span>
-            <h1 className="font-serif text-h1m text-head md:text-h1">
-              Hi, I&apos;m <span className="font-worn">Sanskriti</span>.
+            {/* hero copy taken from Sanskriti's Framer portfolio ("New folio 2026") */}
+            <span className="label">Product Designer · Engineer turned Designer</span>
+            <h1 className="font-serif text-h1m text-balance text-head md:-mx-16 md:text-h1">
+              I design products, <br className="hidden md:block" />
+              that people <span className="font-worn">actually use!</span>
             </h1>
-            <p className="printed text-base">
-              I&apos;m a product designer at AppX, a YC-backed startup, and I build what I design. Before this: Keploy, Dualite
-              and GeeksforGeeks. If I don&apos;t know something, I <span className="font-worn">learn it</span>.
-            </p>
+            <p className="printed text-base">Turning complex ideas into simple, scalable digital experiences.</p>
             <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
               <SakuraButtonLink href="#resume" finish="raised">Résumé</SakuraButtonLink>
               <SakuraButtonLink href="#work" tone="paper" finish="raised">See work</SakuraButtonLink>
             </div>
+            <span className="label pt-2">Delhi NCR, India · Open to work · Trusted by 20+ startups</span>
           </div>
         </section>
       </main>
