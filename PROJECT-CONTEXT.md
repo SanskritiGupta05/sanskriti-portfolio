@@ -107,6 +107,8 @@ text-shadow: 0 0 .5px rgba(0,0,0,.35);
 - **Tokens (in `src/app/globals.css`):** colours `bg / ink / head / muted / line` are CSS variables that flip under `html[data-theme="dark"]`; fonts `font-serif` (Redaction), `font-worn` (Redaction 35), `font-mono` (Courier New); the **only** text sizes are `text-h1` 72, `text-h2` 36, `text-lg` 20, `text-base` 16, `text-sm` 13, plus mobile `text-h1m` 48, `text-h2m` 28, `text-lgm` 18 (all other Tailwind sizes are removed). Utilities `printed` (the ink effect) and `label` (small caps labels).
 - **Gotcha (Next 16 cacheComponents):** don't call `new Date()` in a server component (it breaks prerendering); compute times on the client (see `Clock.tsx`).
 - **Styling: Tailwind CSS. No hand-written vanilla CSS.** Put the colours, fonts, the 5 type sizes and the Printed ink styles in the Tailwind theme (the SVG filter lives once in the root layout) as tokens, so the size rules are enforced in one place.
+- **Component library: shadcn/ui (2026-11-15, Sanskriti's pick) + Motion.** shadcn uses Base UI primitives and the `cn` helper package (shadcn's own replacement for clsx + tailwind-merge). Its colour names (`background`, `foreground`, `primary`, `muted`, `border`…) are mapped in `globals.css` onto our own day/night variables, and its `dark:` variant follows `html[data-theme="dark"]`, so every shadcn component follows the lantern. `font-sans` points to Courier New; shadcn's Geist font was removed. Add components with `npx shadcn@latest add <name>`, then restyle them to the type scale (only `text-sm/base/lg/h2/h1`).
+  - `src/components/ui/button.tsx`: `Button` (a real button) and `ButtonLink` (a link styled as a button). Variants `solid`, `outline`, `ghost`, `link`; pill-shaped; small-caps Courier; a springy Motion lift on hover and a squeeze on press.
 - **Use libraries freely** instead of hand-rolling things:
   - **Motion (Framer Motion)** for animation and page transitions.
   - **Three.js** (via React Three Fiber) for 3D moments, where it adds something.
@@ -464,7 +466,7 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **Hero = version A without the scene banner** (Sanskriti chose A, with the Fuji scene moved to the footer and "mascot + intro only" on top):
   - nav: S stamp + "Sanskriti", Work / About / Playground, "India · live time";
   - **everything centre-aligned** (mascot, label, heading, lead line, buttons), at Sanskriti's request;
-  - the pixel mascot at 300px, cycling poses (click to change);
+  - the pixel mascot at **210px** (30% smaller than first built), cycling poses (click to change), with only a small gap (12px) above the label;
   - label "Product designer · builds in code", the H1 "Hi, I'm Sanskriti." (name in Redaction 35), a lead line in Printed Courier, and the Résumé / See work buttons, **pill-shaped (fully rounded)**: Sanskriti didn't like the sharp corners. The Résumé and nav links don't point anywhere yet.
 - **Footer:** the Fuji scene at column width (it follows day/night), "Hire me, so I can fund my dream Japan trip." (H2, "Japan trip" in Redaction 35), a line inviting people to click around the scene, then links, a Sound toggle (breeze and birds by day, crickets by night), and "Set in Redaction & Courier New · © 2026 Sanskriti".
 - **Day/night:** `ThemeProvider` holds `night`; the lantern sets it, which flips `data-theme`, the Fuji scene (`setNight`) and the ambient sound together.
@@ -515,3 +517,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-15:** Hero centre-aligned: mascot, label, heading, intro and buttons.
 - **2026-11-15:** Site lantern made 20% smaller (max 128px wide).
 - **2026-11-15:** Hero buttons changed from sharp corners to rounded pills.
+- **2026-11-15:** Added shadcn/ui + Motion. Mapped shadcn's colours onto the day/night variables and removed its Geist font. The hero buttons are now the shadcn Button (pill, springy hover and press). Mascot made 30% smaller (210px), with a smaller gap to the text.

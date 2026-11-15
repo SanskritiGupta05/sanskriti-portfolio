@@ -1,6 +1,7 @@
 import { Nav } from "@/components/Nav";
 import { Mascot } from "@/components/Mascot";
 import { Footer } from "@/components/Footer";
+import { ButtonLink } from "@/components/ui/button";
 
 // One narrow centred column with wide empty margins on both sides (like Sam's and Mythili's sites).
 // The lantern hangs outside it, from the page's top-right corner.
@@ -12,8 +13,8 @@ export default function Home() {
       <main>
         {/* Hero: the pixel mascot, then the intro */}
         <section className="pt-16 pb-32 text-center">
-          <Mascot start="coffee" className="mx-auto w-[300px]" />
-          <div className="mt-8 grid justify-items-center gap-6">
+          <Mascot start="coffee" className="mx-auto w-[210px]" />
+          <div className="mt-3 grid justify-items-center gap-6">
             <span className="label">Product designer · builds in code</span>
             <h1 className="font-serif text-h1m text-head md:text-h1">
               Hi, I&apos;m <span className="font-worn">Sanskriti</span>.
@@ -23,8 +24,8 @@ export default function Home() {
               and GeeksforGeeks. If I don&apos;t know something, I <span className="font-worn">learn it</span>.
             </p>
             <div className="flex flex-wrap justify-center gap-3 pt-2">
-              <a href="#resume" className="label rounded-full border border-head bg-head px-6 py-3 !text-bg transition-transform hover:-translate-y-0.5">Résumé</a>
-              <a href="#work" className="label rounded-full border border-head px-6 py-3 !text-head transition-transform hover:-translate-y-0.5">See work ↓</a>
+              <ButtonLink href="#resume">Résumé</ButtonLink>
+              <ButtonLink href="#work" variant="outline">See work ↓</ButtonLink>
             </div>
           </div>
         </section>
