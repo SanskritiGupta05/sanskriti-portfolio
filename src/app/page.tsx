@@ -25,7 +25,7 @@ export default function Home() {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
               <SakuraButtonLink href="#resume" finish="raised">Résumé</SakuraButtonLink>
-              <SakuraButtonLink href="#work" tone="paper" arrow="down" finish="raised">See work</SakuraButtonLink>
+              <SakuraButtonLink href="#work" tone="paper" finish="raised">See work</SakuraButtonLink>
             </div>
           </div>
         </section>
