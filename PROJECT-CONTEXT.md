@@ -463,6 +463,7 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **Layout:** one narrow centred column, `max-w-[720px]`, with wide empty margins on both sides, like Sam's and Mythili's sites (Sanskriti's call). The lantern hangs outside the column from the page's top-right corner.
 - **Hero = version A without the scene banner** (Sanskriti chose A, with the Fuji scene moved to the footer and "mascot + intro only" on top):
   - nav: S stamp + "Sanskriti", Work / About / Playground, "India · live time";
+  - **everything centre-aligned** (mascot, label, heading, lead line, buttons), at Sanskriti's request;
   - the pixel mascot at 300px, cycling poses (click to change);
   - label "Product designer · builds in code", the H1 "Hi, I'm Sanskriti." (name in Redaction 35), a lead line in Printed Courier, and the Résumé / See work buttons. The Résumé and nav links don't point anywhere yet.
 - **Footer:** the Fuji scene at column width (it follows day/night), "Hire me, so I can fund my dream Japan trip." (H2, "Japan trip" in Redaction 35), a line inviting people to click around the scene, then links, a Sound toggle (breeze and birds by day, crickets by night), and "Set in Redaction & Courier New · © 2026 Sanskriti".
@@ -511,3 +512,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-15:** Made a local all-assets page, `explorations/assets.html` (port 3015, not in git). It shows the mascot (4 poses), the stamp, the Fuji scene and the lantern together, and the lantern switches the whole page and the scene to night.
 - **2026-11-15:** Built six hero versions with the real assets (A banner, B horizon, C postage, plus custom D moon window, E in the scene, F postcard) in `explorations/hero.html` for Sanskriti to choose from (section 8c).
 - **2026-11-15:** Set up the real site (Next.js 16 + Tailwind 4, tokens for the type scale and day/night colours). Built the home page: a narrow 720px column with wide margins, hero A without the banner (nav, mascot, intro, buttons), the corner lantern switching the whole site to night, and the Fuji scene in the footer.
+- **2026-11-15:** Hero centre-aligned: mascot, label, heading, intro and buttons.
