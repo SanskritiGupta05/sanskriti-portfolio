@@ -23,8 +23,8 @@ export default function Home() {
               and GeeksforGeeks. If I don&apos;t know something, I <span className="font-worn">learn it</span>.
             </p>
             <div className="flex flex-wrap justify-center gap-3 pt-2">
-              <a href="#resume" className="label border border-head bg-head px-5 py-3 !text-bg transition-transform hover:-translate-y-0.5">Résumé</a>
-              <a href="#work" className="label border border-head px-5 py-3 !text-head transition-transform hover:-translate-y-0.5">See work ↓</a>
+              <a href="#resume" className="label rounded-full border border-head bg-head px-6 py-3 !text-bg transition-transform hover:-translate-y-0.5">Résumé</a>
+              <a href="#work" className="label rounded-full border border-head px-6 py-3 !text-head transition-transform hover:-translate-y-0.5">See work ↓</a>
             </div>
           </div>
         </section>
