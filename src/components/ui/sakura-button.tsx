@@ -150,8 +150,8 @@ const SHELL: Record<Finish, Record<Tone, string>> = {
     paper: "shadow-[inset_0_0_0_3px_#efe0c8,inset_0_0_0_4px_#e2cdab,inset_0_-3px_6px_rgba(150,100,50,0.14),0_2px_2px_rgba(120,80,40,0.18),0_10px_20px_-12px_rgba(120,70,30,0.4)] [text-shadow:0_1px_0_rgba(255,255,255,0.85)]",
   },
   raised: {
-    lacquer: "shadow-[inset_0_1px_0_rgba(255,232,220,0.45),inset_0_-2px_4px_rgba(60,8,4,0.3),0_5px_0_#6d1d16,0_12px_18px_-6px_rgba(90,20,12,0.55)] active:shadow-[inset_0_1px_0_rgba(255,232,220,0.3),inset_0_2px_5px_rgba(60,8,4,0.4),0_1px_0_#6d1d16,0_4px_8px_-4px_rgba(90,20,12,0.5)]",
-    paper: "border-[1.5px] border-[#e6d2b4] shadow-[inset_0_1px_0_#ffffff,inset_0_-2px_4px_rgba(150,100,50,0.12),0_5px_0_#dcc39e,0_12px_18px_-8px_rgba(120,70,30,0.4)] active:shadow-[inset_0_1px_0_#ffffff,inset_0_2px_5px_rgba(150,100,50,0.18),0_1px_0_#dcc39e,0_4px_8px_-4px_rgba(120,70,30,0.35)]",
+    lacquer: "shadow-[inset_0_1px_0_rgba(255,232,220,0.45),inset_0_-2px_4px_rgba(60,8,4,0.3),0_4px_0_#6d1d16,0_12px_18px_-6px_rgba(90,20,12,0.55)] active:shadow-[inset_0_1px_0_rgba(255,232,220,0.3),inset_0_2px_5px_rgba(60,8,4,0.4),0_1px_0_#6d1d16,0_4px_8px_-4px_rgba(90,20,12,0.5)]",
+    paper: "border-[1.5px] border-[#e6d2b4] shadow-[inset_0_1px_0_#ffffff,inset_0_-2px_4px_rgba(150,100,50,0.12),0_4px_0_#dcc39e,0_12px_18px_-8px_rgba(120,70,30,0.4)] active:shadow-[inset_0_1px_0_#ffffff,inset_0_2px_5px_rgba(150,100,50,0.18),0_1px_0_#dcc39e,0_4px_8px_-4px_rgba(120,70,30,0.35)]",
   },
 };
 
@@ -168,14 +168,14 @@ export function SakuraButtonLink({ className, children, tone = "lacquer", arrow,
       whileHover="hover"
       whileTap="press"
       variants={finish === "raised"
-        ? { rest: { y: 0, scale: 1 }, hover: { y: -1, scale: 1 }, press: { y: 4, scale: 1 } } // the key sinks into its base
+        ? { rest: { y: 0, scale: 1 }, hover: { y: -1, scale: 1 }, press: { y: 3, scale: 1 } } // the key sinks into its base
         : { rest: { y: 0, scale: 1 }, hover: { y: -2, scale: 1 }, press: { y: 0, scale: 0.97 } }}
       transition={{ type: "spring", stiffness: 420, damping: 24, mass: 0.6 }}
       className={cn(
-        "relative isolate inline-flex h-14 items-center gap-3 overflow-hidden rounded-full pl-[92px] font-serif text-lg outline-none",
+        "relative isolate inline-flex h-12 items-center gap-2.5 overflow-hidden rounded-full pl-[78px] font-serif text-base outline-none",
         lacquer
-          ? "pr-[72px] bg-[radial-gradient(140%_120%_at_25%_0%,#b8443a_0%,#a2352b_45%,#8c2a22_100%)] text-[#f7e9d6]"
-          : "pr-9 bg-[radial-gradient(140%_120%_at_30%_0%,#fbf3e6_0%,#f5e7d3_60%,#efdcc4_100%)] text-[#7a2a20]",
+          ? "pr-[60px] bg-[radial-gradient(140%_120%_at_25%_0%,#b8443a_0%,#a2352b_45%,#8c2a22_100%)] text-[#f7e9d6]"
+          : "pr-7 bg-[radial-gradient(140%_120%_at_30%_0%,#fbf3e6_0%,#f5e7d3_60%,#efdcc4_100%)] text-[#7a2a20]",
         SHELL[finish][tone],
         "transition-shadow duration-150",
         "focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
@@ -195,7 +195,7 @@ export function SakuraButtonLink({ className, children, tone = "lacquer", arrow,
       {/* the sprig: sways gently on its own, and more when hovered */}
       <motion.svg
         viewBox="0 0 80 60"
-        className="pointer-events-none absolute -top-0.5 left-2 h-[60px] w-20"
+        className="pointer-events-none absolute -top-0.5 left-1.5 h-[51px] w-[68px]"
         style={{ originX: 0, originY: 1 }}
         variants={{ rest: { rotate: 0 }, hover: { rotate: [0, -4, 2.5, -1, 0] }, press: { rotate: -2 } }}
         transition={{ duration: 1.2, ease: "easeInOut" }}
@@ -213,7 +213,7 @@ export function SakuraButtonLink({ className, children, tone = "lacquer", arrow,
       {/* a loose petal, drifting away on hover */}
       <motion.svg
         viewBox="-6 -6 12 12"
-        className={cn("pointer-events-none absolute size-3.5", lacquer ? "top-1.5 left-[84px]" : "bottom-2.5 left-[80px]")}
+        className={cn("pointer-events-none absolute size-3", lacquer ? "top-1 left-[70px]" : "bottom-2 left-[66px]")}
         variants={{ rest: { x: 0, y: 0, rotate: 25, opacity: 0.95 }, hover: { x: [0, 7, 12], y: [0, 6, 14], rotate: [25, 90, 160], opacity: [0.95, 0.95, 0] }, press: { y: 2 } }}
         transition={{ duration: 1.4, ease: "easeIn" }}
         aria-hidden="true"
@@ -225,7 +225,7 @@ export function SakuraButtonLink({ className, children, tone = "lacquer", arrow,
       {lacquer && (
         <motion.svg
           viewBox="0 0 100 40"
-          className="pointer-events-none absolute -right-2 -bottom-1 h-10 w-[100px] [mask-image:linear-gradient(to_right,transparent,#000_45%)]"
+          className="pointer-events-none absolute -right-2 -bottom-1 h-[34px] w-[85px] [mask-image:linear-gradient(to_right,transparent,#000_45%)]"
           variants={{ rest: { x: 0 }, hover: { x: -6 }, press: { x: -3 } }}
           transition={{ type: "spring", stiffness: 110, damping: 18 }}
           aria-hidden="true"

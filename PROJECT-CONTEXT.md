@@ -50,7 +50,7 @@ in any new Claude account or conversation.
 
 | Token | Size |
 |---|---|
-| Heading 1 | 72px |
+| Heading 1 | 60px (was 72px; reduced 2026-11-16 at Sanskriti's request) |
 | Heading 2 | 36px |
 | Body large | 20px |
 | Body | 16px |
@@ -104,7 +104,7 @@ text-shadow: 0 0 .5px rgba(0,0,0,.35);
 ## 5b. Tech stack
 
 - **Framework:** Next.js 16 (App Router, TypeScript, `src/`), set up 2026-11-15 from `create-next-app@16.4.6`. Tailwind 4 through `@tailwindcss/turbopack`. Fonts from `@fontsource/redaction` and `@fontsource/redaction-35`.
-- **Tokens (in `src/app/globals.css`):** colours `bg / ink / head / muted / line` are CSS variables that flip under `html[data-theme="dark"]`; fonts `font-serif` (Redaction), `font-worn` (Redaction 35), `font-mono` (Courier New); the **only** text sizes are `text-h1` 72, `text-h2` 36, `text-lg` 20, `text-base` 16, `text-sm` 13, plus mobile `text-h1m` 48, `text-h2m` 28, `text-lgm` 18 (all other Tailwind sizes are removed). Utilities `printed` (the ink effect) and `label` (small caps labels).
+- **Tokens (in `src/app/globals.css`):** colours `bg / ink / head / muted / line` are CSS variables that flip under `html[data-theme="dark"]`; fonts `font-serif` (Redaction), `font-worn` (Redaction 35), `font-mono` (Courier New); the **only** text sizes are `text-h1` 60 (was 72), `text-h2` 36, `text-lg` 20, `text-base` 16, `text-sm` 13, plus mobile `text-h1m` 48, `text-h2m` 28, `text-lgm` 18 (all other Tailwind sizes are removed). Utilities `printed` (the ink effect) and `label` (small caps labels).
 - **Gotcha (Next 16 cacheComponents):** don't call `new Date()` in a server component (it breaks prerendering); compute times on the client (see `Clock.tsx`).
 - **Styling: Tailwind CSS. No hand-written vanilla CSS.** Put the colours, fonts, the 5 type sizes and the Printed ink styles in the Tailwind theme (the SVG filter lives once in the root layout) as tokens, so the size rules are enforced in one place.
 - **Component library: shadcn/ui (2026-11-15, Sanskriti's pick) + Motion.** shadcn uses Base UI primitives and the `cn` helper package (shadcn's own replacement for clsx + tailwind-merge). Its colour names (`background`, `foreground`, `primary`, `muted`, `border`…) are mapped in `globals.css` onto our own day/night variables, and its `dark:` variant follows `html[data-theme="dark"]`, so every shadcn component follows the lantern. `font-sans` points to Courier New; shadcn's Geist font was removed. Add components with `npx shadcn@latest add <name>`, then restyle them to the type scale (only `text-sm/base/lg/h2/h1`).
@@ -465,6 +465,7 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **Layout:** one narrow centred column, `max-w-[720px]`, with wide empty margins on both sides, like Sam's and Mythili's sites (Sanskriti's call). The lantern hangs outside the column from the page's top-right corner, at `w-[clamp(80px,8.8vw,128px)]` (20% smaller than first built, at Sanskriti's request).
 - **Hero = version A without the scene banner** (Sanskriti chose A, with the Fuji scene moved to the footer and "mascot + intro only" on top):
   - nav: S stamp + "Sanskriti", Work / About / Playground, "India · live time";
+  - **sizes reduced a bit (2026-11-16):** the H1 is 60px, the intro line is body 16px (was 20px), and the buttons are 48px tall with 16px labels and a smaller sprig;
   - **everything centre-aligned** (mascot, label, heading, lead line, buttons), at Sanskriti's request;
   - the pixel mascot at **210px** (30% smaller than first built), cycling poses (click to change), with only a small gap (12px) above the label;
   - label "Product designer · builds in code", the H1 "Hi, I'm Sanskriti." (name in Redaction 35), a lead line in Printed Courier, and two **sakura buttons** built in code in the style of Sanskriti's two references (`src/components/ui/sakura-button.tsx`, `SakuraButtonLink`). **The references set the style only; the labels stay "Résumé" and "See work"** (Sanskriti's clarification):
@@ -533,3 +534,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-16:** Branches back to the gentle S-curve (the arch looked droopy). See work border now in its own cream hue. Added three skeuomorphic finishes (soft lacquer, stitched patch, physical key) to compare at `/lab/buttons`.
 - **2026-11-16:** Hero buttons now use the "physical key" finish: a darker base in each button's own colour that the button sinks into when clicked.
 - **2026-11-16:** Removed the ↓ arrow from the See work button.
+- **2026-11-16:** Hero made a bit smaller: H1 token 72 → 60px, intro text 20 → 16px, buttons 56 → 48px tall with 16px labels and a scaled-down sprig and waves.

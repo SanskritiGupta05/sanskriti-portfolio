@@ -19,7 +19,7 @@ export default function Home() {
             <h1 className="font-serif text-h1m text-head md:text-h1">
               Hi, I&apos;m <span className="font-worn">Sanskriti</span>.
             </h1>
-            <p className="printed text-lgm md:text-lg">
+            <p className="printed text-base">
               I&apos;m a product designer at AppX, a YC-backed startup, and I build what I design. Before this: Keploy, Dualite
               and GeeksforGeeks. If I don&apos;t know something, I <span className="font-worn">learn it</span>.
             </p>
