@@ -479,3 +479,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-15:** Lantern bracket now meets the top and right edges of the page with no spacing.
 - **2026-11-15:** Clicking the lantern body now switches light/dark too, not only the tassel.
 - **2026-11-15:** Lantern: the art now wraps around the cylinder (the branch curves and tapers, things squeeze towards the sides, ribs and seams follow the barrel), and the tassel hangs on a slightly longer string.
+- **2026-11-15:** Made a local all-assets page, `explorations/assets.html` (port 3015, not in git). It shows the mascot (4 poses), the stamp, the Fuji scene and the lantern together, and the lantern switches the whole page and the scene to night.
