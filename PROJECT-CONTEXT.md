@@ -483,7 +483,7 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **Day/night:** `ThemeProvider` holds `night`; the lantern sets it, which flips `data-theme`, the Fuji scene (`setNight`) and the ambient sound together.
 - **Hero copy now comes from her Framer portfolio** (2026-11-16, hero section only, at her request; see `docs/framer-content.md`):
   - label: "Product Designer · Engineer turned Designer";
-  - H1: "I design products, that people actually use!" (her exact wording, comma included), on two lines with "actually use!" in Redaction 35. On desktop the heading extends 64px past the column on each side (`md:-mx-16`) so the second line fits;
+  - H1: **"From messy problems to meaningful products."** (Sanskriti's own line, 2026-11-16; replaced the Framer "I design products, that people actually use!"), on two lines with "meaningful products." in Redaction 35. On desktop the heading may extend 64px past the column on each side (`md:-mx-16`);
   - lead: "Turning complex ideas into simple, scalable digital experiences.";
   - a label under the buttons: "Delhi NCR, India · Open to work · Trusted by 20+ startups".
   The other Framer content (experience, case studies, testimonials, projects) is saved but not used yet.
@@ -543,3 +543,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-16:** Hero made a bit smaller: H1 token 72 → 60px, intro text 20 → 16px, buttons 56 → 48px tall with 16px labels and a scaled-down sprig and waves.
 - **2026-11-16:** Connected Framer and pulled the real content from "New folio 2026" into `docs/framer-content.md` (read-only; nothing changed in Framer). Waiting for Sanskriti to choose what to use.
 - **2026-11-16:** Hero text replaced with the hero copy from her Framer portfolio ("I design products, that people actually use!" and friends).
+- **2026-11-16:** Hero heading changed to "From messy problems to meaningful products."

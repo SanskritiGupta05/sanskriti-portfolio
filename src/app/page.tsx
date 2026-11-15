@@ -18,8 +18,8 @@ export default function Home() {
             {/* hero copy taken from Sanskriti's Framer portfolio ("New folio 2026") */}
             <span className="label">Product Designer · Engineer turned Designer</span>
             <h1 className="font-serif text-h1m text-balance text-head md:-mx-16 md:text-h1">
-              I design products, <br className="hidden md:block" />
-              that people <span className="font-worn">actually use!</span>
+              From messy problems <br className="hidden md:block" />
+              to <span className="font-worn">meaningful products.</span>
             </h1>
             <p className="printed text-base">Turning complex ideas into simple, scalable digital experiences.</p>
             <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
