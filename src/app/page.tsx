@@ -24,8 +24,8 @@ export default function Home() {
               and GeeksforGeeks. If I don&apos;t know something, I <span className="font-worn">learn it</span>.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-              <SakuraButtonLink href="#resume">Résumé</SakuraButtonLink>
-              <SakuraButtonLink href="#work" tone="paper" arrow="down">See work</SakuraButtonLink>
+              <SakuraButtonLink href="#resume" finish="raised">Résumé</SakuraButtonLink>
+              <SakuraButtonLink href="#work" tone="paper" arrow="down" finish="raised">See work</SakuraButtonLink>
             </div>
           </div>
         </section>
