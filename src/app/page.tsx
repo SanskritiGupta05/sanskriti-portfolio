@@ -1,7 +1,7 @@
 import { Nav } from "@/components/Nav";
 import { Mascot } from "@/components/Mascot";
 import { Footer } from "@/components/Footer";
-import { ButtonLink } from "@/components/ui/button";
+import { SakuraButtonLink } from "@/components/ui/sakura-button";
 
 // One narrow centred column with wide empty margins on both sides (like Sam's and Mythili's sites).
 // The lantern hangs outside it, from the page's top-right corner.
@@ -12,7 +12,7 @@ export default function Home() {
 
       <main>
         {/* Hero: the pixel mascot, then the intro */}
-        <section className="pt-16 pb-32 text-center">
+        <section className="pt-4 pb-32 text-center">
           <Mascot start="coffee" className="mx-auto w-[210px]" />
           <div className="mt-3 grid justify-items-center gap-6">
             <span className="label">Product designer · builds in code</span>
@@ -23,9 +23,9 @@ export default function Home() {
               I&apos;m a product designer at AppX, a YC-backed startup, and I build what I design. Before this: Keploy, Dualite
               and GeeksforGeeks. If I don&apos;t know something, I <span className="font-worn">learn it</span>.
             </p>
-            <div className="flex flex-wrap justify-center gap-3 pt-2">
-              <ButtonLink href="#resume">Résumé</ButtonLink>
-              <ButtonLink href="#work" variant="outline">See work ↓</ButtonLink>
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <SakuraButtonLink href="#work">View work</SakuraButtonLink>
+              <SakuraButtonLink href="#contact" tone="paper">Contact</SakuraButtonLink>
             </div>
           </div>
         </section>

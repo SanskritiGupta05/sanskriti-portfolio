@@ -467,7 +467,12 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
   - nav: S stamp + "Sanskriti", Work / About / Playground, "India · live time";
   - **everything centre-aligned** (mascot, label, heading, lead line, buttons), at Sanskriti's request;
   - the pixel mascot at **210px** (30% smaller than first built), cycling poses (click to change), with only a small gap (12px) above the label;
-  - label "Product designer · builds in code", the H1 "Hi, I'm Sanskriti." (name in Redaction 35), a lead line in Printed Courier, and the Résumé / See work buttons, **pill-shaped (fully rounded)**: Sanskriti didn't like the sharp corners. The Résumé and nav links don't point anywhere yet.
+  - label "Product designer · builds in code", the H1 "Hi, I'm Sanskriti." (name in Redaction 35), a lead line in Printed Courier, and two **sakura buttons** built in code from Sanskriti's two references (`src/components/ui/sakura-button.tsx`, `SakuraButtonLink`):
+    - **Primary "View work ↗"** (`tone="lacquer"`): a lacquer-red pill with a felt texture, a cream cherry-blossom sprig top-left, gold seigaiha waves bottom-right, and a cream Redaction label.
+    - **Secondary "Contact ✉"** (`tone="paper"`): a cream paper pill with a thin red border, a pink blossom sprig on the left with a single falling petal, a red Redaction label and an envelope icon.
+    - Motion on both: hover lifts the button, the sprig sways, the waves drift (primary), the arrow or envelope nudges, and the petal drifts down and fades (secondary); pressing squeezes it.
+    - The Résumé button was dropped from the hero for now. "Contact" points to `#contact` until there's a contact section or address. The nav links don't point anywhere yet.
+  - The mascot sits 16px under the nav (Sanskriti found the first gap too big).
 - **Footer:** the Fuji scene at column width (it follows day/night), "Hire me, so I can fund my dream Japan trip." (H2, "Japan trip" in Redaction 35), a line inviting people to click around the scene, then links, a Sound toggle (breeze and birds by day, crickets by night), and "Set in Redaction & Courier New · © 2026 Sanskriti".
 - **Day/night:** `ThemeProvider` holds `night`; the lantern sets it, which flips `data-theme`, the Fuji scene (`setNight`) and the ambient sound together.
 - **Intro copy is a first draft** written from the notes; Sanskriti may want to rewrite it.
@@ -518,3 +523,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-15:** Site lantern made 20% smaller (max 128px wide).
 - **2026-11-15:** Hero buttons changed from sharp corners to rounded pills.
 - **2026-11-15:** Added shadcn/ui + Motion. Mapped shadcn's colours onto the day/night variables and removed its Geist font. The hero buttons are now the shadcn Button (pill, springy hover and press). Mascot made 30% smaller (210px), with a smaller gap to the text.
+- **2026-11-15:** Hero buttons rebuilt from Sanskriti's references: primary red "View work ↗" with blossom sprig and waves, secondary cream "Contact ✉" with a falling petal, both animated with Motion. Résumé dropped from the hero. Less space between the nav and the mascot.
