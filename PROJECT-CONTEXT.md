@@ -440,6 +440,21 @@ Bracketed names point to the references in section 7.
 - **Placement:** the bracket sits flush in the page's top-right corner, with no gap above or to the right (Sanskriti's call). The SVG viewBox is cropped to the bracket (`0 12 384 688`), and the host is `position: absolute; top: 0; right: 0`, outside any centred column.
 - **Gotcha:** the lantern must sit above other content (`z-index`), or the page text catches the clicks.
 
+## 8c. Hero section: versions to choose from (2026-11-15)
+
+All six are live, with the real assets, in `explorations/hero.html` (local only, port 3015). Pick one with the switcher at the bottom, or open `#A` … `#F`. Every version shares the nav (S stamp + name, Work / About / Playground, live India time), the corner lantern that switches the page and the scene to night, the cycling mascot (click it to change pose), and the same copy: "Hi, I'm Sanskriti." (name in Redaction 35) plus a lead line in Printed Courier (AppX, YC-backed; before: Keploy, Dualite, GeeksforGeeks; "If I don't know something, I learn it") and Résumé / See work buttons.
+
+| Version | Idea |
+|---|---|
+| **A · Scene banner** | Sam + Keshav. The Fuji scene is a full-width banner melting into the page (cropped to about half the screen height); the mascot sits beside the intro below it. |
+| **B · Horizon** | Text first, editorial. Heading, lead line and buttons up top with the reading mascot beside them; the scene sits low like a horizon you scroll into. |
+| **C · Postage** | Piyush + Keshav. The scene is framed as a big perforated postage stamp on cream paper, tilted slightly, with a live postmark (today's date and India time). Intro and the drawing mascot on the left. |
+| **D · Moon window** (custom) | A round marumado window, like a Japanese tea room's: Fuji is seen through a wooden circle on a sill, with the mascot eating ramen on the sill. |
+| **E · In the scene** (custom) | The scene is the whole hero. The headline floats in its sky; the mascot sits in the meadow drawing, with a typed speech bubble ("Psst. I'm the one drawing all this…"). The lead line and buttons come below. |
+| **F · Postcard** (custom) | The hero is a postcard from her: Fuji on the picture side ("Kawaguchiko, someday: the trip this portfolio is saving for"), a "Dear visitor," letter signed in Redaction 35 on the other side, the S stamp with a live postmark, and the mascot peeking from behind. |
+
+_Waiting for Sanskriti to pick a version (or mix them). The chosen one becomes the first real section in Next.js + Tailwind._
+
 ## 9. Change log
 
 - **2026-11-13:** Wiped the old portfolio (code, GitHub history reset to one empty commit, Figma Page 14 cleared, old notes deleted).
@@ -480,3 +495,4 @@ Bracketed names point to the references in section 7.
 - **2026-11-15:** Clicking the lantern body now switches light/dark too, not only the tassel.
 - **2026-11-15:** Lantern: the art now wraps around the cylinder (the branch curves and tapers, things squeeze towards the sides, ribs and seams follow the barrel), and the tassel hangs on a slightly longer string.
 - **2026-11-15:** Made a local all-assets page, `explorations/assets.html` (port 3015, not in git). It shows the mascot (4 poses), the stamp, the Fuji scene and the lantern together, and the lantern switches the whole page and the scene to night.
+- **2026-11-15:** Built six hero versions with the real assets (A banner, B horizon, C postage, plus custom D moon window, E in the scene, F postcard) in `explorations/hero.html` for Sanskriti to choose from (section 8c).
