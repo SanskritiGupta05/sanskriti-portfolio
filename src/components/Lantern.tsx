@@ -13,5 +13,5 @@ export function Lantern() {
     const lantern = mountLantern(host.current, { onToggle: (lit: boolean) => setNight(lit) });
     return () => lantern.destroy();
   }, [setNight]);
-  return <div ref={host} className="absolute top-0 right-0 z-20 w-[clamp(100px,11vw,160px)] text-ink" />;
+  return <div ref={host} className="absolute top-0 right-0 z-20 w-[clamp(80px,8.8vw,128px)] text-ink" />;
 }

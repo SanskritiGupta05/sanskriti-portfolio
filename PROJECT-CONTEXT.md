@@ -460,7 +460,7 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 
 ## 8d. Home page as built (2026-11-15)
 
-- **Layout:** one narrow centred column, `max-w-[720px]`, with wide empty margins on both sides, like Sam's and Mythili's sites (Sanskriti's call). The lantern hangs outside the column from the page's top-right corner.
+- **Layout:** one narrow centred column, `max-w-[720px]`, with wide empty margins on both sides, like Sam's and Mythili's sites (Sanskriti's call). The lantern hangs outside the column from the page's top-right corner, at `w-[clamp(80px,8.8vw,128px)]` (20% smaller than first built, at Sanskriti's request).
 - **Hero = version A without the scene banner** (Sanskriti chose A, with the Fuji scene moved to the footer and "mascot + intro only" on top):
   - nav: S stamp + "Sanskriti", Work / About / Playground, "India · live time";
   - **everything centre-aligned** (mascot, label, heading, lead line, buttons), at Sanskriti's request;
@@ -513,3 +513,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-15:** Built six hero versions with the real assets (A banner, B horizon, C postage, plus custom D moon window, E in the scene, F postcard) in `explorations/hero.html` for Sanskriti to choose from (section 8c).
 - **2026-11-15:** Set up the real site (Next.js 16 + Tailwind 4, tokens for the type scale and day/night colours). Built the home page: a narrow 720px column with wide margins, hero A without the banner (nav, mascot, intro, buttons), the corner lantern switching the whole site to night, and the Fuji scene in the footer.
 - **2026-11-15:** Hero centre-aligned: mascot, label, heading, intro and buttons.
+- **2026-11-15:** Site lantern made 20% smaller (max 128px wide).
