@@ -29,6 +29,7 @@ in any new Claude account or conversation.
 | Figma file | key `ltepqkFPU0HVYh7CChNZty`, **Page 14** (node `1422:1412`), currently empty |
 | Type demo | `explorations/type-demo.html` (open in a browser) |
 | Local dev server | Config "portfolio" in `../.claude/launch.json`, port 3014 (`cd sanskriti-portfolio && npm run dev -- --port 3014`) |
+| Framer content | `docs/framer-content.md`: real content pulled from the Framer project "New folio 2026" (hero lines, experience, case studies, testimonials, vibe-coded projects), with the leftover template text marked as not hers. Framer is connected through the Framer connector (read-only use so far). |
 | Site code | `src/app/` (layout, page, `globals.css` with the Tailwind tokens) and `src/components/` (Nav, Clock, Mascot, Lantern, FujiScene, Footer, SoundToggle, ThemeProvider). The asset engines stay plain JS in `assets/` and are imported by the components. |
 
 ## 3. Locked decisions
@@ -535,3 +536,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-16:** Hero buttons now use the "physical key" finish: a darker base in each button's own colour that the button sinks into when clicked.
 - **2026-11-16:** Removed the ↓ arrow from the See work button.
 - **2026-11-16:** Hero made a bit smaller: H1 token 72 → 60px, intro text 20 → 16px, buttons 56 → 48px tall with 16px labels and a scaled-down sprig and waves.
+- **2026-11-16:** Connected Framer and pulled the real content from "New folio 2026" into `docs/framer-content.md` (read-only; nothing changed in Framer). Waiting for Sanskriti to choose what to use.
