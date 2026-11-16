@@ -546,3 +546,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-16:** Hero text replaced with the hero copy from her Framer portfolio ("I design products, that people actually use!" and friends).
 - **2026-11-16:** Hero heading changed to "From messy problems to meaningful products."
 - **2026-11-16:** Tried an envelope intro (washi envelope with a mizuhiki knot and the S stamp that unties, opens and turns into a note card beside the hero). Sanskriti found the transitions not smooth enough and **dropped the idea**; the prototype was deleted and the site stays as it was.
+- **2026-11-16:** Hero heading changed to "a designer by craft, / an engineer by education. / a builder by curiosity." in all lowercase, three lines on desktop, with the last line in Redaction 35.
