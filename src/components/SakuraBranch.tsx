@@ -1,140 +1,105 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 
-// A cherry branch reaching in from the page's left edge, painted the same way as the cherry trees in the
-// footer's Fuji scene: a pixel skeleton of dark bark plus hundreds of small, ragged blossom clusters in the
-// scene's five pinks, lit from the top-left, swaying in a breeze and now and then dropping a petal.
-const W = 150, H = 116, SCALE = 2.5;
-const C = {
-  bark: "#4a302a", barkD: "#2f1e1b", barkL: "#6a4a40",
-  bl0: "#fff6f8", bl1: "#fbe3ea", bl2: "#f5cbd8", bl3: "#eab0c3", bl4: "#d891a8",
-};
-const hash = (x: number, y: number, s: number) => {
-  let h = (x * 374761393 + y * 668265263 + s * 2147483647) | 0;
-  h = Math.imul(h ^ (h >>> 13), 1274126177);
-  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
-};
-const rng = (seed: number) => () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
-const rgb = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+// A cherry branch reaching in from the page's left edge (mirrors the lantern on the right).
+// Smooth, painted SVG: a tapering branch, soft-pink five-petal blossoms (the Fuji scene's pinks,
+// painted like the blossoms on the hero buttons), buds, and a few petals drifting down.
+// (The pixel-art version is in git history: commit cde2c80.)
+const BARK = "#5a3a2e", BARK_L = "#7d5444", BARK_D = "#3e271f";
+const PINK = { edge: "#fff4f7", mid: "#fbd9e3", base: "#f2b4c6", line: "#e391a9", heart: "#c9506a", pollen: "#f2c96b", bud: "#eea3b8", budD: "#d9809a" };
 
-class Buf {
-  d = new Uint8ClampedArray(W * H * 4);
-  px(x: number, y: number, hex: string) {
-    x = Math.round(x); y = Math.round(y);
-    if (x < 0 || y < 0 || x >= W || y >= H) return;
-    const [r, g, b] = rgb(hex), k = (y * W + x) * 4;
-    this.d[k] = r; this.d[k + 1] = g; this.d[k + 2] = b; this.d[k + 3] = 255;
-  }
-  line(x0: number, y0: number, x1: number, y1: number, hex: string, w = 1) {
-    const n = Math.ceil(Math.hypot(x1 - x0, y1 - y0) * 2) + 1, o = Math.floor((w - 1) / 2);
-    for (let i = 0; i <= n; i++) {
-      const x = x0 + ((x1 - x0) * i) / n, y = y0 + ((y1 - y0) * i) / n;
-      for (let a = 0; a < w; a++) for (let b = 0; b < w; b++) this.px(x - o + a, y - o + b, hex);
-    }
-  }
-}
+// a sakura petal: round and full, with a soft notch at the tip
+const q = (n: number) => Math.round(n * 100) / 100; // rounded so server and browser draw the same numbers
+const petal = (r: number, w = 0.62) =>
+  `M0 0C${q(-r * w * 1.05)} ${q(-r * 0.12)} ${q(-r * w * 1.2)} ${q(-r * 0.9)} ${q(-r * 0.24)} ${q(-r * 1.04)}Q${q(-r * 0.08)} ${q(-r)} 0 ${q(-r * 0.88)}Q${q(r * 0.08)} ${q(-r)} ${q(r * 0.24)} ${q(-r * 1.04)}C${q(r * w * 1.2)} ${q(-r * 0.9)} ${q(r * w * 1.05)} ${q(-r * 0.12)} 0 0Z`;
 
-type Cluster = { x: number; y: number; r: number; seed: number; h: number };
+// the branch: one main limb in tapering pieces, and side twigs
+const LIMBS: { d: string; w: number }[] = [
+  { d: "M-12 118 C40 112 80 120 120 128", w: 11 },
+  { d: "M118 128 C160 136 200 140 240 150", w: 8 },
+  { d: "M238 150 C270 158 300 168 330 182", w: 5.5 },
+  { d: "M328 181 C345 190 356 198 366 208", w: 3 },
+  { d: "M96 124 C110 100 122 82 140 66", w: 5 },
+  { d: "M139 67 C148 56 160 48 174 44", w: 3 },
+  { d: "M178 138 C190 116 206 100 226 92", w: 4 },
+  { d: "M190 141 C196 162 200 178 198 198", w: 3.5 },
+  { d: "M280 166 C292 148 306 136 324 130", w: 3 },
+  { d: "M60 117 C66 136 70 150 64 168", w: 3 },
+];
+// blossoms: [x, y, size, turn]
+const FLOWERS: [number, number, number, number][] = [
+  [140, 64, 15, 10], [170, 42, 12, 40], [156, 52, 9, 70], [124, 86, 11, 0], [226, 90, 15, 20], [206, 102, 11, 55],
+  [248, 150, 13, 30], [200, 196, 14, 5], [196, 172, 10, 60], [324, 128, 13, 15], [304, 140, 10, 45], [334, 184, 12, 25],
+  [366, 208, 10, 50], [64, 168, 12, 35], [90, 132, 10, 65], [270, 162, 9, 10], [176, 140, 9, 30],
+];
+const BUDS: [number, number, number][] = [[182, 40, 20], [236, 86, -30], [204, 210, 10], [340, 124, -40], [372, 216, 30], [58, 180, 15], [150, 78, -20]];
+const FALLING = [{ x: 150, d: 0 }, { x: 240, d: 2.4 }, { x: 330, d: 4.8 }, { x: 110, d: 6.6 }];
+const STAMENS = [0, 1, 2, 3, 4, 5, 6].map((k) => { const a = (k * 51.4 * Math.PI) / 180; return [Math.cos(a), Math.sin(a)]; });
 
-// The skeleton: a main limb comes in from off the left edge and droops gently to the right, with side
-// shoots of different lengths along it, each splitting into a few twigs. Blossom gathers along the outer
-// two thirds of every limb and thickest at the twig tips, so it reads as a long drift of pink, not a ball.
-function build() {
-  const r = rng(23), bark = new Buf(), segs: [number, number, number, number, number, number][] = [];
-  function grow(x0: number, y0: number, ang: number, len: number, w: number, depth: number) {
-    const x1 = x0 + Math.cos(ang) * len, y1 = y0 + Math.sin(ang) * len;
-    segs.push([x0, y0, x1, y1, w, depth]);
-    if (depth === 0 || len < 2.5) return;
-    const n = depth > 3 ? 2 : r() < 0.5 ? 2 : 3;
-    for (let i = 0; i < n; i++)
-      grow(x1, y1, ang + (i - (n - 1) / 2) * (0.45 + r() * 0.3) + (r() - 0.5) * 0.3 + 0.04, len * (0.55 + r() * 0.35), Math.max(1, Math.round(w * 0.62)), depth - 1);
-  }
-  // the main limb in four kinked pieces, with a side shoot off each joint
-  let x = -3, y = 40, ang = 0.06;
-  const main = [[24, 5], [24, 4], [22, 3], [18, 2]] as const;
-  main.forEach(([len, w], k) => {
-    const x1 = x + Math.cos(ang) * len, y1 = y + Math.sin(ang) * len;
-    segs.push([x, y, x1, y1, w, 6]);
-    grow(x1, y1, ang - 0.7 - r() * 0.3, 10 + r() * 6, Math.max(1, w - 2), 3); // up-right shoot
-    if (k % 2 === 0) grow(x1, y1, ang + 0.75 + r() * 0.3, 8 + r() * 6, Math.max(1, w - 2), 3); // down-right shoot
-    x = x1; y = y1; ang += 0.1 + (r() - 0.5) * 0.12;
-  });
-  grow(x, y, ang, 9, 1, 3); // the tip
-  segs.forEach(([x0, y0, x1, y1, w]) => {
-    bark.line(x0, y0, x1, y1, C.bark, w);
-    if (w > 1) bark.line(x0, y0 - Math.ceil(w / 2), x1, y1 - Math.ceil(w / 2), C.barkL, 1); // lit top edge
-    if (w > 2) bark.line(x0, y0 + Math.floor(w / 2), x1, y1 + Math.floor(w / 2), C.barkD, 1); // shaded underside
-  });
-  const pts: [number, number, number][] = [];
-  segs.forEach(([x0, y0, x1, y1, w, depth]) => {
-    if (x1 < 14) return; // keep the stretch nearest the edge bare
-    const steps = depth >= 6 ? 3 : depth >= 2 ? 2 : 1;
-    for (let k = 1; k <= steps; k++) { const t = k / steps; pts.push([x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, depth === 0 ? 3 : w > 2 ? 1 : 2]); }
-  });
-  const ys = pts.map((p) => p[1]), minY = Math.min(...ys), maxY = Math.max(...ys);
-  const clusters: Cluster[] = [];
-  pts.forEach(([px, py, n]) => {
-    for (let i = 0; i < n; i++) {
-      const cx = px + (r() - 0.5) * 6, cy = py + (r() - 0.6) * 5;
-      clusters.push({ x: cx, y: cy, r: 1.5 + r() * 2, seed: (r() * 1e6) | 0, h: Math.max(0, Math.min(1, (maxY - cy) / (maxY - minY + 1))) });
-    }
-  });
-  clusters.sort((a, c) => c.y - a.y); // lower (shadowed) clusters first
-  return { bark, clusters };
-}
-
-function paint(out: Buf, clusters: Cluster[], t: number) {
-  clusters.forEach((c) => {
-    const sway = Math.sin(t * 0.9 + c.y * 0.08 + c.x * 0.02) * 0.9 * (0.3 + (c.x / W) * 0.9); // the tips move most
-    const ox = Math.round(c.x + sway), oy = Math.round(c.y), rr = c.r;
-    for (let yy = -3; yy <= 3; yy++) for (let xx = -3; xx <= 3; xx++) {
-      const d = Math.sqrt(xx * xx + yy * yy) / rr;
-      if (d > 1.15 || hash(c.seed + xx, yy, 2) < d * 0.55) continue; // airy, ragged edges
-      const l = -(xx + yy) / (rr * 2) + c.h * 0.6 + (hash(c.seed, xx * 7 + yy, 1) - 0.5) * 0.5; // lit from the top-left
-      out.px(ox + xx, oy + yy, l > 0.75 ? C.bl0 : l > 0.35 ? C.bl1 : l > 0 ? C.bl2 : l > -0.35 ? C.bl3 : C.bl4);
-    }
-  });
+function Blossom({ x, y, s, turn }: { x: number; y: number; s: number; turn: number }) {
+  return (
+    <g transform={`translate(${x} ${y}) rotate(${turn})`}>
+      {[0, 1, 2, 3, 4].map((k) => (
+        <path key={k} d={petal(s)} transform={`rotate(${k * 72})`} fill="url(#sb-petal)" stroke={PINK.line} strokeWidth={0.5} strokeOpacity={0.45} />
+      ))}
+      {STAMENS.map(([cx, cy], k) => (
+        <g key={k}>
+          <line x1={0} y1={0} x2={q(cx * s * 0.42)} y2={q(cy * s * 0.42)} stroke={PINK.heart} strokeWidth={0.7} />
+          <circle cx={q(cx * s * 0.42)} cy={q(cy * s * 0.42)} r={0.9} fill={PINK.pollen} />
+        </g>
+      ))}
+      <circle r={q(s * 0.16)} fill={PINK.heart} />
+    </g>
+  );
 }
 
 export function SakuraBranch() {
-  const canvas = useRef<HTMLCanvasElement>(null);
   const reduce = useReducedMotion();
-
-  useEffect(() => {
-    const ctx = canvas.current?.getContext("2d");
-    if (!ctx) return;
-    const { bark, clusters } = build();
-    // a few petals drifting down from the branch
-    const petals = Array.from({ length: 5 }, (_, i) => ({ x0: 20 + i * 17, phase: i * 1.7, speed: 4 + (i % 3) * 1.5 }));
-    let raf = 0, last = 0;
-    const frame = (now: number) => {
-      raf = requestAnimationFrame(frame);
-      if (now - last < 1000 / 12) return; // 12 fps, like the scene: choppy on purpose, and cheap
-      last = now;
-      const t = reduce ? 0 : now / 1000, out = new Buf();
-      out.d.set(bark.d);
-      paint(out, clusters, t);
-      if (!reduce) petals.forEach((p) => {
-        const k = ((t * p.speed + p.phase * 10) % (H + 10)) - 4;
-        out.px(p.x0 + 10 + k * 0.6 + Math.sin(t * 2 + p.phase) * 2, 58 + k, k % 6 < 3 ? C.bl2 : C.bl3);
-      });
-      ctx.putImageData(new ImageData(out.d, W, H), 0, 0);
-      if (reduce) cancelAnimationFrame(raf);
-    };
-    raf = requestAnimationFrame(frame);
-    return () => cancelAnimationFrame(raf);
-  }, [reduce]);
-
   return (
-    <canvas
-      ref={canvas}
-      width={W}
-      height={H}
+    <motion.svg
+      viewBox="0 0 390 240"
       aria-hidden="true"
-      className="pointer-events-none absolute top-6 left-0 z-10 hidden [image-rendering:pixelated] md:block"
-      style={{ width: W * SCALE }}
-    />
+      className="pointer-events-none absolute top-8 left-0 z-10 hidden w-[360px] overflow-visible md:block"
+      style={{ transformOrigin: "0% 50%" }}
+      animate={reduce ? undefined : { rotate: [0, 1.2, -0.5, 0] }}
+      transition={{ duration: 8, ease: "easeInOut", repeat: Infinity }}
+    >
+      <defs>
+        <radialGradient id="sb-petal" cx="0.5" cy="0.95" r="1">
+          <stop offset="0" stopColor={PINK.base} />
+          <stop offset="0.45" stopColor={PINK.mid} />
+          <stop offset="1" stopColor={PINK.edge} />
+        </radialGradient>
+      </defs>
+
+      {/* the branch: a dark under-stroke, the bark, and a lit top edge */}
+      <g fill="none" strokeLinecap="round">
+        {LIMBS.map((l, i) => <path key={`d${i}`} d={l.d} stroke={BARK_D} strokeWidth={l.w} transform="translate(0 1.2)" />)}
+        {LIMBS.map((l, i) => <path key={`b${i}`} d={l.d} stroke={BARK} strokeWidth={q(l.w * 0.86)} />)}
+        {LIMBS.map((l, i) => l.w > 4 && <path key={`l${i}`} d={l.d} stroke={BARK_L} strokeWidth={q(l.w * 0.22)} transform={`translate(0 ${q(-l.w * 0.25)})`} />)}
+      </g>
+
+      {BUDS.map(([x, y, a], i) => (
+        <g key={i} transform={`translate(${x} ${y}) rotate(${a})`}>
+          <ellipse rx={3.6} ry={5.2} fill={PINK.bud} />
+          <ellipse rx={2} ry={3} cy={1.4} fill={PINK.budD} />
+          <path d="M-3 3.5Q0 6.5 3 3.5" stroke={BARK} strokeWidth={1.4} fill="none" />
+        </g>
+      ))}
+      {FLOWERS.map(([x, y, s, t], i) => <Blossom key={i} x={x} y={y} s={s} turn={t} />)}
+
+      {/* a few petals drifting down and away */}
+      {!reduce && FALLING.map((p, i) => (
+        <motion.path
+          key={i}
+          d={petal(5)}
+          fill={PINK.base}
+          initial={{ x: p.x, y: 120, opacity: 0, rotate: 0 }}
+          animate={{ x: [p.x, p.x + 30, p.x + 10, p.x + 46], y: [120, 170, 220, 280], opacity: [0, 1, 1, 0], rotate: [0, 120, 220, 340] }}
+          transition={{ duration: 7, delay: p.d, repeat: Infinity, ease: "linear" }}
+        />
+      ))}
+    </motion.svg>
   );
 }
