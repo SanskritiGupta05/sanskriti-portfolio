@@ -29,8 +29,8 @@ export default function Home() {
           <div className="mt-3 grid justify-items-center gap-4">
             {/* hero copy taken from Sanskriti's Framer portfolio ("New folio 2026") */}
             <h1 className="font-serif text-h1m text-balance text-head md:-mx-16 md:text-h1">
-              a designer by craft, an engineer by education. <br className="hidden md:block" />
-              <span className="font-worn">a builder by curiosity.</span>
+              product design is my craft. <br />
+              <span className="font-worn">engineering is my foundation.</span>
             </h1>
             <p className="printed max-w-[62ch] text-base text-pretty">
               A product designer at AppX (YC&apos;21). I work across <Keyword tools={["figma", "photoshop", "illustrator"]}>visual design</Keyword>,{" "}

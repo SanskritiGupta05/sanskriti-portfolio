@@ -572,3 +572,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-16:** Button shadows updated from Sanskriti's Figma edits (Sakura button set 1535:236): Résumé's soft shadow is darker `rgba(124,32,15,.45)`, See work's is stronger `rgba(140,79,31,.54)`.
 - **2026-11-16:** Speech bubble made smaller: 13px text (`text-sm`), 20px line spacing, px-4 py-2, rounded-2xl, smaller tail; about 104×58 (was ~150×90).
 - **2026-11-16:** Removed the "Delhi NCR, India · Open to work · Trusted by 20+ startups" line under the hero buttons.
+- **2026-11-17:** Hero heading changed to "product design is my craft. / engineering is my foundation." (lowercase like before, two lines on every screen, second line in Redaction 35).
