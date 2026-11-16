@@ -1,26 +1,27 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Clock } from "./Clock";
+import { VisitorCount } from "./VisitorCount";
 
-const LINKS = [
-  { label: "Work", href: "#work" },
-  { label: "About", href: "#about" },
-  { label: "Playground", href: "#playground" },
-];
+const link = "label !text-ink underline-offset-4 hover:underline";
 
+// Work · About · [stamp] · Playground · 👁 visitors, all centred, with the stamp logo in the middle.
 export function Nav() {
   return (
-    <header className="flex items-center gap-7 py-8">
-      <Link href="/" className="group flex items-center gap-2.5 font-serif text-lg text-head">
-        <Image src="/assets/stamp-s.png" alt="" width={30} height={32} className="-rotate-6 transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110" priority />
-        Sanskriti
-      </Link>
-      <nav className="flex gap-6">
-        {LINKS.map((l) => (
-          <a key={l.href} href={l.href} className="label !text-ink underline-offset-4 hover:underline">{l.label}</a>
-        ))}
+    <header className="py-8">
+      {/* three columns so the stamp sits exactly in the middle, whatever the widths either side */}
+      <nav className="grid grid-cols-[1fr_auto_1fr] items-center gap-10">
+        <div className="flex items-center justify-end gap-8">
+          <a href="#work" className={link}>Work</a>
+          <a href="#about" className={link}>About</a>
+        </div>
+        <Link href="/" aria-label="Sanskriti, home" className="group">
+          <Image src="/assets/stamp-s.png" alt="" width={34} height={36} className="-rotate-6 transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110" priority />
+        </Link>
+        <div className="flex items-center justify-start gap-8">
+          <a href="#playground" className={link}>Playground</a>
+          <VisitorCount />
+        </div>
       </nav>
-      <span className="label ml-auto">India · <Clock /></span>
     </header>
   );
 }
