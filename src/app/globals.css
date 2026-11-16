@@ -128,6 +128,8 @@
     background-image: radial-gradient(var(--dot) 1px, transparent 1.2px);
     background-size: 22px 22px;
     background-position: center top;
+    /* the dots stay still while scrolling, so they don't slide past the pinned hero */
+    background-attachment: fixed;
     color: var(--ink);
     transition: background-color 0.7s ease, color 0.7s ease;
   }
