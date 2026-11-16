@@ -15,7 +15,8 @@ export function Nav() {
           <a href="#about" className={link}>About</a>
         </div>
         <Link href="/" aria-label="Sanskriti, home" className="group">
-          <Image src="/assets/stamp-s.png" alt="" width={34} height={36} className="-rotate-6 transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110" priority />
+          {/* a pre-sharpened copy at 4× its shown size, served as-is (Next's resizing made it soft) */}
+          <Image src="/assets/stamp-s-nav.png" alt="" width={36} height={39} unoptimized className="-rotate-6 transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110" priority />
         </Link>
         <div className="flex items-center justify-start gap-8">
           <a href="#playground" className={link}>Playground</a>
