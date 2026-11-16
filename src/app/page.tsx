@@ -8,17 +8,21 @@ import { NameSwap } from "@/components/NameSwap";
 // The lantern hangs outside it, from the page's top-right corner.
 export default function Home() {
   return (
-    <div className="mx-auto w-full max-w-[720px] px-6">
+    <div className="mx-auto w-full max-w-[874px] px-6">
       <Nav />
 
       <main>
         {/* Hero: the pixel mascot, then the intro */}
         <section className="pt-4 pb-32 text-center">
-          <Mascot start="coffee" className="mx-auto w-[210px]" />
+          {/* a speech bubble from the mascot; her name drifts into katakana and back */}
+          <div className="relative mx-auto mb-1 w-fit rounded-2xl border border-line bg-bg px-4 py-1.5 text-base text-ink shadow-[0_6px_16px_-10px_rgba(60,40,20,0.35)]">
+            Hey, i&apos;m <NameSwap />
+            <span aria-hidden="true" className="absolute -bottom-[7px] left-1/2 size-3 -translate-x-1/2 rotate-45 border-r border-b border-line bg-bg" />
+          </div>
+          <Mascot start="coffee" className="mx-auto w-[168px]" />
           <div className="mt-3 grid justify-items-center gap-6">
             {/* hero copy taken from Sanskriti's Framer portfolio ("New folio 2026") */}
             <h1 className="font-serif text-h1m text-balance text-head md:-mx-16 md:text-h1">
-              <span className="block">Hey, i&apos;m <NameSwap /></span>
               a designer by craft, an engineer by education. <span className="font-worn">a builder by curiosity.</span>
             </h1>
             <p className="printed max-w-[58ch] text-base text-pretty">

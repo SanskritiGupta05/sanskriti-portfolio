@@ -1,52 +1,64 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 
-// "Sanskriti" in katakana is サンスクリティ. Each sound swaps on its own, one after another.
-const PARTS: [string, string][] = [["Sa", "サ"], ["n", "ン"], ["s", "ス"], ["kri", "クリ"], ["ti", "ティ"]];
+// "Sanskriti" in katakana is サンスクリティ, one piece per sound.
+const EN = ["Sa", "n", "s", "kri", "ti"];
+const JA = ["サ", "ン", "ス", "クリ", "ティ"];
 const START_MS = 2500; // first swap, a few seconds after the page loads
-const HOLD_MS = 3500; // how long each language stays before swapping back
-const STEP_MS = 140; // gap between one sound and the next
+const HOLD_MS = 4000; // how long each language stays
+const EASE = [0.4, 0, 0.2, 1] as const;
 
-// Her name, swapping between English and Japanese sound by sound, on a loop.
+// Both spellings sit in the same spot. The letters cross-fade sound by sound with a soft blur,
+// and the width eases between the two lengths, so nothing around it jumps.
 export function NameSwap({ className = "" }: { className?: string }) {
   const reduce = useReducedMotion();
-  const [jp, setJp] = useState<boolean[]>(PARTS.map(() => false));
+  const [ja, setJa] = useState(false);
+  const [w, setW] = useState<{ en: number; ja: number } | null>(null);
+  const enRef = useRef<HTMLSpanElement>(null);
+  const jaRef = useRef<HTMLSpanElement>(null);
+
+  // measure both spellings (again once the fonts have loaded)
+  useLayoutEffect(() => {
+    const measure = () => setW({ en: enRef.current?.offsetWidth ?? 0, ja: jaRef.current?.offsetWidth ?? 0 });
+    measure();
+    document.fonts?.ready.then(measure);
+  }, []);
 
   useEffect(() => {
     if (reduce) return;
-    const timers: number[] = [];
-    let to = true;
-    const swap = () => {
-      PARTS.forEach((_, i) =>
-        timers.push(window.setTimeout(() => setJp((s) => s.map((v, j) => (j === i ? to : v))), i * STEP_MS)),
-      );
-      to = !to;
-      timers.push(window.setTimeout(swap, PARTS.length * STEP_MS + HOLD_MS));
-    };
-    timers.push(window.setTimeout(swap, START_MS));
-    return () => timers.forEach(clearTimeout);
+    let timer = window.setTimeout(function tick() {
+      setJa((v) => !v);
+      timer = window.setTimeout(tick, HOLD_MS);
+    }, START_MS);
+    return () => window.clearTimeout(timer);
   }, [reduce]);
 
+  const layer = (parts: string[], shown: boolean) =>
+    parts.map((p, i) => (
+      <motion.span
+        key={i}
+        className="inline-block"
+        initial={false}
+        animate={shown ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: shown ? 0 : "0.12em" }}
+        transition={{ duration: 0.55, ease: EASE, delay: i * 0.07 }}
+      >
+        {p}
+      </motion.span>
+    ));
+
   return (
-    <span className={`inline-flex ${className}`} aria-label="Sanskriti" role="text">
-      {PARTS.map(([en, ja], i) => (
-        <motion.span key={i} layout transition={{ layout: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } }} className="inline-grid" aria-hidden="true">
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.span
-              key={jp[i] ? "ja" : "en"}
-              className={jp[i] ? "font-jp" : ""}
-              initial={{ opacity: 0, y: "0.5em", filter: "blur(3px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: "-0.5em", filter: "blur(3px)" }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            >
-              {jp[i] ? ja : en}
-            </motion.span>
-          </AnimatePresence>
-        </motion.span>
-      ))}
-    </span>
+    <motion.span
+      role="text"
+      aria-label="Sanskriti"
+      className={`relative inline-block whitespace-nowrap align-bottom ${className}`}
+      initial={false}
+      animate={w ? { width: ja ? w.ja : w.en } : undefined}
+      transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
+    >
+      <span ref={enRef} aria-hidden="true" className="inline-block">{layer(EN, !ja)}</span>
+      <span ref={jaRef} aria-hidden="true" className="font-jp absolute top-0 left-0 inline-block text-[0.92em] font-light tracking-[0.02em]">{layer(JA, ja)}</span>
+    </motion.span>
   );
 }
