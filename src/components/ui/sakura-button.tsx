@@ -150,8 +150,8 @@ const SHELL: Record<Finish, Record<Tone, string>> = {
     paper: "shadow-[inset_0_0_0_3px_#efe0c8,inset_0_0_0_4px_#e2cdab,inset_0_-3px_6px_rgba(150,100,50,0.14),0_2px_2px_rgba(120,80,40,0.18),0_10px_20px_-12px_rgba(120,70,30,0.4)] [text-shadow:0_1px_0_rgba(255,255,255,0.85)]",
   },
   raised: {
-    lacquer: "shadow-[inset_0_1px_0_rgba(255,232,220,0.45),inset_0_-2px_4px_rgba(60,8,4,0.3),0_4px_0_#8f2618,0_12px_18px_-6px_rgba(150,40,20,0.45)] active:shadow-[inset_0_1px_0_rgba(255,232,220,0.3),inset_0_2px_5px_rgba(60,8,4,0.4),0_1px_0_#8f2618,0_4px_8px_-4px_rgba(90,20,12,0.5)]",
-    paper: "border-[1.5px] border-[#f0dcbc] shadow-[inset_0_1px_0_#ffffff,inset_0_-2px_4px_rgba(150,100,50,0.1),0_4px_0_#ebd2a8,0_12px_18px_-8px_rgba(140,80,30,0.32)] active:shadow-[inset_0_1px_0_#ffffff,inset_0_2px_5px_rgba(150,100,50,0.16),0_1px_0_#ebd2a8,0_4px_8px_-4px_rgba(120,70,30,0.35)]",
+    lacquer: "shadow-[inset_0_1px_0_rgba(255,232,220,0.45),inset_0_-2px_4px_rgba(60,8,4,0.3),0_4px_0_#8f2618,0_12px_18px_-6px_rgba(124,32,15,0.45)] active:shadow-[inset_0_1px_0_rgba(255,232,220,0.3),inset_0_2px_5px_rgba(60,8,4,0.4),0_1px_0_#8f2618,0_4px_8px_-4px_rgba(90,20,12,0.5)]",
+    paper: "border-[1.5px] border-[#f0dcbc] shadow-[inset_0_1px_0_#ffffff,inset_0_-2px_4px_rgba(150,100,50,0.1),0_4px_0_#ebd2a8,0_12px_18px_-8px_rgba(140,79,31,0.54)] active:shadow-[inset_0_1px_0_#ffffff,inset_0_2px_5px_rgba(150,100,50,0.16),0_1px_0_#ebd2a8,0_4px_8px_-4px_rgba(120,70,30,0.35)]",
   },
 };
 
