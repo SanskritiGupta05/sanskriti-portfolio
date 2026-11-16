@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { SakuraButtonLink } from "@/components/ui/sakura-button";
 import { NameSwap } from "@/components/NameSwap";
 import { Keyword } from "@/components/Keyword";
-import { WorkFan } from "@/components/WorkFan";
+import { WorkArc } from "@/components/work/WorkArc";
 
 // One narrow centred column with wide empty margins on both sides (like Sam's and Mythili's sites).
 // The lantern hangs outside it, from the page's top-right corner.
@@ -52,7 +52,7 @@ export default function Home() {
         </section>
 
         {/* work visuals fanned out under the hero */}
-        <WorkFan />
+        <WorkArc />
       </main>
 
       <Footer />

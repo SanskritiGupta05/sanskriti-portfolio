@@ -2,14 +2,12 @@ import type { Metadata } from "next";
 import { WorkArc } from "@/components/work/WorkArc";
 import { WorkCascade } from "@/components/work/WorkCascade";
 import { WorkLayers } from "@/components/work/WorkLayers";
-import { WorkFan } from "@/components/WorkFan";
 
 export const metadata: Metadata = { title: "Work visuals", robots: { index: false } };
 
 // A scratch page for comparing ways to show the work visuals under the hero. Not linked from the site.
 const OPTIONS = [
-  { name: "Now", note: "The current fan: mixed sizes and tilts, overlapping freely.", el: <WorkFan /> },
-  { name: "A · Hand of cards", note: "Six cards of one size fanned evenly: the same step, a symmetric tilt and a gentle arc. Hover raises a card.", el: <WorkArc /> },
+  { name: "A · Hand of cards (on the homepage)", note: "Six cards of one size fanned evenly: the same step, a symmetric tilt and a gentle arc. Hover raises a card.", el: <WorkArc /> },
   { name: "B · Cascade", note: "Six cards of one size in a straight staircase, each stepping right and down over the last. No tilt.", el: <WorkCascade /> },
   { name: "C · Two layers", note: "Four cards in a straight back row, two larger cards in front centred over the gaps. Everything square to the page.", el: <WorkLayers /> },
 ];
