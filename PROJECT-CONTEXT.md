@@ -561,3 +561,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-16:** **AI-assisted development** pops out Claude, Cursor, GitHub, Xcode and VS Code (all real marks from Simple Icons, in their brand colours). All four keywords now have tool pop-outs.
 - **2026-11-16:** Jitter icon now matches the real logo Sanskriti shared: white "Jttr" wordmark on violet `#7444F2` (system sans). FigJam and Figma motion are still stand-ins.
 - **2026-11-16:** Xcode icon redrawn to match the app icon Sanskriti shared: blue gradient tile with a faint blueprint grid and a dark diagonal hammer (SVG).
+- **2026-11-16:** Cursor icon redrawn to match the app icon Sanskriti shared: faceted grey hexagon cube (white top triangle, light arrow facet, gradient sides) on black.

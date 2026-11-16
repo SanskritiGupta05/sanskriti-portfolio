@@ -91,11 +91,25 @@ export const TOOLS = {
     ),
   },
   // AI-assisted development (outlines from Simple Icons)
+  // Cursor: the faceted grey cube on black (from the app icon Sanskriti shared)
   cursorAI: {
     name: "Cursor",
     icon: (
-      <span className={TILE} style={{ background: "#111111" }}>
-        <svg viewBox="0 0 24 24" className="size-6" aria-hidden="true"><path d="M11.503.131 1.891 5.678a.84.84 0 0 0-.42.726v11.188c0 .3.162.575.42.724l9.609 5.55a1 1 0 0 0 .998 0l9.61-5.55a.84.84 0 0 0 .42-.724V6.404a.84.84 0 0 0-.42-.726L12.497.131a1.01 1.01 0 0 0-.996 0M2.657 6.338h18.55c.263 0 .43.287.297.515L12.23 22.918c-.062.107-.229.064-.229-.06V12.335a.59.59 0 0 0-.295-.51l-9.11-5.257c-.109-.063-.064-.23.061-.23" fill="#ffffff" /></svg>
+      <span className={TILE} style={{ background: "#000" }}>
+        <svg viewBox="0 0 40 40" className="size-9" aria-hidden="true">
+          <defs>
+            <linearGradient id="cu-top" x1="0" x2="1"><stop offset="0" stopColor="#9a9a9a" /><stop offset=".5" stopColor="#5a5a5a" /><stop offset="1" stopColor="#0d0d0d" /></linearGradient>
+            <linearGradient id="cu-left" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#7c7c7c" /><stop offset="1" stopColor="#1a1a1a" /></linearGradient>
+            <linearGradient id="cu-bl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#5c5c5c" /><stop offset="1" stopColor="#cfcfcf" /></linearGradient>
+            <linearGradient id="cu-br" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0a0a0a" /><stop offset="1" stopColor="#8a8a8a" /></linearGradient>
+          </defs>
+          <path d="M20 8 9.6 14h20.8z" fill="url(#cu-top)" />
+          <path d="M9.6 14 20 20 9.6 26z" fill="url(#cu-left)" />
+          <path d="M9.6 26 20 20v12z" fill="url(#cu-bl)" />
+          <path d="M30.4 14v12L20 32z" fill="url(#cu-br)" />
+          <path d="M20 20 30.4 14 20 32z" fill="#e4e4e4" />
+          <path d="M9.6 14h20.8L20 20z" fill="#ffffff" />
+        </svg>
       </span>
     ),
   },
