@@ -23,7 +23,8 @@ export default function Home() {
           <div className="mt-3 grid justify-items-center gap-6">
             {/* hero copy taken from Sanskriti's Framer portfolio ("New folio 2026") */}
             <h1 className="font-serif text-h1m text-balance text-head md:-mx-16 md:text-h1">
-              a designer by craft, an engineer by education. <span className="font-worn">a builder by curiosity.</span>
+              a designer by craft, an engineer by education. <br className="hidden md:block" />
+              <span className="font-worn">a builder by curiosity.</span>
             </h1>
             <p className="printed max-w-[58ch] text-base text-pretty">
               Product designer working across visual design, UX, motion and AI-assisted development to turn early-stage ideas into
