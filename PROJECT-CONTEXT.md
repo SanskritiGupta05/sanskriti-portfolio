@@ -575,3 +575,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-17:** Hero heading changed to "product design is my craft. / engineering is my foundation." (lowercase like before, two lines on every screen, second line in Redaction 35).
 - **2026-11-17:** Added a third heading line, "curiosity is my compass." It is now the Redaction 35 (worn) line; the first two lines are regular Redaction.
 - **2026-11-17:** Heading no longer forced onto 3 lines: one running sentence ("product design is my craft. engineering is my foundation. curiosity is my compass."), a single line on desktop, wrapping (balanced) on phones; the last sentence stays in Redaction 35.
+- **2026-11-17:** Heading is two lines: "product design is my craft." / "engineering is my foundation. curiosity is my compass." (the last sentence in Redaction 35).

@@ -29,7 +29,8 @@ export default function Home() {
           <div className="mt-3 grid justify-items-center gap-4">
             {/* hero copy taken from Sanskriti's Framer portfolio ("New folio 2026") */}
             <h1 className="font-serif text-h1m text-balance text-head md:-mx-16 md:text-h1">
-              product design is my craft. engineering is my foundation.{" "}
+              product design is my craft. <br />
+              engineering is my foundation.{" "}
               <span className="font-worn">curiosity is my compass.</span>
             </h1>
             <p className="printed max-w-[62ch] text-base text-pretty">
