@@ -578,3 +578,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-17:** Heading is two lines: "product design is my craft." / "engineering is my foundation. curiosity is my compass." (the last sentence in Redaction 35).
 - **2026-11-17:** Heading capitalised: "Product Design is my craft. / Engineering is my foundation. Curiosity is my compass." (no longer all lowercase).
 - **2026-11-17:** Description: "AppX (YC'21)" is now bold and black (`text-black`, `text-head` at night, kept on one line), with an inline Y Combinator logo (Simple Icons path, #F26522) before "YC'21".
+- **2026-11-17:** "AppX (YC'21)" no longer bold: regular weight, still black.
