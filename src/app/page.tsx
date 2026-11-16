@@ -3,6 +3,7 @@ import { Mascot } from "@/components/Mascot";
 import { Footer } from "@/components/Footer";
 import { SakuraButtonLink } from "@/components/ui/sakura-button";
 import { NameSwap } from "@/components/NameSwap";
+import { Keyword } from "@/components/Keyword";
 
 // One narrow centred column with wide empty margins on both sides (like Sam's and Mythili's sites).
 // The lantern hangs outside it, from the page's top-right corner.
@@ -26,10 +27,11 @@ export default function Home() {
               a designer by craft, an engineer by education. <br className="hidden md:block" />
               <span className="font-worn">a builder by curiosity.</span>
             </h1>
-            <p className="printed max-w-[58ch] text-base text-pretty">
-              Product designer working across visual design, UX, motion and AI-assisted development to turn early-stage ideas into
-              products people love using. I&apos;ve worked with startups on 0-to-1 products, and lately, I&apos;ve been bringing my
-              computer science background back into the picture by experimenting with code and building things with AI.
+            <p className="printed max-w-[62ch] text-base text-pretty">
+              A product designer at AppX (YC&apos;21). I work across <Keyword>visual design</Keyword>,{" "}
+              <Keyword>UX</Keyword> and <Keyword>motion</Keyword>, helping startups take ideas from 0 to 1. With a background in
+              computer science, I&apos;m also exploring <Keyword>AI-assisted development</Keyword> and building things beyond the
+              design canvas.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
               <SakuraButtonLink href="#resume" finish="raised">Résumé</SakuraButtonLink>
