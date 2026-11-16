@@ -16,11 +16,8 @@ export default function Home() {
           <Mascot start="coffee" className="mx-auto w-[210px]" />
           <div className="mt-3 grid justify-items-center gap-6">
             {/* hero copy taken from Sanskriti's Framer portfolio ("New folio 2026") */}
-            <span className="label">Product Designer · Engineer turned Designer</span>
             <h1 className="font-serif text-h1m text-balance text-head md:-mx-16 md:text-h1">
-              a designer by craft, <br className="hidden md:block" />
-              an engineer by education. <br className="hidden md:block" />
-              <span className="font-worn">a builder by curiosity.</span>
+              a designer by craft, an engineer by education. <span className="font-worn">a builder by curiosity.</span>
             </h1>
             <p className="printed text-base">Turning complex ideas into simple, scalable digital experiences.</p>
             <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
