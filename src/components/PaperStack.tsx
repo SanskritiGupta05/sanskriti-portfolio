@@ -32,6 +32,11 @@ export function PaperStack({ hero, children }: { hero: ReactNode; children: Reac
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
   const heroFade = useTransform(scrollYProgress, [0, 1], [1, 0.55]);
   const tilt = useTransform(scrollYProgress, [0, 0.7], [-1.6, 0]);
+  // over the last stretch the sheet widens to the full screen and its corners square off,
+  // so once it reaches the top it simply becomes the page (and the next sheet can do the same)
+  const inset = useTransform(scrollYProgress, [0.8, 1], [12, 0]);
+  const width = useTransform(inset, (v) => `calc(100vw - ${v * 2}px)`);
+  const radius = useTransform(scrollYProgress, [0.8, 1], [22, 0]);
 
   return (
     <>
@@ -44,15 +49,20 @@ export function PaperStack({ hero, children }: { hero: ReactNode; children: Reac
       </motion.div>
 
       {/* the sheet: nearly full width, the same dotted paper, a small paperclip at the top left */}
-      <div ref={sheetRef} id="work" className="relative z-10 left-1/2 w-[calc(100vw-24px)] -translate-x-1/2 scroll-mt-6">
+      <motion.div
+        ref={sheetRef}
+        id="work"
+        className="relative z-10 left-1/2 -translate-x-1/2"
+        style={{ width: still ? "100vw" : width }}
+      >
         <motion.div
-          className="relative origin-top-left rounded-[22px] border border-line bg-bg shadow-[0_-24px_60px_-34px_rgba(60,40,20,0.45)] [background-image:radial-gradient(var(--dot)_1px,transparent_1.2px)] [background-size:22px_22px]"
-          style={{ rotate: still ? 0 : tilt }}
+          className="relative origin-top-left border border-line bg-bg shadow-[0_-24px_60px_-34px_rgba(60,40,20,0.45)] [background-image:radial-gradient(var(--dot)_1px,transparent_1.2px)] [background-size:22px_22px]"
+          style={{ rotate: still ? 0 : tilt, borderRadius: still ? 0 : radius }}
         >
           <Paperclip className="absolute -top-4 left-10 md:left-16" />
           {children}
         </motion.div>
-      </div>
+      </motion.div>
     </>
   );
 }
