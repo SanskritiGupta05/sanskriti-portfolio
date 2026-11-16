@@ -4,7 +4,6 @@ import "@fontsource/redaction-35";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Lantern } from "@/components/Lantern";
-import { SakuraBranch } from "@/components/SakuraBranch";
 
 export const metadata: Metadata = {
   title: "Sanskriti",
@@ -24,7 +23,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </svg>
         <ThemeProvider>
           <Lantern />
-          <SakuraBranch />
           {children}
         </ThemeProvider>
       </body>
