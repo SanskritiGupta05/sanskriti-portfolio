@@ -13,6 +13,7 @@
   --head: #1c1b19;
   --muted-ink: #77716a;
   --line: #e2e2e2;
+  --dot: #dcd7cf; /* the dotted page background */
   --surface: #f4f2ee; /* a soft fill for hovers, chips and menus */
 
   --background: var(--bg);
@@ -41,6 +42,7 @@
   --head: #fbf4e7;
   --muted-ink: #aaa49a;
   --line: #2f2d37;
+  --dot: #34313d;
   --surface: #23212b;
   --destructive: #e07a62;
 }
@@ -121,7 +123,11 @@
 
 @layer base {
   html {
-    background: var(--bg);
+    background-color: var(--bg);
+    /* a quiet dot grid over every page */
+    background-image: radial-gradient(var(--dot) 1px, transparent 1.2px);
+    background-size: 22px 22px;
+    background-position: center top;
     color: var(--ink);
     transition: background-color 0.7s ease, color 0.7s ease;
   }

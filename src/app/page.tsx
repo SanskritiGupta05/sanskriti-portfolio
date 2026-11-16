@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { SakuraButtonLink } from "@/components/ui/sakura-button";
 import { NameSwap } from "@/components/NameSwap";
 import { Keyword } from "@/components/Keyword";
+import { WorkFan } from "@/components/WorkFan";
 
 // One narrow centred column with wide empty margins on both sides (like Sam's and Mythili's sites).
 // The lantern hangs outside it, from the page's top-right corner.
@@ -14,7 +15,7 @@ export default function Home() {
 
       <main>
         {/* Hero: the pixel mascot, then the intro */}
-        <section className="pt-4 pb-32 text-center">
+        <section className="pt-4 pb-12 text-center">
           {/* the mascot with a speech bubble at her upper left (on phones it sits above her);
               her name drifts into katakana and back */}
           <div className="relative mx-auto w-fit">
@@ -49,6 +50,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* work visuals fanned out under the hero */}
+        <WorkFan />
       </main>
 
       <Footer />

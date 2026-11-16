@@ -582,3 +582,5 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-17:** "AppX (YC'21)" made half-bold: Courier New has no medium weight, so it is regular weight with a 0.4px text stroke in the text colour.
 - **2026-11-17:** Description now opens "I'm a product designer at AppX (YC'21)."
 - **2026-11-17:** Description now opens "Currently a product designer at AppX (YC'21)."
+- **2026-11-17:** **Work fan** under the hero (`src/components/WorkFan.tsx`): six work visuals (`public/assets/work/*.webp`: mosaic, context-window, figma-to-react, keploy, concertpal, espresso) as tilted rounded cards in a back row and a front row, spilling past the text column full-bleed, fading out at the bottom with a CSS mask. Laid out on a 1440×520 stage that scales down to fit narrower screens. Cards spring up from the middle outwards when scrolled into view and lift/straighten on hover (none of this with reduced motion). Hero bottom padding cut from pb-32 to pb-12.
+- **2026-11-17:** **Dotted background** on every page: a 22px dot grid on `html` (`--dot` #dcd7cf by day, #34313d at night).
