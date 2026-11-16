@@ -30,7 +30,8 @@ export default function Home() {
             {/* hero copy taken from Sanskriti's Framer portfolio ("New folio 2026") */}
             <h1 className="font-serif text-h1m text-balance text-head md:-mx-16 md:text-h1">
               product design is my craft. <br />
-              <span className="font-worn">engineering is my foundation.</span>
+              engineering is my foundation. <br />
+              <span className="font-worn">curiosity is my compass.</span>
             </h1>
             <p className="printed max-w-[62ch] text-base text-pretty">
               A product designer at AppX (YC&apos;21). I work across <Keyword tools={["figma", "photoshop", "illustrator"]}>visual design</Keyword>,{" "}

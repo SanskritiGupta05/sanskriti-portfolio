@@ -573,3 +573,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-16:** Speech bubble made smaller: 13px text (`text-sm`), 20px line spacing, px-4 py-2, rounded-2xl, smaller tail; about 104×58 (was ~150×90).
 - **2026-11-16:** Removed the "Delhi NCR, India · Open to work · Trusted by 20+ startups" line under the hero buttons.
 - **2026-11-17:** Hero heading changed to "product design is my craft. / engineering is my foundation." (lowercase like before, two lines on every screen, second line in Redaction 35).
+- **2026-11-17:** Added a third heading line, "curiosity is my compass." It is now the Redaction 35 (worn) line; the first two lines are regular Redaction.
