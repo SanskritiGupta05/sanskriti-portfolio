@@ -27,7 +27,7 @@ export function FujiScene({ className = "" }: { className?: string }) {
     <canvas
       ref={canvas}
       aria-label="Pixel illustration of Mount Fuji with a lake, cherry trees, a torii gate, a temple and a pagoda. Click things to play."
-      className={`block aspect-[440/170] h-auto w-full [image-rendering:pixelated] [mask-composite:intersect] [mask-image:linear-gradient(to_bottom,transparent_0%,#000_34%,#000_94%,transparent_100%),linear-gradient(to_right,transparent_0%,#000_7%,#000_93%,transparent_100%)] ${className}`}
+      className={`block aspect-[440/170] h-auto w-full [image-rendering:pixelated] [filter:saturate(1.2)_brightness(1.05)] [mask-composite:intersect] [mask-image:linear-gradient(to_bottom,transparent_0%,#000_34%,#000_94%,transparent_100%),linear-gradient(to_right,transparent_0%,#000_7%,#000_93%,transparent_100%)] ${className}`}
     />
   );
 }

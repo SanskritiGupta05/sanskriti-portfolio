@@ -16,8 +16,8 @@ import { cn } from "@/lib/utils";
 type Tone = "lacquer" | "paper";
 
 const PAL = {
-  lacquer: { edge: "#fdf0ea", mid: "#f7d3c7", base: "#e7a291", line: "#c27a6a", eye: "#d7675a", pollen: "#f3cf7a", branch: "#d9a38f", branchD: "#b97f6c", bud: "#f4c3b5", budD: "#de8f7f", sepal: "#9b4a3b" },
-  paper: { edge: "#fbd3c8", mid: "#f2a998", base: "#df7a68", line: "#b9584a", eye: "#b8463a", pollen: "#e9b45a", branch: "#8c5a47", branchD: "#6d4235", bud: "#f0a495", budD: "#d36f5f", sepal: "#7a3a2c" },
+  lacquer: { edge: "#fff7f6", mid: "#fdd9de", base: "#f6a9b4", line: "#de828f", eye: "#ea5f70", pollen: "#ffd76a", branch: "#e3ad98", branchD: "#c48a74", bud: "#fdcbd2", budD: "#f0929f", sepal: "#a8473c" },
+  paper: { edge: "#ffe3e7", mid: "#fab6c2", base: "#f08396", line: "#d45c72", eye: "#d23f58", pollen: "#f7c24c", branch: "#94604a", branchD: "#744636", bud: "#fab1bd", budD: "#e9798c", sepal: "#843a2e" },
 };
 
 // a sakura petal: round and full, swelling out from the centre, with a soft notch at the tip
@@ -150,8 +150,8 @@ const SHELL: Record<Finish, Record<Tone, string>> = {
     paper: "shadow-[inset_0_0_0_3px_#efe0c8,inset_0_0_0_4px_#e2cdab,inset_0_-3px_6px_rgba(150,100,50,0.14),0_2px_2px_rgba(120,80,40,0.18),0_10px_20px_-12px_rgba(120,70,30,0.4)] [text-shadow:0_1px_0_rgba(255,255,255,0.85)]",
   },
   raised: {
-    lacquer: "shadow-[inset_0_1px_0_rgba(255,232,220,0.45),inset_0_-2px_4px_rgba(60,8,4,0.3),0_4px_0_#6d1d16,0_12px_18px_-6px_rgba(90,20,12,0.55)] active:shadow-[inset_0_1px_0_rgba(255,232,220,0.3),inset_0_2px_5px_rgba(60,8,4,0.4),0_1px_0_#6d1d16,0_4px_8px_-4px_rgba(90,20,12,0.5)]",
-    paper: "border-[1.5px] border-[#e6d2b4] shadow-[inset_0_1px_0_#ffffff,inset_0_-2px_4px_rgba(150,100,50,0.12),0_4px_0_#dcc39e,0_12px_18px_-8px_rgba(120,70,30,0.4)] active:shadow-[inset_0_1px_0_#ffffff,inset_0_2px_5px_rgba(150,100,50,0.18),0_1px_0_#dcc39e,0_4px_8px_-4px_rgba(120,70,30,0.35)]",
+    lacquer: "shadow-[inset_0_1px_0_rgba(255,232,220,0.45),inset_0_-2px_4px_rgba(60,8,4,0.3),0_4px_0_#8f2618,0_12px_18px_-6px_rgba(150,40,20,0.45)] active:shadow-[inset_0_1px_0_rgba(255,232,220,0.3),inset_0_2px_5px_rgba(60,8,4,0.4),0_1px_0_#8f2618,0_4px_8px_-4px_rgba(90,20,12,0.5)]",
+    paper: "border-[1.5px] border-[#f0dcbc] shadow-[inset_0_1px_0_#ffffff,inset_0_-2px_4px_rgba(150,100,50,0.1),0_4px_0_#ebd2a8,0_12px_18px_-8px_rgba(140,80,30,0.32)] active:shadow-[inset_0_1px_0_#ffffff,inset_0_2px_5px_rgba(150,100,50,0.16),0_1px_0_#ebd2a8,0_4px_8px_-4px_rgba(120,70,30,0.35)]",
   },
 };
 
@@ -174,8 +174,8 @@ export function SakuraButtonLink({ className, children, tone = "lacquer", arrow,
       className={cn(
         "relative isolate inline-flex h-12 items-center gap-2.5 overflow-hidden rounded-full pl-[78px] font-serif text-base outline-none",
         lacquer
-          ? "pr-[60px] bg-[radial-gradient(140%_120%_at_25%_0%,#b8443a_0%,#a2352b_45%,#8c2a22_100%)] text-[#f7e9d6]"
-          : "pr-7 bg-[radial-gradient(140%_120%_at_30%_0%,#fbf3e6_0%,#f5e7d3_60%,#efdcc4_100%)] text-[#7a2a20]",
+          ? "pr-[60px] bg-[radial-gradient(140%_120%_at_25%_0%,#e3563f_0%,#cc4030_45%,#b0321f_100%)] text-[#fff6ea]"
+          : "pr-7 bg-[radial-gradient(140%_120%_at_30%_0%,#fffcf6_0%,#fef4e4_60%,#fbead0_100%)] text-[#b53424]",
         SHELL[finish][tone],
         "transition-shadow duration-150",
         "focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
@@ -234,7 +234,7 @@ export function SakuraButtonLink({ className, children, tone = "lacquer", arrow,
             [0, 1, 2, 3, 4].map((col) => {
               const R = 13, cx = col * 2 * R + (row % 2 ? R : 0) - 4, cy = 22 + row * R * 0.62;
               return (
-                <g key={`${row}-${col}`} fill="#9a3027" stroke="#e8b48d" strokeOpacity={0.85} strokeWidth={1.25}>
+                <g key={`${row}-${col}`} fill="#bf3a2a" stroke="#f6c9a0" strokeOpacity={0.85} strokeWidth={1.25}>
                   <circle cx={cx} cy={cy} r={R} />
                   <circle cx={cx} cy={cy} r={R * 0.7} fill="none" />
                   <circle cx={cx} cy={cy} r={R * 0.42} fill="none" />

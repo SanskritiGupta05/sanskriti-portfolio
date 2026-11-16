@@ -8,7 +8,7 @@
 import { cordPull } from '../scene/scene-audio.js';
 
 let count = 0;
-const RED = '#cf5138', RED_D = '#a93a26', BRANCH = '#5b3a27';
+const RED = '#e5583a', RED_D = '#c04028', BRANCH = '#5b3a27';
 const BODY = 'M116 174 C 50 205, 50 455, 116 490 L 264 490 C 330 455, 330 205, 264 174 Z';
 const f = (n) => +n.toFixed(1);
 

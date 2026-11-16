@@ -37,7 +37,7 @@ in any new Claude account or conversation.
 ### Colour
 - **Background:** plain white `#FFFFFF`. Not off-white or paper-coloured.
 - **Text ink:** `#1C1B19` (headings), `#2B2A28` (body).
-- **Muted grey (labels, captions):** `#6B6B6B`.
+- **Muted grey (labels, captions):** `#77716A` (a warmer grey; was `#6B6B6B`).
 - **Divider lines:** `#E2E2E2`.
 
 ### Typography
@@ -539,6 +539,7 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-16:** Button branches reshaped into a drooping arc with curving twigs and bent bud stems (they looked stiff), and the petals made rounder.
 - **2026-11-16:** Branches back to the gentle S-curve (the arch looked droopy). See work border now in its own cream hue. Added three skeuomorphic finishes (soft lacquer, stitched patch, physical key) to compare at `/lab/buttons`.
 - **2026-11-16:** Hero buttons now use the "physical key" finish: a darker base in each button's own colour that the button sinks into when clicked.
+- **2026-11-16:** Brightened the colours across the site: Résumé is a brighter vermilion (`#e3563f`→`#b0321f`) with a lighter base and seigaiha; See work is a lighter cream with a vermilion label; the blossoms are pinker; the lantern red is brighter (`#e5583a`); the footer Fuji scene gets `saturate(1.2) brightness(1.05)`; labels use a warmer grey; night mode is a little lighter (bg `#17161e`, text `#eee8dc`).
 - **2026-11-16:** Removed the ↓ arrow from the See work button.
 - **2026-11-16:** Hero made a bit smaller: H1 token 72 → 60px, intro text 20 → 16px, buttons 56 → 48px tall with 16px labels and a scaled-down sprig and waves.
 - **2026-11-16:** Connected Framer and pulled the real content from "New folio 2026" into `docs/framer-content.md` (read-only; nothing changed in Framer). Waiting for Sanskriti to choose what to use.

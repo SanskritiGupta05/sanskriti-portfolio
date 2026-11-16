@@ -11,7 +11,7 @@
   --bg: #ffffff;
   --ink: #2b2a28;
   --head: #1c1b19;
-  --muted-ink: #6b6b6b;
+  --muted-ink: #77716a;
   --line: #e2e2e2;
   --surface: #f4f2ee; /* a soft fill for hovers, chips and menus */
 
@@ -36,12 +36,12 @@
   --radius: 0.625rem;
 }
 :root[data-theme="dark"] {
-  --bg: #131218;
-  --ink: #e6dfd2;
-  --head: #f4ecdd;
-  --muted-ink: #9a958c;
-  --line: #2a2830;
-  --surface: #1f1d25;
+  --bg: #17161e;
+  --ink: #eee8dc;
+  --head: #fbf4e7;
+  --muted-ink: #aaa49a;
+  --line: #2f2d37;
+  --surface: #23212b;
   --destructive: #e07a62;
 }
 
