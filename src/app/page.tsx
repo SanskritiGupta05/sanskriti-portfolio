@@ -21,7 +21,7 @@ export default function Home() {
             <span aria-hidden="true" className="absolute -bottom-[7px] left-1/2 size-3 -translate-x-1/2 rotate-45 border-r border-b border-line bg-bg" />
           </div>
           <Mascot start="coffee" className="mx-auto w-[168px]" />
-          <div className="mt-3 grid justify-items-center gap-6">
+          <div className="mt-3 grid justify-items-center gap-4">
             {/* hero copy taken from Sanskriti's Framer portfolio ("New folio 2026") */}
             <h1 className="font-serif text-h1m text-balance text-head md:-mx-16 md:text-h1">
               a designer by craft, an engineer by education. <br className="hidden md:block" />
@@ -33,7 +33,7 @@ export default function Home() {
               computer science, I&apos;m also exploring <Keyword tools={["claude", "cursorAI", "github", "xcode", "vscode"]}>AI-assisted development</Keyword> and building things beyond the
               design canvas.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
               <SakuraButtonLink href="#resume" finish="raised">Résumé</SakuraButtonLink>
               <SakuraButtonLink href="#work" tone="paper" finish="raised">See work</SakuraButtonLink>
             </div>
