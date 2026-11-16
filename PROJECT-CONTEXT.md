@@ -581,3 +581,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-17:** "AppX (YC'21)" no longer bold: regular weight, still black.
 - **2026-11-17:** "AppX (YC'21)" made half-bold: Courier New has no medium weight, so it is regular weight with a 0.4px text stroke in the text colour.
 - **2026-11-17:** Description now opens "I'm a product designer at AppX (YC'21)."
+- **2026-11-17:** Description now opens "Currently a product designer at AppX (YC'21)."
