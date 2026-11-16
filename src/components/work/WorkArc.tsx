@@ -2,11 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { Frame, ProgressiveBlur, WORK } from "./shared";
+import { Frame, WORK } from "./shared";
 
 // Version B · Arc: six cards of one size, fanned evenly like a hand of cards
-// (same step, symmetric tilt, a gentle arc). Hovering a card raises it out of the hand,
-// straightens it and reshapes it to the image's own proportions, so the whole visual shows.
+// (same step, symmetric tilt, a gentle arc). Hovering a card raises it out of the hand.
+// The wide Figma → React visual is cropped most, so on hover it also straightens and
+// reshapes to its own proportions, showing the whole image.
 const W = 260;
 const H = 200;
 const STEP = 112;
@@ -52,14 +53,19 @@ export function WorkArc() {
               whileInView={{ opacity: 1, y, rotate }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ type: "spring", stiffness: 90, damping: 17, delay: still ? 0 : Math.abs(d) * 0.08 }}
-              whileHover={{ y: y - 30, rotate: 0, width: fw, x: fullLeft - left, zIndex: 20, transition: still ? { duration: 0 } : { type: "spring", stiffness: 300, damping: 26 } }}
+              whileHover={
+                w.src.includes("figma-to-react")
+                  ? { y: y - 30, rotate: 0, width: fw, x: fullLeft - left, zIndex: 20, transition: still ? { duration: 0 } : { type: "spring", stiffness: 300, damping: 26 } }
+                  : still
+                    ? undefined
+                    : { y: y - 26, rotate: rotate * 0.5, zIndex: 20, transition: { type: "spring", stiffness: 300, damping: 22 } }
+              }
             >
               <Frame work={w} sizes={`${Math.max(W, fw)}px`} fill className="h-full" />
             </motion.div>
           );
         })}
       </div>
-      <ProgressiveBlur edge="bottom" className="inset-x-0 bottom-0 h-2/5" />
     </div>
   );
 }

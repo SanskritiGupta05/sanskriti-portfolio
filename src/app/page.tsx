@@ -15,7 +15,7 @@ export default function Home() {
 
       <main>
         {/* Hero: the pixel mascot, then the intro */}
-        <section className="pt-4 pb-12 text-center">
+        <section className="pt-4 pb-2 text-center">
           {/* the mascot with a speech bubble at her upper left (on phones it sits above her);
               her name drifts into katakana and back */}
           <div className="relative mx-auto w-fit">
