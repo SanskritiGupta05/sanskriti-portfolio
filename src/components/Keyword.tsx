@@ -54,16 +54,12 @@ export const TOOLS = {
       </span>
     ),
   },
-  // Jitter stand-in (no official outline available): a ball bouncing along an easing curve
+  // Jitter: the white "Jttr" wordmark on violet (from the logo Sanskriti shared)
   jitter: {
     name: "Jitter",
     icon: (
-      <span className={TILE} style={{ background: "#1c1b19" }}>
-        <svg viewBox="0 0 40 40" className="size-7" aria-hidden="true">
-          <path d="M7 30C14 30 15 10 22 10s8 20 11 20" stroke="#5b5b66" strokeWidth="1.6" strokeDasharray="2 2.5" fill="none" strokeLinecap="round" />
-          <circle cx="22" cy="10" r="4.5" fill="#B4F34B" />
-          <ellipse cx="22" cy="31" rx="4" ry="1.2" fill="#B4F34B" opacity=".35" />
-        </svg>
+      <span className={TILE} style={{ background: "#7444F2" }}>
+        <span className="font-[system-ui] text-[13px] leading-none font-medium tracking-[-0.02em] text-white">Jttr</span>
       </span>
     ),
   },
