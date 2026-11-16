@@ -571,3 +571,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-16:** Speech bubble moved to the **mascot's upper left** (desktop): two lines ("Hey, i'm" / name), rounded-3xl, px-6 py-2.5, 32px line spacing, tail at bottom-right pointing at her, overlapping her by 6px. On phones (< md) it sits centred above her with the tail at bottom-centre.
 - **2026-11-16:** Button shadows updated from Sanskriti's Figma edits (Sakura button set 1535:236): Résumé's soft shadow is darker `rgba(124,32,15,.45)`, See work's is stronger `rgba(140,79,31,.54)`.
 - **2026-11-16:** Speech bubble made smaller: 13px text (`text-sm`), 20px line spacing, px-4 py-2, rounded-2xl, smaller tail; about 104×58 (was ~150×90).
+- **2026-11-16:** Removed the "Delhi NCR, India · Open to work · Trusted by 20+ startups" line under the hero buttons.

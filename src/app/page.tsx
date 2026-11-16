@@ -42,7 +42,6 @@ export default function Home() {
               <SakuraButtonLink href="#resume" finish="raised">Résumé</SakuraButtonLink>
               <SakuraButtonLink href="#work" tone="paper" finish="raised">See work</SakuraButtonLink>
             </div>
-            <span className="label pt-2">Delhi NCR, India · Open to work · Trusted by 20+ startups</span>
           </div>
         </section>
       </main>
