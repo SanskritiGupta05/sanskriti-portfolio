@@ -21,7 +21,11 @@ export default function Home() {
               <span className="block">Hey, i&apos;m <NameSwap /></span>
               a designer by craft, an engineer by education. <span className="font-worn">a builder by curiosity.</span>
             </h1>
-            <p className="printed text-base">Turning complex ideas into simple, scalable digital experiences.</p>
+            <p className="printed max-w-[58ch] text-base text-pretty">
+              Product designer working across visual design, UX, motion and AI-assisted development to turn early-stage ideas into
+              products people love using. I&apos;ve worked with startups on 0-to-1 products, and lately, I&apos;ve been bringing my
+              computer science background back into the picture by experimenting with code and building things with AI.
+            </p>
             <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
               <SakuraButtonLink href="#resume" finish="raised">Résumé</SakuraButtonLink>
               <SakuraButtonLink href="#work" tone="paper" finish="raised">See work</SakuraButtonLink>
