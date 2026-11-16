@@ -29,7 +29,7 @@ export default function Home() {
             </h1>
             <p className="printed max-w-[62ch] text-base text-pretty">
               A product designer at AppX (YC&apos;21). I work across <Keyword tools={["figma", "photoshop", "illustrator"]}>visual design</Keyword>,{" "}
-              <Keyword>UX</Keyword> and <Keyword>motion</Keyword>, helping startups take ideas from 0 to 1. With a background in
+              <Keyword tools={["figjam", "cursor", "flow"]}>UX</Keyword> and <Keyword tools={["jitter", "figmaMotion", "claude"]}>motion</Keyword>, helping startups take ideas from 0 to 1. With a background in
               computer science, I&apos;m also exploring <Keyword>AI-assisted development</Keyword> and building things beyond the
               design canvas.
             </p>
