@@ -28,7 +28,7 @@ export default function Home() {
               <span className="font-worn">a builder by curiosity.</span>
             </h1>
             <p className="printed max-w-[62ch] text-base text-pretty">
-              A product designer at AppX (YC&apos;21). I work across <Keyword>visual design</Keyword>,{" "}
+              A product designer at AppX (YC&apos;21). I work across <Keyword tools={["figma", "photoshop", "illustrator"]}>visual design</Keyword>,{" "}
               <Keyword>UX</Keyword> and <Keyword>motion</Keyword>, helping startups take ideas from 0 to 1. With a background in
               computer science, I&apos;m also exploring <Keyword>AI-assisted development</Keyword> and building things beyond the
               design canvas.
