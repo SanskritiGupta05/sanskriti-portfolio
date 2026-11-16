@@ -80,6 +80,7 @@
   --font-serif: "Redaction", Georgia, serif;
   --font-worn: "Redaction 35", "Redaction", Georgia, serif;
   --font-mono: "Courier New", Courier, monospace;
+  --font-jp: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif; /* katakana in the name swap */
   --font-sans: var(--font-mono); /* shadcn components default to font-sans: keep them in Courier */
 
   /* The only type sizes on the site: 2 headings, 3 body (plus their mobile versions). */
