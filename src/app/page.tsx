@@ -34,7 +34,11 @@ export default function Home() {
               <span className="font-worn">Curiosity is my compass.</span>
             </h1>
             <p className="printed max-w-[62ch] text-base text-pretty">
-              A product designer at AppX (YC&apos;21). I work across <Keyword tools={["figma", "photoshop", "illustrator"]}>visual design</Keyword>,{" "}
+              A product designer at <strong className="font-bold whitespace-nowrap text-black dark:text-head">AppX (
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="mr-1 inline-block size-[0.95em] -translate-y-[0.08em] rounded-[2px] align-middle">
+                <path fill="#F26522" d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z" />
+              </svg>
+              YC&apos;21)</strong>. I work across <Keyword tools={["figma", "photoshop", "illustrator"]}>visual design</Keyword>,{" "}
               <Keyword tools={["figjam", "cursor", "flow"]}>UX</Keyword> and <Keyword tools={["jitter", "figmaMotion", "claude"]}>motion</Keyword>, helping startups take ideas from 0 to 1. With a background in
               computer science, I&apos;m also exploring <Keyword tools={["claude", "cursorAI", "github", "xcode", "vscode"]}>AI-assisted development</Keyword> and building things beyond the
               design canvas.
