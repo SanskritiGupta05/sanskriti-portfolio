@@ -5,26 +5,26 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 // A loose fan of work visuals under the hero: a back row and a front row of tilted cards,
-// spilling past the text column and fading into the page at the bottom.
+// kept inside the page column, fading into the page at the bottom.
 // Towards the bottom the cards blur progressively as they fade into the page.
-// Laid out on a 1440×520 stage that scales down to fit narrower screens.
-const STAGE_W = 1440;
-const STAGE_H = 520;
+// Laid out on a 1000×440 stage that scales down to the column's width.
+const STAGE_W = 1000;
+const STAGE_H = 440;
 
 type Card = { src: string; alt: string; w: number; h: number; x: number; y: number; r: number; front?: boolean };
 
 // x = card centre from the stage centre, y = top edge; the size keeps each image's own shape
 const CARDS: Card[] = [
-  { src: "/assets/work/mosaic.webp", alt: "Mosaic, a story app home screen", w: 320, h: 345, x: -600, y: 70, r: -12 },
-  { src: "/assets/work/context-window.webp", alt: "A context window usage card", w: 400, h: 306, x: -350, y: 120, r: -4, front: true },
-  { src: "/assets/work/figma-to-react.webp", alt: "Figma to React, two folder icons", w: 500, h: 239, x: -60, y: 36, r: 3 },
-  { src: "/assets/work/keploy.webp", alt: "Keploy AI test run screen", w: 460, h: 344, x: 110, y: 140, r: -1, front: true },
-  { src: "/assets/work/concertpal.webp", alt: "ConcertPal Calendar feature cards", w: 400, h: 326, x: 390, y: 50, r: 5 },
-  { src: "/assets/work/espresso.webp", alt: "A Spotify turntable widget", w: 320, h: 320, x: 620, y: 110, r: 12, front: true },
-];
+  { src: "/assets/work/mosaic.webp", alt: "Mosaic, a story app home screen", w: 250, h: 270, x: -345, y: 60, r: -9 },
+  { src: "/assets/work/context-window.webp", alt: "A context window usage card", w: 330, h: 252, x: -205, y: 110, r: -4, front: true },
+  { src: "/assets/work/figma-to-react.webp", alt: "Figma to React, two folder icons", w: 420, h: 201, x: -40, y: 28, r: 3 },
+  { src: "/assets/work/keploy.webp", alt: "Keploy AI test run screen", w: 380, h: 284, x: 85, y: 125, r: -1, front: true },
+  { src: "/assets/work/concertpal.webp", alt: "ConcertPal Calendar feature cards", w: 330, h: 269, x: 255, y: 45, r: 5 },
+  { src: "/assets/work/espresso.webp", alt: "A Spotify turntable widget", w: 250, h: 250, x: 350, y: 100, r: 9, front: true },
+]
 
 // cards rise in from the middle outwards
-const order = (x: number) => Math.abs(x) / 620;
+const order = (x: number) => Math.abs(x) / 350;
 // Progressive blur along the bottom: stacked backdrop blurs, each stronger and confined to a band
 // lower down, so the blur ramps up smoothly instead of starting at a hard line.
 const BLUR_STEPS = [0.5, 1, 2, 4, 8, 16];
@@ -66,7 +66,7 @@ export function WorkFan() {
   }, []);
 
   return (
-    <section aria-label="Selected work" className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden">
+    <section aria-label="Selected work" className="relative">
       {/* the cards sink into the page (a mask, so the dotted background shows through) */}
       <div ref={box} className="relative w-full [mask-image:linear-gradient(to_bottom,black_58%,transparent)]" style={{ height: STAGE_H * scale }}>
         <div
