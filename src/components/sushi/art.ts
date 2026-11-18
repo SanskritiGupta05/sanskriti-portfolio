@@ -175,17 +175,19 @@ const SUSHI: Record<string, string> = {
     .join(""),
 };
 
-export const MENU: { id: string; name: string; plate: keyof typeof PLATES; svg: string }[] = [
-  { id: "salmon", name: "Salmon nigiri", plate: "blue", svg: "" },
-  { id: "tamago", name: "Tamago", plate: "red", svg: "" },
-  { id: "maki", name: "Maki", plate: "cream", svg: "" },
-  { id: "ikura", name: "Ikura gunkan", plate: "pink", svg: "" },
-  { id: "ebi", name: "Ebi nigiri", plate: "lacquer", svg: "" },
-  { id: "inari", name: "Inari", plate: "matcha", svg: "" },
-].map((m) => ({
+export const MENU: { id: string; name: string; plate: keyof typeof PLATES; plateSvg: string; sushiSvg: string }[] = ([
+  { id: "salmon", name: "Salmon nigiri", plate: "blue" },
+  { id: "tamago", name: "Tamago", plate: "red" },
+  { id: "maki", name: "Maki", plate: "cream" },
+  { id: "ikura", name: "Ikura gunkan", plate: "pink" },
+  { id: "ebi", name: "Ebi nigiri", plate: "lacquer" },
+  { id: "inari", name: "Inari", plate: "matcha" },
+] as const).map((m) => ({
   ...m,
-  // drawn at 3× its shown size, so it stays sharp on high-density screens and while moving
-  svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80" width="360" height="240"><defs>${DEFS}</defs>${plate(m.plate)}${SUSHI[m.id]}</svg>`,
+  // the plate and the sushi on it are separate layers (so chopsticks can lift the sushi off);
+  // both are drawn on the same 120×80 canvas at 3× their shown size, so they stay sharp
+  plateSvg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80" width="360" height="240"><defs>${DEFS}</defs>${plate(m.plate)}</svg>`,
+  sushiSvg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80" width="360" height="240"><defs>${DEFS}</defs>${SUSHI[m.id]}</svg>`,
 }));
 
 // the noren curtain over the counter: a wooden rod and three red panels, a steaming bowl on the middle one

@@ -25,6 +25,62 @@ function Art({ svg, w, h, className = "" }: { svg: string; w: number; h: number;
   return <img src={toUrl(svg)} alt="" width={w} height={h} draggable={false} className={className} />;
 }
 
+// Chopsticks come down from above, pinch the sushi and lift it out of the frame.
+const PICK = { duration: 1.7, times: [0, 0.32, 0.55, 1] };
+function PickUp({ svg, onDone }: { svg: string; onDone: () => void }) {
+  return (
+    <div className="pointer-events-none absolute inset-0">
+      <motion.div
+        className="absolute inset-0"
+        initial={{ y: 0, opacity: 1 }}
+        animate={{ y: [0, 0, 0, -200], opacity: [1, 1, 1, 0] }}
+        transition={{ duration: PICK.duration, times: PICK.times, ease: ["linear", "linear", [0.5, 0, 0.75, 0]] }}
+        onAnimationComplete={onDone}
+      >
+        <Art svg={svg} w={PLATE_W} h={PLATE_H} className="absolute inset-0" />
+      </motion.div>
+      <motion.div
+        className="absolute"
+        style={{ left: 31, top: -139, width: 140, height: 190 }}
+        initial={{ y: -170, opacity: 0 }}
+        animate={{ y: [-170, 0, 0, -200], opacity: [0, 1, 1, 0] }}
+        transition={{ duration: PICK.duration, times: PICK.times, ease: [[0.2, 0.7, 0.3, 1], "linear", [0.5, 0, 0.75, 0]] }}
+      >
+        <Chopsticks />
+      </motion.div>
+    </div>
+  );
+}
+
+// a pair of wooden chopsticks angled in from the upper right, their tips meeting at the sushi
+function stick(x1: number, y1: number, x2: number, y2: number, w1: number, w2: number) {
+  const len = Math.hypot(x2 - x1, y2 - y1);
+  const nx = -(y2 - y1) / len, ny = (x2 - x1) / len;
+  const p = (x: number, y: number, w: number, s: number) => `${(x + nx * w * s).toFixed(1)} ${(y + ny * w * s).toFixed(1)}`;
+  return `M${p(x1, y1, w1 / 2, 1)} L${p(x2, y2, w2 / 2, 1)} L${p(x2, y2, w2 / 2, -1)} L${p(x1, y1, w1 / 2, -1)}Z`;
+}
+function Chopsticks() {
+  return (
+    <svg viewBox="0 0 140 190" className="size-full overflow-visible" aria-hidden="true">
+      <defs>
+        <linearGradient id="chop-wood" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#e2bf8c" />
+          <stop offset="0.5" stopColor="#c9975c" />
+          <stop offset="1" stopColor="#9c6b37" />
+        </linearGradient>
+      </defs>
+      {/* the back stick: still while the front one closes in to pinch */}
+      <path d={stick(138, 10, 40, 184, 6, 2.2)} fill="url(#chop-wood)" />
+      <path d={stick(64.8, 140.3, 40, 184, 2.9, 2.2)} fill="#6e4423" opacity="0.85" />
+      <motion.g animate={{ x: [-5, -5, 0, 0] }} transition={{ duration: PICK.duration, times: PICK.times }}>
+        <path d={stick(128, 2, 30, 182, 6, 2.2)} fill="url(#chop-wood)" />
+        <path d={stick(54.5, 137, 30, 182, 2.9, 2.2)} fill="#6e4423" opacity="0.85" />
+        <path d={stick(128, 2, 30, 182, 1, 0.4)} fill="#f3dcb4" opacity="0.6" transform="translate(-1.2 -0.6)" />
+      </motion.g>
+    </svg>
+  );
+}
+
 export function SushiBelt() {
   const box = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
@@ -44,12 +100,35 @@ export function SushiBelt() {
   const offset = useMotionValue(0);
   const speed = useRef(SPEED);
   const hovered = useRef(false);
+  // the track jumps back one menu-length each time it wraps; counting the wraps lets every
+  // plate keep its identity (plate id = slot − 6 × wraps), so an eaten plate stays empty
+  // until it rides off the edge, and plates coming in are always full
+  const [wraps, setWraps] = useState(0);
   useAnimationFrame((_, delta) => {
     if (still) return;
     const target = hovered.current ? 0 : SPEED;
     speed.current += (target - speed.current) * Math.min(1, delta / 250);
-    offset.set((offset.get() + (speed.current * delta) / 1000) % (STEP * MENU.length));
+    const next = offset.get() + (speed.current * delta) / 1000;
+    const loop = STEP * MENU.length;
+    if (next >= loop) {
+      offset.set(next - loop);
+      setWraps((w) => w + 1);
+    } else offset.set(next);
   });
+  const [eaten, setEaten] = useState<Set<number>>(() => new Set());
+  const [picking, setPicking] = useState<Set<number>>(() => new Set());
+  const pick = (id: number) => {
+    if (still) return setEaten((e) => new Set(e).add(id));
+    setPicking((p) => new Set(p).add(id));
+  };
+  const done = (id: number) => {
+    setEaten((e) => new Set(e).add(id));
+    setPicking((p) => {
+      const n = new Set(p);
+      n.delete(id);
+      return n;
+    });
+  };
   const trackX = useTransform(offset, (o) => o - STEP * MENU.length);
   const slatX = useTransform(offset, (o) => `${o % SLAT}px 0`);
   // the round ends turn as the belt runs: arc length / radius, in degrees
@@ -90,8 +169,8 @@ export function SushiBelt() {
       {/* the belt */}
       <div
         ref={box}
-        className="relative mt-2 overflow-hidden"
-        style={{ height: BELT_H + 70 }}
+        className="relative mt-2"
+        style={{ height: BELT_H + 70, clipPath: "inset(-400px 0 0 0)" }}
         onMouseEnter={() => (hovered.current = true)}
         onMouseLeave={() => (hovered.current = false)}
       >
@@ -140,21 +219,35 @@ export function SushiBelt() {
           </>
         )}
         {/* plates ride along the top of the belt and slide out of sight at the column edges */}
-        <div className="absolute inset-x-0 overflow-hidden" style={{ bottom: BELT_H - 60, height: PLATE_H + 50 }}>
+        <div className="absolute inset-x-0" style={{ bottom: BELT_H - 60, height: PLATE_H + 50, clipPath: "inset(-400px 0 0 0)" }}>
           <motion.ul className="absolute bottom-0 left-0 flex" style={{ x: trackX, gap: GAP }}>
-            {plates.map((m, i) => (
-              <motion.li
-                key={i}
-                className="relative shrink-0"
-                style={{ width: PLATE_W, height: PLATE_H }}
-                whileHover={still ? undefined : { y: -10, rotate: [0, -4, 3, 0], transition: { duration: 0.45 } }}
-                title={m.name}
-              >
-                <Art svg={m.svg} w={PLATE_W} h={PLATE_H} />
-                {/* little "tasty!" strokes over every third plate */}
-                {i % 3 === 1 && <Ticks className="absolute -top-3 left-3 w-7" delay={(i % 6) * 0.3} />}
-              </motion.li>
-            ))}
+            {plates.map((m, i) => {
+              const id = i - MENU.length * wraps;
+              const gone = eaten.has(id);
+              const lifting = picking.has(id);
+              return (
+                <motion.li
+                  key={i}
+                  className="relative shrink-0"
+                  style={{ width: PLATE_W, height: PLATE_H }}
+                  whileHover={still || gone || lifting ? undefined : { y: -10, rotate: [0, -4, 3, 0], transition: { duration: 0.45 } }}
+                  title={gone ? undefined : m.name}
+                >
+                  <Art svg={m.plateSvg} w={PLATE_W} h={PLATE_H} className="absolute inset-0" />
+                  {lifting ? (
+                    <PickUp svg={m.sushiSvg} onDone={() => done(id)} />
+                  ) : (
+                    !gone && (
+                      <button type="button" aria-label={`Pick up the ${m.name}`} onClick={() => pick(id)} className="absolute inset-0 cursor-pointer">
+                        <Art svg={m.sushiSvg} w={PLATE_W} h={PLATE_H} className="absolute inset-0" />
+                      </button>
+                    )
+                  )}
+                  {/* little "tasty!" strokes over every third plate */}
+                  {i % 3 === 1 && !gone && !lifting && <Ticks className="absolute -top-3 left-3 w-7" delay={(i % 6) * 0.3} />}
+                </motion.li>
+              );
+            })}
           </motion.ul>
         </div>
       </div>
