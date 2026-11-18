@@ -18,44 +18,53 @@ const rnd = (n: number) => {
 const petal = (r: number) =>
   `M0 0C${r2(-r * 0.95)} ${r2(-r * 0.2)} ${r2(-r * 1.02)} ${r2(-r * 0.92)} ${r2(-r * 0.3)} ${r2(-r * 1.03)}Q${r2(-r * 0.1)} ${r2(-r * 1.02)} 0 ${r2(-r * 0.86)}Q${r2(r * 0.1)} ${r2(-r * 1.02)} ${r2(r * 0.3)} ${r2(-r * 1.03)}C${r2(r * 1.02)} ${r2(-r * 0.92)} ${r2(r * 0.95)} ${r2(-r * 0.2)} 0 0Z`;
 
-// --- the limb: a tapering shape built along a gentle curve ---------------------------------
-const P = [
-  [-12, 6],
-  [50, 40],
-  [150, 34],
-  [268, 58],
-];
-const bez = (t: number) => {
-  const u = 1 - t;
-  const k = [u * u * u, 3 * u * u * t, 3 * u * t * t, t * t * t];
-  return [0, 1].map((j) => k.reduce((acc, c, i) => acc + c * P[i][j], 0));
-};
-function limbPath() {
+// --- limbs and twigs: tapering shapes drawn along hand-placed waypoints --------------------
+type Pt = [number, number];
+// Catmull-Rom through the waypoints, sampled densely
+function spline(pts: Pt[], per = 10): Pt[] {
+  const out: Pt[] = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+    for (let k = 0; k < per; k++) {
+      const t = k / per, t2 = t * t, t3 = t2 * t;
+      out.push([0, 1].map((j) => 0.5 * (2 * p1[j] + (-p0[j] + p2[j]) * t + (2 * p0[j] - 5 * p1[j] + 4 * p2[j] - p3[j]) * t2 + (-p0[j] + 3 * p1[j] - 3 * p2[j] + p3[j]) * t3)) as Pt);
+    }
+  }
+  out.push(pts[pts.length - 1]);
+  return out;
+}
+// a tapering, slightly knobbly limb along the waypoints, from width w0 down to w1
+function limb(pts: Pt[], w0: number, w1: number, seed: number) {
+  const c = spline(pts);
   const left: string[] = [];
   const right: string[] = [];
-  const N = 36;
-  for (let i = 0; i <= N; i++) {
-    const t = i / N;
-    const [x, y] = bez(t);
-    const [x2, y2] = bez(Math.min(1, t + 0.01));
-    const [x1, y1] = bez(Math.max(0, t - 0.01));
-    const len = Math.hypot(x2 - x1, y2 - y1) || 1;
-    const nx = -(y2 - y1) / len;
-    const ny = (x2 - x1) / len;
-    const w = (13 * Math.pow(1 - t, 1.25) + 1.3) / 2 + Math.sin(t * 23) * 0.35; // a slightly knobbly taper
+  c.forEach(([x, y], i) => {
+    const t = i / (c.length - 1);
+    const [ax, ay] = c[Math.max(0, i - 1)];
+    const [bx, by] = c[Math.min(c.length - 1, i + 1)];
+    const len = Math.hypot(bx - ax, by - ay) || 1;
+    const nx = -(by - ay) / len, ny = (bx - ax) / len;
+    const w = (w1 + (w0 - w1) * Math.pow(1 - t, 1.15)) / 2 * (1 + (rnd(seed + Math.floor(t * 9)) - 0.5) * 0.22);
     left.push(`${r2(x + nx * w)} ${r2(y + ny * w)}`);
     right.unshift(`${r2(x - nx * w)} ${r2(y - ny * w)}`);
-  }
+  });
   return `M${left.join(" L")} L${right.join(" L")}Z`;
 }
-const LIMB = limbPath();
-// thin side twigs: [path, width]
-const TWIGS: [string, number][] = [
-  ["M30 22 C40 14 50 8 62 6", 2.6],
-  ["M178 37 C192 30 206 22 222 15", 2],
-  ["M238 48 C246 54 252 60 258 66", 1.4],
-  ["M8 12 C4 6 2 2 -2 -2", 2],
+
+// the main limb: reaches in from the corner, then droops gently towards its tip
+const MAIN: Pt[] = [[-16, 2], [14, 16], [44, 28], [78, 33], [112, 37], [144, 35], [176, 40], [206, 49], [234, 60], [256, 72], [270, 82]];
+const LIMB = limb(MAIN, 15, 1.4, 1);
+
+// twigs, each with its own sway: base point, waypoints, widths, sway (degrees) and pace (seconds)
+type Twig = { id: string; base: Pt; pts: Pt[]; w: [number, number]; sway: number; dur: number };
+const TWIGS: Twig[] = [
+  { id: "corner", base: [14, 16], pts: [[14, 16], [12, 7], [6, -2], [-2, -8]], w: [3.4, 0.9], sway: 2.4, dur: 6.2 },
+  { id: "rise", base: [44, 28], pts: [[44, 28], [52, 17], [62, 9], [78, 3]], w: [3.8, 0.9], sway: 3, dur: 5.4 },
+  { id: "droop", base: [82, 34], pts: [[82, 34], [86, 45], [92, 55], [100, 63]], w: [3, 0.8], sway: 4, dur: 4.8 },
+  { id: "mid", base: [174, 40], pts: [[174, 40], [182, 30], [194, 21], [210, 14]], w: [2.8, 0.8], sway: 3.4, dur: 5.9 },
+  { id: "hang", base: [208, 50], pts: [[208, 50], [210, 60], [215, 70], [222, 78]], w: [2.4, 0.7], sway: 4.6, dur: 4.4 },
 ];
+const twigPath = (t: Twig, i: number) => limb(t.pts, t.w[0], t.w[1], 40 + i * 7);
 
 function Flower({ x, y, r: r0, rot = 0, tilt = 1, seed }: { x: number; y: number; r: number; rot?: number; tilt?: number; seed: number }) {
   const r = r0 * 1.3; // drawn a little fuller than the layout numbers
@@ -114,16 +123,38 @@ function Leaf({ x, y, rot, s = 1 }: { x: number; y: number; rot: number; s?: num
 export const HANG_X = 118;
 export const HANG_Y = 44;
 
+// a twig sways from where it joins the limb, each at its own pace
+function Sway({ t, still, children }: { t: Twig; still: boolean | null; children: React.ReactNode }) {
+  const at = `${t.base[0]} ${t.base[1]}`;
+  return (
+    <g>
+      {!still && (
+        <animateTransform
+          attributeName="transform"
+          type="rotate"
+          values={`0 ${at};${t.sway} ${at};0 ${at};${-t.sway * 0.6} ${at};0 ${at}`}
+          dur={`${t.dur}s`}
+          repeatCount="indefinite"
+          calcMode="spline"
+          keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1"
+        />
+      )}
+      {children}
+    </g>
+  );
+}
+
 export function Branch({ className = "" }: { className?: string }) {
   const still = useReducedMotion();
+  const [corner, rise, droop, mid, hang] = TWIGS;
   return (
     <motion.svg
       viewBox="0 0 270 150"
       aria-hidden="true"
       className={`overflow-visible ${className}`}
       style={{ originX: 0, originY: 0 }}
-      animate={still ? undefined : { rotate: [0, 0.8, 0, -0.5, 0] }}
-      transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+      animate={still ? undefined : { rotate: [0, 0.6, 0, -0.4, 0] }}
+      transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
     >
       <defs>
         {/* watercolour: a slightly ragged, soft edge */}
@@ -153,57 +184,69 @@ export function Branch({ className = "" }: { className?: string }) {
         </linearGradient>
       </defs>
 
-      {/* limb and twigs */}
+      {/* the corner twig sits behind the limb */}
+      <Sway still={still} t={corner}>
+        <path d={twigPath(corner, 0)} fill="url(#wc-bark)" filter="url(#wc)" />
+        <Flower x={-2} y={-6} r={10} rot={30} tilt={0.88} seed={3} />
+        <Flower x={10} y={4} r={8.5} rot={-20} tilt={0.8} seed={16} />
+      </Sway>
+
+      {/* the main limb, with a soft highlight along its top and a few bark marks */}
       <g filter="url(#wc)">
         <path d={LIMB} fill="url(#wc-bark)" />
-        {TWIGS.map(([d, w]) => (
-          <path key={d} d={d} stroke="#7d5a48" strokeWidth={w} fill="none" strokeLinecap="round" />
-        ))}
-        <path d="M-6 6C40 30 90 39 150 33" stroke="#c4a28c" strokeWidth={1.1} strokeOpacity={0.45} fill="none" strokeLinecap="round" />
-        <path d="M22 22l3 1M64 34l3 0.6M100 37l3 0M140 34l2.4-0.3" stroke="#4e3329" strokeWidth={1} strokeOpacity={0.5} strokeLinecap="round" />
+        <path d="M-10 4C14 15 40 27 78 31C104 34 124 35 150 33" stroke="#c4a28c" strokeWidth={1.1} strokeOpacity={0.45} fill="none" strokeLinecap="round" />
+        <path d="M22 20l3 1.2M60 31l3 0.6M98 35l3 0.2M160 37l2.4 0.4M222 54l2 0.8" stroke="#4e3329" strokeWidth={1} strokeOpacity={0.5} strokeLinecap="round" />
       </g>
-
       {/* the lantern's cord ties on here */}
       <circle cx={HANG_X} cy={HANG_Y - 4} r={2.2} fill="#5f4033" />
 
-      {/* leaves */}
-      <Leaf x={92} y={39} rot={28} s={0.9} />
-      <Leaf x={196} y={33} rot={-28} s={0.8} />
-      <Leaf x={40} y={16} rot={-60} s={0.7} />
+      {/* blossoms crowding the corner, thinning out along the limb */}
+      <Flower x={18} y={30} r={13} rot={-10} seed={1} />
+      <Flower x={36} y={42} r={10.5} rot={12} tilt={0.78} seed={5} />
+      <Flower x={0} y={22} r={10} rot={40} tilt={0.9} seed={2} />
+      <Leaf x={28} y={22} rot={-50} s={0.7} />
+      <Flower x={136} y={25} r={8.5} rot={-4} tilt={0.9} seed={15} />
+      <Bud x={110} y={29} rot={-14} s={0.75} />
+      <Stalk d="M150 36 C151 42 152 47 153 51" />
+      <Flower x={153} y={53} r={8.5} rot={-12} tilt={0.72} seed={8} />
+      <Leaf x={186} y={41} rot={22} s={0.75} />
+      <Flower x={240} y={60} r={7.5} rot={-30} tilt={0.8} seed={10} />
+      <Bud x={262} y={76} rot={150} s={0.65} />
+      <Bud x={271} y={84} rot={170} s={0.55} />
 
-      {/* stalks for the hanging flowers and buds */}
-      <Stalk d="M74 37 C75 44 77 50 79 55" />
-      <Stalk d="M90 39 C92 46 95 52 98 58" />
-      <Stalk d="M170 37 C172 43 175 48 178 52" />
-      <Stalk d="M196 30 C199 38 201 46 202 54" />
-      <Stalk d="M246 50 C248 54 249 58 250 62" />
+      {/* a twig rising from the limb */}
+      <Sway still={still} t={rise}>
+        <path d={twigPath(rise, 1)} fill="url(#wc-bark)" filter="url(#wc)" />
+        <Leaf x={52} y={18} rot={-80} s={0.65} />
+        <Flower x={58} y={12} r={9} rot={14} tilt={0.86} seed={4} />
+        <Flower x={77} y={3} r={9.5} rot={-18} tilt={0.84} seed={12} />
+        <Bud x={86} y={0} rot={70} s={0.7} />
+      </Sway>
 
-      {/* blossoms: a full cluster at the corner, thinning out towards the tip */}
-      <Flower x={16} y={30} r={13} rot={-10} seed={1} />
-      <Flower x={38} y={14} r={11} rot={24} tilt={0.82} seed={2} />
-      <Flower x={4} y={8} r={9} rot={40} tilt={0.9} seed={3} />
-      <Flower x={62} y={7} r={9.5} rot={-14} tilt={0.85} seed={4} />
-      <Flower x={46} y={42} r={10.5} rot={12} tilt={0.78} seed={5} />
-      <Flower x={80} y={58} r={10} rot={-6} tilt={0.72} seed={6} />
-      <Flower x={152} y={24} r={10.5} rot={18} tilt={0.88} seed={7} />
-      <Flower x={179} y={55} r={9} rot={-20} tilt={0.7} seed={8} />
-      <Flower x={224} y={14} r={8.5} rot={10} tilt={0.85} seed={9} />
-      <Flower x={232} y={42} r={7.5} rot={-30} tilt={0.8} seed={10} />
-      <Flower x={26} y={46} r={10} rot={30} tilt={0.8} seed={11} />
-      <Flower x={98} y={24} r={9} rot={-20} tilt={0.86} seed={12} />
-      <Flower x={166} y={13} r={8.5} rot={8} tilt={0.9} seed={13} />
-      <Flower x={210} y={38} r={8} rot={22} tilt={0.75} seed={14} />
-      <Flower x={136} y={22} r={8} rot={-4} tilt={0.9} seed={15} />
+      {/* a twig drooping under its flowers */}
+      <Sway still={still} t={droop}>
+        <path d={twigPath(droop, 2)} fill="url(#wc-bark)" filter="url(#wc)" />
+        <Stalk d="M87 47 C84 51 83 55 83 59" />
+        <Flower x={83} y={61} r={9} rot={-8} tilt={0.72} seed={6} />
+        <Flower x={101} y={65} r={9.5} rot={20} tilt={0.76} seed={11} />
+        <Bud x={95} y={60} rot={176} s={0.8} />
+      </Sway>
 
-      {/* buds */}
-      <Bud x={98} y={58} rot={170} s={0.9} />
-      <Bud x={202} y={54} rot={176} s={0.85} />
-      <Bud x={250} y={62} rot={184} s={0.7} />
-      <Bud x={262} y={60} rot={120} s={0.6} />
-      <Bud x={236} y={12} rot={60} s={0.7} />
-      <Bud x={110} y={26} rot={-12} s={0.75} />
-      <Bud x={74} y={20} rot={30} s={0.8} />
-      <Bud x={188} y={20} rot={-40} s={0.7} />
+      {/* a twig reaching up past the lantern */}
+      <Sway still={still} t={mid}>
+        <path d={twigPath(mid, 3)} fill="url(#wc-bark)" filter="url(#wc)" />
+        <Flower x={185} y={27} r={8.5} rot={8} tilt={0.88} seed={7} />
+        <Flower x={208} y={14} r={9} rot={-14} tilt={0.85} seed={9} />
+        <Leaf x={196} y={20} rot={-36} s={0.65} />
+        <Bud x={220} y={9} rot={64} s={0.7} />
+      </Sway>
+
+      {/* and one more hanging near the tip */}
+      <Sway still={still} t={hang}>
+        <path d={twigPath(hang, 4)} fill="url(#wc-bark)" filter="url(#wc)" />
+        <Flower x={214} y={70} r={8} rot={22} tilt={0.74} seed={14} />
+        <Bud x={223} y={80} rot={168} s={0.7} />
+      </Sway>
     </motion.svg>
   );
 }
