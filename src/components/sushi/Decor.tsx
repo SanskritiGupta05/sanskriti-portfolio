@@ -188,6 +188,8 @@ export function Branch({ className = "" }: { className?: string }) {
       <Sway still={still} t={corner}>
         <path d={twigPath(corner, 0)} fill="url(#wc-bark)" filter="url(#wc)" />
         <Flower x={-2} y={-6} r={10} rot={30} tilt={0.88} seed={3} />
+      <Flower x={6} y={-14} r={7.5} rot={-40} tilt={0.85} seed={41} />
+      <Bud x={-6} y={-12} rot={-30} s={0.7} />
         <Flower x={10} y={4} r={8.5} rot={-20} tilt={0.8} seed={16} />
       </Sway>
 
@@ -204,8 +206,22 @@ export function Branch({ className = "" }: { className?: string }) {
       <Flower x={18} y={30} r={13} rot={-10} seed={1} />
       <Flower x={36} y={42} r={10.5} rot={12} tilt={0.78} seed={5} />
       <Flower x={0} y={22} r={10} rot={40} tilt={0.9} seed={2} />
+      <Flower x={28} y={6} r={9} rot={-24} tilt={0.84} seed={21} />
+      <Flower x={6} y={44} r={8.5} rot={16} tilt={0.78} seed={22} />
+      <Flower x={52} y={24} r={8} rot={50} tilt={0.86} seed={23} />
+      <Flower x={64} y={44} r={8.5} rot={-34} tilt={0.74} seed={24} />
+      <Flower x={92} y={30} r={8} rot={10} tilt={0.88} seed={25} />
+      <Bud x={46} y={50} rot={190} s={0.75} />
+      <Bud x={20} y={48} rot={200} s={0.7} />
+      <Bud x={70} y={26} rot={20} s={0.65} />
       <Leaf x={28} y={22} rot={-50} s={0.7} />
       <Flower x={136} y={25} r={8.5} rot={-4} tilt={0.9} seed={15} />
+      <Flower x={164} y={30} r={8} rot={30} tilt={0.86} seed={26} />
+      <Flower x={128} y={46} r={7.5} rot={-18} tilt={0.74} seed={27} />
+      <Flower x={226} y={48} r={7.5} rot={14} tilt={0.8} seed={28} />
+      <Flower x={256} y={66} r={6.5} rot={-20} tilt={0.78} seed={29} />
+      <Bud x={142} y={50} rot={186} s={0.7} />
+      <Bud x={168} y={50} rot={176} s={0.65} />
       <Bud x={110} y={29} rot={-14} s={0.75} />
       <Stalk d="M150 36 C151 42 152 47 153 51" />
       <Flower x={153} y={53} r={8.5} rot={-12} tilt={0.72} seed={8} />
@@ -220,6 +236,8 @@ export function Branch({ className = "" }: { className?: string }) {
         <Leaf x={52} y={18} rot={-80} s={0.65} />
         <Flower x={58} y={12} r={9} rot={14} tilt={0.86} seed={4} />
         <Flower x={77} y={3} r={9.5} rot={-18} tilt={0.84} seed={12} />
+        <Flower x={68} y={-6} r={7.5} rot={36} tilt={0.86} seed={30} />
+        <Flower x={46} y={14} r={7} rot={-50} tilt={0.84} seed={31} />
         <Bud x={86} y={0} rot={70} s={0.7} />
       </Sway>
 
@@ -229,6 +247,7 @@ export function Branch({ className = "" }: { className?: string }) {
         <Stalk d="M87 47 C84 51 83 55 83 59" />
         <Flower x={83} y={61} r={9} rot={-8} tilt={0.72} seed={6} />
         <Flower x={101} y={65} r={9.5} rot={20} tilt={0.76} seed={11} />
+        <Flower x={92} y={72} r={7} rot={-30} tilt={0.72} seed={32} />
         <Bud x={95} y={60} rot={176} s={0.8} />
       </Sway>
 
@@ -237,6 +256,8 @@ export function Branch({ className = "" }: { className?: string }) {
         <path d={twigPath(mid, 3)} fill="url(#wc-bark)" filter="url(#wc)" />
         <Flower x={185} y={27} r={8.5} rot={8} tilt={0.88} seed={7} />
         <Flower x={208} y={14} r={9} rot={-14} tilt={0.85} seed={9} />
+        <Flower x={196} y={4} r={7.5} rot={28} tilt={0.86} seed={33} />
+        <Flower x={174} y={22} r={7} rot={-40} tilt={0.84} seed={34} />
         <Leaf x={196} y={20} rot={-36} s={0.65} />
         <Bud x={220} y={9} rot={64} s={0.7} />
       </Sway>
@@ -245,6 +266,7 @@ export function Branch({ className = "" }: { className?: string }) {
       <Sway still={still} t={hang}>
         <path d={twigPath(hang, 4)} fill="url(#wc-bark)" filter="url(#wc)" />
         <Flower x={214} y={70} r={8} rot={22} tilt={0.74} seed={14} />
+        <Flower x={206} y={62} r={6.5} rot={-26} tilt={0.76} seed={35} />
         <Bud x={223} y={80} rot={168} s={0.7} />
       </Sway>
     </motion.svg>
@@ -253,7 +275,7 @@ export function Branch({ className = "" }: { className?: string }) {
 
 // Petals drifting down from the branches: each one flutters (turning over as it falls),
 // sways side to side, drifts with a light breeze and fades out before the counter.
-const PETALS = Array.from({ length: 14 }, (_, i) => {
+const PETALS = Array.from({ length: 28 }, (_, i) => {
   const right = i % 2 === 1;
   const start = right ? 0.66 + rnd(i + 200) * 0.3 : 0.04 + rnd(i + 200) * 0.3; // across the branch, as a share of the width
   return {
@@ -265,7 +287,7 @@ const PETALS = Array.from({ length: 14 }, (_, i) => {
     sway: 10 + rnd(i + 250) * 16,
     spin: (rnd(i + 260) > 0.5 ? 1 : -1) * (160 + rnd(i + 270) * 260),
     duration: 9 + rnd(i + 280) * 6,
-    delay: i * 1.05 + rnd(i + 290) * 1.5,
+    delay: i * 0.55 + rnd(i + 290) * 1.2,
     tone: rnd(i + 300),
   };
 });
@@ -325,12 +347,12 @@ export function Lantern({ className = "", delay = 0 }: { className?: string; del
         </filter>
         {/* paper: warm and shaded at the sides, bright in the middle, lit from within */}
         <linearGradient id="ln-paper" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#f0a35c" />
-          <stop offset="0.18" stopColor="#ffd08f" />
-          <stop offset="0.42" stopColor="#fff6dc" />
-          <stop offset="0.6" stopColor="#fff1cf" />
-          <stop offset="0.85" stopColor="#ffc47c" />
-          <stop offset="1" stopColor="#e48c45" />
+          <stop offset="0" stopColor="#f9cf9c" />
+          <stop offset="0.2" stopColor="#ffe3bc" />
+          <stop offset="0.42" stopColor="#fff8e6" />
+          <stop offset="0.6" stopColor="#fff4dc" />
+          <stop offset="0.85" stopColor="#ffdcb0" />
+          <stop offset="1" stopColor="#f5c38e" />
         </linearGradient>
         <radialGradient id="ln-light" cx="0.48" cy="0.5" r="0.5">
           <stop offset="0" stopColor="#fffbe8" stopOpacity="0.95" />
@@ -351,7 +373,7 @@ export function Lantern({ className = "", delay = 0 }: { className?: string; del
       </defs>
 
       {/* warm glow around the lantern */}
-      <ellipse cx="32" cy="70" rx="30" ry="40" fill="#ffc874" opacity="0.45" filter="url(#ln-blur)" />
+      <ellipse cx="32" cy="70" rx="30" ry="40" fill="#ffd89a" opacity="0.35" filter="url(#ln-blur)" />
 
       {/* cord */}
       <line x1="32" y1="0" x2="32" y2="28" stroke="#5b3a2a" strokeWidth="1.6" />
@@ -363,12 +385,12 @@ export function Lantern({ className = "", delay = 0 }: { className?: string; del
         {/* bamboo ribs, curving round the barrel */}
         {[43, 50, 57, 64, 71, 78, 85, 92, 98].map((y) => {
           const w = barrel(y);
-          return <path key={y} d={`M${(32 - w).toFixed(1)} ${y}Q32 ${y + 3.6} ${(32 + w).toFixed(1)} ${y}`} stroke="#d9873f" strokeOpacity="0.45" strokeWidth="0.8" fill="none" />;
+          return <path key={y} d={`M${(32 - w).toFixed(1)} ${y}Q32 ${y + 3.6} ${(32 + w).toFixed(1)} ${y}`} stroke="#e0a466" strokeOpacity="0.35" strokeWidth="0.75" fill="none" />;
         })}
         {/* soft shine down the left side */}
         <ellipse cx="19" cy="68" rx="3.4" ry="20" fill="#ffffff" opacity="0.6" filter="url(#ln-soft)" />
       </g>
-      <path d="M20 37C5 45 3 92 20 103H44C61 92 59 45 44 37Z" fill="none" stroke="#d9873f" strokeOpacity="0.55" strokeWidth="0.8" />
+      <path d="M20 37C5 45 3 92 20 103H44C61 92 59 45 44 37Z" fill="none" stroke="#e8b47a" strokeOpacity="0.45" strokeWidth="0.7" />
 
       {/* a sakura on the front, wrapping slightly with the curve */}
       <g transform="translate(32 70) scale(0.92 1)">
