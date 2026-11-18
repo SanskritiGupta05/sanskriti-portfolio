@@ -14,6 +14,8 @@ const STEP = PLATE_W + GAP;
 const SPEED = 34; // px per second
 const SLAT = 26; // belt slat spacing
 const SLAT_INK = "rgba(30,15,10,0.35)";
+// the belt runs on past both sides of the column and is cut off at its edges, as if it keeps going
+const EXT = 64;
 
 const toUrl = (svg: string) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 
@@ -85,23 +87,23 @@ export function SushiBelt() {
       {/* the belt */}
       <div
         ref={box}
-        className="relative mt-2"
+        className="relative mt-2 overflow-hidden"
         style={{ height: BELT_H + 70 }}
         onMouseEnter={() => (hovered.current = true)}
         onMouseLeave={() => (hovered.current = false)}
       >
         {width > 0 && (
           <>
-            <div className="absolute inset-x-0 bottom-0">
-              <Art svg={beltSvg(width)} w={width} h={BELT_H} className="block" />
+            <div className="absolute bottom-0" style={{ left: -EXT, width: width + 2 * EXT }}>
+              <Art svg={beltSvg(width + 2 * EXT)} w={width + 2 * EXT} h={BELT_H} className="block" />
             </div>
             {/* the moving slats on the straight run */}
             <motion.div
               aria-hidden="true"
               className="absolute"
               style={{
-                left: SURFACE.inset + SURFACE.h / 2,
-                right: SURFACE.inset + SURFACE.h / 2,
+                left: SURFACE.inset + SURFACE.h / 2 - EXT,
+                right: SURFACE.inset + SURFACE.h / 2 - EXT,
                 bottom: surfaceBottom,
                 height: SURFACE.h,
                 backgroundImage: slats,
@@ -115,7 +117,7 @@ export function SushiBelt() {
                 aria-hidden="true"
                 className="absolute"
                 style={{
-                  [side]: SURFACE.inset,
+                  [side]: SURFACE.inset - EXT,
                   bottom: surfaceBottom,
                   width: SURFACE.h,
                   height: SURFACE.h,

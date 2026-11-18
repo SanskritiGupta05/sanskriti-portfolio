@@ -608,3 +608,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-19:** Dot grid opacity lowered to **40%** (page and paper sheet).
 - **2026-11-19:** Footer: removed the ✿ divider line and the "Back to top ↑" link under the belt; the footer now ends with the belt.
 - **2026-11-19:** Undid the from-above belt with plates turning the corners (b3d75d0): back to the front-view pill loop with turning half-disc ends.
+- **2026-11-19:** Sushi belt **extends 64px past both sides** of the column and is **clipped at the column edges** (belt container `overflow-hidden`), so its rounded ends are hidden and it looks like it keeps running beyond the page.
