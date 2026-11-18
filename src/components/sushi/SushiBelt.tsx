@@ -97,9 +97,9 @@ export function SushiBelt({ look }: { look: Look }) {
           aria-hidden="true"
           className={`pointer-events-none absolute top-0 hidden h-full w-[330px] md:block ${right ? "right-0 -scale-x-100" : "left-0"}`}
         >
-          <Shoji className="absolute top-[170px] left-0 w-[66px]" />
-          <Branch className="absolute top-0 left-0 w-[330px]" />
-          <div className="absolute" style={{ left: HANG_X * (330 / 270) - 32, top: (HANG_Y - 4) * (330 / 270) }}>
+          <Shoji className="absolute top-[214px] left-0 w-[66px]" />
+          <Branch className="absolute top-0 -left-[22px] w-[330px]" />
+          <div className="absolute" style={{ left: HANG_X * (330 / 270) - 32 - 22, top: (HANG_Y - 4) * (330 / 270) }}>
             <Lantern className="w-[64px]" delay={right ? 1.4 : 0} />
           </div>
         </div>
