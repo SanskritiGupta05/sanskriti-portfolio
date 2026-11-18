@@ -714,3 +714,12 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
     - Your card, your colours: Miles vs Punk reveals.
     - You liked it: X stats + post.
     - What I learned: 3 lessons (draft copy) + CTA.
+- **2026-11-19:** **UX Laws page now uses Sanskriti's own copy** (she rewrote the whole case study text).
+  - **Ticket:** "Personal project · Design + build"; role "Product Design & Development".
+  - **Sections:** renamed to The starting point / Organising 106 laws; categories are now numbered 01–08.
+  - **Loop and map:** the loop steps use her descriptions, and the app map branches are now Explore / Play / Saved / Search.
+  - **New `LawBehind` card** (`src/components/uxie/Uxie.tsx`): white card with a red left rule, label + law name + line. It shows "The law behind it" for each decision:
+    - Chunking, Hick's Law, Visual Anchors, Testing Effect ×2, Consistency, Recognition over Recall.
+    - Read-aloud uses "The design thinking · Multiple ways to consume information" instead.
+  - **Removed:** the state-chip `Flow`s and the "Practising what it preaches" note, which were my copy and not in hers.
+  - Closing quote: "The best way to learn UX laws is to start designing with them."

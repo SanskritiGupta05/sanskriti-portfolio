@@ -4,8 +4,8 @@ import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Ticket } from "@/components/casestudy/pieces";
-import { CaseStudyFrame, Flow, Note, P, Quote, Section, Shot, type TocItem } from "@/components/casestudy/Margin";
-import { Anatomy, AppMap, Beat, CategoryGrid, Clip, LoopChart, Reel, Screen, Screens } from "@/components/uxie/Uxie";
+import { CaseStudyFrame, Note, P, Quote, Section, Shot, type TocItem } from "@/components/casestudy/Margin";
+import { Anatomy, AppMap, Beat, CategoryGrid, Clip, LawBehind, LoopChart, Reel, Screen, Screens } from "@/components/uxie/Uxie";
 
 export const metadata: Metadata = {
   title: "UXie, UX laws made playful · Sanskriti",
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
 const img = (name: string, w: number, h: number) => ({ src: `/assets/cases/uxie/${name}.webp`, w, h });
 
 const TOC: TocItem[] = [
-  { id: "why", label: "Why I made it" },
-  { id: "sorting", label: "Sorting 106 laws" },
+  { id: "why", label: "The starting point" },
+  { id: "sorting", label: "Organising 106 laws" },
   { id: "loop", label: "The core loop" },
   { id: "map", label: "The app map" },
   { id: "deck", label: "A deck, not a list" },
@@ -49,18 +49,18 @@ export default function UxLaws() {
             </Link>
             <div className="mt-8 flex items-center gap-4">
               <Image src="/assets/cases/uxie/uxie-logo-no-lines.webp" alt="UXie logo" width={1266} height={1243} sizes="64px" className="size-16" />
-              <span className="label">Vibe-coded project · iOS</span>
+              <span className="label">Personal project · Design + build</span>
             </div>
             <h1 className="mt-4 font-serif text-h2 text-head">UXie</h1>
             <p className="mt-3 max-w-[30ch] font-worn text-h1 text-balance text-head">106 UX laws, made playful. The psychology behind better design.</p>
             <div className="mt-8">
               <Ticket
-                kicker="Personal project · Admit one"
-                text="An iPhone app that turns the laws of UX into a deck of illustrated cards you can swipe through, try to recall, read or listen to, and then test yourself on."
+                kicker="Personal project · Design + build"
+                text="An iOS app that turns UX laws into a deck of illustrated cards. Swipe through them, try to remember what you've learned, listen to an explanation or test yourself with a quick quiz."
                 meta={[
-                  { k: "My role", v: "Design + build" },
-                  { k: "Platform", v: "iOS, SwiftUI" },
-                  { k: "Content", v: "106 laws · 8 categories" },
+                  { k: "My role", v: "Product Design & Development" },
+                  { k: "Platform", v: "iOS · SwiftUI" },
+                  { k: "Content", v: "106 UX laws · 8 categories" },
                 ]}
               />
             </div>
@@ -70,44 +70,45 @@ export default function UxLaws() {
           </header>
         }
       >
-        <Section id="why" label="Why I made it" title="I kept reading UX laws. I kept forgetting them.">
+        <Section id="why" label="The starting point" title="I kept reading UX laws. I kept forgetting them.">
           <P>
-            Hick&apos;s Law, the Zeigarnik Effect, the Peak-End Rule. Every designer meets these names, usually as a long list on a website or a poster on a wall. They make
-            sense when you read them, and then they quietly slip away right when you&apos;re in a design review and need one.
+            Hick&apos;s Law, the Zeigarnik Effect, the Peak-End Rule. Every designer comes across these names, usually as a long list on a website or a poster on a wall. You
+            read them, save them, and then quietly forget them right when you need one.
           </P>
-          <P>
-            So I set myself a small brief: make the laws something you can carry around, open for two minutes and actually remember. Not a reference to search, a deck to
-            play with.
-          </P>
-          <Note label="The brief, on a sticky note" tilt={-1.5}>
-            Make it feel like a game of cards, not a textbook. Every law gets a picture, a plain sentence, and a way to test yourself.
+          <P>I wanted something I could carry around and spend a few minutes with. Not another reference to search, but a little deck to play with.</P>
+          <P>So I started building UXie.</P>
+          <Note label="The brief" tilt={-1.5}>
+            Make it feel like a game of cards, not a textbook. Every law gets a picture, a plain-language explanation and a way to test yourself.
           </Note>
         </Section>
 
-        <Section id="sorting" label="Information architecture" title="First, 106 laws had to fit in eight drawers.">
+        <Section id="sorting" label="Organising 106 laws" title="First, 106 laws had to fit into eight drawers.">
+          <P>A flat list of 106 was the very thing I wanted to escape. So the first real design work was sorting.</P>
           <P>
-            A flat list of 106 is the problem I was trying to escape, so the first real design work was sorting. I grouped the laws by the question they answer for a
-            designer: what do people notice, what do they remember, why do they trust, what brings them back. That gave eight categories, each with a one-line promise.
-          </P>
-          <P>
-            Many laws answer more than one question (loss aversion is about decisions and motivation), so a law can live in several categories. That&apos;s why the counts
-            below add up to more than 106.
+            I grouped the laws by the questions they answer for a designer: what do people notice, what do they remember, what do they trust, what brings them back? That
+            gave me eight categories, each with a one-line description.
           </P>
           <CategoryGrid />
+          <P>Many laws answer more than one question. That&apos;s why some ideas naturally connect across categories.</P>
+          <LawBehind name="Chunking">
+            Grouping related information into smaller, meaningful sets makes a large collection easier to approach. Instead of starting with 106 individual laws, users can
+            start with eight familiar categories.
+          </LawBehind>
         </Section>
 
-        <Section id="loop" label="Flow chart" title="The whole app is one loop: see it, recall it, learn it, test it.">
+        <Section id="loop" label="The core loop" title="See it. Try to remember it. Learn it. Test it.">
           <P>
-            Before drawing screens I wrote down how a law should travel from &ldquo;never heard of it&rdquo; to &ldquo;I can use this&rdquo;. Each step became a part of the
-            app, and each one hands you to the next.
+            Before drawing screens, I wrote down how a law should travel from &ldquo;never heard of it&rdquo; to &ldquo;I can use this.&rdquo; Each step became part of the
+            app, and each one leads into the next.
           </P>
           <LoopChart />
+          <P>The idea was to make learning feel like a small loop rather than a one-way reading experience.</P>
         </Section>
 
-        <Section id="map" label="Flow chart" title="Four ways in, and they all lead to the same page.">
+        <Section id="map" label="The app map" title="Four ways in, and they all lead to the same page.">
           <P>
-            From the home deck you can dive into a category, jump into a quiz, open what you saved or search. However you arrive, you land on the law page, so that page
-            got the most care.
+            From the home deck, users can dive into a category, jump into a quiz, open their saved laws or search for something specific. However they arrive, they land on
+            the same law page, so there&apos;s always one place to get right.
           </P>
           <AppMap />
         </Section>
@@ -115,11 +116,14 @@ export default function UxLaws() {
         <Section id="deck" label="Decision 01" title="A deck, not a list.">
           <Beat clip="explore" label="Recording · exploring the deck">
             <P>
-              The home screen is a stack of category cards you swipe through, each with its colour and illustration. It makes 106 laws feel like eight friendly things
-              instead of a wall of text, and swiping is a lot more fun than scrolling.
+              The home screen is a stack of category cards you can swipe through. Each one has its own colour and illustration. It makes 106 laws feel like eight friendly
+              places to explore instead of a wall of text.
             </P>
-            <P>Inside a category, the laws sit in a grid of cards that you can drag in any direction and it never runs out, like a table covered in flashcards.</P>
-            <Flow steps={["Swipe the deck", "Pick a category", "Drag the card grid", "Tap a law"]} />
+            <P>Inside a category, the laws sit in a grid of cards that you can drag in any direction. It never runs out, like a table covered in flashcards.</P>
+            <LawBehind name="Hick's Law">
+              Too many choices can make decisions harder. Starting with eight categories gives users a more manageable way into the collection before they explore
+              individual laws.
+            </LawBehind>
           </Beat>
           <Screens
             items={[
@@ -131,9 +135,10 @@ export default function UxLaws() {
         </Section>
 
         <Section id="illustrated" label="Decision 02" title="Every law gets its own picture.">
+          <P>A name like &ldquo;Serial Position Effect&rdquo; is hard to hold on to. A picture of it is much easier.</P>
           <P>
-            A name like &ldquo;Serial Position Effect&rdquo; is hard to hold on to. A picture of it is much easier. I drew a flat illustration for every one of the 106
-            laws, then retinted each set in its category colour so a card tells you where it belongs before you read a word.
+            I drew a flat illustration for every one of the 106 laws, then varied each card&apos;s colour and composition. The illustrations give each concept something
+            visual to hold on to, while the category colour tells you where it belongs before you read a word.
           </P>
           <div className="grid gap-4 sm:grid-cols-2 sm:items-start">
             <Shot {...img("perception-six-cards", 1600, 1367)} alt="Six Attention & Perception law cards" caption="Attention & Perception" />
@@ -141,17 +146,17 @@ export default function UxLaws() {
             <Shot {...img("memory-three-cards", 1600, 683)} alt="Memory & Recall law cards" caption="Memory & Recall" />
             <Shot {...img("social-four-cards", 1600, 512)} alt="Social Influence law cards" caption="Social Influence" />
           </div>
+          <LawBehind name="Visual Anchors">A visual cue gives users another way to recognise a concept, rather than relying on its name alone.</LawBehind>
         </Section>
 
         <Section id="recall" label="Decision 03" title="Ask before you tell.">
           <Beat clip="recall" label="Recording · think you remember?">
-            <P>
-              Tapping a card doesn&apos;t open the answer straight away. It asks &ldquo;Think you remember?&rdquo; first, and you flip the card to check. Trying to recall
-              something, even when you get it wrong, makes it stick far better than re-reading it.
-            </P>
-            <Note label="Practising what it preaches" tilt={1.2}>
-              The app uses its own Memory &amp; Recall laws on you.
-            </Note>
+            <P>Tapping a card doesn&apos;t open the answer straight away. It asks, &ldquo;Think you remember?&rdquo; first, and you flip the card to check.</P>
+            <P>Trying to recall something, even when you get it wrong, makes it stick far better than simply rereading it.</P>
+            <LawBehind name="Testing Effect">
+              Actively trying to retrieve information helps reinforce learning. The card makes that attempt part of the interaction, rather than giving away the answer
+              immediately.
+            </LawBehind>
           </Beat>
           <Screens
             items={[
@@ -163,19 +168,24 @@ export default function UxLaws() {
 
         <Section id="page" label="Decision 04" title="One law, one page, always in the same order.">
           <P>
-            Every law page has the same anatomy, so after two or three you know exactly where to look. It starts with the idea in one sentence and gets deeper as you
+            Every law page has the same anatomy, so after two or three, you know exactly where to look. It starts with the idea in one sentence and gets deeper as you
             scroll, so a quick look and a long read both work.
           </P>
           <Anatomy />
+          <LawBehind name="Consistency">
+            Keeping the same structure across all 106 pages means users don&apos;t have to figure out a new layout every time they open a law.
+          </LawBehind>
         </Section>
 
         <Section id="listen" label="Decision 05" title="Read it, or hear it.">
           <Beat clip="read" label="Recording · read-aloud">
             <P>
-              Some people learn better by listening, and sometimes your eyes are busy. Every law can be read aloud, with each word highlighting as it&apos;s spoken. Tap any
-              word to jump there, skip ten seconds either way, or change the speed.
+              Some people learn better by listening, and sometimes your eyes are busy. Every law can be read aloud, with each word highlighting as it&apos;s spoken.
             </P>
-            <Flow steps={["Play", "Words highlight", "Tap a word to jump", "±10s", "Speed"]} />
+            <P>Tap any word to jump there, skip ten seconds either way, or change the speed.</P>
+            <LawBehind label="The design thinking" name="Multiple ways to consume information">
+              The reading experience stays the same, but users can choose how they want to move through it.
+            </LawBehind>
           </Beat>
           <Screens
             items={[
@@ -189,9 +199,12 @@ export default function UxLaws() {
           <Beat clip="play" label="Recording · a round of Play">
             <P>
               Play is a quick five-question quiz. Every answer gets an instant &ldquo;Correct!&rdquo; or &ldquo;Not quite!&rdquo;, and a &ldquo;Why?&rdquo; so a wrong answer
-              still teaches you something. At the end you see your score and the laws worth another look.
+              still teaches you something.
             </P>
-            <Flow steps={["Start", "5 questions", "Correct! / Not quite!", "Why?", "Your score"]} />
+            <P>At the end you see your score and the laws worth another look.</P>
+            <LawBehind name="Testing Effect">
+              A quiz turns learning into an active attempt to remember. The instant explanation also gives users a chance to understand what they missed.
+            </LawBehind>
           </Beat>
           <Screens
             items={[
@@ -208,31 +221,31 @@ export default function UxLaws() {
         </Section>
 
         <Section id="keep" label="Decision 07" title="Keep the ones you like. Find any of them fast.">
-          <P>
-            Bookmark a law and file it into folders, so the ones you keep reaching for are always one tap away. And when you already know the law you want, search gets
-            you there without browsing.
-          </P>
+          <P>Bookmark a law and file it into folders, so the ones you keep reaching for are always one tap away.</P>
+          <P>And when you already know the law you want, search gets you there without browsing the whole deck.</P>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <Clip src="saved" label="Recording · saved" />
             <Screen name="saved" caption="Saved" />
             <Clip src="search" label="Recording · search" />
             <Screen name="search" caption="Search" />
           </div>
+          <LawBehind name="Recognition over Recall">
+            Saved laws and search make it easier to return to something you&apos;ve already discovered, without having to remember where it was.
+          </LawBehind>
         </Section>
 
         <Section id="figma" label="From the Figma file" title="Every flow, laid out end to end.">
           <P>
-            I designed the app in Figma first and kept one board with every flow in a row, from the home deck through reading, listening, search and play, down to the
-            components they share. It was my map while building.
+            I designed the app in Figma first and kept every flow on one board, from the home deck through reading, listening, search and play, down to the components they
+            share.
           </P>
+          <P>It was my map while building. Having everything laid out together made it easier to see how one interaction connected to the next.</P>
           <Shot {...img("flowboard", 1547, 2400)} alt="The full flow board from the UX laws Figma file" caption="One law, every flow, from the Figma file" />
         </Section>
 
         <Section id="details" label="The small things" title="Room for everyone.">
-          <P>
-            Text scales up for people who need it larger, and the screens work with VoiceOver. A dark mode is on its way, with the illustrations and category colours
-            retuned for the night.
-          </P>
+          <P>Text scales up for anyone who needs it larger, and the screens work with VoiceOver.</P>
+          <P>A dark mode is also in progress, with the illustrations and category colours finding their way into a different setting.</P>
           <div className="grid gap-4 sm:grid-cols-2 sm:items-start">
             <Shot {...img("accessibility-preview", 1266, 934)} alt="Larger text preview" caption="Larger text" />
             <Shot {...img("dark-mode-preview", 1600, 838)} alt="Dark mode preview" caption="Dark mode, in progress" />
@@ -241,10 +254,11 @@ export default function UxLaws() {
 
         <Section id="next" label="What's next">
           <P>
-            I built UXie in SwiftUI myself, so every decision above had to survive being real: 106 vector illustrations, an endless card grid, a read-aloud that keeps
-            pace word by word. Next up is finishing dark mode and getting it into people&apos;s hands.
+            I built UXie in SwiftUI myself, so every decision above had to work beyond the Figma file. The 106 vector illustrations, the endless card grid, a read-aloud
+            that keeps pace word by word, and the little interactions all had to come together in a working app.
           </P>
-          <Quote>&ldquo;The best way to learn the laws of UX turned out to be designing with them.&rdquo;</Quote>
+          <P>I&apos;m still refining dark mode and getting the experience ready for more people to use.</P>
+          <Quote>The best way to learn UX laws is to start designing with them.</Quote>
           <Link href="/#work" className="label mt-6 w-fit !text-ink underline-offset-4 hover:underline">
             ← Back to all work
           </Link>

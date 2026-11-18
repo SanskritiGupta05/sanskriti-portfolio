@@ -98,14 +98,14 @@ export function Beat({ clip, label, children }: { clip: string; label: string; c
 
 // ——— the eight categories ———
 export const CATEGORIES: { name: string; line: string; n: number; tint: string }[] = [
-  { name: "Attention & Perception", line: "What users notice, and in what order", n: 37, tint: "#fde3dc" },
-  { name: "Simplicity & Effort", line: "Cutting the cost of thinking and doing", n: 24, tint: "#fdf0d2" },
-  { name: "Memory & Recall", line: "What sticks, and what fades", n: 38, tint: "#e3f0dc" },
-  { name: "Decisions & Choice", line: "How users weigh options and commit", n: 58, tint: "#dcebf5" },
-  { name: "Motivation & Habit", line: "What pulls users back", n: 45, tint: "#ece2f5" },
-  { name: "Social Influence", line: "How other people shape behaviour", n: 29, tint: "#f5e0ea" },
-  { name: "Trust & Credibility", line: "Why users believe a product", n: 24, tint: "#e6e2da" },
-  { name: "Feedback & Expectation", line: "Knowing what happened and what's next", n: 24, tint: "#fbe7d3" },
+  { name: "Attention & Perception", line: "What users notice, and in what order.", n: 37, tint: "#fde3dc" },
+  { name: "Simplicity & Effort", line: "Cutting the cost of thinking and doing.", n: 24, tint: "#fdf0d2" },
+  { name: "Memory & Recall", line: "What sticks, and what fades.", n: 38, tint: "#e3f0dc" },
+  { name: "Decisions & Choice", line: "How users weigh options and commit.", n: 58, tint: "#dcebf5" },
+  { name: "Motivation & Habit", line: "What pulls users back.", n: 45, tint: "#ece2f5" },
+  { name: "Social Influence", line: "How other people shape behaviour.", n: 29, tint: "#f5e0ea" },
+  { name: "Trust & Credibility", line: "Why users believe a product.", n: 24, tint: "#e6e2da" },
+  { name: "Feedback & Expectation", line: "Knowing what happened and what's next.", n: 24, tint: "#fbe7d3" },
 ];
 
 export function CategoryGrid() {
@@ -124,6 +124,7 @@ export function CategoryGrid() {
           <div className="flex items-baseline justify-between gap-3">
             <span className="flex items-center gap-2 font-serif text-lg text-head">
               <span aria-hidden="true" className="size-3 rounded-full border border-black/10" style={{ background: c.tint }} />
+              <span className="label !text-[#c8553b]">{String(i + 1).padStart(2, "0")}</span>
               {c.name}
             </span>
             <span className="label">{c.n} laws</span>
@@ -140,11 +141,11 @@ export function CategoryGrid() {
 
 // ——— flow chart 1: the core loop ———
 const LOOP = [
-  { k: "01", t: "Explore", d: "Swipe the deck of 8 categories" },
-  { k: "02", t: "Browse", d: "A grid of illustrated law cards" },
-  { k: "03", t: "Recall", d: "\"Think you remember?\" then flip" },
-  { k: "04", t: "Learn", d: "Read the law, or listen to it" },
-  { k: "05", t: "Play", d: "5 questions, with the why" },
+  { k: "01", t: "Explore", d: "Swipe through the deck of eight categories." },
+  { k: "02", t: "Browse", d: "Explore a grid of illustrated law cards." },
+  { k: "03", t: "Recall", d: "Try to remember the law before flipping the card." },
+  { k: "04", t: "Learn", d: "Read the explanation, examples and practical applications, or listen to them." },
+  { k: "05", t: "Play", d: "Take a five-question quiz and see what stuck." },
 ];
 
 export function LoopChart() {
@@ -203,9 +204,9 @@ export function LoopChart() {
 
 // ——— flow chart 2: the app map ———
 const BRANCHES: { root: string; steps: string[] }[] = [
-  { root: "Category", steps: ["Law cards grid", "Flashcard", "Law page", "Related laws"] },
-  { root: "Play", steps: ["Intro", "5 questions", "Correct / Not quite + Why?", "Results x/5"] },
-  { root: "Saved", steps: ["Folders", "Law page"] },
+  { root: "Explore", steps: ["Category deck", "Law cards", "Flashcard", "Law page"] },
+  { root: "Play", steps: ["Intro", "Five questions", "Correct / Not quite + Why?", "Results"] },
+  { root: "Saved", steps: ["Saved laws", "Folders", "Law page"] },
   { root: "Search", steps: ["Results", "Law page"] },
 ];
 
@@ -233,7 +234,6 @@ export function AppMap() {
             </div>
           ))}
         </div>
-        <p className="printed mt-6 text-center text-sm text-muted-foreground">Every road ends on the same law page, so there is one place to get right.</p>
       </div>
       <figcaption className="label">The app map: four doors, one law page.</figcaption>
     </figure>
@@ -247,7 +247,7 @@ const PARTS: [string, string][] = [
   ["In UX", "Three things to actually do about it."],
   ["Example", "Where you've already met it."],
   ["Design takeaway", "The line to remember if you forget the rest."],
-  ["Related laws", "Where to go next, so reading turns into wandering."],
+  ["Related laws", "Other ideas worth exploring."],
   ["Origin & further reading", "The research it comes from, for the curious."],
 ];
 
@@ -274,5 +274,18 @@ export function Anatomy() {
         ))}
       </ol>
     </div>
+  );
+}
+
+// "the law behind it": the UX law each decision leans on, as an index card with a red rule
+export function LawBehind({ name, children, label = "The law behind it" }: { name: string; children: ReactNode; label?: string }) {
+  return (
+    <aside className="grid max-w-[60ch] gap-1.5 rounded-2xl border border-line bg-bg p-5 shadow-[0_14px_30px_-26px_rgba(60,40,20,0.45)]" style={{ borderLeft: `3px solid ${RED}` }}>
+      <span className="label" style={{ color: RED }}>
+        {label}
+      </span>
+      <span className="font-serif text-lg text-head">{name}</span>
+      <p className="printed text-sm text-pretty">{children}</p>
+    </aside>
   );
 }
