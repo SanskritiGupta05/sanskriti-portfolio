@@ -640,3 +640,11 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-19:** **Sheets sink behind the next one:** while a sheet rises, the pinned sheet under it scales to 95% and a **white veil** fades over it (0 → 50%), like the hero's fade but without making the sheet see-through (fading its opacity showed the hero behind it).
 - **2026-11-19:** AppX case study card title shows the **Y Combinator logo** before "YC'21" (same orange mark as the hero, sized to the serif title).
 - **2026-11-19:** Sushi footer is now **full screen width** (edge to edge, `ml-[50%] w-screen -translate-x-1/2`, `overflow-x-clip` so the plate track can't widen the page): the belt, branches, lanterns, shoji windows and petals sit at the screen edges instead of the column margins. The belt carries enough menu copies to cover any screen width (`ceil(width / menu length) + 2`, 24 plates at 1440).
+- **2026-11-19:** **Footer performance pass** (was ~29 fps with long frames; now a steady 60 fps, 0 long frames at 1440 in the preview):
+  - Removed the footer-wide `saturate/brightness` filter (it re-filtered the whole animated scene every frame).
+  - Removed the watercolour turbulence filter from the branches (it re-ran every frame because the twigs sway).
+  - Each flower's 11 stamens + anthers are now 2 paths instead of 22 elements (branches ~2,600 → 832 nodes).
+  - Branch, lantern and plate-track layers get `will-change: transform`.
+  - Sushi data-URLs are encoded once and cached (they were re-encoded on every belt re-render); images decode async.
+  - The belt's animation loop and the falling petals **pause while the footer is off screen** (`useInView`, 200px margin).
+- **2026-11-19:** Footer cherry branches **bigger** (440px wide, was 330) and **no outward offset** (they start at the screen edge, top 150px); lanterns 68px, still hanging from the branch.

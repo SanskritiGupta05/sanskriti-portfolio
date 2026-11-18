@@ -70,26 +70,33 @@ function Flower({ x, y, r: r0, rot = 0, tilt = 1, seed }: { x: number; y: number
   const r = r0 * 1.3; // drawn a little fuller than the layout numbers
   return (
     <g transform={`translate(${x} ${y}) rotate(${rot}) scale(1 ${tilt})`}>
-      <g filter="url(#wc)">
+      <g>
         {[0, 1, 2, 3, 4].map((i) => {
           const a = i * 72 + (rnd(seed + i) - 0.5) * 14;
           const s = 0.92 + rnd(seed + i + 9) * 0.16;
           return <path key={i} d={petal(r * s)} transform={`rotate(${r2(a)})`} fill="url(#wc-petal)" stroke="#e78ea6" strokeOpacity={0.35} strokeWidth={0.45} />;
         })}
       </g>
-      {/* stamens fanning out from a deep pink eye */}
-      {Array.from({ length: 11 }, (_, i) => {
-        const a = (i / 11) * Math.PI * 2 + rnd(seed + i + 20) * 0.3;
-        const l = r * (0.36 + rnd(seed + i + 30) * 0.16);
-        const ex = r2(Math.cos(a) * l);
-        const ey = r2(Math.sin(a) * l);
+      {/* stamens fanning out from a deep pink eye: all the filaments as one path and all the
+          anthers as one path (2 shapes instead of 22, so the swaying twigs stay cheap to redraw) */}
+      {(() => {
+        let lines = "";
+        let dots = "";
+        for (let i = 0; i < 11; i++) {
+          const a = (i / 11) * Math.PI * 2 + rnd(seed + i + 20) * 0.3;
+          const l = r * (0.36 + rnd(seed + i + 30) * 0.16);
+          const ex = r2(Math.cos(a) * l);
+          const ey = r2(Math.sin(a) * l);
+          lines += `M0 0L${ex} ${ey}`;
+          dots += `M${r2(ex - 0.75)} ${ey}a0.75 0.75 0 1 0 1.5 0a0.75 0.75 0 1 0 -1.5 0`;
+        }
         return (
-          <g key={i}>
-            <line x2={ex} y2={ey} stroke="#df7f9a" strokeWidth={0.45} strokeOpacity={0.9} />
-            <circle cx={ex} cy={ey} r={0.75} fill="#f0bf55" />
-          </g>
+          <>
+            <path d={lines} stroke="#df7f9a" strokeWidth={0.45} strokeOpacity={0.9} fill="none" />
+            <path d={dots} fill="#f0bf55" />
+          </>
         );
-      })}
+      })()}
       <circle r={r * 0.15} fill="#c94f73" opacity={0.85} />
     </g>
   );
@@ -102,7 +109,7 @@ function Stalk({ d }: { d: string }) {
 
 function Bud({ x, y, rot, s = 1 }: { x: number; y: number; rot: number; s?: number }) {
   return (
-    <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s})`} filter="url(#wc)">
+    <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s})`}>
       <path d="M0 0C-4.2-1.5-5-8.5 0.4-13.5C5-8.6 4.4-1.8 0 0Z" fill="url(#wc-bud)" />
       <path d="M-1.5-3C-0.6-7 0.8-9.5 1.4-12" stroke="#ffffff" strokeOpacity={0.5} strokeWidth={0.7} fill="none" strokeLinecap="round" />
       <path d="M-3.4 0.6 L-2.2-3.6 L-0.8-0.9 L0.4-4.2 L1.4-0.8 L3-3.4 L3.2 0.8 Q0 2.2-3.4 0.6Z" fill="#a24636" />
@@ -112,7 +119,7 @@ function Bud({ x, y, rot, s = 1 }: { x: number; y: number; rot: number; s?: numb
 
 function Leaf({ x, y, rot, s = 1 }: { x: number; y: number; rot: number; s?: number }) {
   return (
-    <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s})`} filter="url(#wc)">
+    <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s})`}>
       <path d="M0 0C5-3 13-3 19 0C13 3.5 5 3.5 0 0Z" fill="url(#wc-leaf)" />
       <path d="M1 0H17" stroke="#5f8445" strokeWidth={0.5} strokeOpacity={0.7} />
     </g>
@@ -151,7 +158,7 @@ export function Branch({ className = "" }: { className?: string }) {
     <motion.svg
       viewBox="0 0 270 150"
       aria-hidden="true"
-      className={`overflow-visible ${className}`}
+      className={`overflow-visible will-change-transform ${className}`}
       style={{ originX: 0, originY: 0 }}
       animate={still ? undefined : { rotate: [0, 0.6, 0, -0.4, 0] }}
       transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
@@ -186,7 +193,7 @@ export function Branch({ className = "" }: { className?: string }) {
 
       {/* the corner twig sits behind the limb */}
       <Sway still={still} t={corner}>
-        <path d={twigPath(corner, 0)} fill="url(#wc-bark)" filter="url(#wc)" />
+        <path d={twigPath(corner, 0)} fill="url(#wc-bark)" />
         <Flower x={-2} y={-6} r={10} rot={30} tilt={0.88} seed={3} />
       <Flower x={6} y={-14} r={7.5} rot={-40} tilt={0.85} seed={41} />
       <Bud x={-6} y={-12} rot={-30} s={0.7} />
@@ -194,7 +201,7 @@ export function Branch({ className = "" }: { className?: string }) {
       </Sway>
 
       {/* the main limb, with a soft highlight along its top and a few bark marks */}
-      <g filter="url(#wc)">
+      <g>
         <path d={LIMB} fill="url(#wc-bark)" />
         <path d="M-10 4C14 15 40 27 78 31C104 34 124 35 150 33" stroke="#c4a28c" strokeWidth={1.1} strokeOpacity={0.45} fill="none" strokeLinecap="round" />
         <path d="M22 20l3 1.2M60 31l3 0.6M98 35l3 0.2M160 37l2.4 0.4M222 54l2 0.8" stroke="#4e3329" strokeWidth={1} strokeOpacity={0.5} strokeLinecap="round" />
@@ -232,7 +239,7 @@ export function Branch({ className = "" }: { className?: string }) {
 
       {/* a twig rising from the limb */}
       <Sway still={still} t={rise}>
-        <path d={twigPath(rise, 1)} fill="url(#wc-bark)" filter="url(#wc)" />
+        <path d={twigPath(rise, 1)} fill="url(#wc-bark)" />
         <Leaf x={52} y={18} rot={-80} s={0.65} />
         <Flower x={58} y={12} r={9} rot={14} tilt={0.86} seed={4} />
         <Flower x={77} y={3} r={9.5} rot={-18} tilt={0.84} seed={12} />
@@ -243,7 +250,7 @@ export function Branch({ className = "" }: { className?: string }) {
 
       {/* a twig drooping under its flowers */}
       <Sway still={still} t={droop}>
-        <path d={twigPath(droop, 2)} fill="url(#wc-bark)" filter="url(#wc)" />
+        <path d={twigPath(droop, 2)} fill="url(#wc-bark)" />
         <Stalk d="M87 47 C84 51 83 55 83 59" />
         <Flower x={83} y={61} r={9} rot={-8} tilt={0.72} seed={6} />
         <Flower x={101} y={65} r={9.5} rot={20} tilt={0.76} seed={11} />
@@ -253,7 +260,7 @@ export function Branch({ className = "" }: { className?: string }) {
 
       {/* a twig reaching up past the lantern */}
       <Sway still={still} t={mid}>
-        <path d={twigPath(mid, 3)} fill="url(#wc-bark)" filter="url(#wc)" />
+        <path d={twigPath(mid, 3)} fill="url(#wc-bark)" />
         <Flower x={185} y={27} r={8.5} rot={8} tilt={0.88} seed={7} />
         <Flower x={208} y={14} r={9} rot={-14} tilt={0.85} seed={9} />
         <Flower x={196} y={4} r={7.5} rot={28} tilt={0.86} seed={33} />
@@ -264,7 +271,7 @@ export function Branch({ className = "" }: { className?: string }) {
 
       {/* and one more hanging near the tip */}
       <Sway still={still} t={hang}>
-        <path d={twigPath(hang, 4)} fill="url(#wc-bark)" filter="url(#wc)" />
+        <path d={twigPath(hang, 4)} fill="url(#wc-bark)" />
         <Flower x={214} y={70} r={8} rot={22} tilt={0.74} seed={14} />
         <Flower x={206} y={62} r={6.5} rot={-26} tilt={0.76} seed={35} />
         <Bud x={223} y={80} rot={168} s={0.7} />
@@ -292,9 +299,9 @@ const PETALS = Array.from({ length: 28 }, (_, i) => {
   };
 });
 
-export function FallingPetals({ className = "" }: { className?: string }) {
+export function FallingPetals({ className = "", active = true }: { className?: string; active?: boolean }) {
   const still = useReducedMotion();
-  if (still) return null;
+  if (still || !active) return null; // no petals while off screen
   return (
     <div aria-hidden="true" className={`pointer-events-none [perspective:400px] ${className}`}>
       {PETALS.map((p, i) => (
@@ -333,7 +340,7 @@ export function Lantern({ className = "", delay = 0 }: { className?: string; del
     <motion.svg
       viewBox="0 0 64 128"
       aria-hidden="true"
-      className={`overflow-visible ${className}`}
+      className={`overflow-visible will-change-transform ${className}`}
       style={{ originX: 0.5, originY: 0 }}
       animate={still ? undefined : { rotate: [0, 3, 0, -3, 0] }}
       transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay }}

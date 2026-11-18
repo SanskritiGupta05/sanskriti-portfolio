@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useAnimationFrame, useMotionValue, useReducedMotion, useTransform } from "motion/react";
+import { motion, useAnimationFrame, useInView, useMotionValue, useReducedMotion, useTransform } from "motion/react";
 import { BELT_H, MENU, NOREN, SURFACE, beltSvg } from "./art";
 import { Branch, FallingPetals, HANG_X, HANG_Y, Lantern, Shoji, Ticks } from "./Decor";
 
@@ -17,12 +17,18 @@ const SLAT_INK = "rgba(30,15,10,0.35)";
 // the belt runs on past both sides of the column and is cut off at its edges, as if it keeps going
 const EXT = 64;
 
-const toUrl = (svg: string) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+// encode each drawing once and reuse it (re-encoding the big SVG strings on every render was slow)
+const urls = new Map<string, string>();
+const toUrl = (svg: string) => {
+  let u = urls.get(svg);
+  if (!u) urls.set(svg, (u = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`));
+  return u;
+};
 
 // one of the SVG drawings from art.ts, shown as an image
 function Art({ svg, w, h, className = "" }: { svg: string; w: number; h: number; className?: string }) {
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={toUrl(svg)} alt="" width={w} height={h} draggable={false} className={className} />;
+  return <img src={toUrl(svg)} alt="" width={w} height={h} draggable={false} decoding="async" className={className} />;
 }
 
 // Chopsticks reach in from the nearer side at a low angle, pinch the sushi, lift it a little
@@ -107,6 +113,7 @@ function Chopsticks() {
 export function SushiBelt() {
   const box = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
+  const onScreen = useInView(box, { margin: "200px 0px" });
   const still = useReducedMotion();
 
   useEffect(() => {
@@ -128,7 +135,7 @@ export function SushiBelt() {
   // until it rides off the edge, and plates coming in are always full
   const [wraps, setWraps] = useState(0);
   useAnimationFrame((_, delta) => {
-    if (still) return;
+    if (still || !onScreen) return; // nothing moves while the footer is off screen
     const target = hovered.current ? 0 : SPEED;
     speed.current += (target - speed.current) * Math.min(1, delta / 250);
     const next = offset.get() + (speed.current * delta) / 1000;
@@ -164,27 +171,26 @@ export function SushiBelt() {
   const slats = `repeating-linear-gradient(90deg, transparent 0 ${SLAT - 3}px, ${SLAT_INK} ${SLAT - 3}px ${SLAT}px)`;
 
   return (
-    <footer className="relative ml-[50%] w-screen -translate-x-1/2 overflow-x-clip pt-20 pb-10 [filter:saturate(1.15)_brightness(1.05)]">
+    <footer className="relative ml-[50%] w-screen -translate-x-1/2 overflow-x-clip pt-20 pb-10">
       {/* (the footer runs the full width of the screen, edge to edge, not just the column) */}
-      {/* (the filter makes the whole scene a touch brighter and livelier) */}
       {/* scenery: a cherry branch in each top corner with a lantern hanging from it,
           and a shoji window down each side, standing on the belt (mirrored on the right) */}
       {[false, true].map((right) => (
         <div
           key={String(right)}
           aria-hidden="true"
-          className={`pointer-events-none absolute top-0 hidden h-full w-[330px] overflow-hidden md:block ${right ? "right-0 -scale-x-100" : "left-0"}`}
+          className={`pointer-events-none absolute top-0 hidden h-full w-[440px] overflow-hidden md:block ${right ? "right-0 -scale-x-100" : "left-0"}`}
         >
           <Shoji className="absolute top-[300px] left-0 w-[66px]" />
-          <Branch className="absolute top-[170px] -left-[82px] w-[330px]" />
-          <div className="absolute" style={{ left: HANG_X * (330 / 270) - 32 - 82, top: 170 + (HANG_Y - 4) * (330 / 270) }}>
-            <Lantern className="w-[64px]" delay={right ? 1.4 : 0} />
+          <Branch className="absolute top-[150px] left-0 w-[440px]" />
+          <div className="absolute" style={{ left: HANG_X * (440 / 270) - 34, top: 150 + (HANG_Y - 4) * (440 / 270) }}>
+            <Lantern className="w-[68px]" delay={right ? 1.4 : 0} />
           </div>
         </div>
       ))}
 
       {/* petals drifting down from both branches, fading before the counter */}
-      <FallingPetals className="absolute inset-x-0 top-0 hidden h-[560px] overflow-hidden md:block" />
+      <FallingPetals active={onScreen} className="absolute inset-x-0 top-0 hidden h-[560px] overflow-hidden md:block" />
 
       {/* the noren over the counter */}
       <div className="relative mt-[180px] grid justify-items-center">
@@ -245,7 +251,7 @@ export function SushiBelt() {
         )}
         {/* plates ride along the top of the belt and slide out of sight at the column edges */}
         <div className="absolute inset-x-0" style={{ bottom: BELT_H - 60, height: PLATE_H + 50, clipPath: "inset(-400px 0 0 0)" }}>
-          <motion.ul className="absolute bottom-0 left-0 flex" style={{ x: trackX, gap: GAP }}>
+          <motion.ul className="absolute bottom-0 left-0 flex will-change-transform" style={{ x: trackX, gap: GAP }}>
             {plates.map((m, i) => {
               const id = i - MENU.length * wraps;
               const gone = eaten.has(id);
