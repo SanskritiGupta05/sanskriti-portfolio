@@ -171,7 +171,7 @@ export function SushiBelt() {
   const slats = `repeating-linear-gradient(90deg, transparent 0 ${SLAT - 3}px, ${SLAT_INK} ${SLAT - 3}px ${SLAT}px)`;
 
   return (
-    <footer className="relative ml-[50%] w-screen -translate-x-1/2 overflow-x-clip pt-20 pb-10">
+    <footer className="relative ml-[50%] w-screen -translate-x-1/2 overflow-x-clip pt-20">
       {/* (the footer runs the full width of the screen, edge to edge, not just the column) */}
       {/* scenery: a cherry branch in each top corner with a lantern hanging from it,
           and a shoji window down each side, standing on the belt (mirrored on the right) */}
@@ -190,7 +190,7 @@ export function SushiBelt() {
       ))}
 
       {/* petals drifting down from both branches, fading before the counter */}
-      <FallingPetals active={onScreen} className="absolute inset-x-0 top-0 hidden h-[560px] overflow-hidden md:block" />
+      <FallingPetals active={onScreen} className="absolute inset-0 hidden overflow-hidden md:block" />
 
       {/* the noren over the counter */}
       <div className="relative mt-[180px] grid justify-items-center">
