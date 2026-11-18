@@ -171,7 +171,7 @@ export function SushiBelt() {
           aria-hidden="true"
           className={`pointer-events-none absolute top-0 hidden h-full w-[330px] overflow-hidden md:block ${right ? "right-0 -scale-x-100" : "left-0"}`}
         >
-          <Shoji className="absolute top-[364px] left-0 w-[66px]" />
+          <Shoji className="absolute top-[300px] left-0 w-[66px]" />
           <Branch className="absolute top-[170px] -left-[62px] w-[330px]" />
           <div className="absolute" style={{ left: HANG_X * (330 / 270) - 32 - 62, top: 170 + (HANG_Y - 4) * (330 / 270) }}>
             <Lantern className="w-[64px]" delay={right ? 1.4 : 0} />
@@ -190,7 +190,7 @@ export function SushiBelt() {
       {/* the belt */}
       <div
         ref={box}
-        className="relative mt-[72px]"
+        className="relative mt-2"
         style={{ height: BELT_H + 70, clipPath: "inset(-400px 0 0 0)" }}
         onMouseEnter={() => (hovered.current = true)}
         onMouseLeave={() => (hovered.current = false)}
