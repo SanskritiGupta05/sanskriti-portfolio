@@ -7,6 +7,7 @@ import { Keyword } from "@/components/Keyword";
 import { WorkArc } from "@/components/work/WorkArc";
 import { PaperStack } from "@/components/PaperStack";
 import { CaseStudies } from "@/components/CaseStudies";
+import { VibeProjects } from "@/components/VibeProjects";
 
 // One narrow centred column with wide empty margins on both sides (like Sam's and Mythili's sites).
 // The lantern hangs outside it, from the page's top-right corner.
@@ -103,6 +104,8 @@ export default function Home() {
         <div className="mx-auto w-full max-w-[874px] px-6">
           {/* primary case studies */}
           <CaseStudies />
+          {/* vibe-coded side projects */}
+          <VibeProjects />
           <Footer />
         </div>
       </PaperStack>

@@ -31,7 +31,7 @@ const PROJECTS = [
 
 export function CaseStudies() {
   return (
-    <section aria-labelledby="work-title" className="min-h-[70vh] pt-20">
+    <section aria-labelledby="work-title" className="pt-20">
       <span className="label">Primary case studies</span>
 
       {/* the heading with a little pixel lucky cat waving beside it
