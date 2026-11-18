@@ -5,6 +5,7 @@
 // the live site. Copy is from her reference.
 import Image from "next/image";
 import { Ticks } from "./sushi/Decor";
+import { Tamagotchi } from "./Tamagotchi";
 
 const PROJECTS = [
   {
@@ -44,6 +45,8 @@ export function VibeProjects() {
           Small ideas, big curiosities
         </h2>
         <Ticks className="absolute -top-3 -right-7 w-6 rotate-12" />
+        {/* a little pixel tamagotchi to play with (click to feed it) */}
+        <Tamagotchi className="absolute bottom-0 left-full ml-14 hidden md:block" px={1.9} />
       </div>
       <p className="printed mt-4 text-pretty">Playful experiments, creative interactions and ideas I brought to life with code + AI.</p>
 
