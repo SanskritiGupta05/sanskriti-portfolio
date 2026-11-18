@@ -158,11 +158,14 @@ export function SushiBelt() {
   const turn = useTransform(offset, (o) => -((o / (SURFACE.h / 2)) * 180) / Math.PI);
   const surfaceBottom = BELT_H - SURFACE.top - SURFACE.h; // from the container's bottom
 
-  const plates = [...MENU, ...MENU, ...MENU];
+  // enough copies of the menu to cover the whole belt, however wide the screen is
+  const copies = Math.max(3, Math.ceil((width || 1440) / (STEP * MENU.length)) + 2);
+  const plates = Array.from({ length: copies }, () => MENU).flat();
   const slats = `repeating-linear-gradient(90deg, transparent 0 ${SLAT - 3}px, ${SLAT_INK} ${SLAT - 3}px ${SLAT}px)`;
 
   return (
-    <footer className="relative pt-20 pb-10 [filter:saturate(1.15)_brightness(1.05)]">
+    <footer className="relative ml-[50%] w-screen -translate-x-1/2 overflow-x-clip pt-20 pb-10 [filter:saturate(1.15)_brightness(1.05)]">
+      {/* (the footer runs the full width of the screen, edge to edge, not just the column) */}
       {/* (the filter makes the whole scene a touch brighter and livelier) */}
       {/* scenery: a cherry branch in each top corner with a lantern hanging from it,
           and a shoji window down each side, standing on the belt (mirrored on the right) */}
