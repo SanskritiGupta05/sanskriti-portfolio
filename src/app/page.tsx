@@ -6,6 +6,7 @@ import { NameSwap } from "@/components/NameSwap";
 import { Keyword } from "@/components/Keyword";
 import { WorkArc } from "@/components/work/WorkArc";
 import { PaperStack } from "@/components/PaperStack";
+import { LuckyCat } from "@/components/LuckyCat";
 
 // One narrow centred column with wide empty margins on both sides (like Sam's and Mythili's sites).
 // The lantern hangs outside it, from the page's top-right corner.
@@ -103,12 +104,16 @@ export default function Home() {
           {/* Case studies come next; the sheet already carries the footer */}
           <section aria-labelledby="work-title" className="min-h-[70vh] pt-20">
             <span className="label">Work</span>
-            <h2
-              id="work-title"
-              className="mt-3 font-serif text-h2m text-head md:text-h2"
-            >
-              Selected case studies
-            </h2>
+            {/* the heading with a little pixel lucky cat waving beside it */}
+            <div className="mt-3 flex items-end gap-4">
+              <h2
+                id="work-title"
+                className="font-serif text-h2m text-head md:text-h2"
+              >
+                Selected case studies
+              </h2>
+              <LuckyCat className="mb-1 shrink-0" px={2.5} />
+            </div>
           </section>
           <Footer />
         </div>
