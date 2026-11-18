@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useAnimationFrame, useMotionValue, useReducedMotion, useTransform } from "motion/react";
-import { BELT_H, MENU, NOREN, beltSvg } from "./art";
+import { BELT_H, MENU, NOREN, SURFACE, beltSvg } from "./art";
 import { Branch, HANG_X, HANG_Y, Lantern, Shoji, Ticks } from "./Decor";
 
 // Sushi conveyor footer. The same drawings render two ways:
@@ -80,6 +80,9 @@ export function SushiBelt({ look }: { look: Look }) {
   });
   const trackX = useTransform(offset, (o) => o - STEP * MENU.length);
   const slatX = useTransform(offset, (o) => `${o % SLAT}px 0`);
+  // the round ends turn as the belt runs: arc length / radius, in degrees
+  const turn = useTransform(offset, (o) => -((o / (SURFACE.h / 2)) * 180) / Math.PI);
+  const surfaceBottom = BELT_H - SURFACE.top - SURFACE.h; // from the container's bottom
 
   const plates = [...MENU, ...MENU, ...MENU];
   const slats =
@@ -95,11 +98,11 @@ export function SushiBelt({ look }: { look: Look }) {
         <div
           key={String(right)}
           aria-hidden="true"
-          className={`pointer-events-none absolute top-0 hidden h-full w-[330px] md:block ${right ? "right-0 -scale-x-100" : "left-0"}`}
+          className={`pointer-events-none absolute top-0 hidden h-full w-[330px] overflow-hidden md:block ${right ? "right-0 -scale-x-100" : "left-0"}`}
         >
           <Shoji className="absolute top-[214px] left-0 w-[66px]" />
-          <Branch className="absolute top-0 -left-[22px] w-[330px]" />
-          <div className="absolute" style={{ left: HANG_X * (330 / 270) - 32 - 22, top: (HANG_Y - 4) * (330 / 270) }}>
+          <Branch className="absolute top-10 -left-[22px] w-[330px]" />
+          <div className="absolute" style={{ left: HANG_X * (330 / 270) - 32 - 22, top: 40 + (HANG_Y - 4) * (330 / 270) }}>
             <Lantern className="w-[64px]" delay={right ? 1.4 : 0} />
           </div>
         </div>
@@ -125,16 +128,47 @@ export function SushiBelt({ look }: { look: Look }) {
             <div className="absolute inset-x-0 bottom-0">
               <Art svg={beltSvg(width)} w={width} h={BELT_H} look={look} px={2.6} className="block" />
             </div>
-            {/* the moving slats, inside the belt's dark surface */}
+            {/* the moving slats on the straight run */}
             <motion.div
               aria-hidden="true"
-              className="absolute rounded-[22px]"
-              style={{ left: 22, right: 22, bottom: BELT_H - 68, height: 36, backgroundImage: slats, backgroundPosition: slatX }}
+              className="absolute"
+              style={{
+                left: SURFACE.inset + SURFACE.h / 2,
+                right: SURFACE.inset + SURFACE.h / 2,
+                bottom: surfaceBottom,
+                height: SURFACE.h,
+                backgroundImage: slats,
+                backgroundPosition: slatX,
+              }}
             />
+            {/* the round ends: half-discs of slats that turn with the belt, so it reads as one loop */}
+            {(["left", "right"] as const).map((side) => (
+              <div
+                key={side}
+                aria-hidden="true"
+                className="absolute"
+                style={{
+                  [side]: SURFACE.inset,
+                  bottom: surfaceBottom,
+                  width: SURFACE.h,
+                  height: SURFACE.h,
+                  clipPath: side === "left" ? "inset(0 50% 0 0)" : "inset(0 0 0 50%)",
+                }}
+              >
+                <motion.div
+                  className="size-full rounded-full"
+                  style={{
+                    rotate: turn,
+                    backgroundImage: `repeating-conic-gradient(${look === "pixel" ? "#48302a" : "rgba(30,15,10,0.35)"} 0deg 5deg, transparent 5deg ${(SLAT / (SURFACE.h / 2)) * (180 / Math.PI)}deg)`,
+                  }}
+                />
+                <div className="absolute top-1/2 left-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#7a2c1d]" />
+              </div>
+            ))}
           </>
         )}
         {/* plates ride along the top of the belt, fading out at both ends */}
-        <div className="absolute inset-x-0 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_7%,black_93%,transparent)]" style={{ bottom: BELT_H - 66, height: PLATE_H + 50 }}>
+        <div className="absolute inset-x-0 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_7%,black_93%,transparent)]" style={{ bottom: BELT_H - 60, height: PLATE_H + 50 }}>
           <motion.ul className="absolute bottom-0 left-0 flex" style={{ x: trackX, gap: GAP }}>
             {plates.map((m, i) => (
               <motion.li
