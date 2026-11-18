@@ -12,7 +12,7 @@ const PROJECTS = [
     line: "What if a mystery card could come to life? An interactive Spider-Verse-inspired experiment with a little cinematic magic.",
     tags: ["Creative Coding", "AI"],
     img: "/assets/cases/spider-verse.webp",
-    href: "https://spider-verse-cards.netlify.app/",
+    href: "/work/spider-verse",
   },
   {
     name: "UX Laws: Learn Design Psychology",
@@ -55,7 +55,7 @@ export function VibeProjects() {
           return (
             <li key={p.name}>
               <Card
-                {...(live ? { href: p.href!, target: "_blank", rel: "noreferrer" } : {})}
+                {...(live ? { href: p.href!, ...(p.href!.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {}) } : {})}
                 className="group flex flex-col gap-5 rounded-[20px] border border-line bg-bg p-3 text-head shadow-[0_18px_36px_-26px_rgba(60,40,20,0.35)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_26px_44px_-26px_rgba(60,40,20,0.42)] sm:flex-row sm:items-stretch"
               >
                 <span className="relative block aspect-[4/3] shrink-0 overflow-hidden rounded-[14px] sm:w-[240px]">
