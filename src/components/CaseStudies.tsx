@@ -48,12 +48,10 @@ export function CaseStudies() {
           px={1.9}
         />
       </div>
-      <div className="mt-4 flex flex-wrap items-end justify-between gap-x-10 gap-y-3">
-        <p className="printed max-w-[58ch] text-pretty">
-          A collection of products I&apos;ve helped shape, from early ideas and
-          messy problems to thoughtful, real-world experiences.
-        </p>
-      </div>
+      <p className="printed mt-4 text-pretty">
+        A collection of products I&apos;ve helped shape, from early ideas and
+        messy problems to thoughtful, real-world experiences.
+      </p>
 
       <ul className="mt-12 grid gap-4 md:grid-cols-2">
         {PROJECTS.map((p, i) => {

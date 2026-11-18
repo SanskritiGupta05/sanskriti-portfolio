@@ -633,3 +633,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-19:** Case study cards are now **white**: page background colour with a hairline border and a soft warm shadow (deeper on hover), heading colour for the name, the printed Courier style for the line, a vermilion ↗, and chips with a hairline border on a faint surface tint. They follow the day/night theme.
 - **2026-11-19:** Case study layout: **AppX is a full-width lead card** (banner on the left at 58% width, name, line and chips on the right), with **Bounce Daily and eight.money side by side** in a second row (2-column grid; stacks on phones).
 - **2026-11-19:** Removed the "Selected work, 2025 — 2026" label from the case studies intro.
+- **2026-11-19:** Case studies intro line ("A collection of products…") now spans the **full column width** (no 58ch cap).
