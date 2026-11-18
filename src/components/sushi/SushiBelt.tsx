@@ -136,8 +136,8 @@ export function SushiBelt() {
             ))}
           </>
         )}
-        {/* plates ride along the top of the belt, fading out at both ends */}
-        <div className="absolute inset-x-0 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_7%,black_93%,transparent)]" style={{ bottom: BELT_H - 60, height: PLATE_H + 50 }}>
+        {/* plates ride along the top of the belt and slide out of sight at the column edges */}
+        <div className="absolute inset-x-0 overflow-hidden" style={{ bottom: BELT_H - 60, height: PLATE_H + 50 }}>
           <motion.ul className="absolute bottom-0 left-0 flex" style={{ x: trackX, gap: GAP }}>
             {plates.map((m, i) => (
               <motion.li
