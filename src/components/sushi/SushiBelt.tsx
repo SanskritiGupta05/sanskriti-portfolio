@@ -162,7 +162,8 @@ export function SushiBelt() {
   const slats = `repeating-linear-gradient(90deg, transparent 0 ${SLAT - 3}px, ${SLAT_INK} ${SLAT - 3}px ${SLAT}px)`;
 
   return (
-    <footer className="relative pt-20 pb-10">
+    <footer className="relative pt-20 pb-10 [filter:saturate(1.15)_brightness(1.05)]">
+      {/* (the filter makes the whole scene a touch brighter and livelier) */}
       {/* scenery: a cherry branch in each top corner with a lantern hanging from it,
           and a shoji window down each side, standing on the belt (mirrored on the right) */}
       {[false, true].map((right) => (

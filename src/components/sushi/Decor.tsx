@@ -300,41 +300,95 @@ export function FallingPetals({ className = "" }: { className?: string }) {
   );
 }
 
-// a paper chōchin lantern with a sakura on it; it sways gently from its cord
+// a paper chōchin lantern, lit from inside: a rounded barrel of warm paper with curved ribs,
+// shading on its sides and a soft glow around it, wooden caps and a red tassel.
+// It sways gently from its cord.
+// rib width across the barrel at height y (follows the body's curve)
+const barrel = (y: number) => 12 + 14 * Math.sin(((y - 37) / 66) * Math.PI);
 export function Lantern({ className = "", delay = 0 }: { className?: string; delay?: number }) {
   const still = useReducedMotion();
   return (
     <motion.svg
       viewBox="0 0 64 128"
       aria-hidden="true"
-      className={className}
+      className={`overflow-visible ${className}`}
       style={{ originX: 0.5, originY: 0 }}
       animate={still ? undefined : { rotate: [0, 3, 0, -3, 0] }}
       transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay }}
     >
       <defs>
-        <radialGradient id="lantern-glow" cx="0.5" cy="0.55" r="0.6">
-          <stop offset="0" stopColor="#fff8ec" />
-          <stop offset="1" stopColor="#f6dfc0" />
+        <filter id="ln-blur" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="6" />
+        </filter>
+        <filter id="ln-soft" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="1.6" />
+        </filter>
+        {/* paper: warm and shaded at the sides, bright in the middle, lit from within */}
+        <linearGradient id="ln-paper" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#f0a35c" />
+          <stop offset="0.18" stopColor="#ffd08f" />
+          <stop offset="0.42" stopColor="#fff6dc" />
+          <stop offset="0.6" stopColor="#fff1cf" />
+          <stop offset="0.85" stopColor="#ffc47c" />
+          <stop offset="1" stopColor="#e48c45" />
+        </linearGradient>
+        <radialGradient id="ln-light" cx="0.48" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#fffbe8" stopOpacity="0.95" />
+          <stop offset="0.6" stopColor="#fff2c8" stopOpacity="0.35" />
+          <stop offset="1" stopColor="#ffd59a" stopOpacity="0" />
         </radialGradient>
+        <linearGradient id="ln-wood" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#4a2616" />
+          <stop offset="0.45" stopColor="#9a5e36" />
+          <stop offset="1" stopColor="#4a2616" />
+        </linearGradient>
+        <radialGradient id="ln-sakura" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#ffe3ea" />
+          <stop offset="0.6" stopColor="#ff9fb7" />
+          <stop offset="1" stopColor="#f2728f" />
+        </radialGradient>
+        <clipPath id="ln-body"><path d="M20 37C5 45 3 92 20 103H44C61 92 59 45 44 37Z" /></clipPath>
       </defs>
-      <line x1="32" y1="0" x2="32" y2="30" stroke="#5b3a2a" strokeWidth="1.6" />
-      <rect x="20" y="28" width="24" height="8" rx="2" fill="#6a3a24" />
-      <rect x="22" y="29" width="20" height="2" rx="1" fill="#8b5536" />
-      <path d="M12 44C10 34 20 35 32 35C44 35 54 34 52 44V96C54 106 44 105 32 105C20 105 10 106 12 96Z" fill="url(#lantern-glow)" stroke="#e2c49e" strokeWidth="1" />
-      {[46, 56, 66, 76, 86, 96].map((y) => (
-        <path key={y} d={`M12.5 ${y}Q32 ${y + 3} 51.5 ${y}`} stroke="#e8cfac" strokeWidth="1" fill="none" />
-      ))}
-      <g transform="translate(32 70)">
-        {[0, 72, 144, 216, 288].map((a) => (
-          <path key={a} d={petal(11)} transform={`rotate(${a})`} fill="#f4a9b6" stroke="#d8687c" strokeOpacity={0.35} strokeWidth={0.6} />
-        ))}
-        <circle r={2.8} fill="#d2465f" />
+
+      {/* warm glow around the lantern */}
+      <ellipse cx="32" cy="70" rx="30" ry="40" fill="#ffc874" opacity="0.45" filter="url(#ln-blur)" />
+
+      {/* cord */}
+      <line x1="32" y1="0" x2="32" y2="28" stroke="#5b3a2a" strokeWidth="1.6" />
+
+      {/* the paper barrel */}
+      <path d="M20 37C5 45 3 92 20 103H44C61 92 59 45 44 37Z" fill="url(#ln-paper)" />
+      <g clipPath="url(#ln-body)">
+        <ellipse cx="31" cy="70" rx="24" ry="30" fill="url(#ln-light)" />
+        {/* bamboo ribs, curving round the barrel */}
+        {[43, 50, 57, 64, 71, 78, 85, 92, 98].map((y) => {
+          const w = barrel(y);
+          return <path key={y} d={`M${(32 - w).toFixed(1)} ${y}Q32 ${y + 3.6} ${(32 + w).toFixed(1)} ${y}`} stroke="#d9873f" strokeOpacity="0.45" strokeWidth="0.8" fill="none" />;
+        })}
+        {/* soft shine down the left side */}
+        <ellipse cx="19" cy="68" rx="3.4" ry="20" fill="#ffffff" opacity="0.6" filter="url(#ln-soft)" />
       </g>
-      <rect x="20" y="104" width="24" height="8" rx="2" fill="#6a3a24" />
-      <rect x="22" y="109" width="20" height="2" rx="1" fill="#8b5536" />
-      <path d="M32 112V124" stroke="#c8432e" strokeWidth="2" strokeLinecap="round" />
-      <path d="M29 118H35" stroke="#c8432e" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M20 37C5 45 3 92 20 103H44C61 92 59 45 44 37Z" fill="none" stroke="#d9873f" strokeOpacity="0.55" strokeWidth="0.8" />
+
+      {/* a sakura on the front, wrapping slightly with the curve */}
+      <g transform="translate(32 70) scale(0.92 1)">
+        {[0, 72, 144, 216, 288].map((a) => (
+          <path key={a} d={petal(11.5)} transform={`rotate(${a})`} fill="url(#ln-sakura)" stroke="#e05a7c" strokeOpacity={0.45} strokeWidth={0.6} />
+        ))}
+        <circle r={3} fill="#e0436a" />
+        <circle r={1.1} fill="#ffd36b" />
+      </g>
+
+      {/* wooden caps: little cylinders with a lit rim */}
+      <rect x="18" y="29" width="28" height="9" rx="2" fill="url(#ln-wood)" />
+      <ellipse cx="32" cy="29.5" rx="14" ry="2.4" fill="#b67a4e" />
+      <rect x="18" y="102" width="28" height="9" rx="2" fill="url(#ln-wood)" />
+      <ellipse cx="32" cy="102.5" rx="14" ry="2.2" fill="#ffd9a0" opacity="0.7" />
+
+      {/* tassel */}
+      <path d="M32 111V116" stroke="#c8302a" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="32" cy="117" r="2.2" fill="#d63b30" />
+      <path d="M30 118.5L29 127M31.3 119L31 127.5M32.7 119L33 127.5M34 118.5L35 127" stroke="#d63b30" strokeWidth="1" strokeLinecap="round" />
     </motion.svg>
   );
 }
