@@ -121,23 +121,43 @@ export const NOREN = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 7
   <rect x="210" y="2" width="8" height="8" rx="2" fill="#8a5730"/>
 </svg>`;
 
-// The belt, drawn as a loop seen from the front: every layer is a full pill sharing one end
-// radius, so the rails curve round both ends instead of stopping. The moving slats and the
-// turning ends are drawn on top by the component.
-export const BELT_H = 112;
-// where the dark running surface sits inside the drawing
-export const SURFACE = { inset: 10, top: 26, h: 52 };
+// The belt, seen from a little above, like the reference: the near run is straight and at each
+// end the track curves away round a big corner, with the red rail wrapping round it, so it reads
+// as one continuous loop. The far side runs under the wooden back rail.
+// The moving slats, the turning corner seams and the plates are drawn by the component.
+export const BELT_H = 132;
+export const TRACK = {
+  top: 30, // where the running surface starts, under the back rail
+  bottom: 104, // the surface's near edge
+  side: 14, // gap from the drawing's edge to the surface at each end
+  r: 58, // corner radius of the surface
+  lane: 24, // plates run this far in from the near edge
+};
+
+// a rectangle whose two near (bottom) corners are rounded by r, top corners square
+function track(x: number, y: number, w: number, h: number, r: number) {
+  return `M${x} ${y} V${y + h - r} A${r} ${r} 0 0 0 ${x + r} ${y + h} H${x + w - r} A${r} ${r} 0 0 0 ${x + w} ${y + h - r} V${y} Z`;
+}
+// the same curve as an open line (for the grooves)
+function groove(x: number, y: number, w: number, h: number, r: number) {
+  return `M${x} ${y} V${y + h - r} A${r} ${r} 0 0 0 ${x + r} ${y + h} H${x + w - r} A${r} ${r} 0 0 0 ${x + w} ${y + h - r} V${y}`;
+}
+
 export function beltSvg(w: number) {
-  const W = Math.max(200, Math.round(w));
-  const { inset: i, top: t, h } = SURFACE;
+  const W = Math.max(240, Math.round(w));
+  const { top: t, bottom: b, side: s, r } = TRACK;
+  const sw = W - 2 * s;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${BELT_H}" width="${W}" height="${BELT_H}">
-    <rect x="8" y="100" width="${W - 16}" height="10" rx="5" fill="rgba(60,30,20,0.16)"/>
-    <rect x="0" y="24" width="${W}" height="82" rx="41" fill="#94351f"/>
-    <rect x="0" y="16" width="${W}" height="82" rx="41" fill="#c4513a"/>
-    <rect x="3" y="18" width="${W - 6}" height="40" rx="20" fill="#d06048" opacity="0.6"/>
-    <rect x="${i - 3}" y="${t - 3}" width="${W - 2 * (i - 3)}" height="${h + 6}" rx="${(h + 6) / 2}" fill="#7a2c1d"/>
-    <rect x="${i}" y="${t}" width="${W - 2 * i}" height="${h}" rx="${h / 2}" fill="#5b3f35"/>
-    <rect x="${i + 16}" y="${t + 2}" width="${W - 2 * i - 32}" height="5" rx="2.5" fill="#48302a"/>
-    <path d="M${41} ${16 + 82 - 9} H${W - 41}" stroke="#e07a5b" stroke-width="2.2" stroke-linecap="round" opacity="0.7"/>
+    <ellipse cx="${W / 2}" cy="${BELT_H - 6}" rx="${W / 2 - 10}" ry="6" fill="rgba(60,30,20,0.14)"/>
+    <path d="${track(0, 26, W, b + 22 - 26, r + s)}" fill="#94351f"/>
+    <path d="${track(0, 18, W, b + 12 - 18, r + s)}" fill="#c4513a"/>
+    <path d="${groove(4, 18, W - 8, b + 8 - 18, r + s - 4)}" fill="none" stroke="#e07a5b" stroke-width="2" opacity="0.6"/>
+    <path d="${track(s - 3, t - 4, sw + 6, b - t + 7, r + 3)}" fill="#7a2c1d"/>
+    <path d="${track(s, t - 4, sw, b - t + 4, r)}" fill="#5b3f35"/>
+    <path d="${groove(s + 10, t - 4, sw - 20, b - t - 6, r - 10)}" fill="none" stroke="#4a3229" stroke-width="1.6"/>
+    <path d="${groove(s + 44, t - 4, sw - 88, b - t - 40, Math.max(6, r - 44))}" fill="none" stroke="#4a3229" stroke-width="1.6"/>
+    <rect x="0" y="10" width="${W}" height="${t - 6}" rx="6" fill="#c98f66"/>
+    <rect x="6" y="12" width="${W - 12}" height="4" rx="2" fill="#dcab86"/>
+    <rect x="0" y="${t - 2}" width="${W}" height="4" fill="#9e6843"/>
   </svg>`;
 }
