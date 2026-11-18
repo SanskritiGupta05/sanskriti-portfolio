@@ -18,7 +18,7 @@ const PROJECTS = [
     line: "Rethinking the end-to-end scooter rental experience, making it easier for people to discover, book and get moving.",
     tags: ["Product Design", "2025"],
     img: "/assets/cases/bounce-daily.webp",
-    href: "#",
+    href: "/work/bounce-daily",
   },
   {
     name: "eight.money",
