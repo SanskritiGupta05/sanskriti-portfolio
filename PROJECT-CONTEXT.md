@@ -605,3 +605,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
   - **Cherry branches** now sit 40px lower and are **clipped at the column edges** (the 22px outward shift stays, hidden past the edge).
 - **2026-11-19:** Footer is **smooth only**: the pixel look is removed from `SushiBelt` (no `look` prop, no canvas rasteriser) and the `/lab/footer` page is deleted.
 - **2026-11-19:** Dot grid (page and paper sheet): dots **bigger** (radius 1px → 1.6px, edge 1.9px) at **60% opacity** (`color-mix(in srgb, var(--dot) 60%, transparent)`), same 22px spacing.
+- **2026-11-19:** Dot grid opacity lowered to **40%** (page and paper sheet).

@@ -56,7 +56,7 @@ export function PaperStack({ hero, children }: { hero: ReactNode; children: Reac
         style={{ width: still ? "100vw" : width }}
       >
         <motion.div
-          className="relative origin-top-left border border-line bg-bg shadow-[0_-24px_60px_-34px_rgba(60,40,20,0.45)] [background-image:radial-gradient(color-mix(in_srgb,var(--dot)_60%,transparent)_1.6px,transparent_1.9px)] [background-size:22px_22px]"
+          className="relative origin-top-left border border-line bg-bg shadow-[0_-24px_60px_-34px_rgba(60,40,20,0.45)] [background-image:radial-gradient(color-mix(in_srgb,var(--dot)_40%,transparent)_1.6px,transparent_1.9px)] [background-size:22px_22px]"
           style={{ rotate: still ? 0 : tilt, borderRadius: still ? 0 : radius }}
         >
           <Paperclip className="absolute -top-4 left-10 md:left-16" />
