@@ -171,7 +171,7 @@ export function SushiBelt() {
           aria-hidden="true"
           className={`pointer-events-none absolute top-0 hidden h-full w-[330px] overflow-hidden md:block ${right ? "right-0 -scale-x-100" : "left-0"}`}
         >
-          <Shoji className="absolute top-[214px] left-0 w-[66px]" />
+          <Shoji className="absolute top-[314px] left-0 w-[66px]" />
           <Branch className="absolute top-[120px] -left-[62px] w-[330px]" />
           <div className="absolute" style={{ left: HANG_X * (330 / 270) - 32 - 62, top: 120 + (HANG_Y - 4) * (330 / 270) }}>
             <Lantern className="w-[64px]" delay={right ? 1.4 : 0} />
@@ -183,14 +183,14 @@ export function SushiBelt() {
       <FallingPetals className="absolute inset-x-0 top-0 hidden h-[440px] overflow-hidden md:block" />
 
       {/* the noren over the counter */}
-      <div className="relative mt-20 grid justify-items-center">
+      <div className="relative mt-[110px] grid justify-items-center">
         <Art svg={NOREN} w={220} h={76} />
       </div>
 
       {/* the belt */}
       <div
         ref={box}
-        className="relative mt-2"
+        className="relative mt-[72px]"
         style={{ height: BELT_H + 70, clipPath: "inset(-400px 0 0 0)" }}
         onMouseEnter={() => (hovered.current = true)}
         onMouseLeave={() => (hovered.current = false)}
