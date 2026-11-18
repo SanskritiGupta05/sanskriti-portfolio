@@ -171,19 +171,19 @@ export function SushiBelt() {
           aria-hidden="true"
           className={`pointer-events-none absolute top-0 hidden h-full w-[330px] overflow-hidden md:block ${right ? "right-0 -scale-x-100" : "left-0"}`}
         >
-          <Shoji className="absolute top-[314px] left-0 w-[66px]" />
-          <Branch className="absolute top-[120px] -left-[62px] w-[330px]" />
-          <div className="absolute" style={{ left: HANG_X * (330 / 270) - 32 - 62, top: 120 + (HANG_Y - 4) * (330 / 270) }}>
+          <Shoji className="absolute top-[364px] left-0 w-[66px]" />
+          <Branch className="absolute top-[170px] -left-[62px] w-[330px]" />
+          <div className="absolute" style={{ left: HANG_X * (330 / 270) - 32 - 62, top: 170 + (HANG_Y - 4) * (330 / 270) }}>
             <Lantern className="w-[64px]" delay={right ? 1.4 : 0} />
           </div>
         </div>
       ))}
 
       {/* petals drifting down from both branches, fading before the counter */}
-      <FallingPetals className="absolute inset-x-0 top-0 hidden h-[440px] overflow-hidden md:block" />
+      <FallingPetals className="absolute inset-x-0 top-0 hidden h-[560px] overflow-hidden md:block" />
 
       {/* the noren over the counter */}
-      <div className="relative mt-[110px] grid justify-items-center">
+      <div className="relative mt-[160px] grid justify-items-center">
         <Art svg={NOREN} w={220} h={76} />
       </div>
 

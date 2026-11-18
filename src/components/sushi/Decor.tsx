@@ -258,7 +258,7 @@ const PETALS = Array.from({ length: 14 }, (_, i) => {
   const start = right ? 0.66 + rnd(i + 200) * 0.3 : 0.04 + rnd(i + 200) * 0.3; // across the branch, as a share of the width
   return {
     left: `${r2(start * 100)}%`,
-    top: r2(40 + rnd(i + 210) * 50),
+    top: r2(190 + rnd(i + 210) * 50),
     size: r2(8 + rnd(i + 220) * 6),
     fall: 230 + rnd(i + 230) * 120,
     drift: (right ? -1 : 1) * (30 + rnd(i + 240) * 70) + (rnd(i + 245) - 0.5) * 30,
