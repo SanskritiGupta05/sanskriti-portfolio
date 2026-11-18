@@ -4,17 +4,16 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 
 // The hero scrolls normally until its bottom reaches the bottom of the screen, then stays put,
-// and the next section slides up over it like a sheet of paper clipped on with a paperclip.
-// As the sheet arrives it straightens out, and the hero behind it sinks back a little.
-export function PaperStack({ hero, children }: { hero: ReactNode; children: ReactNode }) {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const sheetRef = useRef<HTMLDivElement>(null);
-  const [pinTop, setPinTop] = useState(0);
-  const still = useReducedMotion();
+// and each section after it slides up over the one before like a sheet of paper clipped on
+// with a paperclip. As a sheet arrives it straightens out and widens to the full screen.
+// Every sheet except the last pins the same way, so the next sheet can slide over it.
+// The hero behind the first sheet sinks back a little.
 
-  // pin the hero at the point where its bottom edge meets the bottom of the screen
+// pin an element at the point where its bottom edge meets the bottom of the screen
+function usePinTop(ref: React.RefObject<HTMLDivElement | null>) {
+  const [pinTop, setPinTop] = useState(0);
   useEffect(() => {
-    const el = heroRef.current;
+    const el = ref.current;
     if (!el) return;
     const fit = () => setPinTop(Math.min(0, window.innerHeight - el.offsetHeight));
     fit();
@@ -25,18 +24,20 @@ export function PaperStack({ hero, children }: { hero: ReactNode; children: Reac
       ro.disconnect();
       window.removeEventListener("resize", fit);
     };
-  }, []);
+  }, [ref]);
+  return pinTop;
+}
 
-  // 0 when the sheet's top edge enters at the bottom of the screen, 1 when it reaches the top
-  const { scrollYProgress } = useScroll({ target: sheetRef, offset: ["start end", "start start"] });
+export function PaperStack({ hero, sheets }: { hero: ReactNode; sheets: { id: string; content: ReactNode }[] }) {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const firstRef = useRef<HTMLDivElement>(null);
+  const pinTop = usePinTop(heroRef);
+  const still = useReducedMotion();
+
+  // the hero sinks back while the first sheet rises over it
+  const { scrollYProgress } = useScroll({ target: firstRef, offset: ["start end", "start start"] });
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
   const heroFade = useTransform(scrollYProgress, [0, 1], [1, 0.55]);
-  const tilt = useTransform(scrollYProgress, [0, 0.7], [-1.6, 0]);
-  // over the last stretch the sheet widens to the full screen and its corners square off,
-  // so once it reaches the top it simply becomes the page (and the next sheet can do the same)
-  const inset = useTransform(scrollYProgress, [0.8, 1], [12, 0]);
-  const width = useTransform(inset, (v) => `calc(100vw - ${v * 2}px)`);
-  const radius = useTransform(scrollYProgress, [0.8, 1], [22, 0]);
 
   return (
     <>
@@ -47,23 +48,58 @@ export function PaperStack({ hero, children }: { hero: ReactNode; children: Reac
       >
         {hero}
       </motion.div>
-
-      {/* the sheet: nearly full width, the same dotted paper, a small paperclip at the top left */}
-      <motion.div
-        ref={sheetRef}
-        id="work"
-        className="relative z-10 left-1/2 -translate-x-1/2"
-        style={{ width: still ? "100vw" : width }}
-      >
-        <motion.div
-          className="relative origin-top-left border border-line bg-bg shadow-[0_-24px_60px_-34px_rgba(60,40,20,0.45)] [background-image:radial-gradient(color-mix(in_srgb,var(--dot)_40%,transparent)_1.6px,transparent_1.9px)] [background-size:22px_22px]"
-          style={{ rotate: still ? 0 : tilt, borderRadius: still ? 0 : radius }}
-        >
-          <Paperclip className="absolute -top-4 left-10 md:left-16" />
-          {children}
-        </motion.div>
-      </motion.div>
+      {sheets.map((sh, i) => (
+        <Sheet key={sh.id} id={sh.id} layer={i} pin={i < sheets.length - 1} anchor={i === 0 ? firstRef : undefined}>
+          {sh.content}
+        </Sheet>
+      ))}
     </>
+  );
+}
+
+// one sheet: nearly full width, the same dotted paper, a small paperclip at the top left
+function Sheet({
+  id,
+  layer,
+  pin,
+  anchor,
+  children,
+}: {
+  id: string;
+  layer: number;
+  pin: boolean;
+  anchor?: React.RefObject<HTMLDivElement | null>;
+  children: ReactNode;
+}) {
+  const own = useRef<HTMLDivElement>(null);
+  const ref = anchor ?? own;
+  const pinTop = usePinTop(ref);
+  const still = useReducedMotion();
+
+  // 0 when the sheet's top edge enters at the bottom of the screen, 1 when it reaches the top
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "start start"] });
+  const tilt = useTransform(scrollYProgress, [0, 0.7], [layer % 2 ? 1.4 : -1.6, 0]);
+  // over the last stretch the sheet widens to the full screen and its corners square off,
+  // so once it reaches the top it simply becomes the page
+  const inset = useTransform(scrollYProgress, [0.8, 1], [12, 0]);
+  const width = useTransform(inset, (v) => `calc(100vw - ${v * 2}px)`);
+  const radius = useTransform(scrollYProgress, [0.8, 1], [22, 0]);
+
+  return (
+    <motion.div
+      ref={ref}
+      id={id}
+      className={`ml-[50%] -translate-x-1/2 ${pin ? "sticky" : "relative"}`}
+      style={{ width: still ? "100vw" : width, zIndex: 10 + layer, ...(pin ? { top: pinTop } : {}) }}
+    >
+      <motion.div
+        className={`relative border border-line bg-bg shadow-[0_-24px_60px_-34px_rgba(60,40,20,0.45)] [background-image:radial-gradient(color-mix(in_srgb,var(--dot)_40%,transparent)_1.6px,transparent_1.9px)] [background-size:22px_22px] ${layer % 2 ? "origin-top-right" : "origin-top-left"}`}
+        style={{ rotate: still ? 0 : tilt, borderRadius: still ? 0 : radius }}
+      >
+        <Paperclip className={`absolute -top-4 ${layer % 2 ? "right-10 md:right-16" : "left-10 md:left-16"}`} />
+        {children}
+      </motion.div>
+    </motion.div>
   );
 }
 

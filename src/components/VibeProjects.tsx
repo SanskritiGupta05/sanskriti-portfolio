@@ -32,7 +32,7 @@ const PROJECTS = [
 
 export function VibeProjects() {
   return (
-    <section aria-labelledby="vibe-title" className="pt-28">
+    <section aria-labelledby="vibe-title" className="pt-20">
       <div className="flex items-center gap-3">
         <span aria-hidden="true" className="grid h-8 w-10 -rotate-6 place-items-center rounded-md border border-[#ecd2b0] bg-[#fdf1df] font-mono text-sm text-[#9b6a3a] shadow-[0_3px_0_#ecd2b0]">
           {"</>"}

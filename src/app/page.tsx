@@ -100,15 +100,28 @@ export default function Home() {
             </main>
           </>
         }
-      >
-        <div className="mx-auto w-full max-w-[874px] px-6">
-          {/* primary case studies */}
-          <CaseStudies />
-          {/* vibe-coded side projects */}
-          <VibeProjects />
-          <Footer />
-        </div>
-      </PaperStack>
+        sheets={[
+          {
+            id: "work",
+            content: (
+              <div className="mx-auto w-full max-w-[874px] px-6 pb-24">
+                {/* primary case studies */}
+                <CaseStudies />
+              </div>
+            ),
+          },
+          {
+            id: "vibe",
+            content: (
+              <div className="mx-auto w-full max-w-[874px] px-6">
+                {/* vibe-coded side projects, then the footer */}
+                <VibeProjects />
+                <Footer />
+              </div>
+            ),
+          },
+        ]}
+      />
     </div>
   );
 }
