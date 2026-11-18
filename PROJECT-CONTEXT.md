@@ -606,3 +606,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-19:** Footer is **smooth only**: the pixel look is removed from `SushiBelt` (no `look` prop, no canvas rasteriser) and the `/lab/footer` page is deleted.
 - **2026-11-19:** Dot grid (page and paper sheet): dots **bigger** (radius 1px → 1.6px, edge 1.9px) at **60% opacity** (`color-mix(in srgb, var(--dot) 60%, transparent)`), same 22px spacing.
 - **2026-11-19:** Dot grid opacity lowered to **40%** (page and paper sheet).
+- **2026-11-19:** Footer: removed the ✿ divider line and the "Back to top ↑" link under the belt; the footer now ends with the belt.

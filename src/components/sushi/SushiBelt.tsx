@@ -154,17 +154,6 @@ export function SushiBelt() {
         </div>
       </div>
 
-      {/* closing line */}
-      <div className="mt-8 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
-        <span className="h-px bg-[#efc9bd]" />
-        <span aria-hidden="true" className="text-[#e58f86]">✿</span>
-        <span className="h-px bg-[#efc9bd]" />
-      </div>
-      <div className="mt-4 flex justify-end">
-        <a href="#" className="label !text-ink underline-offset-4 hover:underline">
-          Back to top ↑
-        </a>
-      </div>
     </footer>
   );
 }
