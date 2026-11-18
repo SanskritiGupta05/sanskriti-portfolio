@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useAnimationFrame, useInView, useMotionValue, useReducedMotion, useTransform } from "motion/react";
 import { BELT_H, MENU, NOREN, SURFACE, beltSvg } from "./art";
-import { Branch, FallingPetals, HANG_X, HANG_Y, Lantern, Shoji, Ticks } from "./Decor";
+import { Branch, FallingPetals, HANG_X, HANG_Y, Lantern, Shoji } from "./Decor";
 
 // Sushi conveyor footer, in smooth vector art.
 // Plates ride the belt to the right forever; hovering the belt slows it to a stop.
@@ -279,8 +279,6 @@ export function SushiBelt() {
                       </button>
                     )
                   )}
-                  {/* little "tasty!" strokes over every third plate */}
-                  {i % 3 === 1 && !gone && !lifting && <Ticks className="absolute -top-3 left-3 w-7" delay={(i % 6) * 0.3} />}
                 </motion.li>
               );
             })}

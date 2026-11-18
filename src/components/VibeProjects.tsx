@@ -4,7 +4,6 @@
 // Thumbnails: Spider-Verse and UX Laws from her Framer site; Little Lights is a capture of
 // the live site. Copy is from her reference.
 import Image from "next/image";
-import { Ticks } from "./sushi/Decor";
 import { Tamagotchi } from "./Tamagotchi";
 
 const PROJECTS = [
@@ -44,7 +43,6 @@ export function VibeProjects() {
         <h2 id="vibe-title" className="font-serif text-h2m text-head italic md:text-h2">
           Small ideas, big curiosities
         </h2>
-        <Ticks className="absolute -top-3 -right-7 w-6 rotate-12" />
         {/* a little pixel tamagotchi to play with (click to feed it) */}
         <Tamagotchi className="absolute bottom-0 left-full ml-14 hidden md:block" px={1.9} />
       </div>

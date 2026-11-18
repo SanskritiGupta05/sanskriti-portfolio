@@ -649,3 +649,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
   - The belt's animation loop and the falling petals **pause while the footer is off screen** (`useInView`, 200px margin).
 - **2026-11-19:** Footer cherry branches **bigger** (440px wide, was 330) and **no outward offset** (they start at the screen edge, top 150px); lanterns 68px, still hanging from the branch.
 - **2026-11-19:** Footer: cherry branches **smaller** (380px wide, was 440; lanterns follow) and shoji windows **bigger** (84px wide, was 66; top 252px so they still stand on the belt).
+- **2026-11-19:** Removed the little red "tasty!" tick marks everywhere: over the sushi plates and beside the "Small ideas, big curiosities" heading (`Ticks` stays in `Decor.tsx`, unused).
