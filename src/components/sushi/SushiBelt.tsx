@@ -70,8 +70,8 @@ export function SushiBelt() {
           className={`pointer-events-none absolute top-0 hidden h-full w-[330px] overflow-hidden md:block ${right ? "right-0 -scale-x-100" : "left-0"}`}
         >
           <Shoji className="absolute top-[214px] left-0 w-[66px]" />
-          <Branch className="absolute top-10 -left-[22px] w-[330px]" />
-          <div className="absolute" style={{ left: HANG_X * (330 / 270) - 32 - 22, top: 40 + (HANG_Y - 4) * (330 / 270) }}>
+          <Branch className="absolute top-10 -left-[42px] w-[330px]" />
+          <div className="absolute" style={{ left: HANG_X * (330 / 270) - 32 - 42, top: 40 + (HANG_Y - 4) * (330 / 270) }}>
             <Lantern className="w-[64px]" delay={right ? 1.4 : 0} />
           </div>
         </div>
