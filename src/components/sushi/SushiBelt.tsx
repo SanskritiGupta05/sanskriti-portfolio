@@ -25,26 +25,42 @@ function Art({ svg, w, h, className = "" }: { svg: string; w: number; h: number;
   return <img src={toUrl(svg)} alt="" width={w} height={h} draggable={false} className={className} />;
 }
 
-// Chopsticks come down from above, pinch the sushi and lift it out of the frame.
-const PICK = { duration: 1.7, times: [0, 0.32, 0.55, 1] };
-function PickUp({ svg, onDone }: { svg: string; onDone: () => void }) {
+// Chopsticks reach in from the nearer side at a low angle, pinch the sushi, lift it a little
+// and carry it back out the same side, vanishing at the edge of the column.
+type Side = "left" | "right";
+const PICK = { duration: 2, times: [0, 0.3, 0.42, 0.55, 1] };
+const AWAY = 760; // far enough to be past the column edge from anywhere on the belt
+const SUSHI_AT = { x: 66, y: 44 }; // the sushi's centre inside a plate
+const TIP = { x: 19, y: 82 }; // where the chopstick tips meet, inside their drawing
+const CHOP_W = 300;
+const CHOP_H = 90;
+
+function PickUp({ svg, side, onDone }: { svg: string; side: Side; onDone: () => void }) {
+  const dir = side === "right" ? 1 : -1;
+  const lift = { x: [0, 0, 0, 0, dir * AWAY], y: [0, 0, 0, -26, -44] };
+  const ease = [[0.2, 0.7, 0.3, 1], "linear", [0.4, 0, 0.6, 1], [0.5, 0, 0.8, 0.6]] as const;
   return (
     <div className="pointer-events-none absolute inset-0">
       <motion.div
         className="absolute inset-0"
-        initial={{ y: 0, opacity: 1 }}
-        animate={{ y: [0, 0, 0, -200], opacity: [1, 1, 1, 0] }}
-        transition={{ duration: PICK.duration, times: PICK.times, ease: ["linear", "linear", [0.5, 0, 0.75, 0]] }}
+        animate={lift}
+        transition={{ duration: PICK.duration, times: PICK.times, ease: ease as never }}
         onAnimationComplete={onDone}
       >
         <Art svg={svg} w={PLATE_W} h={PLATE_H} className="absolute inset-0" />
       </motion.div>
       <motion.div
         className="absolute"
-        style={{ left: 31, top: -139, width: 140, height: 190 }}
-        initial={{ y: -170, opacity: 0 }}
-        animate={{ y: [-170, 0, 0, -200], opacity: [0, 1, 1, 0] }}
-        transition={{ duration: PICK.duration, times: PICK.times, ease: [[0.2, 0.7, 0.3, 1], "linear", [0.5, 0, 0.75, 0]] }}
+        style={{
+          width: CHOP_W,
+          height: CHOP_H,
+          top: SUSHI_AT.y - TIP.y,
+          left: side === "right" ? SUSHI_AT.x - TIP.x : SUSHI_AT.x - (CHOP_W - TIP.x),
+          scaleX: dir,
+        }}
+        initial={{ x: dir * AWAY }}
+        animate={{ x: [dir * AWAY, 0, 0, 0, dir * AWAY], y: lift.y }}
+        transition={{ duration: PICK.duration, times: PICK.times, ease: ease as never }}
       >
         <Chopsticks />
       </motion.div>
@@ -52,30 +68,37 @@ function PickUp({ svg, onDone }: { svg: string; onDone: () => void }) {
   );
 }
 
-// a pair of wooden chopsticks angled in from the upper right, their tips meeting at the sushi
+// a pair of wooden chopsticks lying low from the right, their tips meeting at the sushi
 function stick(x1: number, y1: number, x2: number, y2: number, w1: number, w2: number) {
   const len = Math.hypot(x2 - x1, y2 - y1);
   const nx = -(y2 - y1) / len, ny = (x2 - x1) / len;
   const p = (x: number, y: number, w: number, s: number) => `${(x + nx * w * s).toFixed(1)} ${(y + ny * w * s).toFixed(1)}`;
   return `M${p(x1, y1, w1 / 2, 1)} L${p(x2, y2, w2 / 2, 1)} L${p(x2, y2, w2 / 2, -1)} L${p(x1, y1, w1 / 2, -1)}Z`;
 }
+const along = (x1: number, y1: number, x2: number, y2: number, t: number) => [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t] as const;
 function Chopsticks() {
+  const lower = [298, 30, 24, 86] as const; // [from x, from y, tip x, tip y]
+  const upper = [296, 6, 14, 78] as const;
+  const tipBand = (s: readonly [number, number, number, number]) => {
+    const [mx, my] = along(s[0], s[1], s[2], s[3], 0.78);
+    return stick(mx, my, s[2], s[3], 3, 2.2);
+  };
   return (
-    <svg viewBox="0 0 140 190" className="size-full overflow-visible" aria-hidden="true">
+    <svg viewBox={`0 0 ${CHOP_W} ${CHOP_H}`} className="size-full overflow-visible" aria-hidden="true">
       <defs>
-        <linearGradient id="chop-wood" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#e2bf8c" />
+        <linearGradient id="chop-wood" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#e6c592" />
           <stop offset="0.5" stopColor="#c9975c" />
           <stop offset="1" stopColor="#9c6b37" />
         </linearGradient>
       </defs>
-      {/* the back stick: still while the front one closes in to pinch */}
-      <path d={stick(138, 10, 40, 184, 6, 2.2)} fill="url(#chop-wood)" />
-      <path d={stick(64.8, 140.3, 40, 184, 2.9, 2.2)} fill="#6e4423" opacity="0.85" />
-      <motion.g animate={{ x: [-5, -5, 0, 0] }} transition={{ duration: PICK.duration, times: PICK.times }}>
-        <path d={stick(128, 2, 30, 182, 6, 2.2)} fill="url(#chop-wood)" />
-        <path d={stick(54.5, 137, 30, 182, 2.9, 2.2)} fill="#6e4423" opacity="0.85" />
-        <path d={stick(128, 2, 30, 182, 1, 0.4)} fill="#f3dcb4" opacity="0.6" transform="translate(-1.2 -0.6)" />
+      <path d={stick(...lower, 6.5, 2.4)} fill="url(#chop-wood)" />
+      <path d={tipBand(lower)} fill="#6e4423" opacity="0.85" />
+      {/* the upper stick closes down onto the lower one to pinch */}
+      <motion.g animate={{ y: [-6, -6, 0, 0, 0] }} transition={{ duration: PICK.duration, times: PICK.times }}>
+        <path d={stick(...upper, 6.5, 2.4)} fill="url(#chop-wood)" />
+        <path d={tipBand(upper)} fill="#6e4423" opacity="0.85" />
+        <path d={stick(upper[0], upper[1] - 1.4, upper[2] + 6, upper[3] - 1.2, 1.2, 0.4)} fill="#f6e2bf" opacity="0.6" />
       </motion.g>
     </svg>
   );
@@ -116,15 +139,15 @@ export function SushiBelt() {
     } else offset.set(next);
   });
   const [eaten, setEaten] = useState<Set<number>>(() => new Set());
-  const [picking, setPicking] = useState<Set<number>>(() => new Set());
-  const pick = (id: number) => {
+  const [picking, setPicking] = useState<Map<number, Side>>(() => new Map());
+  const pick = (id: number, side: Side) => {
     if (still) return setEaten((e) => new Set(e).add(id));
-    setPicking((p) => new Set(p).add(id));
+    setPicking((p) => new Map(p).set(id, side));
   };
   const done = (id: number) => {
     setEaten((e) => new Set(e).add(id));
     setPicking((p) => {
-      const n = new Set(p);
+      const n = new Map(p);
       n.delete(id);
       return n;
     });
@@ -224,7 +247,7 @@ export function SushiBelt() {
             {plates.map((m, i) => {
               const id = i - MENU.length * wraps;
               const gone = eaten.has(id);
-              const lifting = picking.has(id);
+              const lifting = picking.get(id);
               return (
                 <motion.li
                   key={i}
@@ -235,10 +258,15 @@ export function SushiBelt() {
                 >
                   <Art svg={m.plateSvg} w={PLATE_W} h={PLATE_H} className="absolute inset-0" />
                   {lifting ? (
-                    <PickUp svg={m.sushiSvg} onDone={() => done(id)} />
+                    <PickUp svg={m.sushiSvg} side={lifting} onDone={() => done(id)} />
                   ) : (
                     !gone && (
-                      <button type="button" aria-label={`Pick up the ${m.name}`} onClick={() => pick(id)} className="absolute inset-0 cursor-pointer">
+                      <button type="button" aria-label={`Pick up the ${m.name}`} onClick={(e) => {
+                          // the chopsticks come from whichever side of the belt the plate is nearer
+                          const r = e.currentTarget.getBoundingClientRect();
+                          const b = box.current?.getBoundingClientRect();
+                          pick(id, b && r.left + r.width / 2 < b.left + b.width / 2 ? "left" : "right");
+                        }} className="absolute inset-0 cursor-pointer">
                         <Art svg={m.sushiSvg} w={PLATE_W} h={PLATE_H} className="absolute inset-0" />
                       </button>
                     )
