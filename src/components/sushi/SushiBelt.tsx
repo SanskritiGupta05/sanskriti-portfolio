@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useAnimationFrame, useMotionValue, useReducedMotion, useTransform } from "motion/react";
 import { BELT_H, MENU, NOREN, SURFACE, beltSvg } from "./art";
-import { Branch, HANG_X, HANG_Y, Lantern, Shoji, Ticks } from "./Decor";
+import { Branch, FallingPetals, HANG_X, HANG_Y, Lantern, Shoji, Ticks } from "./Decor";
 
 // Sushi conveyor footer, in smooth vector art.
 // Plates ride the belt to the right forever; hovering the belt slows it to a stop.
@@ -76,6 +76,9 @@ export function SushiBelt() {
           </div>
         </div>
       ))}
+
+      {/* petals drifting down from both branches, fading before the counter */}
+      <FallingPetals className="absolute inset-x-0 top-0 hidden h-[440px] overflow-hidden md:block" />
 
       {/* the noren over the counter, the line, and the note */}
       <div className="relative grid justify-items-center gap-5 text-center">
