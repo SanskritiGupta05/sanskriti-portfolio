@@ -1,5 +1,5 @@
 // Primary case studies on the work sheet: a short intro, then three cards side by side
-// (after Sanskriti's reference): a dark card with the project's banner (from her Framer site),
+// (after Sanskriti's reference): a white card with the project's banner (from her Framer site),
 // the name with an arrow, one line, and the tags as small chips. Hovering lifts a card.
 import Image from "next/image";
 import { LuckyCat } from "./LuckyCat";
@@ -53,7 +53,7 @@ export function CaseStudies() {
           <li key={p.name}>
             <a
               href={p.href}
-              className="group flex h-full flex-col rounded-[20px] bg-[#211d1b] p-2 text-[#f6efe6] shadow-[0_24px_40px_-28px_rgba(40,20,10,0.6)] transition duration-300 hover:-translate-y-1.5"
+              className="group flex h-full flex-col rounded-[20px] border border-line bg-bg p-2 text-head shadow-[0_18px_36px_-26px_rgba(60,40,20,0.35)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_26px_44px_-26px_rgba(60,40,20,0.42)]"
             >
               <span className="relative block aspect-[2880/1546] overflow-hidden rounded-[14px]">
                 <Image src={p.img} alt="" fill sizes="(min-width: 768px) 280px, 100vw" className="object-cover transition duration-500 group-hover:scale-[1.04]" />
@@ -61,14 +61,14 @@ export function CaseStudies() {
               <span className="flex flex-1 flex-col gap-3 px-3 pt-4 pb-3">
                 <span className="flex items-start justify-between gap-3">
                   <span className="font-serif text-h1m leading-tight md:text-h1">{p.name}</span>
-                  <span aria-hidden="true" className="mt-1 text-base text-[#f2a08c] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                  <span aria-hidden="true" className="mt-1 text-base text-[#c8553b] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                     ↗
                   </span>
                 </span>
-                <span className="text-sm leading-relaxed text-[#f6efe6]/75">{p.line}</span>
+                <span className="printed text-sm leading-relaxed">{p.line}</span>
                 <span className="mt-auto flex flex-wrap gap-2 pt-1">
                   {p.tags.map((t) => (
-                    <span key={t} className="rounded-full border border-[#f6efe6]/20 px-3 py-1 text-sm text-[#f6efe6]/85">
+                    <span key={t} className="rounded-full border border-line bg-surface/60 px-3 py-1 text-sm text-ink">
                       {t}
                     </span>
                   ))}
