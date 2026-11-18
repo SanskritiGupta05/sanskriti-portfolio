@@ -25,7 +25,7 @@ const PROJECTS = [
     line: "Exploring the digital experience of a fintech product through thoughtful interfaces and product design.",
     tags: ["Product Design", "0 → 1"],
     img: "/assets/cases/eight-money.webp",
-    href: "#",
+    href: "/work/eight-money",
   },
 ];
 
