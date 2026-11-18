@@ -623,3 +623,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-19:** Footer: **noren and cherry branches + lanterns another 50px lower** (noren `mt-[160px]`, branch top 170px); shoji windows lowered 50px too (top 364px) so the lanterns still clear them, with the belt following; falling petals now start at the branches' new height (petal layer 560px tall).
 - **2026-11-19:** Footer: the belt now sits **right under the noren and branches** (belt gap back to `mt-2`, so it rose 64px) and the shoji windows came up with it (top 300px); the lanterns hang in front of the windows, which Sanskriti is fine with.
 - **2026-11-19:** Footer cherry branches and lanterns another **20px outward** (82px past each column edge, clipped).
+- **2026-11-19:** Footer: noren **20px lower** (`mt-[180px]`), belt held in place (`-mt-3`), so the noren sits closer to the sushi.

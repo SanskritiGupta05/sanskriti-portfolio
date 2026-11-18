@@ -183,14 +183,14 @@ export function SushiBelt() {
       <FallingPetals className="absolute inset-x-0 top-0 hidden h-[560px] overflow-hidden md:block" />
 
       {/* the noren over the counter */}
-      <div className="relative mt-[160px] grid justify-items-center">
+      <div className="relative mt-[180px] grid justify-items-center">
         <Art svg={NOREN} w={220} h={76} />
       </div>
 
       {/* the belt */}
       <div
         ref={box}
-        className="relative mt-2"
+        className="relative -mt-3"
         style={{ height: BELT_H + 70, clipPath: "inset(-400px 0 0 0)" }}
         onMouseEnter={() => (hovered.current = true)}
         onMouseLeave={() => (hovered.current = false)}
