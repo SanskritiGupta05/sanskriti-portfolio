@@ -179,11 +179,11 @@ export function SushiBelt() {
         <div
           key={String(right)}
           aria-hidden="true"
-          className={`pointer-events-none absolute top-0 hidden h-full w-[440px] overflow-hidden md:block ${right ? "right-0 -scale-x-100" : "left-0"}`}
+          className={`pointer-events-none absolute top-0 hidden h-full w-[380px] overflow-hidden md:block ${right ? "right-0 -scale-x-100" : "left-0"}`}
         >
-          <Shoji className="absolute top-[300px] left-0 w-[66px]" />
-          <Branch className="absolute top-[150px] left-0 w-[440px]" />
-          <div className="absolute" style={{ left: HANG_X * (440 / 270) - 34, top: 150 + (HANG_Y - 4) * (440 / 270) }}>
+          <Shoji className="absolute top-[252px] left-0 w-[84px]" />
+          <Branch className="absolute top-[150px] left-0 w-[380px]" />
+          <div className="absolute" style={{ left: HANG_X * (380 / 270) - 34, top: 150 + (HANG_Y - 4) * (380 / 270) }}>
             <Lantern className="w-[68px]" delay={right ? 1.4 : 0} />
           </div>
         </div>
