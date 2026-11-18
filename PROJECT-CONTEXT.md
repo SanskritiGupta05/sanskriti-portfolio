@@ -694,3 +694,23 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
   - **Clips** play only while on screen and pause for reduced motion; the showreel autoplays in the header.
   - **The vibe-coded "UX Laws" card** now links here.
   - **Copy:** the "why" story and the closing quote are a draft for her to edit; all features and numbers come from the app.
+- **2026-11-19:** **Spider-Verse case study rebuilt from scratch** (`/work/spider-verse`). The dark "cinematic stage" version above was replaced, and the page now uses the same margin-notes language as the other case studies (`CaseStudyFrame`, `Ticket`, `Note`, `Quote`). New parts are in `src/components/spider/Spider.tsx`; `Holo.tsx` now only keeps `HoloTilt`, and the old `Phone`/`TemplateFan` were removed.
+  - **Sources:**
+    - Story copy: her Framer case study.
+    - **Card data, accents, quotes and motion constants:** read from the live site's JS bundle.
+    - **Stills:** captured from the live site at phone size: `live-landing`, `live-stack`, `live-orbit`, `live-orbit-tint`, `live-reveal-miles`, `live-reveal-punk`.
+    - **Finished cards:** `card-*.webp`, downloaded from the live site.
+    - The `t-*` empty ChatGPT templates are kept. The old Framer `s-*` screens were deleted.
+  - **Sections:**
+    - Header: ticket, three live phones on a dark strip, CTA + X link.
+    - The spark.
+    - **Flow chart 1 — feeling curve:** an animated SVG; Open, Wait, Reveal and Joy map to app moments. Plus a taped note: "the wait is the product".
+    - **Flow chart 2 — process:** feeling, ChatGPT, Figma, Cursor, Capacitor, X.
+    - Words first: her prompt as a chat, the templates as the reply, and "The catch" note.
+    - **Template → finished card:** a toggle flips all 7 cards.
+    - **The cast:** pick any of the 7. Shows a tilting holo card, number/Earth, quote and the two accents, and the panel tints in the card's colours like the app.
+    - **Flow chart 3 — reveal timeline:** proportional bar of the real phases (hold 280ms, wake 620, prepare 900, orbit 5800, reveal) + 5 live stills.
+    - **Tuning the shuffle:** a live orbit diagram drawn from the code's numbers (ellipse 224×29, depth 78, lanes +42/0/−38, breathes ±13% at 0.52Hz; pauses off screen), plus 5.8s / 3 lanes / 0.94 coast-decay cards.
+    - Your card, your colours: Miles vs Punk reveals.
+    - You liked it: X stats + post.
+    - What I learned: 3 lessons (draft copy) + CTA.

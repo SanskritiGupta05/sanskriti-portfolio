@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useRef, type ReactNode } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
 
@@ -41,45 +40,6 @@ export function HoloTilt({ children, className = "", max = 12, rounded = "rounde
         {children}
         <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 mix-blend-overlay" style={{ backgroundImage: sheen, opacity: glow }} />
       </motion.div>
-    </div>
-  );
-}
-
-// a phone screenshot in a slim dark bezel
-export function Phone({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
-  return (
-    <div className={`rounded-[34px] bg-[#111] p-[6px] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] ring-1 ring-white/10 ${className}`}>
-      <div className="relative aspect-[393/852] overflow-hidden rounded-[28px]">
-        <Image src={src} alt={alt} fill sizes="260px" className="object-cover" />
-      </div>
-    </div>
-  );
-}
-
-// the seven ChatGPT templates, fanned like a hand of cards; each one tilts and shines on hover
-const TEMPLATES = ["peter", "miles", "gwen", "miguel", "noir", "punk", "ham"];
-export function TemplateFan() {
-  const still = useReducedMotion();
-  const mid = (TEMPLATES.length - 1) / 2;
-  return (
-    <div className="relative mx-auto h-[330px] w-full max-w-[760px]">
-      {TEMPLATES.map((t, i) => {
-        const d = i - mid;
-        return (
-          <motion.div
-            key={t}
-            className="absolute top-6 left-1/2 w-[150px]"
-            style={{ marginLeft: -75 + d * 88, zIndex: 10 - Math.abs(Math.round(d)) }}
-            initial={{ rotate: d * 6, y: Math.abs(d) * 10 }}
-            whileHover={still ? undefined : { y: -26, rotate: d * 2, zIndex: 30, scale: 1.08 }}
-            transition={{ type: "spring", stiffness: 260, damping: 20 }}
-          >
-            <HoloTilt rounded="rounded-[10px]">
-              <Image src={`/assets/cases/spider/t-${t}.webp`} alt={`ChatGPT card template ${i + 1}`} width={593} height={900} sizes="150px" className="block h-auto w-full" />
-            </HoloTilt>
-          </motion.div>
-        );
-      })}
     </div>
   );
 }
