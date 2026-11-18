@@ -6,7 +6,7 @@ import { NameSwap } from "@/components/NameSwap";
 import { Keyword } from "@/components/Keyword";
 import { WorkArc } from "@/components/work/WorkArc";
 import { PaperStack } from "@/components/PaperStack";
-import { LuckyCat } from "@/components/LuckyCat";
+import { CaseStudies } from "@/components/CaseStudies";
 
 // One narrow centred column with wide empty margins on both sides (like Sam's and Mythili's sites).
 // The lantern hangs outside it, from the page's top-right corner.
@@ -101,21 +101,8 @@ export default function Home() {
         }
       >
         <div className="mx-auto w-full max-w-[874px] px-6">
-          {/* Case studies come next; the sheet already carries the footer */}
-          <section aria-labelledby="work-title" className="min-h-[70vh] pt-20">
-            <span className="label">Work</span>
-            {/* the heading with a little pixel lucky cat waving beside it
-                (pinned to the heading, so it doesn't push the heading away from the label) */}
-            <div className="relative mt-3 w-fit">
-              <h2
-                id="work-title"
-                className="font-serif text-h2m text-head md:text-h2"
-              >
-                Selected case studies
-              </h2>
-              <LuckyCat className="absolute bottom-1 left-full ml-4" px={1.9} />
-            </div>
-          </section>
+          {/* primary case studies */}
+          <CaseStudies />
           <Footer />
         </div>
       </PaperStack>
