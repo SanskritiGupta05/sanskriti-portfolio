@@ -172,8 +172,8 @@ export function SushiBelt() {
           className={`pointer-events-none absolute top-0 hidden h-full w-[330px] overflow-hidden md:block ${right ? "right-0 -scale-x-100" : "left-0"}`}
         >
           <Shoji className="absolute top-[214px] left-0 w-[66px]" />
-          <Branch className="absolute top-[70px] -left-[62px] w-[330px]" />
-          <div className="absolute" style={{ left: HANG_X * (330 / 270) - 32 - 62, top: 70 + (HANG_Y - 4) * (330 / 270) }}>
+          <Branch className="absolute top-[120px] -left-[62px] w-[330px]" />
+          <div className="absolute" style={{ left: HANG_X * (330 / 270) - 32 - 62, top: 120 + (HANG_Y - 4) * (330 / 270) }}>
             <Lantern className="w-[64px]" delay={right ? 1.4 : 0} />
           </div>
         </div>
@@ -182,11 +182,9 @@ export function SushiBelt() {
       {/* petals drifting down from both branches, fading before the counter */}
       <FallingPetals className="absolute inset-x-0 top-0 hidden h-[440px] overflow-hidden md:block" />
 
-      {/* the noren over the counter, the line, and the note */}
-      <div className="relative grid justify-items-center gap-5 text-center">
+      {/* the noren over the counter */}
+      <div className="relative mt-20 grid justify-items-center">
         <Art svg={NOREN} w={220} h={76} />
-        <h2 className="font-serif text-h2m italic text-head md:text-h2">One last roll before you go?</h2>
-        <p className="printed">Thanks for stopping by. Hope you found something you liked. ♡</p>
       </div>
 
       {/* the belt */}
