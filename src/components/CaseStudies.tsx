@@ -53,7 +53,6 @@ export function CaseStudies() {
           A collection of products I&apos;ve helped shape, from early ideas and
           messy problems to thoughtful, real-world experiences.
         </p>
-        <span className="label shrink-0">Selected work, 2025 — 2026</span>
       </div>
 
       <ul className="mt-12 grid gap-4 md:grid-cols-2">
