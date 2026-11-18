@@ -19,7 +19,7 @@ const PROJECTS = [
     line: "An interactive way to explore UX laws, understand the psychology behind better design and make it easier to remember.",
     tags: ["Learning Experience", "AI"],
     img: "/assets/cases/uxie.webp",
-    href: null,
+    href: "/work/ux-laws",
   },
   {
     name: "Little Lights",

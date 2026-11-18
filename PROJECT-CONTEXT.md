@@ -667,3 +667,30 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
   - **The finished flow**: six beats on a dashed red timeline with timing chips, beside the three phones.
   - **P.S. You liked it**: 1.2K+ likes / 40K+ views / 180+ reposts / 120+ replies, her X post as a card (links to the video), "small experiment, big love ♡", CTA to the live app.
   - The vibe-coded card on the homepage now opens this page (internal links no longer open a new tab).
+- **2026-11-19:** **New UX Laws case study page `/work/ux-laws`** for UXie, her SwiftUI iOS app (106 laws, 8 categories). Built from her own screen recordings, her "UX laws iOS app" Figma file and the app's data (`laws.json`). Same margin-notes language (`src/app/work/ux-laws/page.tsx`), new parts in `src/components/uxie/Uxie.tsx`.
+  - **Assets** in `public/assets/cases/uxie/`:
+    - 7 recordings, compressed to 480×854 mp4 with jpg posters: explore, recall, read, play, saved, search, and the 1200×900 showreel.
+    - 15 Figma screens as `fig-*.webp`.
+    - The full law page `fig-lawpage-full.webp`.
+    - The flow board.
+    - Her redrawn category card sheets, plus the logo, larger-text, dark-mode and quiz-feedback previews.
+    - **Never** the early Figma reference cards (they copy Growth.Design's cheat sheet).
+  - **Storyline (14 sections):**
+    - Why I made it: kept forgetting the laws; brief on a taped note.
+    - Sorting 106 laws: 8 category cards with taglines + law counts as bars; laws can sit in several categories.
+    - **Flow chart 1, core loop:** Explore → Browse → Recall → Learn → Play, with a dashed red return arc ("missed one? back to that law").
+    - **Flow chart 2, app map:** Home → Category / Play / Saved / Search, all ending on the law page.
+    - Decisions 01–07, each a looping clip beside the copy plus Figma screens:
+      - deck, not a list
+      - every law illustrated
+      - recall first ("Think you remember?")
+      - one law page, with an anatomy list beside the scrollable full page
+      - read it or hear it
+      - Play (5 states + feedback image)
+      - saved & search
+    - From the Figma file: the flow board.
+    - The small things: larger text, dark mode in progress.
+    - What's next.
+  - **Clips** play only while on screen and pause for reduced motion; the showreel autoplays in the header.
+  - **The vibe-coded "UX Laws" card** now links here.
+  - **Copy:** the "why" story and the closing quote are a draft for her to edit; all features and numbers come from the app.
