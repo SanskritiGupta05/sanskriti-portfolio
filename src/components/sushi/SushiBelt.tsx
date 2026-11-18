@@ -5,55 +5,25 @@ import { motion, useAnimationFrame, useMotionValue, useReducedMotion, useTransfo
 import { BELT_H, MENU, NOREN, SURFACE, beltSvg } from "./art";
 import { Branch, HANG_X, HANG_Y, Lantern, Shoji, Ticks } from "./Decor";
 
-// Sushi conveyor footer. The same drawings render two ways:
-//  - "smooth": crisp vector art
-//  - "pixel": drawn small on a canvas, hard-edged, then scaled up (chunky but readable pixels)
+// Sushi conveyor footer, in smooth vector art.
 // Plates ride the belt to the right forever; hovering the belt slows it to a stop.
-type Look = "smooth" | "pixel";
-
 const PLATE_W = 132; // shown size of one plate drawing (120×80 art)
 const PLATE_H = 88;
 const GAP = 22;
 const STEP = PLATE_W + GAP;
 const SPEED = 34; // px per second
 const SLAT = 26; // belt slat spacing
+const SLAT_INK = "rgba(30,15,10,0.35)";
 
 const toUrl = (svg: string) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 
-// Draw an SVG small on a canvas with hard edges, shown at full size with pixelated scaling.
-function Art({ svg, w, h, look, px = 2.6, className = "" }: { svg: string; w: number; h: number; look: Look; px?: number; className?: string }) {
-  const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    if (look !== "pixel") return;
-    const c = ref.current;
-    if (!c) return;
-    const cw = Math.max(1, Math.round(w / px));
-    const ch = Math.max(1, Math.round(h / px));
-    c.width = cw;
-    c.height = ch;
-    const img = new Image();
-    img.onload = () => {
-      const g = c.getContext("2d");
-      if (!g) return;
-      g.clearRect(0, 0, cw, ch);
-      g.imageSmoothingEnabled = true;
-      g.drawImage(img, 0, 0, cw, ch);
-      // hard edges: every pixel is either fully there or not at all
-      const d = g.getImageData(0, 0, cw, ch);
-      for (let i = 3; i < d.data.length; i += 4) d.data[i] = d.data[i] > 100 ? 255 : 0;
-      g.putImageData(d, 0, 0);
-    };
-    img.src = toUrl(svg);
-  }, [svg, w, h, look, px]);
-
-  if (look === "smooth") {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={toUrl(svg)} alt="" width={w} height={h} draggable={false} className={className} />;
-  }
-  return <canvas ref={ref} aria-hidden="true" style={{ width: w, height: h }} className={`[image-rendering:pixelated] ${className}`} />;
+// one of the SVG drawings from art.ts, shown as an image
+function Art({ svg, w, h, className = "" }: { svg: string; w: number; h: number; className?: string }) {
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={toUrl(svg)} alt="" width={w} height={h} draggable={false} className={className} />;
 }
 
-export function SushiBelt({ look }: { look: Look }) {
+export function SushiBelt() {
   const box = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
   const still = useReducedMotion();
@@ -85,10 +55,7 @@ export function SushiBelt({ look }: { look: Look }) {
   const surfaceBottom = BELT_H - SURFACE.top - SURFACE.h; // from the container's bottom
 
   const plates = [...MENU, ...MENU, ...MENU];
-  const slats =
-    look === "pixel"
-      ? `repeating-linear-gradient(90deg, transparent 0 ${SLAT - 4}px, #48302a ${SLAT - 4}px ${SLAT}px)`
-      : `repeating-linear-gradient(90deg, transparent 0 ${SLAT - 3}px, rgba(30,15,10,0.35) ${SLAT - 3}px ${SLAT}px)`;
+  const slats = `repeating-linear-gradient(90deg, transparent 0 ${SLAT - 3}px, ${SLAT_INK} ${SLAT - 3}px ${SLAT}px)`;
 
   return (
     <footer className="relative pt-20 pb-10">
@@ -110,7 +77,7 @@ export function SushiBelt({ look }: { look: Look }) {
 
       {/* the noren over the counter, the line, and the note */}
       <div className="relative grid justify-items-center gap-5 text-center">
-        <Art svg={NOREN} w={220} h={76} look={look} px={2.4} />
+        <Art svg={NOREN} w={220} h={76} />
         <h2 className="font-serif text-h2m italic text-head md:text-h2">One last roll before you go?</h2>
         <p className="printed">Thanks for stopping by. Hope you found something you liked. ♡</p>
       </div>
@@ -126,7 +93,7 @@ export function SushiBelt({ look }: { look: Look }) {
         {width > 0 && (
           <>
             <div className="absolute inset-x-0 bottom-0">
-              <Art svg={beltSvg(width)} w={width} h={BELT_H} look={look} px={2.6} className="block" />
+              <Art svg={beltSvg(width)} w={width} h={BELT_H} className="block" />
             </div>
             {/* the moving slats on the straight run */}
             <motion.div
@@ -159,7 +126,7 @@ export function SushiBelt({ look }: { look: Look }) {
                   className="size-full rounded-full"
                   style={{
                     rotate: turn,
-                    backgroundImage: `repeating-conic-gradient(${look === "pixel" ? "#48302a" : "rgba(30,15,10,0.35)"} 0deg 5deg, transparent 5deg ${(SLAT / (SURFACE.h / 2)) * (180 / Math.PI)}deg)`,
+                    backgroundImage: `repeating-conic-gradient(${SLAT_INK} 0deg 5deg, transparent 5deg ${(SLAT / (SURFACE.h / 2)) * (180 / Math.PI)}deg)`,
                   }}
                 />
                 <div className="absolute top-1/2 left-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#7a2c1d]" />
@@ -178,7 +145,7 @@ export function SushiBelt({ look }: { look: Look }) {
                 whileHover={still ? undefined : { y: -10, rotate: [0, -4, 3, 0], transition: { duration: 0.45 } }}
                 title={m.name}
               >
-                <Art svg={m.svg} w={PLATE_W} h={PLATE_H} look={look} />
+                <Art svg={m.svg} w={PLATE_W} h={PLATE_H} />
                 {/* little "tasty!" strokes over every third plate */}
                 {i % 3 === 1 && <Ticks className="absolute -top-3 left-3 w-7" delay={(i % 6) * 0.3} />}
               </motion.li>

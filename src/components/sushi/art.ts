@@ -1,5 +1,4 @@
-// Hand-drawn SVG art for the sushi conveyor footer, kept as strings so the same drawing can be
-// shown as smooth vector or rasterised small for the pixel version.
+// Hand-drawn SVG art for the sushi conveyor footer, kept as strings and shown as images.
 // Each plate is drawn on a 120×80 canvas, with the plate centred at (60, 62).
 
 const RICE = "#fbf8f1";
