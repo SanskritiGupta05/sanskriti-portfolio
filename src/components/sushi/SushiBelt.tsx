@@ -141,7 +141,7 @@ export function SushiBelt({ look }: { look: Look }) {
         <span className="h-px bg-[#efc9bd]" />
       </div>
       <div className="mt-4 flex justify-end">
-        <a href="#top" className="label !text-ink underline-offset-4 hover:underline">
+        <a href="#" className="label !text-ink underline-offset-4 hover:underline">
           Back to top ↑
         </a>
       </div>
