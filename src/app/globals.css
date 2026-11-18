@@ -125,7 +125,7 @@
   html {
     background-color: var(--bg);
     /* a quiet dot grid over every page */
-    background-image: radial-gradient(var(--dot) 1px, transparent 1.2px);
+    background-image: radial-gradient(color-mix(in srgb, var(--dot) 60%, transparent) 1.6px, transparent 1.9px);
     background-size: 22px 22px;
     background-position: center top;
     /* the dots stay still while scrolling, so they don't slide past the pinned hero */
