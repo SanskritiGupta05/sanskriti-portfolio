@@ -4,9 +4,11 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll } from "motion/react";
 import { BOUNCE as B } from "./content";
+import { StageTabs, Ticket } from "./pieces";
 
 // A · Margin notes. Editorial and calm (after Kari's case study): a sticky contents list whose
-// dot follows you, a thin reading-progress line, meta chips, a big Redaction pull quote,
+// dot follows you, a thin reading-progress line, the project facts on a perforated ticket,
+// the lifecycle as index-card tabs, a big Redaction pull quote,
 // a before/after switch on the screens, and principles pinned on as taped paper notes.
 const SECTIONS = [
   { id: "a-overview", label: "Overview" },
@@ -45,14 +47,8 @@ export function LayoutMargin() {
         <p className="mt-3 max-w-[40ch] font-serif text-h1 text-balance text-head">
           <span className="font-worn">{B.title}</span>
         </p>
-        <p className="printed mt-5 max-w-[62ch]">{B.intro}</p>
-        <div className="mt-6 flex flex-wrap gap-2">
-          {B.meta.map((m) => (
-            <span key={m.k} className="rounded-full border border-line bg-surface/60 px-3 py-1.5 text-sm text-ink">
-              <span className="text-muted-foreground">{m.k} · </span>
-              {m.v}
-            </span>
-          ))}
+        <div className="mt-8">
+          <Ticket kicker="Rider app redesign · Admit one" text={B.intro} meta={B.meta} />
         </div>
         <div className="relative mt-10 aspect-[1600/966] overflow-hidden rounded-[20px] border border-line">
           <Image src={B.hero} alt="Bounce Daily redesigned screens" fill sizes="900px" className="object-cover" />
@@ -102,15 +98,7 @@ export function LayoutMargin() {
           <section id="a-lifecycle" className="grid gap-6">
             <span className="label">The rider lifecycle</span>
             <h2 className="max-w-[34ch] font-serif text-h1 text-head">{B.lifecycleIntro}</h2>
-            <ol className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-4">
-              {B.lifecycle.map((l, i) => (
-                <li key={l.stage} className="grid content-start gap-2 bg-bg p-3">
-                  <span className="label !text-[#c8553b]">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-serif text-lg text-head">{l.stage}</span>
-                  <span className="printed text-sm">{l.q}</span>
-                </li>
-              ))}
-            </ol>
+            <StageTabs stages={B.lifecycle} />
             <Note>
               {B.principle.lead} <b className="font-normal text-head">{B.principle.qs.join(" ")}</b>
             </Note>
