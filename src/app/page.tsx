@@ -104,15 +104,16 @@ export default function Home() {
           {/* Case studies come next; the sheet already carries the footer */}
           <section aria-labelledby="work-title" className="min-h-[70vh] pt-20">
             <span className="label">Work</span>
-            {/* the heading with a little pixel lucky cat waving beside it */}
-            <div className="mt-3 flex items-end gap-4">
+            {/* the heading with a little pixel lucky cat waving beside it
+                (pinned to the heading, so it doesn't push the heading away from the label) */}
+            <div className="relative mt-3 w-fit">
               <h2
                 id="work-title"
                 className="font-serif text-h2m text-head md:text-h2"
               >
                 Selected case studies
               </h2>
-              <LuckyCat className="mb-1 shrink-0" px={2.5} />
+              <LuckyCat className="absolute bottom-1 left-full ml-4" px={1.9} />
             </div>
           </section>
           <Footer />
