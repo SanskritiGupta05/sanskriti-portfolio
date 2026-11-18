@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useAnimationFrame, useMotionValue, useReducedMotion, useTransform } from "motion/react";
 import { BELT_H, MENU, NOREN, beltSvg } from "./art";
+import { Branch, HANG_X, HANG_Y, Lantern, Shoji, Ticks } from "./Decor";
 
 // Sushi conveyor footer. The same drawings render two ways:
 //  - "smooth": crisp vector art
@@ -87,9 +88,25 @@ export function SushiBelt({ look }: { look: Look }) {
       : `repeating-linear-gradient(90deg, transparent 0 ${SLAT - 3}px, rgba(30,15,10,0.35) ${SLAT - 3}px ${SLAT}px)`;
 
   return (
-    <footer className="pt-20 pb-10">
+    <footer className="relative pt-20 pb-10">
+      {/* scenery: a cherry branch in each top corner with a lantern hanging from it,
+          and a shoji window down each side, standing on the belt (mirrored on the right) */}
+      {[false, true].map((right) => (
+        <div
+          key={String(right)}
+          aria-hidden="true"
+          className={`pointer-events-none absolute top-0 hidden h-full w-[330px] md:block ${right ? "right-0 -scale-x-100" : "left-0"}`}
+        >
+          <Shoji className="absolute top-[170px] left-0 w-[66px]" />
+          <Branch className="absolute top-0 left-0 w-[330px]" />
+          <div className="absolute" style={{ left: HANG_X * (330 / 270) - 32, top: (HANG_Y - 4) * (330 / 270) }}>
+            <Lantern className="w-[64px]" delay={right ? 1.4 : 0} />
+          </div>
+        </div>
+      ))}
+
       {/* the noren over the counter, the line, and the note */}
-      <div className="grid justify-items-center gap-5 text-center">
+      <div className="relative grid justify-items-center gap-5 text-center">
         <Art svg={NOREN} w={220} h={76} look={look} px={2.4} />
         <h2 className="font-serif text-h2m italic text-head md:text-h2">One last roll before you go?</h2>
         <p className="printed">Thanks for stopping by. Hope you found something you liked. ♡</p>
@@ -122,12 +139,14 @@ export function SushiBelt({ look }: { look: Look }) {
             {plates.map((m, i) => (
               <motion.li
                 key={i}
-                className="shrink-0"
+                className="relative shrink-0"
                 style={{ width: PLATE_W, height: PLATE_H }}
                 whileHover={still ? undefined : { y: -10, rotate: [0, -4, 3, 0], transition: { duration: 0.45 } }}
                 title={m.name}
               >
                 <Art svg={m.svg} w={PLATE_W} h={PLATE_H} look={look} />
+                {/* little "tasty!" strokes over every third plate */}
+                {i % 3 === 1 && <Ticks className="absolute -top-3 left-3 w-7" delay={(i % 6) * 0.3} />}
               </motion.li>
             ))}
           </motion.ul>
