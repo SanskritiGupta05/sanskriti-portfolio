@@ -26,6 +26,9 @@ A short, decision-led case study: each key decision shows problem â†’ options â†
 - Takeaway (her words): fewer clicks doesn't always mean better understanding, or better accessibility.
 - Explorations: 5 scooter-card versions, 3 combined scooter + plan versions, 2 options for the switch-speed sheet.
 
+## Core design challenge (from Sanskriti, 2026-11-21)
+- Many riders aren't highly educated and want every piece of information easy to reach. The challenge: show everything they need without the UI looking complex, and without putting all the data on one screen, which overwhelms. This tension should run through the case study (a good candidate for the problem statement and the "challenges" section).
+
 ## Working with Aum
 - Regular calls. Sanskriti brought her thinking for each flow, they brainstormed, Aum added his ideas, opinions and feedback, and she improved the flows from that. Sometimes he made his own versions too (the "Aum's version for reference" frames).
 
