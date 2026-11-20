@@ -44,6 +44,13 @@ Built in her file `eJ4fYjVQr9UC9cwEYrLDgP`, page "Case study — assets" (1115:7
 - D03 · KYC status (1118:8388): old 7-step sign-up wall (details, reference, Aadhaar, licence, selfie, then a wait screen) → "Onboard in 3 steps" (plan, KYC, payment) + pending / rejected-with-reasons / approved cards on home. Law: Visibility of system status. Number: 7 steps → 3.
 - D04 · No dead ends (1118:11688): old failed-payment toast + plan-ended timer → hub sold out → nearby hubs, outside service area → coming soon, payment failed → try again. Law: Help users recover from errors. Number: 8 scenarios.
 - D05 · Dues and renewals (1118:12357): old countdown + bare dues list → plan expiring / expired / KM low on home + dues explained before paying. Law: Recognition over recall. Number: 4 plan states.
+- D06 · Onboarding (1120:7935): old 3 slides + 7-step form → splash + 3 illustrated intro screens (scooter on map, rider testimonials, what's included) + sign-up in 2 screens (phone, OTP) + "Onboard in 3 steps" checklist. Law: Aesthetic-usability effect. Number: 7 form steps → 2 screens. Sanskriti is proud of this visual work; give it room on the page.
+- D07 · Choose a plan (1120:9364): dense old plan cards → plans with price per day, KM sheet, review screen. Law: Hick's law.
+- D08 · Pay (1120:10160): straight to payment gateway → price breakdown + Shield + referral, success screen with hub to visit. Law: Peak-end rule.
+- D09 · Home (1120:10506): countdown timer → booking card that changes by stage (booked, picked up, riding). Law: Visibility of system status.
+- V01 · Visual language (1120:13971): custom illustrations set + loyalty tiers (Start, Cruise, Power).
+- S01 · Bottom sheet standard (1121:11102): 6 sheets as designed vs standardised, plus 4 rules (full width, top radius 24, close button 12 above, no grabber/dividers, 22 SemiBold title centred for status sheets and left for details sheets, filled primary + red-outline secondary). The same standard is applied to every sheet inside the screen copies on the assets page only (not the original screens).
+- Page plan: D01–D05 are the key decisions; D06 onboarding gets its own showcase; D07–D09 + V01 + S01 form a shorter "more before and after / system" part.
 - Before/after boards: grey "Old app" row, then red-outlined "Shipped" row, then a law + "what changed" footer. Boards are 1440 wide, laid out left to right at x = 0, 1600, 3200, 4800, 6400.
 
 ## Still open
