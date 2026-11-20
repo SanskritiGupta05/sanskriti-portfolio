@@ -49,8 +49,8 @@ Built in her file `eJ4fYjVQr9UC9cwEYrLDgP`, page "Case study — assets" (1115:7
 - D08 · Pay (1120:10160): straight to payment gateway → price breakdown + Shield + referral, success screen with hub to visit. Law: Peak-end rule.
 - D09 · Home (1120:10506): countdown timer → booking card that changes by stage (booked, picked up, riding). Law: Visibility of system status.
 - V01 · Visual language (1120:13971): custom illustrations set + loyalty tiers (Start, Cruise, Power).
-- S01 · Bottom sheet standard (1121:11102): 6 sheets as designed vs standardised, plus 4 rules (full width, top radius 24, close button 12 above, no grabber/dividers, 22 SemiBold title centred for status sheets and left for details sheets, filled primary + red-outline secondary). The same standard is applied to every sheet inside the screen copies on the assets page only (not the original screens).
-- Page plan: D01–D05 are the key decisions; D06 onboarding gets its own showcase; D07–D09 + V01 + S01 form a shorter "more before and after / system" part.
+- Bottom sheets (not a case study decision, just cleanup): every sheet inside the screen copies on the assets page is full width with 20px left/right margins, top corners 24, close button 12 above, no grabber/dividers, red-outline secondary buttons. Original screens on Page 1 untouched. The S01 board was removed on her request.
+- Page plan: D01–D05 are the key decisions; D06 onboarding gets its own showcase; D07–D09 + V01 form a shorter "more before and after / system" part.
 - Before/after boards: grey "Old app" row, then red-outlined "Shipped" row, then a law + "what changed" footer. Boards are 1440 wide, laid out left to right at x = 0, 1600, 3200, 4800, 6400.
 
 ## Still open
