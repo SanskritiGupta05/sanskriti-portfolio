@@ -26,8 +26,21 @@ A short, decision-led case study: each key decision shows problem → options �
 - Takeaway (her words): fewer clicks doesn't always mean better understanding, or better accessibility.
 - Explorations: 5 scooter-card versions, 3 combined scooter + plan versions, 2 options for the switch-speed sheet.
 
+## Working with Aum
+- Regular calls. Sanskriti brought her thinking for each flow, they brainstormed, Aum added his ideas, opinions and feedback, and she improved the flows from that. Sometimes he made his own versions too (the "Aum's version for reference" frames).
+
+## Lead decisions (agreed 2026-11-20)
+1. Scooter type gets its own step (licence rule up front)
+2. Map-first hub selection
+3. KYC status on the home screen, with one next step
+4. No dead ends (no scooters at a hub, wrong type, out of area)
+5. Dues and renewals shown up front
+
+## Case study assets (Figma)
+Built in her file `eJ4fYjVQr9UC9cwEYrLDgP`, page "Case study — assets" (1115:7577), using the file's own Bounce text and colour styles and cloned screens (not screenshots).
+- Doc components: `Doc/Tag` (1115:7579), `Doc/Point` (1115:7581).
+- D01 · Scooter choice board (1115:7584): Option A "Fewer taps" (her proposal) vs Option B "Decide first" (shipped), pros/cons, law + learning.
+
 ## Still open
 - Timeline: old screenshots are May 2025; workspace labels say Dec 2025. Need real start and end months.
-- How the work with Aum ran day to day (his rough "Aum's version" frames → her designs?).
 - Any feedback after launch from Aum or the team.
-- Which 3–4 decisions lead the page (candidates: scooter-type step, KYC status on home, no dead ends, dues and renewals up front, map-first hubs).
