@@ -723,3 +723,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
     - Read-aloud uses "The design thinking · Multiple ways to consume information" instead.
   - **Removed:** the state-chip `Flow`s and the "Practising what it preaches" note, which were my copy and not in hers.
   - Closing quote: "The best way to learn UX laws is to start designing with them."
+- **2026-11-20:** Started the **Bounce Daily case study rewrite**. Working notes (facts, countable numbers, decisions, open questions) live in `docs/bounce-daily-case-study-notes.md`; the page `/work/bounce-daily` will be rebuilt from them. First decision captured: the separate scooter-type step (Aum's call over Sanskriti's fewer-taps idea; "fewer clicks doesn't always mean better understanding").
