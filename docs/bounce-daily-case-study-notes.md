@@ -68,6 +68,11 @@ Built in her file `eJ4fYjVQr9UC9cwEYrLDgP`, page "Case study — assets" (1115:7
 - Measured red UI elements (text, fills, borders; illustrations and icons excluded) on 26 screens: 13.2 → 3.3 per screen (75% less). This compares her first handoff screens with the system version, so phrase it as a system rule ("a red budget of about 3 per screen"), not as a shipped before/after.
 - DS · Colour and components board (1128:11128): red budget, colour roles (Doc/Swatch 1128:11111), Bounce/Button set (1128:11110: Primary/Secondary × Large/Small), Bounce/Status set (1128:11127), bottom sheet anatomy + 5 rules, "Learning from Zomato" panel (quote: "We overused red since it was our brand color." from "Developing the Zomato design system", uxdesign.cc).
 
+## Reverted (2026-11-20, her call)
+- All screen copies on the decision boards (D01–D05, D07–D09, V01) were replaced with fresh, unmodified clones of her original screens. The colour pass, bottom-sheet cleanup, trays, soft shadows, pills, floating nav and price-breakdown swap are gone from the boards. D06 onboarding and the old-app rows were never changed.
+- Kept on the page but unused, for reference: DS · Colour and components board, Bounce/Button, Bounce/Status, Doc/Swatch, Bounce/Bottom nav, Bounce/Price row, Bounce/Price breakdown, and the two preview frames (including her own edited price breakdown, 1140:11790).
+- So the "13.2 → 3.3 red per screen" figure no longer describes the boards; don't use it on the page unless the colour system is applied again.
+
 ## Still open
 - Timeline: old screenshots are May 2025; workspace labels say Dec 2025. Need real start and end months.
 - Any feedback after launch from Aum or the team.
