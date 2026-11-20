@@ -28,6 +28,7 @@ A short, decision-led case study: each key decision shows problem â†’ options â†
 
 ## Core design challenge (from Sanskriti, 2026-11-21)
 - Many riders aren't highly educated and want every piece of information easy to reach. The challenge: show everything they need without the UI looking complex, and without putting all the data on one screen, which overwhelms. This tension should run through the case study (a good candidate for the problem statement and the "challenges" section).
+- She confirmed it was a major challenge and was kept in mind throughout. Placement on the page: (1) one line in the summary card; (2) its own short section right after "Who it's for": "Everything visible, nothing overwhelming"; (3) each decision card gets a one-line "For the rider" note showing how that decision served it (scooter step: Yes/No licence on each card; hubs: a map, not names to read; KYC: one status card with one next step; dead ends: an illustration plus one action; dues/renewals: status on home, not remembered dates; onboarding: pictures and real riders before any form).
 
 ## Working with Aum
 - Regular calls. Sanskriti brought her thinking for each flow, they brainstormed, Aum added his ideas, opinions and feedback, and she improved the flows from that. Sometimes he made his own versions too (the "Aum's version for reference" frames).
