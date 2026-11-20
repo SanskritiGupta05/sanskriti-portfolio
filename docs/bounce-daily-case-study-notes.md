@@ -29,6 +29,12 @@ A short, decision-led case study: each key decision shows problem → options �
 ## Working with Aum
 - Regular calls. Sanskriti brought her thinking for each flow, they brainstormed, Aum added his ideas, opinions and feedback, and she improved the flows from that. Sometimes he made his own versions too (the "Aum's version for reference" frames).
 
+## More story (from Sanskriti, 2026-11-20)
+- She was the app's first UI designer; before her there was no UI designer. Aum later told her she set the first benchmark / foundation for every designer who comes after.
+- Done before the AI boom: only ChatGPT was available. Research was done by hand, and decisions were grounded in UX principles.
+- She raised early on that the app overused red (primary buttons, headers, icons, card backgrounds), using colour psychology. Aum said to skip it for then and focus on UX and flows.
+- The case study shows her refined version (calmer colour, consistent buttons and sheets). Her call: don't label it "refined"; present it as her designs. The live app may have changed since anyway (it's 2026).
+
 ## Lead decisions (agreed 2026-11-20)
 1. Scooter type gets its own step (licence rule up front)
 2. Map-first hub selection
@@ -52,6 +58,11 @@ Built in her file `eJ4fYjVQr9UC9cwEYrLDgP`, page "Case study — assets" (1115:7
 - Bottom sheets (not a case study decision, just cleanup): every sheet inside the screen copies on the assets page is full width with 20px left/right margins, top corners 24, close button 12 above, no grabber/dividers, red-outline secondary buttons. Original screens on Page 1 untouched. The S01 board was removed on her request.
 - Page plan: D01–D05 are the key decisions; D06 onboarding gets its own showcase; D07–D09 + V01 form a shorter "more before and after / system" part.
 - Before/after boards: grey "Old app" row, then red-outlined "Shipped" row, then a law + "what changed" footer. Boards are 1440 wide, laid out left to right at x = 0, 1600, 3200, 4800, 6400.
+
+## Colour and component system (assets page)
+- Applied to all screen copies on the assets page except onboarding (D06 stays visual-heavy), old-app screens and illustrations: one red primary button per screen; secondary buttons white + Neutral/300 border + dark text; red text/prices/tabs/chips/card headers → neutrals; status uses the file's Warning/Error/Success/Info tokens; buttons Large 50 / Small 40, radius 12.
+- Measured red UI elements (text, fills, borders; illustrations and icons excluded) on 26 screens: 13.2 → 3.3 per screen (75% less). This compares her first handoff screens with the system version, so phrase it as a system rule ("a red budget of about 3 per screen"), not as a shipped before/after.
+- DS · Colour and components board (1128:11128): red budget, colour roles (Doc/Swatch 1128:11111), Bounce/Button set (1128:11110: Primary/Secondary × Large/Small), Bounce/Status set (1128:11127), bottom sheet anatomy + 5 rules, "Learning from Zomato" panel (quote: "We overused red since it was our brand color." from "Developing the Zomato design system", uxdesign.cc).
 
 ## Still open
 - Timeline: old screenshots are May 2025; workspace labels say Dec 2025. Need real start and end months.
