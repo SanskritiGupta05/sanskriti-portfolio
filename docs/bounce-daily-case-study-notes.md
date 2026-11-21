@@ -77,6 +77,9 @@ Built in her file `eJ4fYjVQr9UC9cwEYrLDgP`, page "Case study — assets" (1115:7
 - Kept on the page but unused, for reference: DS · Colour and components board, Bounce/Button, Bounce/Status, Doc/Swatch, Bounce/Bottom nav, Bounce/Price row, Bounce/Price breakdown, and the two preview frames (including her own edited price breakdown, 1140:11790).
 - So the "13.2 → 3.3 red per screen" figure no longer describes the boards; don't use it on the page unless the colour system is applied again.
 
+## Editable full-size screens (Page 1)
+- 2026-11-21: section "Case study screens (editable)" (1157:7577) on Page 1, right of "new bounce". Full-size copies (440 wide; onboarding 393, loyalty 360) of every Page 1 frame used on the assets-page boards, one labelled row per board (D01 A/B, D02–D05, D06 first impression + sign up, D07–D09, V01 loyalty + illustrations), 37 frames. Old-app screenshots not included. A screen used on two boards has a copy in each row. All refinements happen here, frame by frame, with her approval; the originals in "new bounce" stay untouched.
+
 ## Still open
 - Timeline: old screenshots are May 2025; workspace labels say Dec 2025. Need real start and end months.
 - Any feedback after launch from Aum or the team.
