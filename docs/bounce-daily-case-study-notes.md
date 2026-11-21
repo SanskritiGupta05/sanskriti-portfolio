@@ -79,6 +79,7 @@ Built in her file `eJ4fYjVQr9UC9cwEYrLDgP`, page "Case study — assets" (1115:7
 
 ## Editable full-size screens (Page 1)
 - 2026-11-21: section "Case study screens (editable)" (1157:7577) on Page 1, right of "new bounce". Full-size copies (440 wide; onboarding 393, loyalty 360) of every Page 1 frame used on the assets-page boards, one labelled row per board (D01 A/B, D02–D05, D06 first impression + sign up, D07–D09, V01 loyalty + illustrations), 37 frames. Old-app screenshots not included. A screen used on two boards has a copy in each row. All refinements happen here, frame by frame, with her approval; the originals in "new bounce" stay untouched.
+- Frame log: 1157:7579 (D01 Option A, Select Your Plan): plan list replaced by a clone of her list 1145:16849 (old list hidden, 1157:7605) with 30/14/7/3 days in the grey tray and 5 days (selected, red radio) in the pink promo tray. Km and totals are sample values from the per-day prices; real ones still needed.
 
 ## Still open
 - Timeline: old screenshots are May 2025; workspace labels say Dec 2025. Need real start and end months.
