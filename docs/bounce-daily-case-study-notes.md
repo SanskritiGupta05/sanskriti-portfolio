@@ -88,6 +88,52 @@ Built in her file `eJ4fYjVQr9UC9cwEYrLDgP`, page "Case study — assets" (1115:7
 - D01 Option B, plan screen: new frame 1177:11013 = clone of the refined plan screen 1157:7579, with High speed selected in the toggle (the rider just chose it on the scooter screen); old copy 1157:8038 hidden. Note: 1157:7579 itself now shows Low speed selected (her edit), and its toggle frame is named "Frame 2147224146".
 - Scooter choice demo built (1172:10988): fixes the bug where the Low speed card was tagged "License Required" while its row said NO; tray of two cards with radio, sentence-case titles, dark speeds, meaning-coloured licence lines, "from ₹X a day"; bigger scooter image; helper tip "No driving licence? Pick Low speed. You can switch later."; full-width "Continue with high speed →". Not yet applied to the D01 Option B scooter copy (1157:7949).
 
+## Decision: when KYC happens (Plan → KYC → Pay) — discussed 2026-11-22
+She had a similar discussion with Aum. This is a strong candidate for a decision card ("problem → options → choice → why").
+
+**How we got there (three rounds):**
+1. First assumption (from the v1 "Onboard in 3 steps" checklist: plan → KYC → payment): KYC between plan and pay, with the rider waiting for approval before paying. Problems found on the flow map: the Review button said "Confirm and pay" but led to KYC; Verify identity said "Continue to payment" but led to a 2–4 hour wait; after approval the rider had to tap "Start booking" to get back to a plan they had already chosen, and the hub could sell out meanwhile.
+2. She then proposed pay first, KYC after: payment books the scooter; KYC must be verified before pick-up because hub staff check it at the hub (this is what Aum described). Built: Payment successful → "Complete KYC"; home states "KYC needed" (can't collect yet), "KYC in review", "KYC not approved"; tracker Paid → KYC → Pick up → Ride.
+3. She came back to KYC before payment, worried it would bring back the old KYC wall. Discussion settled on the **hybrid**.
+
+**Options weighed:**
+| Order | Friction before paying | Friction after paying |
+|---|---|---|
+| Pay → KYC | Lowest | Highest: riders who pay but never finish KYC need refunds; hub staff turn people away |
+| KYC approved → Pay | Highest: a 2–4 hour wait between choosing and paying; plan/hub must be held | Lowest |
+| **Hybrid: KYC submit → Pay** (chosen) | About 2 minutes of doing, no waiting | Low: rare re-uploads |
+| KYC → Plan → Pay | Rider cleared first | Basically the old app's KYC wall |
+
+**Why it isn't the old KYC wall:** the old app asked for 11 screens (Aadhaar, OTP, licence, selfie, plus a reference contact) right after sign-up, before the rider saw any hub, scooter or price. The new flow asks after hub, scooter and plan are chosen, and asks for less (Aadhaar + selfie; licence only for high speed).
+
+**UX reasoning used:** value before effort (show hub, scooter, price first); commitment and consistency (after choosing a plan, riders are more likely to finish the next step); goal-gradient (a short "step 1 of 2" right before paying feels near the finish); don't make people wait mid-task (the real problem with "approve, then pay").
+
+**Competitors:** not verified. General pattern only: two-wheeler rental apps in India usually let riders browse and choose first, and ask for documents before payment or at pick-up. Research specific apps (Yulu, Zypp, Royal Brothers, Vogo) before quoting anything on the page.
+
+**Final flow (hybrid + escape hatch):**
+Plan → KM → Review ("Continue to KYC", with "2 steps to book: ① KYC · ② Pay") → ① Verify identity (submit Aadhaar + selfie; "Submit and continue to pay") → ② Confirm and pay (chip "Step 2 of 2 · KYC submitted ✓") → Payment successful ("We're checking your KYC, usually 2–4 hours"; hub staff check it at pick-up) → Home · KYC in review → Home · ready to collect → pick up → ride.
+- **"Do KYC later"**: a quiet link on Verify identity for riders in a hurry. They pay first, see "Payment successful · KYC skipped" (main button "Complete KYC"), and home shows "KYC needed: you can't collect yet" until it's done. Most riders take the default.
+- Ways to keep the KYC step light: present it as one checkout ("2 steps to book"); Aadhaar via OTP/DigiLocker if Bounce supports it; KYC only once (returning riders skip it); save progress if they drop off.
+- How to know it works: watch drop-off between Review and Pay after launch; if too many leave at KYC, make "Do KYC later" more prominent or flip the default.
+- Checklist wording now: 1 Choose your plan · 2 Verify KYC and pay · 3 Collect your scooter.
+- Open with Aum: refund policy if KYC can't be fixed after payment; is verification instant (Aadhaar OTP/DigiLocker) or manual (2–4 hours)? If instant, the order matters much less.
+
+## Other flow decisions from the 2026-11-22 session
+- **Switch scooter is mid-rental only.** Before paying, switching speed is just the plan-screen toggle and the "Switch to high speed?" sheet. Mid-rental, low → high checks only the driving licence (Aadhaar and selfie already verified), then the rider swaps at a hub; high → low needs no documents. Entry: a "Switch to high speed scooter" card under the booking card on Home while the rental is running (active, plan ending soon, low on KM); not shown when the plan has ended, the scooter is locked, or before pick-up. Open: price difference and unused KM when switching.
+- **Booking card button rule:** Renew plan (left) and Top up KM (right) never move; only emphasis changes. Renew is primary by default (every rider renews; a plan ending locks the scooter); Top up becomes primary only when KM is the problem. Plan ended shows Renew alone.
+- **Progress tracker** (Paid → KYC → Pick up → Ride) shows only until the ride starts; after that the card uses a status chip plus plan and KM tiles.
+- **Allow location** screen added before Pick a hub (it powers distance and nearest-hub-first), with "Enter my area instead".
+- **Nearest hub first:** hub cards show distance and a "Nearest" tag; the carousel starts at the nearest hub. The same hub card is reused on payment success and on home so riders recognise their hub.
+- **Security deposit in 4 parts:** a v1 pay screen offered "Pay ₹250 in next 4 renewals · Security deposit in 4 EMIs"; revamped as a choice on Confirm and pay. Confirm this is a real offer and the amounts.
+- **Booking details used across screens (sample values):** low speed scooter, 30 days, 4,000 km, RR Nagar Hub (0.8 km), plate KA 01 AV 2848, first payment ₹11,398 (plan ₹9,400 + deposit ₹999 + onboarding ₹999; Shield free), renewal ₹9,400. Fees and km figures are placeholders.
+
+## Figma work from the 2026-11-21/22 sessions (for reference)
+- Page 1 sections: "App flows · old journey → new journey" (overview, old journey as numbered screenshots, new journey by stage), "New app · flow map" (every new screen connected with arrows, branches and return paths), "Revamp · remaining screens" (the last v1 screens rebuilt with the new components).
+- New page "Design system": the old variables and styles were deleted (her call) and replaced with v1 tokens (Primitives, Color, Spacing, Radius), 16 text styles, 2 shadows, 22 icons and 14 components (Button, Chip, Radio, Step, Progress bar, Icon tile, Input, List row, Card, Tray, Header, Bottom bar, Sheet, Slot). The screens are not linked to these components yet; she chose to skip that for now.
+
 ## Still open
 - Timeline: old screenshots are May 2025; workspace labels say Dec 2025. Need real start and end months.
 - Any feedback after launch from Aum or the team.
+- KYC: refund policy if KYC fails after payment; instant vs manual verification (see the KYC decision above).
+- Switch scooter: price difference and unused KM.
+- Security deposit in 4 parts: real offer or not.
