@@ -80,6 +80,7 @@ export default function Keploy() {
 
       <CaseStudyFrame
         layout="sheet"
+        accent="#F8904A"
         toc={TOC}
         header={
           <header>

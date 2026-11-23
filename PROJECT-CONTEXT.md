@@ -770,3 +770,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-24:** Removed "· Admit one" from the ticket labels on the GFG and Keploy pages (her question; it was my copy, carried over from the eight.money ticket). eight.money still has its own.
 - **2026-11-24:** "Admit one" removed from the eight.money and Spider-Verse ticket labels too (her call); no page says it now.
 - **2026-11-24:** Keploy page: images no longer use the shared framed `Shot` (rounded corners, outline, grey backing boxed in her cover art). A page-local bare `Shot`, served `unoptimized`, matches GFG; the cover uses the 1800px early-keploy.webp.
+- **2026-11-24:** Keploy page contents nav + progress line use Keploy orange #F8904A (`accent` prop; sampled from the Keploy wordmark in her cover art), her ask.
