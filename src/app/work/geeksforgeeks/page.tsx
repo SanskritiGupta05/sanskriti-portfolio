@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Ticket } from "@/components/casestudy/pieces";
-import { CaseStudyFrame, Note, P, Quote, Section, Shot, type TocItem } from "@/components/casestudy/Margin";
+import { CaseStudyFrame, Note, P, Quote, Section, type TocItem } from "@/components/casestudy/Margin";
 
 export const metadata: Metadata = {
   title: "GeeksforGeeks · Sanskriti",
@@ -43,10 +43,10 @@ const ADS = [
 
 const THUMBS = [
   { ...g("yt-technical-interviews", 1116, 628), alt: "Thumbnail: Trends in technical interviews you should know" },
-  { ...g("yt-maxima-minima", 1600, 900), alt: "Thumbnail: Maxima & minima" },
-  { ...g("yt-vector-spaces", 1600, 900), alt: "Thumbnail: Vector spaces" },
-  { ...g("yt-geometric-distribution", 1600, 900), alt: "Thumbnail: Geometric distribution" },
-  { ...g("yt-definite-integral", 1600, 900), alt: "Thumbnail: Definite integral" },
+  { ...g("yt-maxima-minima", 1920, 1080), alt: "Thumbnail: Maxima & minima" },
+  { ...g("yt-vector-spaces", 1920, 1080), alt: "Thumbnail: Vector spaces" },
+  { ...g("yt-geometric-distribution", 1920, 1080), alt: "Thumbnail: Geometric distribution" },
+  { ...g("yt-definite-integral", 1920, 1080), alt: "Thumbnail: Definite integral" },
 ];
 
 const BANNERS = [
@@ -68,7 +68,24 @@ const BANNERS_OTHER = [
   { ...g("banner-discord", 1000, 470), alt: "Banner: Top Discord servers for developers" },
 ];
 
-// a plain grid of framed images
+// Her work shown as-is: square corners (rounded corners clipped the edges of the artwork),
+// served unoptimized so Next doesn't re-compress the lossless files.
+function Shot({ src, w, h, alt, caption, native = false }: { src: string; w: number; h: number; alt: string; caption?: string; native?: boolean }) {
+  return (
+    <figure className="grid gap-2">
+      <Image
+        src={src}
+        alt={alt}
+        width={w}
+        height={h}
+        unoptimized
+        className={`block h-auto border border-line ${native ? "w-full max-w-[250px]" : "w-full"}`}
+      />
+      {caption && <figcaption className="label">{caption}</figcaption>}
+    </figure>
+  );
+}
+
 function Grid({ items, cols = "sm:grid-cols-2" }: { items: { src: string; w: number; h: number; alt: string }[]; cols?: string }) {
   return (
     <div className={`grid gap-4 ${cols}`}>
@@ -79,6 +96,13 @@ function Grid({ items, cols = "sm:grid-cols-2" }: { items: { src: string; w: num
   );
 }
 
+// the tools she used day to day, with their official logos (public/assets/tools/, from Wikimedia Commons)
+const TOOLS = [
+  { name: "Adobe Photoshop", logo: "/assets/tools/photoshop.svg", w: 240, h: 234 },
+  { name: "Adobe Illustrator", logo: "/assets/tools/illustrator.svg", w: 240, h: 234 },
+  { name: "Figma", logo: "/assets/tools/figma.svg", w: 200, h: 300 },
+];
+
 export default function GeeksforGeeks() {
   return (
     <div className="w-full">
@@ -88,6 +112,7 @@ export default function GeeksforGeeks() {
 
       <CaseStudyFrame
         layout="sheet"
+        accent="#2F8D46"
         toc={TOC}
         header={
           <header>
@@ -108,8 +133,19 @@ export default function GeeksforGeeks() {
                 ]}
               />
             </div>
+            <div className="mt-8">
+              <span className="label">Tools I used day to day</span>
+              <ul className="mt-3 flex flex-wrap gap-3">
+                {TOOLS.map((t) => (
+                  <li key={t.name} className="skeu flex items-center gap-2.5 rounded-full py-2 pr-4 pl-2.5">
+                    <Image src={t.logo} alt="" width={t.w} height={t.h} unoptimized className="h-6 w-auto" />
+                    <span className="text-sm text-head">{t.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
             <div className="mt-10">
-              <Shot src="/assets/cases/early-gfg.webp" w={1200} h={902} alt="Designing for growth at GeeksforGeeks" />
+              <Shot src="/assets/cases/gfg/cover.webp" w={2128} h={1598} alt="Designing for growth at GeeksforGeeks" />
             </div>
           </header>
         }
@@ -121,7 +157,7 @@ export default function GeeksforGeeks() {
               alt="Polaroids from the GeeksforGeeks office: the logo wall, a mirror selfie, my desk and the floor"
               width={1677}
               height={1643}
-              sizes="(min-width: 1024px) 400px, 100vw"
+              unoptimized
               className="h-auto w-full"
             />
             <div className="grid gap-4">
@@ -151,9 +187,9 @@ export default function GeeksforGeeks() {
 
         <Section id="ads" label="Google advertisements" title="Promoting courses and premium offerings.">
           <P>These designs were created from scratch in Photoshop to promote GeeksforGeeks&apos; courses and premium offerings.</P>
-          <div className="grid grid-cols-2 items-start gap-4 sm:grid-cols-4">
+          <div className="grid grid-cols-2 items-start justify-items-start gap-4 sm:grid-cols-4">
             {ADS.map((s) => (
-              <Shot key={s.src} {...s} />
+              <Shot key={s.src} {...s} native />
             ))}
           </div>
         </Section>
@@ -176,7 +212,7 @@ export default function GeeksforGeeks() {
           <Note label="Fun fact">
             All these article banners are live on the website! Just search for the article title, and you&apos;ll see the banner featured directly on the page.
           </Note>
-          <Shot {...g("live-on-site", 1600, 730)} alt="The What is Interactive Design? banner live on a GeeksforGeeks article" />
+          <Shot {...g("live-on-site", 1899, 867)} alt="The What is Interactive Design? banner live on a GeeksforGeeks article" />
         </Section>
 
         <Section id="banners-other" label="Article banners" title="Beyond design and UX/UI.">

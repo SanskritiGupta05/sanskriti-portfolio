@@ -62,7 +62,7 @@ export function EarlyCareer() {
                   src={r.img}
                   alt=""
                   fill
-                  sizes="(min-width: 768px) 270px, 100vw"
+                  unoptimized
                   className="object-cover"
                 />
               </span>

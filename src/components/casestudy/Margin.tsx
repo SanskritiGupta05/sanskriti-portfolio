@@ -23,6 +23,7 @@ export function CaseStudyFrame({
   children,
   layout = "column",
   contentClassName = "",
+  accent = "#c8553b",
 }: {
   toc: TocItem[];
   header: ReactNode;
@@ -32,6 +33,8 @@ export function CaseStudyFrame({
   layout?: "column" | "sheet";
   // extra classes for the sheet's content, e.g. a body font for one case study
   contentClassName?: string;
+  // colour of the reading-progress line and the active contents item (default: the site's terracotta)
+  accent?: string;
 }) {
   const box = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -71,14 +74,14 @@ export function CaseStudyFrame({
   const bar = (
     <motion.div
       aria-hidden="true"
-      className="fixed inset-x-0 top-0 z-50 h-[2px] origin-left bg-[#c8553b]"
+      className="fixed inset-x-0 top-0 z-50 h-[2px] origin-left bg-[var(--cs-accent)]"
       style={{ scaleX: scrollYProgress }}
     />
   );
 
   if (layout === "sheet") {
     return (
-      <div ref={box} className="relative">
+      <div ref={box} className="relative" style={{ "--cs-accent": accent } as React.CSSProperties}>
         {bar}
         <div className="md:grid md:grid-cols-[minmax(220px,22vw)_1fr] md:items-start">
           <nav
@@ -93,10 +96,10 @@ export function CaseStudyFrame({
                   <li key={s.id}>
                     <a
                       href={`#${s.id}`}
-                      className={`flex items-center gap-3 text-sm transition-colors ${on ? "text-[#c8553b]" : "text-muted-foreground hover:text-ink"}`}
+                      className={`flex items-center gap-3 text-sm transition-colors ${on ? "text-[var(--cs-accent)]" : "text-muted-foreground hover:text-ink"}`}
                     >
                       <span
-                        className={`size-1.5 shrink-0 rounded-full transition-all ${on ? "scale-125 bg-[#c8553b]" : "bg-line"}`}
+                        className={`size-1.5 shrink-0 rounded-full transition-all ${on ? "scale-125 bg-[var(--cs-accent)]" : "bg-line"}`}
                       />
                       <span className="tabular-nums">
                         {String(i + 1).padStart(2, "0")}
@@ -126,7 +129,7 @@ export function CaseStudyFrame({
                               <a
                                 href={`#${p.id}`}
                                 tabIndex={on ? 0 : -1}
-                                className={`block !text-[14px] leading-snug transition-colors ${activeSub === p.id ? "text-[#c8553b]" : "text-muted-foreground hover:text-ink"}`}
+                                className={`block !text-[14px] leading-snug transition-colors ${activeSub === p.id ? "text-[var(--cs-accent)]" : "text-muted-foreground hover:text-ink"}`}
                               >
                                 {p.label}
                               </a>
@@ -171,7 +174,7 @@ export function CaseStudyFrame({
   }
 
   return (
-    <div ref={box} className="relative">
+    <div ref={box} className="relative" style={{ "--cs-accent": accent } as React.CSSProperties}>
       {bar}
       {header}
       <div className="mt-20 grid gap-12 md:grid-cols-[180px_1fr]">
@@ -185,7 +188,7 @@ export function CaseStudyFrame({
                 className={`flex items-center gap-2 text-sm leading-snug transition-colors ${active === s.id ? "text-head" : "text-muted-foreground hover:text-ink"}`}
               >
                 <span
-                  className={`size-1.5 shrink-0 rounded-full transition-all ${active === s.id ? "scale-125 bg-[#c8553b]" : "bg-line"}`}
+                  className={`size-1.5 shrink-0 rounded-full transition-all ${active === s.id ? "scale-125 bg-[var(--cs-accent)]" : "bg-line"}`}
                 />
                 {s.label}
               </a>
