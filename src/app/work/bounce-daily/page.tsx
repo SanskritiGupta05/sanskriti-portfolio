@@ -22,6 +22,32 @@ import {
   Tags,
   Takeaways,
 } from "@/components/casestudy/bounceStory";
+import { Mark } from "@/components/casestudy/Mark";
+
+// a key fact inside body text: bold, in the heading ink
+function B({ children }: { children: React.ReactNode }) {
+  return <strong className="font-bold text-head">{children}</strong>;
+}
+
+// short pointers with a small red bullet, in the body type
+function Pointers({ items }: { items: React.ReactNode[] }) {
+  return (
+    <ul className="grid gap-3">
+      {items.map((it, i) => (
+        <li
+          key={i}
+          className="printed flex gap-3 text-[16px] leading-[26px] text-ink"
+        >
+          <span
+            aria-hidden="true"
+            className="mt-[10px] size-1.5 shrink-0 rounded-full bg-[#c8553b]"
+          />
+          <span className="min-w-0">{it}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export const metadata: Metadata = {
   title: "Bounce Daily · Sanskriti",
@@ -38,11 +64,27 @@ const TOC: TocItem[] = [
   { id: "challenge", label: "The challenge" },
   { id: "rider", label: "The rider" },
   { id: "move", label: "The big move" },
-  { id: "solution", label: "The solution" },
+  {
+    id: "solution",
+    label: "The solution",
+    sub: [
+      { id: "s1", label: "#1 Look first" },
+      { id: "s2", label: "#2 Choose" },
+      { id: "s3", label: "#3 Book" },
+      { id: "s4", label: "#4 Ride and renew" },
+    ],
+  },
   {
     id: "decisions",
     label: "Design decisions",
-    match: ["decisions", "d1", "d2", "d3", "d4", "d5", "more"],
+    sub: [
+      { id: "d1", label: "#1 Scooter type gets its own step" },
+      { id: "d2", label: "#2 Map first, nearest hub first" },
+      { id: "d3", label: "#3 KYC just before paying" },
+      { id: "d4", label: "#4 KYC status on home" },
+      { id: "d5", label: "#5 Dues and renewals up front" },
+      { id: "more", label: "More calls, at a glance" },
+    ],
   },
   { id: "edge", label: "Edge cases" },
   { id: "ui", label: "The UI layer" },
@@ -249,19 +291,43 @@ export default function BounceDaily() {
             ]}
           />
           <Eyebrow className="pt-4">How I worked</Eyebrow>
-          <Body>
-            The product manager and the Bounce team talked to riders firsthand:
-            they visited the hubs where riders rent scooters, and invited riders
-            to their office to hear where the app was letting them down. I built
-            on those findings. I took screenshots of the live app, went through
-            every flow the way a rider would, and mapped the whole old journey
-            end to end. This was before the AI boom, so all of it was done by
-            hand. From there I explored around 270 screens, reviewed directions
-            with the product manager on regular calls, and kept only what I
-            could defend with a principle I could explain in a sentence.
-            Category apps like Yulu were a useful reference for what riders
-            already knew.
-          </Body>
+          <Pointers
+            items={[
+              <>
+                <B>Talked to riders firsthand.</B> The product manager and the
+                Bounce team visited the hubs where riders rent scooters and
+                invited riders to their office, to hear{" "}
+                <Mark type="highlight">where the app was letting them down</Mark>
+                .
+              </>,
+              <>
+                <B>Walked the live app.</B> I built on those findings, took
+                screenshots, went through every flow the way a rider would, and{" "}
+                <Mark type="highlight">
+                  mapped the whole old journey end to end
+                </Mark>
+                .
+              </>,
+              <>
+                <B>Explored around 270 screens,</B> and reviewed directions with
+                the product manager on regular calls.
+              </>,
+              <>
+                <B>Kept only what I could defend</B> with{" "}
+                <Mark type="highlight">
+                  a principle I could explain in a sentence
+                </Mark>
+                .
+              </>,
+              <>
+                <B>Used category apps like Yulu</B> as a reference for what
+                riders already knew.
+              </>,
+              <>
+                <B>All by hand,</B> before the AI boom.
+              </>,
+            ]}
+          />
         </Section>
 
         <Section
@@ -289,6 +355,7 @@ export default function BounceDaily() {
             number.
           </Body>
           <Solution
+            id="s1"
             label="Solution #1 · Look first"
             title="Look before committing"
             fig="onboarding"
@@ -299,6 +366,7 @@ export default function BounceDaily() {
             includes. Sign-up is just a phone number and an OTP.
           </Solution>
           <Solution
+            id="s2"
             label="Solution #2 · Choose"
             title="Choose without doing maths"
             fig="plans"
@@ -309,6 +377,7 @@ export default function BounceDaily() {
             review comes before paying.
           </Solution>
           <Solution
+            id="s3"
             label="Solution #3 · Book"
             title="Book in two steps"
             fig="pay"
@@ -319,6 +388,7 @@ export default function BounceDaily() {
             to go to.
           </Solution>
           <Solution
+            id="s4"
             label="Solution #4 · Ride and renew"
             title="Know where you stand, every day"
             fig="home"

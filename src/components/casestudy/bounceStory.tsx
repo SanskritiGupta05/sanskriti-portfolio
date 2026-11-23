@@ -283,12 +283,14 @@ export function RiderCard({
 
 // one part of the solution walk-through
 export function Solution({
+  id,
   label,
   title,
   children,
   fig,
   alt,
 }: {
+  id?: string;
   label: string;
   title: string;
   children: ReactNode;
@@ -296,7 +298,7 @@ export function Solution({
   alt: string;
 }) {
   return (
-    <div className="grid min-w-0 gap-3.5 pt-9">
+    <div id={id} className="grid min-w-0 scroll-mt-16 gap-3.5 pt-9">
       <Eyebrow>{label}</Eyebrow>
       <h3 className="font-serif text-[24px] leading-[1.2] text-head md:text-[28px]">
         {title}
@@ -451,12 +453,55 @@ export function PlayLink() {
 
 // the whole old journey vs the new one, step by step with screen counts (her Figma strip 1291:9950, as wrapping chips)
 type Kind = "kept" | "removed" | "new" | "moved";
-const KIND: Record<Kind, { bg: string; fg: string; label: string }> = {
-  kept: { bg: "#efefef", fg: "#666666", label: "Kept" },
-  new: { bg: "#e7ffec", fg: "#028f00", label: "New step" },
-  moved: { bg: "#fff4e2", fg: "#b86e00", label: "Moved here" },
-  removed: { bg: "#ffeded", fg: "#d42b31", label: "Removed" },
+// each chip is a soft raised pill: a top-lit gradient, a bright top edge, a tinted hairline and a small shadow
+const KIND: Record<
+  Kind,
+  {
+    bg: string;
+    from: string;
+    to: string;
+    ring: string;
+    fg: string;
+    label: string;
+  }
+> = {
+  kept: {
+    bg: "#ffffff",
+    from: "#ffffff",
+    to: "#f7f7f7",
+    ring: "rgba(0,0,0,0.07)",
+    fg: "#666666",
+    label: "Kept",
+  },
+  new: {
+    bg: "#e7ffec",
+    from: "#f4fff6",
+    to: "#e3fbe8",
+    ring: "rgba(2,143,0,0.16)",
+    fg: "#028f00",
+    label: "New step",
+  },
+  moved: {
+    bg: "#fff4e2",
+    from: "#fffaf2",
+    to: "#fff0d9",
+    ring: "rgba(184,110,0,0.16)",
+    fg: "#b86e00",
+    label: "Moved here",
+  },
+  removed: {
+    bg: "#ffeded",
+    from: "#fff6f6",
+    to: "#ffe9e9",
+    ring: "rgba(212,43,49,0.16)",
+    fg: "#d42b31",
+    label: "Removed",
+  },
 };
+const chipStyle = (k: Kind) => ({
+  background: `linear-gradient(180deg, ${KIND[k].from}, ${KIND[k].to})`,
+  boxShadow: `inset 0 1px 0 #fff, 0 0 0 1px ${KIND[k].ring}, 0 1px 2px rgba(0,0,0,0.05), 0 6px 12px -6px rgba(40,30,20,0.12)`,
+});
 const OLD_FLOW: [string, string, Kind][] = [
   ["Play Store", "3 screens", "kept"],
   ["Intro", "3 screens", "kept"],
@@ -501,7 +546,7 @@ export function FlowCompare({ caption }: { caption?: string }) {
           <li key={name + i} className="flex items-center gap-2">
             <span
               className="grid gap-0.5 rounded-xl px-3 py-2"
-              style={{ background: KIND[kind].bg }}
+              style={chipStyle(kind)}
             >
               <span className="font-serif text-[16px] leading-5 text-[#1c1b19]">
                 {name}
