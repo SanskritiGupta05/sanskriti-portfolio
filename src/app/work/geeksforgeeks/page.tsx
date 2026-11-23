@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Ticket } from "@/components/casestudy/pieces";
+import { Mark } from "@/components/casestudy/Mark";
 import { CaseStudyFrame, Note, P, Quote, Section, type TocItem } from "@/components/casestudy/Margin";
 
 export const metadata: Metadata = {
@@ -105,7 +106,8 @@ const TOOLS = [
 
 export default function GeeksforGeeks() {
   return (
-    <div className="w-full">
+    // green highlights on this page (GFG brand green, lightened), with the same taller band as Keploy
+    <div className="w-full" style={{ "--scribble": "#2F8D46", "--scribble-fill": "#BFE6C8", "--marker-height": "13px" } as React.CSSProperties}>
       <div className="mx-auto max-w-[826px] px-6">
         <Nav />
       </div>
@@ -162,11 +164,12 @@ export default function GeeksforGeeks() {
             />
             <div className="grid gap-4">
               <P>
-                Shifting from &ldquo;Tech to Design&rdquo; was no easy feat, but I&apos;m incredibly thankful for the head start GFG provided. It&apos;s been an amazing
+                Shifting from &ldquo;Tech to Design&rdquo; was no easy feat, but I&apos;m incredibly thankful for{" "}
+                <Mark type="marker">the head start GFG provided</Mark>. It&apos;s been an amazing
                 experience working on diverse creatives &amp; ideas.
               </P>
               <P>
-                I&apos;ve gained so much knowledge from the team, lessons I&apos;ll carry with me moving forward. Grateful to have collaborated with such passionate and
+                I&apos;ve gained so much knowledge from the team, <Mark type="marker">lessons I&apos;ll carry with me moving forward</Mark>. Grateful to have collaborated with such passionate and
                 creative individuals there!
               </P>
             </div>
@@ -186,7 +189,9 @@ export default function GeeksforGeeks() {
         </Section>
 
         <Section id="ads" label="Google advertisements" title="Promoting courses and premium offerings.">
-          <P>These designs were created from scratch in Photoshop to promote GeeksforGeeks&apos; courses and premium offerings.</P>
+          <P>
+            These designs were <Mark type="marker">created from scratch in Photoshop</Mark> to promote GeeksforGeeks&apos; courses and premium offerings.
+          </P>
           <div className="grid grid-cols-2 items-start justify-items-start gap-4 sm:grid-cols-4">
             {ADS.map((s) => (
               <Shot key={s.src} {...s} native />
@@ -196,7 +201,8 @@ export default function GeeksforGeeks() {
 
         <Section id="thumbnails" label="YouTube thumbnails" title="Grab attention, say what the video is about.">
           <P>
-            YouTube thumbnails were designed to grab attention &amp; communicate the video&apos;s content effectively. Each thumbnail is tailored to the topic, featuring
+            YouTube thumbnails were designed to{" "}
+            <Mark type="marker">grab attention &amp; communicate the video&apos;s content effectively</Mark>. Each thumbnail is tailored to the topic, featuring
             bold typography, vibrant colors, &amp; relevant visuals to ensure clarity and engagement.
           </P>
           <Shot {...THUMBS[0]} />
@@ -205,8 +211,11 @@ export default function GeeksforGeeks() {
 
         <Section id="banners" label="Article banners" title="Making complex concepts more approachable.">
           <P>
-            Designing article banners was one of my core responsibilities at GeeksforGeeks. Each banner was crafted to visually complement the article&apos;s topic,
-            making complex concepts more approachable and engaging.
+            Designing article banners was <Mark type="marker">one of my core responsibilities</Mark> at GeeksforGeeks. Each banner was crafted to visually complement the article&apos;s topic,
+            <Mark type="marker" order={1}>
+              making complex concepts more approachable and engaging
+            </Mark>
+            .
           </P>
           <Grid items={BANNERS} />
           <Note label="Fun fact">
@@ -222,8 +231,11 @@ export default function GeeksforGeeks() {
 
         <Section id="highlight" label="The highlight of my journey" title="The GFG Premium landing page re-design.">
           <P>
-            This was a pivotal project where I revamped the product&apos;s landing page for its launch. The result? Positive feedback from my design team lead and
-            project manager, praising the fresh approach and usability of my designs.
+            This was a pivotal project where I <Mark type="marker">revamped the product&apos;s landing page for its launch</Mark>. The result?{" "}
+            <Mark type="marker" order={1}>
+              Positive feedback from my design team lead and project manager
+            </Mark>
+            , praising the fresh approach and usability of my designs.
           </P>
           <Quote>&ldquo;I&apos;m incredibly thankful for the head start GFG provided.&rdquo;</Quote>
           <Link href="/work#early" className="label mt-6 w-fit !text-ink underline-offset-4 hover:underline">
