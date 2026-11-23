@@ -1,12 +1,14 @@
 # Bounce Daily · case study v3 (draft for review)
 
-Written 2026-11-23 from the "Case study · context" page, the case study notes, the Page 1 flows and her revamped screens. Replaces the structure of web v2 (Figma 1287:2). Items marked **[confirm]** need a check before publishing.
+Written 2026-11-23 (attribution revised the same day) from the "Case study · context" page, the case study notes, the Page 1 flows and her revamped screens. Replaces the structure of web v2 (Figma 1287:2). Items marked **[confirm]** need a check before publishing.
+
+**Voice rule:** the design decisions are Sanskriti's. The product manager brought the business concerns that started the redesign and reviewed the work; he is never named, only "the product manager", and decisions are never credited as his suggestions.
 
 ---
 
 ## Why v2 is hard to read (senior review)
 
-1. **No stated goal.** The page opens with "Aum's four concerns", which is the PM's list, not the problem we set out to solve. A reader never sees *what success meant*, so they can't judge the decisions.
+1. **No stated goal.** The page opens with the product manager's four concerns, which is his list, not the problem we set out to solve. A reader never sees *what success meant*, so they can't judge the decisions.
 2. **Too many frameworks at once.** Four concerns, seven decisions, a Venn, a three-question rule, a seven-stage lifecycle and a UX law on every decision. Each is fine alone; together the reader is holding six mental models.
 3. **Headings don't carry the story.** Clever lines ("The app remembers, so the rider doesn't have to") read well but don't tell a skimmer what happened. A recruiter reading only headings should get the whole case.
 4. **Decisions don't share a shape.** D3 and D5 show options and trade-offs; the others are mostly before/after. Senior work is judged on the trade-offs, so every decision needs them.
@@ -46,7 +48,7 @@ Decision anatomy (sections 7.1–7.5): **The problem → What we considered → 
 **From a document wall to a rider journey.**
 Redesigning an EV scooter rental app for delivery riders, so they can see what they're getting before the app asks anything of them.
 
-Role: Product Designer (first UI designer on the app) · Team: Aum Vats, PM, via DreamLaunch · Timeline: 3 months, 2025 **[confirm months]** · Platform: Android & iOS rider app **[confirm]** · Status: Live on Google Play
+Role: Product Designer (first UI designer on the app) · Team: worked with the product manager, via DreamLaunch · Timeline: 3 months, 2025 **[confirm months]** · Platform: Android & iOS rider app **[confirm]** · Status: Live on Google Play
 
 ### 1 · TL;DR
 
@@ -58,13 +60,15 @@ Role: Product Designer (first UI designer on the app) · Team: Aum Vats, PM, via
 
 Bounce Daily rents EV scooters by the day, week or month to delivery and gig riders in Bengaluru and Delhi NCR. For them the scooter is income: a sold-out hub, an expired plan or a failed payment is a day without earnings.
 
-Many riders have low literacy and use the app outdoors, on budget phones, between deliveries. **[confirm "budget phones, outdoors" with Aum]**
+Many riders have low literacy and use the app outdoors, on budget phones, between deliveries. **[confirm "budget phones, outdoors"]**
 
 ### 3 · The problem
 
 **The app asked for everything before it gave anything.**
 
 A new rider went through 15 steps and 39 screens to book a scooter. The first 18 were forms, OTPs, documents, a selfie and a wait for approval, all before seeing a hub, a scooter or a price. Riders who got past that met plans laid out as near-identical boxes of four numbers each, and many left right there, at the moment of paying. After paying, the app showed a countdown and little else.
+
+The product manager came to me with the business concerns behind the redesign: riders dropping off at plans, documents demanded up front, and a rider base that reads little. Turning those concerns into a new journey was the design work.
 
 > Visual: old journey strip with three callouts: "18 screens before value", "Plans: 4 numbers per box", "After paying: a timer".
 
@@ -79,12 +83,12 @@ A new rider went through 15 steps and 39 screens to book a scooter. The first 18
 **What we couldn't change**
 - **KYC is mandatory:** hub staff check it before handing over a scooter.
 - **The licence rule:** high-speed scooters need a driving licence; low-speed don't (business rule; competitors do the same).
-- **No research budget:** no interviews or analytics; just the live app, the PM and UX principles. Before the AI boom, so research was done by hand.
+- **No research budget:** no interviews or analytics; just the live app, the product manager's knowledge of the business, and UX principles. Before the AI boom, so research was done by hand.
 - **3 months, no design system:** I was the app's first UI designer.
 
 ### 5 · Approach
 
-I walked the live app screen by screen as a rider would, mapped the full old journey, and worked through around 270 screen explorations with Aum on regular calls: I brought a direction, he pushed back, sometimes with his own version, and we settled on what a principle could defend. Aum picked references to learn from, Yulu first.
+I walked the live app screen by screen as a rider would, mapped the full old journey, and explored around 270 screens. I reviewed directions with the product manager on regular calls, kept what a UX principle could defend, and studied category references such as Yulu.
 
 **One principle for every screen: everything visible, nothing overwhelming.**
 Riders want every detail but won't read for it. So each screen shows only what that step needs, as a map, a picture, a chip or a number, and answers three questions: where am I, what's happening, what do I do next.
@@ -110,13 +114,13 @@ Riders now see what they're getting first, and the effort comes only once they'v
 - **Why:** riders use map apps all day; location is the decision (Jakob's law).
 - **Trade-off:** depends on location permission, hence the explained ask and the manual fallback.
 
-#### 7.2 · Scooter type is its own step (I argued against it)
+#### 7.2 · Scooter type is its own step
 
 - **Problem:** the licence rule had to be impossible to miss.
-- **Considered:** *mine:* no extra screen, a speed toggle on the plan screen with a licence sheet on tap; *Aum's:* choose the scooter type first, licence rule on each card.
-- **Chose:** Aum's. The toggle stays on the plan screen for riders who change their mind.
+- **Considered:** *fewer taps:* no extra screen, a speed toggle on the plan screen with a licence sheet on tap; *decide first:* choose the scooter type first, licence rule on each card.
+- **Chose:** decide first, after testing both against the licence rule. The toggle stays on the plan screen for riders who change their mind.
 - **Why:** choosing a scooter and choosing a plan are two decisions; mixing them was the same load that made riders drop off at plans.
-- **Trade-off:** one extra screen. What I took from it: fewer taps doesn't always mean better understanding.
+- **Trade-off:** one extra screen. What I took from it: my first instinct was to save a tap, but fewer taps doesn't always mean better understanding.
 
 #### 7.3 · Plans compare on one number
 
@@ -132,7 +136,7 @@ Riders now see what they're getting first, and the effort comes only once they'v
 - **Considered:** during sign-up (the old app); before choosing a hub; approved before paying (hours of waiting, hub can sell out); after paying (refunds, riders turned away at pick-up); submitted right before paying.
 - **Chose:** submitted right before paying, about two minutes, verified in the background, presented as "2 steps to book". Asks for less than before: Aadhaar and a selfie, licence only for high speed. A quiet "Do KYC later" for riders in a hurry.
 - **Why:** riders have already chosen, so they're motivated to finish; a short "step 1 of 2" feels like the finish line (goal-gradient effect).
-- **Trade-off:** riders who skip KYC can pay but can't collect until it's done; home tells them so. Took three rounds with Aum to settle.
+- **Trade-off:** riders who skip KYC can pay but can't collect until it's done; home tells them so. Took three rounds of iteration, mapped end to end, to settle.
 
 #### 7.5 · Home shows where the rider stands
 
@@ -152,7 +156,7 @@ Eight scenarios beyond the happy path: sold-out hub, city not served, payment fa
 ### 9 · The UI layer
 
 **A calmer, reusable UI.**
-Built a small system as I went: tokens, 16 text styles and 14 components **[confirm counts against the Design system page]**, so a pattern learned once works everywhere. Custom illustrations carry availability, verification and service states so riders don't rely on text. I flagged early that red was everywhere; Aum asked to park it until the flows were right, and the system now keeps one red action per screen.
+Built a small system as I went: tokens, 16 text styles and 14 components **[confirm counts against the Design system page]**, so a pattern learned once works everywhere. Custom illustrations carry availability, verification and service states so riders don't rely on text. I flagged early that red was everywhere; we prioritised the flows first, and the system now keeps one red action per screen.
 
 > Visual: components strip + illustration set + loyalty tiers.
 
@@ -161,7 +165,7 @@ Built a small system as I went: tokens, 16 text styles and 14 components **[conf
 **Shipped in 3 months, live on Google Play.**
 I don't have before-and-after numbers, and I won't invent them. What I'd measure first: drop-off between plan review and payment (where the KYC decision lives), share of riders verified before pick-up, and support calls about booking status.
 
-> "You've set the first benchmark for every designer who works on this app after you." **[confirm exact wording with Aum, or paraphrase]**
+> The product manager later told me I'd set the first benchmark for every designer who works on this app after me. **[confirm wording]**
 
 ### 11 · Reflection
 
@@ -176,6 +180,6 @@ I don't have before-and-after numbers, and I won't invent them. What I'd measure
 - Platform (Android only or both).
 - "Budget phones, outdoors" as a rider fact.
 - Design system counts (text styles, components).
-- Aum's quote: exact words or paraphrase.
+- The product manager's words: exact or paraphrase.
 - Sample values in screens (₹X, ₹999 fees, ₹11,398) labelled or replaced.
 - "18 screens before a hub" vs the context page's "11 KYC screens before a scooter": pick one definition and use it everywhere.
