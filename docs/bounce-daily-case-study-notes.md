@@ -184,6 +184,13 @@ Sanskriti revamped the screens in "Case study screens (editable)" (1157:7577) he
 - Post-launch feedback (product manager's testimonial, used on her site): the redesign unlocked several new product capabilities, with noticeable improvements in rider onboarding and plan adoption after launch; exact numbers withheld for business reasons. In the case study it's credited to "Product Manager, Bounce Daily" (no name).
 - All revamped screens in "Case study screens (editable)" now use the local component "Android/Status bar" (1317:10868, Components page, Roboto, punch-hole camera); the iOS home-indicator lines were removed (iOS components). Same swap applied inside case study v4's screen copies.
 
+## Next version (v5) ideas, parked 2026-11-23 at her request
+Not for the current version. Add numbers that can be measured honestly from the designs and from public data:
+- **UX numbers from the Figma flows (old vs new):** screens and taps before a rider sees a scooter (18 → ?), steps to book end to end (15 steps / 39 screens → ?), decisions per screen on plan selection, words a rider must read per key screen, states designed (happy path only → 8 unhappy-path scenarios).
+- **UI and accessibility numbers:** WCAG AA contrast pass rate of text on key screens, old vs new (her `wcag-checker` project can help); tap targets at 48dp or more; minimum body text size; red elements per screen (only if the calmer colour system ships in the case study screens).
+- **Play Store data:** historical download counts and rating over time from public app trackers (check the date of the redesign release), and review mining: themes riders complained about before the redesign vs after (KYC, plans, payment confusion). Caveat: recent reviews are mostly about support, deposits and pricing, not the UI, so only use themes the redesign actually touched.
+- Label every number as "measured on the designs" or "from public Play Store data"; never present it as Bounce's internal analytics.
+
 ## Still open
 - Timeline: the revamp took 3 months. Exact start and end months still to confirm (old screenshots are May 2025; workspace labels say Dec 2025). The Framer draft and the interview-prep guide say 2 months, and the prep guide calls it "not shipped"; both are wrong.
 - Any feedback after launch from Aum or the team.
