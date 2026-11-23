@@ -7,7 +7,6 @@ import Image from "next/image";
 import {
   CaseStudyFrame,
   P,
-  Quote,
   Section,
   type TocItem,
 } from "@/components/casestudy/Margin";
@@ -165,7 +164,8 @@ function Sub({ children }: { children: React.ReactNode }) {
 
 export default function Keploy() {
   return (
-    <div className="w-full">
+    // the contents list in Redaction (her ask, like the Bounce page)
+    <div className="w-full [&_nav[aria-label=Contents]]:font-serif [&_nav[aria-label=Contents]_.label]:text-[15px] [&_nav[aria-label=Contents]_.label]:tracking-normal [&_nav[aria-label=Contents]_.label]:normal-case [&_nav[aria-label=Contents]_a]:text-[15px]">
       <div className="mx-auto max-w-[826px] px-6">
         <Nav />
       </div>
@@ -389,7 +389,7 @@ export default function Keploy() {
           label="Other website illustrations"
           title="For bento sections and beyond."
         >
-          {/* grouped as on her Figma board (Desktop 9) */}
+          {/* bento tiles, the "Confident" section, then the graphics (her headings) */}
           <Sub>For bento sections</Sub>
           <Shot
             {...k(
@@ -399,7 +399,6 @@ export default function Keploy() {
               "Bento section: trusted, secure, community-driven",
             )}
           />
-          <Sub>The graphics</Sub>
           <Shot
             {...k(
               "web-2",
@@ -423,6 +422,7 @@ export default function Keploy() {
               "Section: Confident. Scalable. Reliable. Testing with AI for all scenarios",
             )}
           />
+          <Sub>The graphics</Sub>
           <Shot
             {...k(
               "graphic-1",
@@ -571,19 +571,58 @@ export default function Keploy() {
         </Section>
 
         <Section id="words" label="Kind words">
-          <Quote>
-            &ldquo;Her ownership, reliability, and attention to detail make her
-            someone I&apos;d happily recommend to any product team.&rdquo;
-          </Quote>
-          <P>
-            Sanskriti has been an absolute pleasure to work with. She
-            consistently delivers high-quality work on time and brings a deep
-            understanding of the developer tools ecosystem, which reflects in
-            every design decision she makes. Beyond strong visual design skills,
-            she approaches problems with a product mindset, collaborates
-            seamlessly with engineering, and takes feedback exceptionally well.
-          </P>
-          <span className="label">Neha Gupta, Co-Founder @ Keploy</span>
+          {/* her client's testimonial (words, photo from her Framer testimonial card; logo from her Keploy board) */}
+          <figure className="skeu relative overflow-hidden rounded-3xl px-6 pt-10 pb-6 sm:px-10 sm:pt-12">
+            <span
+              aria-hidden="true"
+              className="absolute top-2 left-5 font-serif text-[96px] leading-none text-[#F8904A]/35 sm:left-8"
+            >
+              &ldquo;
+            </span>
+            <blockquote className="relative grid gap-5">
+              <p className="max-w-[30ch] font-serif text-h1 text-balance text-head sm:text-[28px] sm:leading-snug">
+                Her ownership, reliability, and attention to detail make her
+                someone I&apos;d happily recommend to any product team.
+              </p>
+              <p className="printed max-w-[64ch] text-sm leading-relaxed">
+                Sanskriti has been an absolute pleasure to work with. She
+                consistently delivers high-quality work on time and brings a
+                deep understanding of the developer tools ecosystem, which
+                reflects in every design decision she makes. Beyond strong
+                visual design skills, she approaches problems with a product
+                mindset, collaborates seamlessly with engineering, and takes
+                feedback exceptionally well.
+              </p>
+            </blockquote>
+            <figcaption className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-dashed border-line pt-5">
+              <span className="flex items-center gap-3">
+                <Image
+                  src="/assets/cases/keploy/neha-gupta.webp"
+                  alt="Neha Gupta"
+                  width={320}
+                  height={320}
+                  unoptimized
+                  className="size-12 rounded-full object-cover ring-2 ring-white shadow-[0_4px_10px_-4px_rgba(60,40,20,0.4)]"
+                />
+                <span className="grid">
+                  <span className="font-serif text-lg leading-tight text-head">
+                    Neha Gupta
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    Co-Founder, Keploy
+                  </span>
+                </span>
+              </span>
+              <Image
+                src="/assets/cases/keploy/keploy-logo.webp"
+                alt="Keploy"
+                width={1056}
+                height={251}
+                unoptimized
+                className="h-6 w-auto mix-blend-multiply"
+              />
+            </figcaption>
+          </figure>
           <Link
             href="/work#early"
             className="label mt-6 w-fit !text-ink underline-offset-4 hover:underline"
