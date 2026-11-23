@@ -262,7 +262,7 @@ export default function Keploy() {
             <p className="printed mt-3 text-sm leading-relaxed">
               Designing for developer-facing tools was{" "}
               <Mark type="marker">no easy feat</Mark>.{" "}
-              <span className="text-[#E8762E]">
+              <span className="text-[#F8904A]">
                 It required a lot of brainstorming, constant iteration, and close
                 collaboration with both developers &amp; stakeholders to ensure
                 the designs genuinely communicated what Keploy is about.
