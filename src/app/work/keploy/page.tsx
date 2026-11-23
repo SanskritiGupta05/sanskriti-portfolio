@@ -96,6 +96,8 @@ const SKETCH_NOTES: [string, string][] = [
 // Her work shown as-is: no rounded frame or backing (they boxed in artwork that has its own
 // rounded corners), served unoptimized so Next doesn't re-compress it. Pieces on a plain white
 // canvas get a thin outline so they don't melt into the white page.
+// the vector illustrations sit on a soft grey panel instead (her pick); multiply turns their white canvas grey
+const ON_GREY = new Set(["vector-1", "vector-2", "vector-3", "vector-4"]);
 const ON_WHITE = new Set([
   "email-flyer-1",
   "email-flyer-2",
@@ -106,10 +108,6 @@ const ON_WHITE = new Set([
   "vscode-3",
   "linkedin-1",
   "linkedin-2",
-  "vector-1",
-  "vector-2",
-  "vector-3",
-  "vector-4",
   "web-1",
   "card-illustrations",
 ]);
@@ -129,14 +127,16 @@ function Shot({
 }) {
   const name = src.split("/").pop()?.replace(".webp", "") ?? "";
   return (
-    <figure className="grid gap-2">
+    <figure
+      className={`grid gap-2 ${ON_GREY.has(name) ? "bg-[#f3f2ef] p-3 sm:p-4" : ""}`}
+    >
       <Image
         src={src}
         alt={alt}
         width={w}
         height={h}
         unoptimized
-        className={`block h-auto w-full ${ON_WHITE.has(name) ? "border border-line" : ""}`}
+        className={`block h-auto w-full ${ON_WHITE.has(name) ? "border border-line" : ""} ${ON_GREY.has(name) ? "mix-blend-multiply" : ""}`}
       />
       {caption && <figcaption className="label">{caption}</figcaption>}
     </figure>
