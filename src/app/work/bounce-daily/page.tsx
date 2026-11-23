@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 // Bounce Daily case study. This page follows her Figma v4 frame one to one (file eJ4fYjVQ…, page
 // "Case study · web page", frame 1312:9945): same header, same words, same figures in the same order.
 // Change the Figma first, then mirror it here. The only addition is the scroll scribbles she chose (Mark):
-// swoosh = facts, circle = numbers, highlight = lines that hurt, spark = one moment.
+// swoosh = facts, circle = numbers, box, spark = one moment (highlighter fills removed at her ask).
 // Figures are her composed canvases exported 2× into public/assets/cases/bounce/v4/fig.
 
 // the nine contents entries from the Figma frame; "Making it real" lights up The UI layer's entry
@@ -34,14 +34,15 @@ const TOC: TocItem[] = [
 
 export default function BounceDaily() {
   return (
-    <div className="w-full">
+    // every header on this page is in Redaction (her ask): the small labels and the contents list too, in normal case
+    <div className="w-full [&_nav[aria-label=Contents]]:font-serif [&_nav[aria-label=Contents]_.label]:text-[15px] [&_nav[aria-label=Contents]_.label]:tracking-normal [&_nav[aria-label=Contents]_.label]:normal-case [&_nav[aria-label=Contents]_a]:text-[15px]">
       <div className="mx-auto max-w-[826px] px-6">
         <Nav />
       </div>
 
       <CaseStudyFrame
         layout="sheet"
-        contentClassName="[&_.printed]:[filter:none] [&_.printed]:[text-shadow:none] [&_.printed]:[-webkit-text-stroke:0]"
+        contentClassName="[&_.printed]:[filter:none] [&_.printed]:[text-shadow:none] [&_.printed]:[-webkit-text-stroke:0] [&_.label]:font-serif [&_.label]:text-[16px] [&_.label]:leading-snug [&_.label]:tracking-normal [&_.label]:normal-case"
         toc={TOC}
         header={
           <header>
@@ -123,7 +124,7 @@ export default function BounceDaily() {
           <P>
             Bounce Daily rents EV scooters by the day, week or month to delivery and gig riders in <Mark type="swoosh">Bengaluru and Delhi NCR</Mark>. A
             rider picks a hub, chooses a scooter and a plan, gets verified, pays, and rides to work every day. For them, a sold-out hub or an expired
-            plan isn&apos;t an inconvenience. <Mark type="highlight" order={1}>It&apos;s a day without earnings.</Mark>
+            plan isn&apos;t an inconvenience. It&apos;s a day without earnings.
           </P>
           <P>
             I was{" "}
@@ -132,7 +133,7 @@ export default function BounceDaily() {
                 the app&apos;s first UI designer
               </Mark>
             </Mark>
-            . Before me there was <Mark type="highlight" order={1}>no designer, no system and no shared way of doing things</Mark>. I redesigned the
+            . Before me there was no designer, no system and no shared way of doing things. I redesigned the
             Android rider app end to end <Mark type="circle" order={2}>over 3 months</Mark>, working{" "}
             <Mark type="swoosh" order={3}>through DreamLaunch with the product manager</Mark>.
           </P>
@@ -141,7 +142,7 @@ export default function BounceDaily() {
         <Chapter id="problem" name="Problem" lead="An app that asked for everything before it gave anything.">
           <P>
             When the product manager brought me the project, the app did its job on paper. Riders could sign up, find a hub and pay. But they were
-            leaving, and he came with the business concerns behind it: <Mark type="highlight">riders dropping off at plans</Mark>, documents demanded up
+            leaving, and he came with the business concerns behind it: riders dropping off at plans, documents demanded up
             front, and a rider base that reads little.
           </P>
           <P>
@@ -157,14 +158,14 @@ export default function BounceDaily() {
           />
           <P>
             Riders who made it through met plans laid out as <Mark type="box">near-identical boxes of four numbers</Mark> each, and after paying, the app
-            showed a countdown and little else. When it hit zero, it simply said <Mark type="highlight" order={1}>time had run out</Mark>.
+            showed a countdown and little else. When it hit zero, it simply said time had run out.
           </P>
         </Chapter>
 
         <Chapter id="how" name="How I worked" lead="No research team. Just the old app, walked screen by screen, and a lot of UX principles.">
           <P>
             I want to be honest about how this project ran. <Mark type="swoosh">I didn&apos;t run user interviews</Mark>, and this was{" "}
-            <Mark type="highlight" order={1}>before the AI boom</Mark>, so there was no shortcut for research. What I had was the live app. I took
+            before the AI boom, so there was no shortcut for research. What I had was the live app. I took
             screenshots, then went through every flow myself, the way a rider would, and mapped the whole old journey end to end.
           </P>
           <P>
@@ -176,7 +177,7 @@ export default function BounceDaily() {
 
         <Chapter id="goal" name="The goal" lead="Everything visible, nothing overwhelming.">
           <P>
-            Many riders have low literacy. They want every detail before they commit, but <Mark type="highlight">they won&apos;t read a paragraph to find it</Mark>.
+            Many riders have low literacy. They want every detail before they commit, but they won&apos;t read a paragraph to find it.
             Putting everything on one screen overwhelms them; hiding it loses them. So every screen had one rule: show only what this step needs, as a
             map, a picture, a chip or a number, and answer three questions. <Mark type="swoosh" order={1}>Where am I? What&apos;s happening? What do I do next?</Mark>
           </P>
@@ -220,13 +221,13 @@ export default function BounceDaily() {
                 cared for, and for someone who reads little,{" "}
                 <Mark type="swoosh" order={1}>a picture and a familiar face say more than a paragraph</Mark> ever could.
               </P>
-              <Fig name="onboarding" h={979} alt="Before: the old text-heavy how-it-works slide. After: three illustrated intro screens." />
+              <Fig name="onboarding" h={981} alt="Before: the old text-heavy how-it-works slide. After: three illustrated intro screens." />
             </Step>
 
             <Step id="j2" label="2. Finding a hub" title="Riders don't think in hub names. They think, “Where's the closest scooter?”">
               <P>
                 The old app gave riders a list of hubs by name, with the details on a second screen. To find the right one, they had to{" "}
-                <Mark type="highlight">read names and addresses and work out the distance themselves</Mark>.
+                read names and addresses and work out the distance themselves.
               </P>
               <P>
                 Riders spend their day in map apps, so <Mark type="swoosh">a map is a screen they already know how to read</Mark>. The new hub screen opens
@@ -234,14 +235,14 @@ export default function BounceDaily() {
                 “Enter my area instead” for riders who&apos;d rather not share it. The same hub card comes back on the payment success screen and on home,
                 so riders recognise their hub everywhere.
               </P>
-              <Fig name="hubs" h={1061} alt="Before: the old hub list. After: the allow-location screen and the hub map opening on the nearest hub." />
+              <Fig name="hubs" h={1063} alt="Before: the old hub list. After: the allow-location screen and the hub map opening on the nearest hub." />
             </Step>
 
             <Step id="j3" label="3. Choosing a scooter" title="The licence rule had to be impossible to miss.">
               <P>
                 High-speed scooters need a driving licence; low-speed ones don&apos;t. My first instinct was to save a tap: put a speed toggle on the plan
                 screen, and show a licence sheet when someone tapped high speed. I designed that, then tested it against the rule, and{" "}
-                <Mark type="highlight">it didn&apos;t hold up</Mark>. The licence only appeared if you tapped, and riders were choosing a scooter and a plan at
+                it didn&apos;t hold up. The licence only appeared if you tapped, and riders were choosing a scooter and a plan at
                 the same time.
               </P>
               <P>
@@ -275,14 +276,14 @@ export default function BounceDaily() {
             <Step id="j4" label="4. Choosing a plan" title="Plans riders can compare without doing maths.">
               <P>
                 In the old app, every plan sat in a near-identical box with four numbers: a price, a deposit, a price per km and a km limit. Comparing two
-                plans meant <Mark type="highlight">reading and remembering eight numbers</Mark>, and that&apos;s exactly where many riders left.
+                plans meant reading and remembering eight numbers, and that&apos;s exactly where many riders left.
               </P>
               <P>
                 I gave each screen one decision, and each plan <Mark type="swoosh">one number to compare: its price per day</Mark>. Kilometres moved into
                 their own step, and a review screen came before paying. The fewer things you ask someone to weigh at once, the faster and surer they
                 decide.
               </P>
-              <Fig name="plans" h={1127} alt="Before: old plan boxes with four numbers each. After: plan cards led by the price per day." />
+              <Fig name="plans" h={1129} alt="Before: old plan boxes with four numbers each. After: plan cards led by the price per day." />
             </Step>
 
             <Step id="j5" label="5. Verifying and paying" title="Where KYC goes: the question that took the longest.">
@@ -327,7 +328,7 @@ export default function BounceDaily() {
             <Step id="j6" label="6. After paying" title="The app remembers, so the rider doesn't have to.">
               <P>
                 After paying, the old app showed a countdown. Riders had to{" "}
-                <Mark type="highlight">work out for themselves what was going on</Mark> with their KYC, their plan, their kilometres and their dues.
+                work out for themselves what was going on with their KYC, their plan, their kilometres and their dues.
               </P>
               <P>
                 I replaced the timer with <Mark type="swoosh">one booking card on home that changes with the rider&apos;s stage</Mark>: KYC in review, ready
@@ -335,7 +336,7 @@ export default function BounceDaily() {
                 Top up never swap places, and Renew leads unless kilometres are the problem, because an ended plan locks the scooter. Until the ride
                 starts, a small tracker shows how far along the rider is: paid, KYC, picked up, riding.
               </P>
-              <Fig name="home" h={981} alt="Before: the old booking countdown. After: home with the booking card ready to collect, ready to ride, and active." />
+              <Fig name="home" h={983} alt="Before: the old booking countdown. After: home with the booking card ready to collect, ready to ride, and active." />
               <P>
                 The same card warns riders before things run out. When a plan is about to end or kilometres are running low, a sheet says so with the best
                 plan to renew or a top-up, and when dues are pending, they&apos;re itemised and explained before the next trip.
@@ -354,7 +355,7 @@ export default function BounceDaily() {
           <P>
             Beyond the happy path, I designed <Mark type="circle">eight scenarios</Mark>: a sold-out hub, a city we don&apos;t serve yet, a failed
             payment, KYC not approved, a plan ending and ended, kilometres running low and used up, and dues before a new trip. In the old app, most of
-            them <Mark type="highlight" order={1}>ended in a toast or a timer running out</Mark>.
+            them ended in a toast or a timer running out.
           </P>
           <P>
             Now each one says what went wrong in plain words, shows an illustration instead of a paragraph, and gives{" "}
@@ -378,7 +379,7 @@ export default function BounceDaily() {
           </P>
           <P>
             Early on, I flagged that the app used red for everything: buttons, headers, icons and cards.{" "}
-            <Mark type="highlight">When everything shouts, nothing does.</Mark> We prioritised the flows first, and the system now keeps{" "}
+            When everything shouts, nothing does. We prioritised the flows first, and the system now keeps{" "}
             <Mark type="circle" order={1}>one red action per screen</Mark>.
           </P>
           <Fig
@@ -393,7 +394,7 @@ export default function BounceDaily() {
           <P>
             <Mark type="swoosh">I handled the developer handoffs myself.</Mark> Before handing anything over, I mapped every screen of the new app and
             connected them, so the developers could see the whole journey, including every branch where something goes wrong. Each screen went over with
-            its states and the shared components it was built from, so <Mark type="highlight" order={1}>what shipped matched what was designed</Mark>.
+            its states and the shared components it was built from, so what shipped matched what was designed.
           </P>
           <Fig
             name="flow-map"
@@ -407,7 +408,7 @@ export default function BounceDaily() {
         <Chapter id="impact" name="Impact and learnings" lead="Shipped on Android in 3 months, and it moved the numbers that mattered.">
           <P>
             The revamp shipped and is <Mark type="swoosh">live on the Play Store</Mark>, rated <Mark type="circle" order={1}>4.8</Mark> with over a lakh
-            downloads. After launch, the team saw <Mark type="highlight" order={2}>noticeable improvements in rider onboarding and plan adoption</Mark>.
+            downloads. After launch, the team saw noticeable improvements in rider onboarding and plan adoption.
             The exact numbers stay with Bounce for business reasons, but those were the two places the redesign was meant to move: getting riders through
             the door, and getting them to commit to a plan.
           </P>
@@ -425,7 +426,7 @@ export default function BounceDaily() {
             colour system with a few screens side by side, not an argument.
           </P>
           <P>
-            The real thing I took from Bounce is that <Mark type="highlight">when you ask for something matters as much as what you ask for</Mark>. KYC
+            The real thing I took from Bounce is that when you ask for something matters as much as what you ask for. KYC
             asked for the same documents before and after the redesign. Moving it from the first minute to the moment just before paying turned a wall
             into a last step. And a rider who reads little doesn&apos;t need less information.{" "}
             <Mark type="swoosh" order={1}>They need it in a form they can take in at a glance.</Mark>
