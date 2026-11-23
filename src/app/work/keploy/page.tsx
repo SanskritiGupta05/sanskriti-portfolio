@@ -133,6 +133,9 @@ export default function Keploy() {
         </Section>
 
         <Section id="product" label="Product design" title="VS Code extension, sign-up and dashboard.">
+          <div className="max-w-[560px]">
+            <Shot {...k("vscode-hero", 931, 931, "Welcome to Keploy in the VS Code extension: generate unit and integration tests")} />
+          </div>
           <Sub>VS Code screens · dark mode + light mode</Sub>
           <Shot {...k("vscode-1", 1348, 708, "Keploy VS Code extension, dark mode")} />
           <Grid items={[k("vscode-2", 1337, 708, "Keploy VS Code extension, dark mode"), k("vscode-3", 1337, 708, "Keploy VS Code extension, light mode")]} />
