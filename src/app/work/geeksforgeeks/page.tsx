@@ -164,7 +164,7 @@ export default function GeeksforGeeks() {
             />
             <div className="grid gap-4">
               <P>
-                Shifting from &ldquo;Tech to Design&rdquo; was no easy feat, but I&apos;m incredibly thankful for{" "}
+                Shifting from <span className="text-[#2F8D46]">&ldquo;Tech to Design&rdquo;</span> was no easy feat, but I&apos;m incredibly thankful for{" "}
                 <Mark type="marker">the head start GFG provided</Mark>. It&apos;s been an amazing
                 experience working on diverse creatives &amp; ideas.
               </P>
