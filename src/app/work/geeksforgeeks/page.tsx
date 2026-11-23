@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { CalendarDays, ChartPie, Megaphone, MonitorPlay, Newspaper, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
@@ -27,12 +28,29 @@ const TOC: TocItem[] = [
   { id: "highlight", label: "The highlight" },
 ];
 
+// each card gets its own soft colour and a matching icon (her ask: colourful)
+const CARD_STYLE: Record<string, { icon: LucideIcon; tint: string; ink: string }> = {
+  "Article banners": { icon: Newspaper, tint: "#E9F6EC", ink: "#2F8D46" },
+  "YouTube thumbnails": { icon: MonitorPlay, tint: "#FDECEC", ink: "#D93A3A" },
+  "Google advertisements": { icon: Megaphone, tint: "#EAF1FD", ink: "#2F6FE0" },
+  "Monthly event creatives": { icon: CalendarDays, tint: "#FFF3DE", ink: "#D9871A" },
+  "Infographics & more": { icon: ChartPie, tint: "#F1ECFB", ink: "#7A4FD6" },
+};
+
 const CONTRIBUTIONS: [string, string][] = [
   ["Article banners", "Designed eye-catching visuals for the newly introduced UX/UI and graphic design categories, making them stand out for readers."],
   ["YouTube thumbnails", "Created engaging thumbnails to enhance video click-through rates."],
   ["Google advertisements", "Developed ad creatives that aligned with the brand's vision and boosted campaign effectiveness."],
   ["Monthly event creatives", "Delivered designs for events, ensuring consistent branding and engagement."],
   ["Infographics & more", "Produced detailed infographics and diverse creatives to support content strategies."],
+];
+
+const OFFICE = [
+  { src: "/assets/cases/gfg/office-logo-wall.webp", w: 900, h: 1200, alt: "The GeeksforGeeks logo wall at the office" },
+  { src: "/assets/cases/gfg/office-selfie.webp", w: 675, h: 1200, alt: "A mirror selfie at the GeeksforGeeks office" },
+  { src: "/assets/cases/gfg/office-desk.webp", w: 1200, h: 900, alt: "My desk, with a plant and two figurines" },
+  { src: "/assets/cases/gfg/office-floor.webp", w: 900, h: 1200, alt: "The office floor with rows of desks" },
+  { src: "/assets/cases/gfg/office-desk-view.webp", w: 675, h: 1200, alt: "The view from my desk" },
 ];
 
 const ADS = [
@@ -84,6 +102,17 @@ function Shot({ src, w, h, alt, caption, native = false }: { src: string; w: num
       />
       {caption && <figcaption className="label">{caption}</figcaption>}
     </figure>
+  );
+}
+
+function CardIcon({ name }: { name: string }) {
+  const st = CARD_STYLE[name];
+  if (!st) return null;
+  const Icon = st.icon;
+  return (
+    <span aria-hidden="true" className="grid size-9 shrink-0 place-items-center rounded-xl bg-white shadow-[0_1px_2px_rgba(0,0,0,0.08)]" style={{ color: st.ink }}>
+      <Icon size={18} strokeWidth={1.8} />
+    </span>
   );
 }
 
@@ -153,16 +182,7 @@ export default function GeeksforGeeks() {
         }
       >
         <Section id="working" label="Working at GeeksforGeeks" title="From tech to design.">
-          <div className="grid items-center gap-8 lg:grid-cols-[1fr_1fr]">
-            <Image
-              src="/assets/cases/gfg/office-polaroids.webp"
-              alt="Polaroids from the GeeksforGeeks office: the logo wall, a mirror selfie, my desk and the floor"
-              width={1677}
-              height={1643}
-              unoptimized
-              className="h-auto w-full"
-            />
-            <div className="grid gap-4">
+          <div className="grid gap-4">
               <P>
                 Shifting from <span className="text-[#2F8D46]">&ldquo;Tech to Design&rdquo;</span> was no easy feat, but I&apos;m incredibly thankful for{" "}
                 <Mark type="marker">the head start GFG provided</Mark>. It&apos;s been an amazing
@@ -172,7 +192,12 @@ export default function GeeksforGeeks() {
                 I&apos;ve gained so much knowledge from the team, <Mark type="marker">lessons I&apos;ll carry with me moving forward</Mark>. Grateful to have collaborated with such passionate and
                 creative individuals there!
               </P>
-            </div>
+          </div>
+          {/* her office photos, each on its own (from the GFG page of her Figma file), uncropped */}
+          <div className="columns-2 gap-3 sm:columns-3 [&>*]:mb-3">
+            {OFFICE.map((o) => (
+              <Image key={o.src} src={o.src} alt={o.alt} width={o.w} height={o.h} unoptimized className="block h-auto w-full break-inside-avoid" />
+            ))}
           </div>
         </Section>
 
@@ -180,8 +205,11 @@ export default function GeeksforGeeks() {
           <P>Here&apos;s a summary of what I contributed:</P>
           <ul className="grid gap-4 sm:grid-cols-2">
             {CONTRIBUTIONS.map(([k, v]) => (
-              <li key={k} className="skeu rounded-2xl p-5">
-                <span className="font-serif text-h1m text-head">{k}</span>
+              <li key={k} className="skeu rounded-2xl p-5" style={{ background: `linear-gradient(180deg, #ffffff -40%, ${CARD_STYLE[k].tint} 100%)` }}>
+                <span className="flex items-center gap-3">
+                  <CardIcon name={k} />
+                  <span className="font-serif text-h1m text-head">{k}</span>
+                </span>
                 <p className="printed mt-2 text-sm leading-relaxed">{v}</p>
               </li>
             ))}
@@ -206,7 +234,9 @@ export default function GeeksforGeeks() {
             bold typography, vibrant colors, &amp; relevant visuals to ensure clarity and engagement.
           </P>
           <Shot {...THUMBS[0]} />
-          <Grid items={THUMBS.slice(1)} />
+          {THUMBS.slice(1).map((t) => (
+            <Shot key={t.src} {...t} />
+          ))}
         </Section>
 
         <Section id="banners" label="Article banners" title="Making complex concepts more approachable.">
