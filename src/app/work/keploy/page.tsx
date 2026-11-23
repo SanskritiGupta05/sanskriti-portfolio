@@ -265,7 +265,19 @@ export default function Keploy() {
               <span className="text-[#F8904A]">
                 It required a lot of brainstorming, constant iteration, and close
                 collaboration with both developers &amp; stakeholders to ensure
-                the designs genuinely communicated what Keploy is about.
+                the designs genuinely communicated what{" "}
+                <span className="whitespace-nowrap">
+                  <Image
+                    src="/assets/cases/keploy/keploy-icon.webp"
+                    alt=""
+                    width={197}
+                    height={251}
+                    unoptimized
+                    className="mr-1 inline-block h-[1.05em] w-auto -translate-y-[0.1em] align-middle mix-blend-multiply"
+                  />
+                  Keploy
+                </span>{" "}
+                is about.
               </span>
             </p>
             <p className="printed mt-3 text-sm leading-relaxed">
