@@ -26,6 +26,7 @@ const ROLES: {
     company: "Dualite",
     role: "Visual designer",
     img: "/assets/cases/early-dualite.webp",
+    href: "/work/dualite",
     length: "3 months",
     line: "Illustrations for the marketing team of an AI full-stack tool that turns prompts or design files into working apps.",
   },
