@@ -33,6 +33,7 @@ const ROLES: {
     company: "Keploy",
     role: "Product and visual designer",
     img: "/assets/cases/early-keploy.webp",
+    href: "/work/keploy",
     length: "3 months",
     line: "Open-source test-case generation for developers: the VS Code extension UI, the sign-up flow, illustrations, social and event graphics.",
   },
