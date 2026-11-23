@@ -25,7 +25,6 @@ const TOC: TocItem[] = [
   { id: "banners", label: "Article banners" },
   { id: "banners-other", label: "More article banners" },
   { id: "thumbnails", label: "YouTube thumbnails" },
-  { id: "highlight", label: "The highlight" },
 ];
 
 // each card gets its own soft colour and a matching icon (her ask: colourful)
@@ -260,16 +259,8 @@ export default function GeeksforGeeks() {
           ))}
         </Section>
 
-        <Section id="highlight" label="The highlight of my journey" title="The GFG Premium landing page re-design.">
-          <P>
-            This was a pivotal project where I <Mark type="marker">revamped the product&apos;s landing page for its launch</Mark>. The result?{" "}
-            <Mark type="marker" order={1}>
-              Positive feedback from my design team lead and project manager
-            </Mark>
-            , praising the fresh approach and usability of my designs.
-          </P>
-          {/* from the GFG page of her Figma file (286:35) */}
-          <Shot src="/assets/cases/gfg/premium-landing-page.webp" w={1057} h={4096} alt="The GeeksforGeeks Premium landing page re-design" />
+        {/* closing (the Premium landing page part was removed at her ask) */}
+        <Section id="closing">
           <Quote>&ldquo;I&apos;m incredibly thankful for the head start GFG provided.&rdquo;</Quote>
           <Link href="/work#early" className="label mt-6 w-fit !text-ink underline-offset-4 hover:underline">
             ← Back to all work
