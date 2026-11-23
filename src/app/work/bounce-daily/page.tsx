@@ -13,6 +13,7 @@ import {
   Eyebrow,
   Facts,
   Fig,
+  FlowCompare,
   PlayLink,
   QuoteCard,
   RiderCard,
@@ -107,7 +108,7 @@ export default function BounceDaily() {
                           height={67}
                           className="mx-1 inline-block h-[22px] w-auto"
                         />
-                        )
+                        ) · Developers
                       </span>
                     ),
                     sub: "My role: product designer, the app's first UI designer, dev handoffs",
@@ -135,7 +136,7 @@ export default function BounceDaily() {
             </div>
             <div className="mt-10">
               <Image
-                src="/assets/cases/bounce/v4/figures/hero.webp"
+                src="/assets/cases/bounce/v5/hero.webp"
                 alt="Three redesigned screens: Welcome to Bounce Daily, Pick a hub near you, and Select your plan"
                 width={1792}
                 height={1024}
@@ -206,18 +207,22 @@ export default function BounceDaily() {
                 {
                   t: "KYC is mandatory",
                   l: "Hub staff check it before they hand over a scooter.",
+                  tone: "blue",
                 },
                 {
                   t: "The licence rule",
                   l: "High-speed scooters need a driving licence; low-speed ones don't. A business rule, like every competitor's.",
+                  tone: "amber",
                 },
                 {
-                  t: "No research budget",
-                  l: "No interviews or analytics, and before the AI boom. Research was done by hand.",
+                  t: "Research by hand",
+                  l: "Before the AI boom. The Bounce team met riders at their hubs and in the office; I built on what they heard.",
+                  tone: "green",
                 },
                 {
                   t: "3 months, no system",
                   l: "No design system and no earlier designer to build on.",
+                  tone: "rose",
                 },
               ]}
             />
@@ -245,13 +250,17 @@ export default function BounceDaily() {
           />
           <Eyebrow className="pt-4">How I worked</Eyebrow>
           <Body>
-            No research team. I took screenshots of the live app, went through
+            The product manager and the Bounce team talked to riders firsthand:
+            they visited the hubs where riders rent scooters, and invited riders
+            to their office to hear where the app was letting them down. I built
+            on those findings. I took screenshots of the live app, went through
             every flow the way a rider would, and mapped the whole old journey
-            end to end. This was before the AI boom, so there was no shortcut.
-            From there I explored around 270 screens, reviewed directions with
-            the product manager on regular calls, and kept only what I could
-            defend with a principle I could explain in a sentence. Category apps
-            like Yulu were a useful reference for what riders already knew.
+            end to end. This was before the AI boom, so all of it was done by
+            hand. From there I explored around 270 screens, reviewed directions
+            with the product manager on regular calls, and kept only what I
+            could defend with a principle I could explain in a sentence.
+            Category apps like Yulu were a useful reference for what riders
+            already knew.
           </Body>
         </Section>
 
@@ -266,11 +275,7 @@ export default function BounceDaily() {
             hubs, choose a scooter and a plan, and only then verify and pay.
             Every decision that follows comes from this one change.
           </Body>
-          <Fig
-            name="journey"
-            alt="Old journey: Sign up, Details and documents, Wait, Find a hub, Choose a plan, Pay. New journey: Discover, Choose, Verify, Pay, Ride, Manage, Renew."
-            caption="Old journey vs new journey. Green steps give the rider something; red steps ask for effort."
-          />
+          <FlowCompare caption="The whole old journey vs the new one, step by step, with screen counts." />
         </Section>
 
         <Section
@@ -557,7 +562,7 @@ export default function BounceDaily() {
           </Body>
           <Fig
             name="flow-map"
-            href="/assets/cases/bounce/v4/flow-map.webp"
+            href="/assets/cases/bounce/v5/flow-map-full.webp"
             alt="The new app flow map: every screen connected, with the unhappy paths branching off the main journey."
             caption="The new app flow map, with the unhappy paths branching off the main journey. Opens full size."
           />
