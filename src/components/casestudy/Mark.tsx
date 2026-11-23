@@ -11,14 +11,15 @@ import { annotate } from "rough-notation";
 //   circle / highlight / underline / box / bracket: rough-notation
 //   swoosh: one relaxed pen stroke under each line, with a small flick at the end
 //   spark: a tiny four-point doodle that pops in just after the phrase
-type Kind = "highlight" | "underline" | "circle" | "box" | "bracket" | "swoosh" | "spark";
+//   marker: a thin, see-through highlighter band along the lower part of each line, like a real marker
+type Kind = "highlight" | "underline" | "circle" | "box" | "bracket" | "swoosh" | "spark" | "marker";
 type Annotation = ReturnType<typeof annotate>;
 type Drawn = { svg: SVGSVGElement; remove: () => void };
 
 const NS = "http://www.w3.org/2000/svg";
 
 // our own scribbles (swoosh, spark), drawn into an SVG laid over the paragraph
-function drawOwn(el: HTMLElement, type: "swoosh" | "spark", color: string, animate: boolean): Drawn | null {
+function drawOwn(el: HTMLElement, type: "swoosh" | "spark" | "marker", color: string, animate: boolean): Drawn | null {
   const host = el.parentElement?.closest("p, li, blockquote, figcaption, div") as HTMLElement | null;
   if (!host) return null;
   if (getComputedStyle(host).position === "static") host.style.position = "relative";
@@ -29,7 +30,18 @@ function drawOwn(el: HTMLElement, type: "swoosh" | "spark", color: string, anima
   svg.setAttribute("aria-hidden", "true");
   Object.assign(svg.style, { position: "absolute", left: "0", top: "0", width: `${hr.width}px`, height: `${hr.height}px`, overflow: "visible", pointerEvents: "none", transition: "opacity 380ms ease" });
   const paths: SVGPathElement[] = [];
-  if (type === "swoosh") {
+  if (type === "marker") {
+    // one soft band per line, sitting low on the words with a hint of a hand-drawn slope
+    svg.style.mixBlendMode = "multiply";
+    rects.forEach((r) => {
+      const x0 = r.left - hr.left - 1;
+      const x1 = r.right - hr.left + 1;
+      const y = r.bottom - hr.top - 6;
+      const p = document.createElementNS(NS, "path");
+      p.setAttribute("d", `M ${x0} ${y + 0.8} L ${x1} ${y - 0.8}`);
+      paths.push(p);
+    });
+  } else if (type === "swoosh") {
     rects.forEach((r, i) => {
       const x0 = r.left - hr.left - 2;
       const x1 = r.right - hr.left + 2;
@@ -54,7 +66,8 @@ function drawOwn(el: HTMLElement, type: "swoosh" | "spark", color: string, anima
   paths.forEach((p, i) => {
     p.setAttribute("fill", "none");
     p.setAttribute("stroke", color);
-    p.setAttribute("stroke-width", type === "spark" ? "1.6" : "1.9");
+    p.setAttribute("stroke-width", type === "spark" ? "1.6" : type === "marker" ? "8" : "1.9");
+    if (type === "marker") p.setAttribute("stroke-opacity", "0.55");
     p.setAttribute("stroke-linecap", "round");
     p.setAttribute("stroke-linejoin", "round");
     svg.appendChild(p);
@@ -109,6 +122,10 @@ export function Mark({ children, type = "underline", order = 0 }: { children: Re
         const fill = css.getPropertyValue("--scribble-fill").trim() || "#f4c7bd";
         if (type === "swoosh" || type === "spark") {
           own = drawOwn(el, type, stroke, !reduce);
+          return;
+        }
+        if (type === "marker") {
+          own = drawOwn(el, type, fill, !reduce);
           return;
         }
         ann = annotate(el, {

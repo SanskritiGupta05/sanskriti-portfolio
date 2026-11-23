@@ -297,13 +297,13 @@ export default function BounceDaily() {
                 <B>Talked to riders firsthand.</B> The product manager and the
                 Bounce team visited the hubs where riders rent scooters and
                 invited riders to their office, to hear{" "}
-                <Mark type="highlight">where the app was letting them down</Mark>
+                <Mark type="marker">where the app was letting them down</Mark>
                 .
               </>,
               <>
                 <B>Walked the live app.</B> I built on those findings, took
                 screenshots, went through every flow the way a rider would, and{" "}
-                <Mark type="highlight">
+                <Mark type="marker">
                   mapped the whole old journey end to end
                 </Mark>
                 .
@@ -314,7 +314,7 @@ export default function BounceDaily() {
               </>,
               <>
                 <B>Kept only what I could defend</B> with{" "}
-                <Mark type="highlight">
+                <Mark type="marker">
                   a principle I could explain in a sentence
                 </Mark>
                 .
