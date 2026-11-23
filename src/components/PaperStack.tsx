@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   motion,
+  useMotionValue,
   useReducedMotion,
   useScroll,
   useTransform,
+  type MotionValue,
 } from "motion/react";
 
 // The hero scrolls normally until its bottom reaches the bottom of the screen, then stays put,
@@ -52,12 +54,9 @@ export function PaperStack({
   const still = useReducedMotion();
 
   // the hero sinks back while the first sheet rises over it
-  const { scrollYProgress } = useScroll({
-    target: firstRef,
-    offset: ["start end", "start start"],
-  });
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
-  const heroFade = useTransform(scrollYProgress, [0, 1], [1, 0.55]);
+  const firstRise = useRise(firstRef, true);
+  const heroScale = useTransform(firstRise, [0, 1], [1, 0.95]);
+  const heroFade = useTransform(firstRise, [0, 1], [1, 0.55]);
 
   return (
     <>
@@ -88,6 +87,35 @@ export function PaperStack({
   );
 }
 
+// how far an element's top edge has risen through the screen: 0 while it's at or below the bottom
+// edge, 1 once it reaches the top. Read from its real on-screen position on every scroll and resize
+// (not from motion's scroll-offset maths, which can mis-measure sticky elements in some browsers and
+// left a white veil over a sheet before the next one had arrived).
+function useRise(ref: React.RefObject<HTMLDivElement | null>, on: boolean): MotionValue<number> {
+  const rise = useMotionValue(0);
+  useEffect(() => {
+    if (!on) return;
+    const update = () => {
+      const el = ref.current;
+      if (!el) return;
+      const h = window.innerHeight;
+      const top = el.getBoundingClientRect().top;
+      rise.set(Math.min(1, Math.max(0, (h - top) / h)));
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    const ro = new ResizeObserver(update);
+    ro.observe(document.body);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      ro.disconnect();
+    };
+  }, [ref, on, rise]);
+  return rise;
+}
+
 // one sheet: nearly full width, the same dotted paper, a small paperclip at the top left
 function Sheet({
   id,
@@ -107,10 +135,7 @@ function Sheet({
   const pinTop = usePinTop(ref);
   const still = useReducedMotion();
   // while the next sheet rises over this one, this one sinks back and fades a little (like the hero)
-  const { scrollYProgress: under } = useScroll({
-    target: next,
-    offset: ["start end", "start start"],
-  });
+  const under = useRise(next, pin && next !== ref);
   const sinkScale = useTransform(under, [0, 1], [1, 0.95]);
   // a white veil over the sheet (not see-through, so the page behind it doesn't show)
   const veil = useTransform(under, [0, 1], [0, 0.5]);
