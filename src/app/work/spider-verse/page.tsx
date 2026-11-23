@@ -50,7 +50,7 @@ export default function SpiderVerse() {
             <p className="mt-3 max-w-[30ch] font-worn text-h1 text-balance text-head">What if the Spider-Verse chose you?</p>
             <div className="mt-8">
               <Ticket
-                kicker="Personal experiment · Admit one"
+                kicker="Personal experiment"
                 text="A playful side project that turns the thrill of opening a trading card pack into an interactive web experience. Designed in Figma, explored with ChatGPT, vibecoded in Cursor."
                 meta={[
                   { k: "My role", v: "Design, prompts, build" },

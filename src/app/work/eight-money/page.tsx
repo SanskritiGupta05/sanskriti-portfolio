@@ -64,7 +64,7 @@ export default function EightMoney() {
             </p>
             <div className="mt-8">
               <Ticket
-                kicker="Fintech app, 0 → 1 · Admit one"
+                kicker="Fintech app, 0 → 1"
                 text="The payments landscape is rapidly changing. eight.money sits at the intersection of unbundling and rebundling financial services, connecting users to their existing financial tools in an optimised way."
                 meta={[
                   { k: "My role", v: "Product Designer" },
