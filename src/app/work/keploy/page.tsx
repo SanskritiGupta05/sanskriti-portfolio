@@ -197,7 +197,7 @@ export default function Keploy() {
       style={
         {
           "--scribble": "#E8762E",
-          "--scribble-fill": "#F9B98A",
+          "--scribble-fill": "#FCD5B5", "--marker-height": "13px",
         } as React.CSSProperties
       }
       className="w-full [&_nav[aria-label=Contents]]:font-serif [&_nav[aria-label=Contents]_.label]:text-[15px] [&_nav[aria-label=Contents]_.label]:tracking-normal [&_nav[aria-label=Contents]_.label]:normal-case [&_nav[aria-label=Contents]_a]:text-[15px]"

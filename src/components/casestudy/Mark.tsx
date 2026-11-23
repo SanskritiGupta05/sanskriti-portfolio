@@ -30,13 +30,15 @@ function drawOwn(el: HTMLElement, type: "swoosh" | "spark" | "marker", color: st
   svg.setAttribute("aria-hidden", "true");
   Object.assign(svg.style, { position: "absolute", left: "0", top: "0", width: `${hr.width}px`, height: `${hr.height}px`, overflow: "visible", pointerEvents: "none", transition: "opacity 380ms ease" });
   const paths: SVGPathElement[] = [];
+  // marker band height: --marker-height on the page (default 8px), so a page can make it taller
+  const band = parseFloat(getComputedStyle(el).getPropertyValue("--marker-height")) || 8;
   if (type === "marker") {
     // one soft band per line, sitting low on the words with a hint of a hand-drawn slope
     svg.style.mixBlendMode = "multiply";
     rects.forEach((r) => {
       const x0 = r.left - hr.left - 1;
       const x1 = r.right - hr.left + 1;
-      const y = r.bottom - hr.top - 6;
+      const y = r.bottom - hr.top - 6 - (band - 8) / 2;
       const p = document.createElementNS(NS, "path");
       p.setAttribute("d", `M ${x0} ${y + 0.8} L ${x1} ${y - 0.8}`);
       paths.push(p);
@@ -66,7 +68,7 @@ function drawOwn(el: HTMLElement, type: "swoosh" | "spark" | "marker", color: st
   paths.forEach((p, i) => {
     p.setAttribute("fill", "none");
     p.setAttribute("stroke", color);
-    p.setAttribute("stroke-width", type === "spark" ? "1.6" : type === "marker" ? "8" : "1.9");
+    p.setAttribute("stroke-width", type === "spark" ? "1.6" : type === "marker" ? String(band) : "1.9");
     if (type === "marker") p.setAttribute("stroke-opacity", "0.55");
     p.setAttribute("stroke-linecap", "round");
     p.setAttribute("stroke-linejoin", "round");
