@@ -348,7 +348,7 @@ export default function Keploy() {
           title="Technical accuracy, visual clarity."
         >
           <P>
-            <strong className="font-bold text-head">
+            <strong className="font-normal text-head [-webkit-text-stroke:0.45px_currentColor]">
               One of the most challenging yet rewarding tasks was crafting
               custom illustrations for the website.
             </strong>
@@ -541,13 +541,21 @@ export default function Keploy() {
             caption="Confidential 🔐"
           />
           <Sub>Website advertisements</Sub>
-          <Shot
-            {...k(
-              "web-ads",
-              1320,
-              1171,
-              "Website advertisements: Get to 90% coverage fast",
-            )}
+          <Grid
+            items={[
+              k(
+                "web-ad-light",
+                1278,
+                2342,
+                "Website ad: Get to 90% coverage fast",
+              ),
+              k(
+                "web-ad-dark",
+                1306,
+                2340,
+                "Website ad: 90% coverage, zero manual effort",
+              ),
+            ]}
           />
           <Sub>LinkedIn advertisements</Sub>
           <Grid
