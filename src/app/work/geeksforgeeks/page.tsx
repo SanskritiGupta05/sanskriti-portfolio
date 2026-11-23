@@ -22,9 +22,9 @@ const TOC: TocItem[] = [
   { id: "working", label: "Working at GFG" },
   { id: "portfolio", label: "What I contributed" },
   { id: "ads", label: "Google ads" },
-  { id: "thumbnails", label: "YouTube thumbnails" },
   { id: "banners", label: "Article banners" },
   { id: "banners-other", label: "More article banners" },
+  { id: "thumbnails", label: "YouTube thumbnails" },
   { id: "highlight", label: "The highlight" },
 ];
 
@@ -227,18 +227,6 @@ export default function GeeksforGeeks() {
           </div>
         </Section>
 
-        <Section id="thumbnails" label="YouTube thumbnails" title="Grab attention, say what the video is about.">
-          <P>
-            YouTube thumbnails were designed to{" "}
-            <Mark type="marker">grab attention &amp; communicate the video&apos;s content effectively</Mark>. Each thumbnail is tailored to the topic, featuring
-            bold typography, vibrant colors, &amp; relevant visuals to ensure clarity and engagement.
-          </P>
-          <Shot {...THUMBS[0]} />
-          {THUMBS.slice(1).map((t) => (
-            <Shot key={t.src} {...t} />
-          ))}
-        </Section>
-
         <Section id="banners" label="Article banners" title="Making complex concepts more approachable.">
           <P>
             Designing article banners was <Mark type="marker">one of my core responsibilities</Mark> at GeeksforGeeks. Each banner was crafted to visually complement the article&apos;s topic,
@@ -257,6 +245,18 @@ export default function GeeksforGeeks() {
         <Section id="banners-other" label="Article banners" title="Beyond design and UX/UI.">
           <P>Article banners for topics other than the design and UX/UI domain.</P>
           <Grid items={BANNERS_OTHER} />
+        </Section>
+
+        <Section id="thumbnails" label="YouTube thumbnails" title="Grab attention, say what the video is about.">
+          <P>
+            YouTube thumbnails were designed to{" "}
+            <Mark type="marker">grab attention &amp; communicate the video&apos;s content effectively</Mark>. Each thumbnail is tailored to the topic, featuring
+            bold typography, vibrant colors, &amp; relevant visuals to ensure clarity and engagement.
+          </P>
+          <Shot {...THUMBS[0]} />
+          {THUMBS.slice(1).map((t) => (
+            <Shot key={t.src} {...t} />
+          ))}
         </Section>
 
         <Section id="highlight" label="The highlight of my journey" title="The GFG Premium landing page re-design.">
