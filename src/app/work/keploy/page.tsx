@@ -84,19 +84,27 @@ const WORKED_ON: [string, string[]][] = [
 ];
 
 // her notes beside the first sketches, word for word
-const SKETCH_NOTES: [string, string][] = [
+// [title, note, phrase to highlight]
+const SKETCH_NOTES: [string, string, string][] = [
   [
     "API Testing",
     "circuit-like visual connected blocks, with some blocks highlighted to represent “issues caught.”",
+    "circuit-like visual connected blocks",
   ],
-  ["API Testing", "we can use code graphics then API test generation"],
+  [
+    "API Testing",
+    "we can use code graphics then API test generation",
+    "code graphics",
+  ],
   [
     "Unit Testing",
     "Puzzle blocks or simple blocks a speedometer type visual to represent full coverage a button in the middle with a hand clicking on it to represent one click testing.",
+    "a speedometer type visual to represent full coverage",
   ],
   [
     "Integration Testing",
     "glowing mock/test icon in the center. Arrows looping inwards and outwards from a central node, symbolizing interaction and replication. mock tests representation",
+    "glowing mock/test icon in the center",
   ],
 ];
 
@@ -170,6 +178,19 @@ function WorkIcon({ head }: { head: string }) {
   );
 }
 
+// a sketch note with one phrase highlighted (orange marker, like the rest of the page)
+function MarkedNote({ note, mark }: { note: string; mark: string }) {
+  const at = note.indexOf(mark);
+  if (at < 0) return <>{note}</>;
+  return (
+    <>
+      {note.slice(0, at)}
+      <Mark type="marker">{mark}</Mark>
+      {note.slice(at + mark.length)}
+    </>
+  );
+}
+
 function Grid({
   items,
   cols = "sm:grid-cols-2",
@@ -197,7 +218,8 @@ export default function Keploy() {
       style={
         {
           "--scribble": "#E8762E",
-          "--scribble-fill": "#FCD5B5", "--marker-height": "13px",
+          "--scribble-fill": "#FCD5B5",
+          "--marker-height": "13px",
         } as React.CSSProperties
       }
       className="w-full [&_nav[aria-label=Contents]]:font-serif [&_nav[aria-label=Contents]_.label]:text-[15px] [&_nav[aria-label=Contents]_.label]:tracking-normal [&_nav[aria-label=Contents]_.label]:normal-case [&_nav[aria-label=Contents]_a]:text-[15px]"
@@ -263,9 +285,9 @@ export default function Keploy() {
               Designing for developer-facing tools was{" "}
               <Mark type="marker">no easy feat</Mark>.{" "}
               <span className="text-[#F8904A]">
-                It required a lot of brainstorming, constant iteration, and close
-                collaboration with both developers &amp; stakeholders to ensure
-                the designs genuinely communicated what{" "}
+                It required a lot of brainstorming, constant iteration, and
+                close collaboration with both developers &amp; stakeholders to
+                ensure the designs genuinely communicated what{" "}
                 <span className="whitespace-nowrap">
                   <Image
                     src="/assets/cases/keploy/keploy-icon.webp"
@@ -400,7 +422,10 @@ export default function Keploy() {
                   <strong className="font-normal text-head">
                     {SKETCH_NOTES[i][0]}:
                   </strong>{" "}
-                  {SKETCH_NOTES[i][1]}
+                  <MarkedNote
+                    note={SKETCH_NOTES[i][1]}
+                    mark={SKETCH_NOTES[i][2]}
+                  />
                 </figcaption>
               </figure>
             ))}

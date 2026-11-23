@@ -783,3 +783,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-24:** Keploy "Overall challenges": the sentence "It required a lot of brainstorming… what Keploy is about." is in Keploy orange #F8904A (same as the contents accent), her ask.
 - **2026-11-24:** Keploy highlights, her ask: taller (13px band) and lighter (#FCD5B5). `Mark` now reads an optional `--marker-height` from the marked text (default 8px, centred on the same line, so Bounce is unchanged).
 - **2026-11-24:** Keploy "Overall challenges": the Keploy rabbit icon (`keploy/keploy-icon.webp`, cropped from the logo) sits inline before "Keploy" in the orange sentence, her ask.
+- **2026-11-24:** Keploy initial-sketch notes each highlight one key phrase (orange marker): "circuit-like visual connected blocks", "code graphics", "a speedometer type visual to represent full coverage", "glowing mock/test icon in the center" (`SKETCH_NOTES` third field + `MarkedNote`), her ask.
