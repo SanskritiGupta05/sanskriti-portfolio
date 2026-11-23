@@ -84,6 +84,23 @@ const WORKED_ON: [string, string[]][] = [
 ];
 
 // her notes beside the first sketches, word for word
+// the tools she used day to day, with their official logos (public/assets/tools/, from Wikimedia Commons)
+const TOOLS = [
+  {
+    name: "Adobe Illustrator",
+    logo: "/assets/tools/illustrator.svg",
+    w: 240,
+    h: 234,
+  },
+  {
+    name: "Adobe Photoshop",
+    logo: "/assets/tools/photoshop.svg",
+    w: 240,
+    h: 234,
+  },
+  { name: "Figma", logo: "/assets/tools/figma.svg", w: 200, h: 300 },
+];
+
 // [title, note, phrase to highlight]
 const SKETCH_NOTES: [string, string, string][] = [
   [
@@ -255,6 +272,27 @@ export default function Keploy() {
                   { k: "Scope", v: "Product, marketing, social, brand" },
                 ]}
               />
+            </div>
+            <div className="mt-8">
+              <span className="label">Tools I used day to day</span>
+              <ul className="mt-3 flex flex-wrap gap-3">
+                {TOOLS.map((t) => (
+                  <li
+                    key={t.name}
+                    className="skeu flex items-center gap-2.5 rounded-full py-2 pr-4 pl-2.5"
+                  >
+                    <Image
+                      src={t.logo}
+                      alt=""
+                      width={t.w}
+                      height={t.h}
+                      unoptimized
+                      className="h-6 w-auto"
+                    />
+                    <span className="text-sm text-head">{t.name}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
             <div className="mt-10">
               <Shot
