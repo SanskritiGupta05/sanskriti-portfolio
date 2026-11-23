@@ -198,16 +198,22 @@ export default function BounceDaily() {
         >
           <Body>
             Bounce Daily rents EV scooters by the day, week or month to delivery
-            and gig riders in Bengaluru and Delhi NCR. A rider picks a hub,
-            chooses a scooter and a plan, gets verified, pays, and rides to work
-            every day. For them, a sold-out hub or an expired plan isn&apos;t an
-            inconvenience. It&apos;s a day without earnings.
+            and gig riders in <B>Bengaluru and Delhi NCR</B>. A rider picks a
+            hub, chooses a scooter and a plan, gets verified, pays, and rides to
+            work every day. For them, a sold-out hub or an expired plan
+            isn&apos;t an inconvenience.{" "}
+            <Mark type="marker">It&apos;s a day without earnings.</Mark>
           </Body>
           <Body>
-            The product manager came to me with the business concerns: riders
-            dropping off at plans, documents demanded up front, and a rider base
-            that reads little. I was the app&apos;s first UI designer. Before me
-            there was no designer, no system and no shared way of doing things.
+            The product manager came to me with the business concerns:{" "}
+            <B>riders dropping off at plans</B>,{" "}
+            <B>documents demanded up front</B>, and{" "}
+            <B>a rider base that reads little</B>. I was{" "}
+            <B>the app&apos;s first UI designer</B>. Before me there was{" "}
+            <Mark type="marker" order={1}>
+              no designer, no system and no shared way of doing things
+            </Mark>
+            .
           </Body>
           <BigStats
             items={[
@@ -233,10 +239,10 @@ export default function BounceDaily() {
           size="lg"
         >
           <Body>
-            Many riders have low literacy. They want every detail before they
-            commit, but they won&apos;t read a paragraph to find it. Putting
-            everything on one screen overwhelms them; hiding it loses them.
-            Every iteration had to pass that test.
+            <B>Many riders have low literacy.</B> They want every detail before
+            they commit, but they won&apos;t read a paragraph to find it.
+            Putting everything on one screen overwhelms them; hiding it loses
+            them. Every iteration had to pass that test.
           </Body>
           <Body>
             We designed for Android first. Many riders come from lower-income
@@ -297,8 +303,7 @@ export default function BounceDaily() {
                 <B>Talked to riders firsthand.</B> The product manager and the
                 Bounce team visited the hubs where riders rent scooters and
                 invited riders to their office, to hear{" "}
-                <Mark type="marker">where the app was letting them down</Mark>
-                .
+                <Mark type="marker">where the app was letting them down</Mark>.
               </>,
               <>
                 <B>Walked the live app.</B> I built on those findings, took
