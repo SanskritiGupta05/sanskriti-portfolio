@@ -1,4 +1,4 @@
-// Tier 3 of the work section, early career: where she started, before the case studies.
+// Tier 3 of the /work page (not on the home page), early career: where she started, before the case studies.
 // One soft skeu card per role. Company, role, length and the line under it come from her
 // Framer site ("Other case studies"); the heading and intro are her Framer copy too.
 // Thumbnails are her Framer "Project Card" images for each (downloaded 2026-11-24,

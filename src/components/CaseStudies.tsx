@@ -1,4 +1,4 @@
-// Tier 1 of the work section, primary case studies: a short intro, then Bounce Daily as a full-width
+// Primary case studies (home #work sheet, and tier 1 of the /work page): a short intro, then Bounce Daily as a full-width
 // lead card and the other two side by side below it
 // (after Sanskriti's reference): a white card with the project's banner (from her Framer site),
 // the name with an arrow, one line, and the tags as small chips. Hovering lifts a card.

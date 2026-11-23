@@ -11,7 +11,7 @@ export function Nav() {
       {/* three columns so the stamp sits exactly in the middle, whatever the widths either side */}
       <nav className="grid grid-cols-[1fr_auto_1fr] items-center gap-10">
         <div className="flex items-center justify-end gap-8">
-          <a href="#work" className={link}>Work</a>
+          <Link href="/work" className={link}>Work</Link>
           <a href="#about" className={link}>About</a>
         </div>
         <Link href="/" aria-label="Sanskriti, home" className="group">
