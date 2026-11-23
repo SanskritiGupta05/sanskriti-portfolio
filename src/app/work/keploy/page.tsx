@@ -97,7 +97,7 @@ const SKETCH_NOTES: [string, string][] = [
 // rounded corners), served unoptimized so Next doesn't re-compress it. Pieces on a plain white
 // canvas get a thin outline so they don't melt into the white page.
 // the vector illustrations sit on a soft grey panel instead (her pick); multiply turns their white canvas grey
-const ON_GREY = new Set(["vector-1", "vector-2", "vector-3", "vector-4"]);
+const ON_GREY = new Set(["vector-2", "vector-4"]);
 const ON_WHITE = new Set([
   "email-flyer-1",
   "email-flyer-2",
@@ -564,9 +564,7 @@ export default function Keploy() {
         <Section id="vectors" label="Other vector illustrations">
           <Grid
             items={[
-              k("vector-1", 999, 666, "Vector: auto-generate tests"),
               k("vector-2", 759, 629, "Vector: Keploy savings"),
-              k("vector-3", 1123, 584, "Vector: approve or reject tests"),
               k("vector-4", 1000, 568, "Vector: test checklist"),
             ]}
           />
