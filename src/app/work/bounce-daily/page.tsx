@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { CaseStudyFrame, type TocItem } from "@/components/casestudy/Margin";
-import { PlayStoreButton, Squiggle } from "@/components/casestudy/bounce";
+import { PlayStoreButton } from "@/components/casestudy/bounce";
 import {
   BigStats,
   Body,
@@ -75,8 +75,9 @@ export default function BounceDaily() {
                 <Tags items={["Shipped", "Consumer app", "Android"]} />
               </div>
               <h1 className="mt-4 font-serif text-[clamp(44px,6vw,72px)] leading-[1.02] text-head">Bounce Daily</h1>
-              <p className="mt-4 max-w-[30ch] font-serif text-[clamp(22px,2.4vw,30px)] leading-snug text-balance text-head">
-                From a document wall to a <Squiggle marks={false}>rider journey</Squiggle>.
+              <p className="mt-4 max-w-[720px] font-serif text-[clamp(19px,1.9vw,22px)] leading-[1.4] text-pretty text-muted-foreground">
+                Redesigning an EV scooter rental app for delivery riders, so they see hubs, scooters and prices before the app asks anything of
+                them.
               </p>
               <PlayStoreButton className="mt-6" />
             </div>
