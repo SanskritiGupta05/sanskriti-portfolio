@@ -44,13 +44,14 @@ const CONTRIBUTIONS: [string, string][] = [
   ["Infographics & more", "Produced detailed infographics and diverse creatives to support content strategies."],
 ];
 
+// order and focus points for the even 3×2 grid (each photo fills a 4:5 cell; tap to see it whole)
 const OFFICE = [
-  { src: "/assets/cases/gfg/office-logo-wall.webp", w: 900, h: 1200, alt: "The GeeksforGeeks logo wall at the office" },
-  { src: "/assets/cases/gfg/office-selfie.webp", w: 675, h: 1200, alt: "A mirror selfie at the GeeksforGeeks office" },
-  { src: "/assets/cases/gfg/office-desk.webp", w: 1200, h: 900, alt: "My desk, with a plant and two figurines" },
-  { src: "/assets/cases/gfg/office-floor.webp", w: 900, h: 1200, alt: "The office floor with rows of desks" },
-  { src: "/assets/cases/gfg/office-desk-view.webp", w: 675, h: 1200, alt: "The view from my desk" },
-  { src: "/assets/cases/gfg/office-farewell-cake.webp", w: 480, h: 852, alt: "My farewell cake at GeeksforGeeks, with a Thank You topper" },
+  { src: "/assets/cases/gfg/office-logo-wall.webp", w: 900, h: 1200, pos: "50% 40%", alt: "The GeeksforGeeks logo wall at the office" },
+  { src: "/assets/cases/gfg/office-desk-view.webp", w: 675, h: 1200, pos: "50% 55%", alt: "The view from my desk" },
+  { src: "/assets/cases/gfg/office-selfie.webp", w: 675, h: 1200, pos: "50% 45%", alt: "A mirror selfie at the GeeksforGeeks office" },
+  { src: "/assets/cases/gfg/office-desk.webp", w: 1200, h: 900, pos: "62% 50%", alt: "My desk, with a plant and two figurines" },
+  { src: "/assets/cases/gfg/office-floor.webp", w: 900, h: 1200, pos: "50% 50%", alt: "The office floor with rows of desks" },
+  { src: "/assets/cases/gfg/office-farewell-cake.webp", w: 480, h: 852, pos: "50% 35%", alt: "My farewell cake at GeeksforGeeks, with a Thank You topper" },
 ];
 
 const ADS = [
@@ -184,10 +185,19 @@ export default function GeeksforGeeks() {
                 creative individuals there!
               </P>
           </div>
-          {/* her office photos, each on its own (from the GFG page of her Figma file), uncropped */}
-          <div className="columns-2 gap-3 sm:columns-3 [&>*]:mb-3">
+          {/* her office photos (from the GFG page of her Figma file) in an even grid */}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {OFFICE.map((o) => (
-              <Image key={o.src} src={o.src} alt={o.alt} width={o.w} height={o.h} unoptimized className="block h-auto w-full break-inside-avoid" />
+              <Image
+                key={o.src}
+                src={o.src}
+                alt={o.alt}
+                width={o.w}
+                height={o.h}
+                unoptimized
+                className="block aspect-[4/5] h-auto w-full object-cover"
+                style={{ objectPosition: o.pos }}
+              />
             ))}
           </div>
         </Section>
