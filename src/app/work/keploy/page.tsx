@@ -261,10 +261,12 @@ export default function Keploy() {
             <span className="label">Overall challenges</span>
             <p className="printed mt-3 text-sm leading-relaxed">
               Designing for developer-facing tools was{" "}
-              <Mark type="marker">no easy feat</Mark>. It required a lot of
-              brainstorming, constant iteration, and close collaboration with
-              both developers &amp; stakeholders to ensure the designs genuinely
-              communicated what Keploy is about.
+              <Mark type="marker">no easy feat</Mark>.{" "}
+              <span className="text-[#E8762E]">
+                It required a lot of brainstorming, constant iteration, and close
+                collaboration with both developers &amp; stakeholders to ensure
+                the designs genuinely communicated what Keploy is about.
+              </span>
             </p>
             <p className="printed mt-3 text-sm leading-relaxed">
               Understanding technical workflows and translating them into
