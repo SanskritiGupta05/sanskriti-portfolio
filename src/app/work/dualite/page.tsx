@@ -14,7 +14,10 @@ export const metadata: Metadata = {
 // Dualite (early career), in the clipped-sheet case study layout, like GFG and Keploy.
 // Copy and frames are Sanskriti's own, from her Framer page /work/dualite (the frames she placed there);
 // that page's leftover Bounce template text ("Making it real", 60+ components, riders) is left out.
-// Section names describe what each frame shows. Images in public/assets/cases/dualite/ (2400px wide).
+// Section names describe what each frame shows. Each graphic is its own file in public/assets/cases/dualite/:
+// exported from her Figma file "dualite-socials" where the frame matched the one on Framer (Builder Fridays,
+// podcast covers, demo thumbnails, BITS posts), otherwise cut out of the full-size image she uploaded to
+// Framer (Alpha launch, Concept to Launch + masterclass posts, video thumbnails).
 const d = (name: string, w: number, h: number, alt: string) => ({ src: `/assets/cases/dualite/${name}.webp`, w, h, alt });
 
 const TOC: TocItem[] = [
@@ -27,9 +30,20 @@ const TOC: TocItem[] = [
   { id: "campus", label: "Campus collab" },
 ];
 
-// her work shown as-is: no frame or outline, full width, not re-compressed
-function Shot({ src, w, h, alt }: { src: string; w: number; h: number; alt: string }) {
+// her work shown as-is: no frame or outline, not re-compressed
+type Pic = { src: string; w: number; h: number; alt: string };
+function Shot({ src, w, h, alt }: Pic) {
   return <Image src={src} alt={alt} width={w} height={h} unoptimized className="block h-auto w-full" />;
+}
+// tall pieces (stories, covers, squares) side by side so they don't run several screens long
+function Row({ items, cols = "sm:grid-cols-2" }: { items: Pic[]; cols?: string }) {
+  return (
+    <div className={`grid items-start gap-4 ${cols}`}>
+      {items.map((p) => (
+        <Shot key={p.src} {...p} />
+      ))}
+    </div>
+  );
 }
 
 export default function Dualite() {
@@ -64,7 +78,7 @@ export default function Dualite() {
               />
             </div>
             <div className="mt-10">
-              <Shot {...d("alpha-launch", 2400, 2516, "Dualite Alpha is now launched: the launch creative with the app")} />
+              <Shot src="/assets/cases/early-dualite.webp" w={1800} h={1253} alt="Dualite Alpha is now launched" />
             </div>
           </header>
         }
@@ -72,30 +86,81 @@ export default function Dualite() {
         <Section id="overview" label="Overview">
           {/* her line from the Framer page, word for word apart from the capital I */}
           <P>All of the illustration that I made for marketing team of Dualite.</P>
+          <div className="mx-auto w-full max-w-[460px]">
+            <Shot {...d("alpha-launch", 2000, 3540, "Dualite Alpha is now launched: the launch creative with the app")} />
+          </div>
         </Section>
 
         <Section id="builder-fridays" label="Builder Fridays" title="Episode creatives, in every size.">
-          <Shot {...d("builder-fridays", 2400, 1124, "Builder Fridays, Episode 3: story, banner and post")} />
+          <Shot {...d("builder-fridays-banner", 2000, 1125, "Builder Fridays, Episode 3: YouTube banner")} />
+          <Row
+            items={[
+              d("builder-fridays-story", 1350, 2400, "Builder Fridays, Episode 3: Instagram story"),
+              d("builder-fridays-post", 2000, 2113, "Builder Fridays, Episode 3: post"),
+            ]}
+          />
         </Section>
 
         <Section id="podcast" label="Design to Dev: The Podcast" title="Podcast covers.">
-          <Shot {...d("podcast", 2400, 1466, "Design to Dev: The Podcast, episode 3 covers")} />
+          <Row
+            cols="grid-cols-3"
+            items={[
+              d("podcast-70-30", 1350, 2400, "Design to Dev podcast #03: 70-30 problem"),
+              d("podcast-developer", 1350, 2400, "Design to Dev podcast #03: changing definition of a developer"),
+              d("podcast-pehchan", 1350, 2400, "Design to Dev podcast #03: pehchan"),
+            ]}
+          />
         </Section>
 
         <Section id="demos" label="Product demos" title="Built with alpha.">
-          <Shot {...d("demo-thumbnails", 2400, 2125, "Demo video thumbnails: FinTech app, Figma import, marketplace, multiple APIs, finance dashboard, no-code builder")} />
+          {[
+            d("demo-fintech", 1920, 1080, "FinTech app + React Native by alpha itself"),
+            d("demo-figma-import", 1920, 1080, "Import your Figma file & integrate with alpha itself"),
+            d("demo-marketplace", 1920, 1080, "Build end-to-end marketplace with alpha"),
+            d("demo-apis", 1920, 1080, "Integrating multiple APIs with alpha"),
+            d("demo-finance-dashboard", 1920, 1080, "Build production grade finance dashboard with alpha"),
+            d("demo-no-code", 1920, 1080, "No code builder by alpha itself"),
+          ].map((p) => (
+            <Shot key={p.src} {...p} />
+          ))}
         </Section>
 
         <Section id="posts" label="Social posts" title="Concept to launch, Figma to code.">
-          <Shot {...d("social-posts", 2400, 1642, "Social posts: Move from concept to launch, and the Figma to Code masterclass")} />
+          <Row
+            items={[
+              d("post-concept-1", 1968, 1968, "Move from concept to launch. Fast: developer illustration"),
+              d("post-concept-2", 1968, 1968, "Move from concept to launch. Fast: code background"),
+              d("post-concept-3", 1968, 1968, "Move from concept to launch. Fast: alpha app"),
+              d("post-concept-4", 1968, 1968, "Move from concept to launch. Fast: wireframe to alpha"),
+              d("post-masterclass-zoom", 1968, 1968, "Figma to Code Masterclass, live on Zoom"),
+              d("post-masterclass-meet", 1968, 1968, "Figma to Code Masterclass, live on Google Meet"),
+            ]}
+          />
         </Section>
 
         <Section id="thumbnails" label="Video thumbnails" title="Prompting, generative UI and more.">
-          <Shot {...d("video-thumbnails", 2400, 1561, "Video thumbnails: how to prompt well, Figma to React, generative UI, comparisons")} />
+          {[
+            d("thumb-prompt", 2000, 1233, "How to prompt well?"),
+            d("thumb-figma-react", 2000, 1230, "Figma to React"),
+            d("thumb-generative-ui", 2000, 1233, "Introduction to generative UI"),
+            d("thumb-figma-flutter", 2000, 1228, "Figma to Flutter"),
+            d("thumb-figma-react-code", 2000, 1228, "Figma design to React code"),
+            d("thumb-figma-tailwind", 2000, 1228, "Figma to Tailwind"),
+            d("thumb-vs-bolt", 2000, 1091, "alpha vs bolt"),
+            d("thumb-vs-lovable", 2000, 1093, "alpha vs Lovable"),
+            d("thumb-vs-replit", 2000, 1091, "alpha vs Replit"),
+          ].map((p) => (
+            <Shot key={p.src} {...p} />
+          ))}
         </Section>
 
         <Section id="campus" label="Campus collab" title="A birthday gift for BITSians.">
-          <Shot {...d("bits-collab", 2400, 1310, "Dualite x BITS: Rohan's gift to all the BITSians")} />
+          <Row
+            items={[
+              d("bits-gift", 1920, 2400, "Dualite x BITS: Rohan's gift to all the BITSians, with illustration"),
+              d("bits-signup", 1920, 2400, "Dualite x BITS: Rohan's gift to all the BITSians, sign up now"),
+            ]}
+          />
           <Link href="/work#early" className="label mt-6 w-fit !text-ink underline-offset-4 hover:underline">
             ← Back to all work
           </Link>
