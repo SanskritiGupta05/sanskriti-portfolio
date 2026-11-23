@@ -8,6 +8,7 @@ import { WorkArc } from "@/components/work/WorkArc";
 import { PaperStack } from "@/components/PaperStack";
 import { CaseStudies } from "@/components/CaseStudies";
 import { VibeProjects } from "@/components/VibeProjects";
+import { EarlyCareer } from "@/components/EarlyCareer";
 
 // One narrow centred column with wide empty margins on both sides (like Sam's and Mythili's sites).
 // The lantern hangs outside it, from the page's top-right corner.
@@ -105,7 +106,8 @@ export default function Home() {
             id: "work",
             content: (
               <div className="mx-auto w-full max-w-[874px] px-6 pb-24">
-                {/* primary case studies */}
+                {/* the work section, in three tiers, each on its own clipped sheet:
+                    1 primary case studies · 2 vibe-coded projects · 3 early career */}
                 <CaseStudies />
               </div>
             ),
@@ -113,9 +115,18 @@ export default function Home() {
           {
             id: "vibe",
             content: (
-              <div className="mx-auto w-full max-w-[874px] px-6">
-                {/* vibe-coded side projects, then the footer */}
+              <div className="mx-auto w-full max-w-[874px] px-6 pb-24">
+                {/* tier 2: vibe-coded side projects */}
                 <VibeProjects />
+              </div>
+            ),
+          },
+          {
+            id: "early",
+            content: (
+              <div className="mx-auto w-full max-w-[874px] px-6">
+                {/* tier 3: early career, then the footer */}
+                <EarlyCareer />
                 <Footer />
               </div>
             ),
