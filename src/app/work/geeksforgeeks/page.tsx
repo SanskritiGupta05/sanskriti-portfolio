@@ -50,6 +50,7 @@ const OFFICE = [
   { src: "/assets/cases/gfg/office-desk.webp", w: 1200, h: 900, alt: "My desk, with a plant and two figurines" },
   { src: "/assets/cases/gfg/office-floor.webp", w: 900, h: 1200, alt: "The office floor with rows of desks" },
   { src: "/assets/cases/gfg/office-desk-view.webp", w: 675, h: 1200, alt: "The view from my desk" },
+  { src: "/assets/cases/gfg/office-farewell-cake.webp", w: 480, h: 852, alt: "My farewell cake at GeeksforGeeks, with a Thank You topper" },
 ];
 
 const ADS = [
