@@ -496,63 +496,21 @@ export function PlayLink() {
   );
 }
 
-// the whole old journey vs the new one, step by step with screen counts (her Figma strip 1291:9950, as wrapping chips)
+// the whole old journey vs the new one, as a Figma canvas: an "Old app" and a green "New app" section, each step a small
+// frame with its screen count, blue prototype arrows between them, and New / Moved here / Removed tags (Figma v5, The big move)
 type Kind = "kept" | "removed" | "new" | "moved";
-// each chip is a soft raised pill: a top-lit gradient, a bright top edge, a tinted hairline and a small shadow
-const KIND: Record<
-  Kind,
-  {
-    bg: string;
-    from: string;
-    to: string;
-    ring: string;
-    fg: string;
-    label: string;
-  }
-> = {
-  kept: {
-    bg: "#ffffff",
-    from: "#ffffff",
-    to: "#f7f7f7",
-    ring: "rgba(0,0,0,0.07)",
-    fg: "#666666",
-    label: "Kept",
-  },
-  new: {
-    bg: "#e7ffec",
-    from: "#f4fff6",
-    to: "#e3fbe8",
-    ring: "rgba(2,143,0,0.16)",
-    fg: "#028f00",
-    label: "New step",
-  },
-  moved: {
-    bg: "#fff4e2",
-    from: "#fffaf2",
-    to: "#fff0d9",
-    ring: "rgba(184,110,0,0.16)",
-    fg: "#b86e00",
-    label: "Moved here",
-  },
-  removed: {
-    bg: "#ffeded",
-    from: "#fff6f6",
-    to: "#ffe9e9",
-    ring: "rgba(212,43,49,0.16)",
-    fg: "#d42b31",
-    label: "Removed",
-  },
+const KIND: Record<Kind, { stroke: string; tag?: [string, string] }> = {
+  kept: { stroke: "#dcdcdc" },
+  new: { stroke: "#7fd1a0", tag: ["New", "#14ae5c"] },
+  moved: { stroke: "#f5b97a", tag: ["Moved here", "#f5a524"] },
+  removed: { stroke: "#f2a3a3", tag: ["Removed", "#f24822"] },
 };
-const chipStyle = (k: Kind) => ({
-  background: `linear-gradient(180deg, ${KIND[k].from}, ${KIND[k].to})`,
-  boxShadow: `inset 0 1px 0 #fff, 0 0 0 1px ${KIND[k].ring}, 0 1px 2px rgba(0,0,0,0.05), 0 6px 12px -6px rgba(40,30,20,0.12)`,
-});
 const OLD_FLOW: [string, string, Kind][] = [
   ["Play Store", "3 screens", "kept"],
   ["Intro", "3 screens", "kept"],
   ["Location", "1 screen", "kept"],
   ["Sign up", "3 screens", "kept"],
-  ["Reference contact", "3 screens · removed", "removed"],
+  ["Reference contact", "3 screens", "removed"],
   ["Aadhaar", "7 screens", "kept"],
   ["Driving licence", "2 screens", "kept"],
   ["Selfie", "2 screens", "kept"],
@@ -567,75 +525,109 @@ const OLD_FLOW: [string, string, Kind][] = [
 const NEW_FLOW: [string, string, Kind][] = [
   ["Splash + intro", "4 screens", "kept"],
   ["Sign up", "2 screens", "kept"],
-  ["3-step checklist", "1 screen · new step", "new"],
-  ["Allow location", "1 screen · new step", "new"],
+  ["3-step checklist", "1 screen", "new"],
+  ["Allow location", "1 screen", "new"],
   ["Pick a hub (map)", "1 screen", "kept"],
-  ["Scooter type", "1 screen · new step", "new"],
+  ["Scooter type", "1 screen", "new"],
   ["Plan, KM, review", "3 screens", "kept"],
-  ["① KYC submit (2 min)", "1 screen · moved here", "moved"],
+  ["① KYC submit (2 min)", "1 screen", "moved"],
   ["② Pay + success", "2 screens", "kept"],
-  ["KYC check in background", "3 screens · new step", "new"],
-  ["Pick up + ride", "4 screens · new step", "new"],
+  ["KYC check in background", "3 screens", "new"],
+  ["Pick up + ride", "4 screens", "new"],
   ["Status on home", "3 screens", "kept"],
-  ["Loyalty", "4 screens · new step", "new"],
+  ["Loyalty", "4 screens", "new"],
 ];
+const FIGMA_UI = {
+  fontFamily:
+    'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif',
+};
 
-export function FlowCompare({ caption }: { caption?: string }) {
-  const row = (title: string, steps: [string, string, Kind][]) => (
-    <div className="grid gap-3.5">
-      <span className="font-mono text-[12px] tracking-[0.14em] text-muted-foreground uppercase">
-        {title}
+function FlowSection({
+  label,
+  after,
+  steps,
+}: {
+  label: string;
+  after?: boolean;
+  steps: [string, string, Kind][];
+}) {
+  return (
+    <div
+      className={`grid gap-3.5 rounded-md border px-[18px] pt-3.5 pb-5 ${after ? "border-[#bfe7c9] bg-[#f3fbf5]" : "border-[#e2e2e2] bg-white"}`}
+    >
+      <span
+        className={`w-fit rounded px-2 py-[3px] text-[11px] font-medium ${after ? "bg-[#14ae5c] text-white" : "bg-[#e6e6e6] text-[#1e1e1e]"}`}
+      >
+        {label}
       </span>
-      <ol className="flex flex-wrap items-center gap-x-2 gap-y-2.5">
+      <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-3">
         {steps.map(([name, sub, kind], i) => (
-          <li key={name + i} className="flex items-center gap-2">
+          <li key={name + i} className="flex items-center gap-1.5">
             <span
-              className="grid gap-0.5 rounded-xl px-3 py-2"
-              style={chipStyle(kind)}
+              className="grid gap-[3px] rounded-lg bg-white px-2.5 py-2 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+              style={{
+                boxShadow: `inset 0 0 0 ${kind === "kept" ? 1 : 1.5}px ${KIND[kind].stroke}, 0 1px 2px rgba(0,0,0,0.04)`,
+              }}
             >
-              <span className="font-serif text-[16px] leading-5 text-[#1c1b19]">
-                {name}
+              <span className="flex items-center gap-1.5">
+                <span className="text-[13px] font-medium text-[#1e1e1e]">
+                  {name}
+                </span>
+                {KIND[kind].tag && (
+                  <span
+                    className="rounded-[3px] px-[5px] py-px text-[9px] font-medium text-white"
+                    style={{ background: KIND[kind].tag![1] }}
+                  >
+                    {KIND[kind].tag![0]}
+                  </span>
+                )}
               </span>
-              <span
-                className="font-mono text-[11px] leading-4"
-                style={{ color: KIND[kind].fg }}
-              >
-                {sub}
-              </span>
+              <span className="text-[11px] text-[#8c8c8c]">{sub}</span>
             </span>
             {i < steps.length - 1 && (
-              <span
-                aria-hidden="true"
-                className="font-mono text-[14px] text-[#9a9a9a]"
-              >
-                →
-              </span>
+              <svg aria-hidden="true" width="16" height="9" viewBox="0 0 16 9">
+                <path
+                  d="M1 4.5h13M10.5 1l3.5 3.5L10.5 8"
+                  fill="none"
+                  stroke="#0d99ff"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             )}
           </li>
         ))}
       </ol>
     </div>
   );
+}
+
+export function FlowCompare({ caption }: { caption?: string }) {
   return (
     <figure className="grid min-w-0 gap-3">
-      <div className="grid gap-7 rounded-[20px] bg-[#F8F8F8] p-5 sm:p-8 dark:bg-surface">
-        {row("Old app · 15 steps, 39 screens", OLD_FLOW)}
-        {row("New app · 13 stages", NEW_FLOW)}
-        <div className="flex flex-wrap gap-x-5 gap-y-2">
-          {(Object.keys(KIND) as Kind[]).map((k) => (
+      <div
+        className="grid gap-[18px] rounded-2xl border border-black/[0.05] bg-[#f5f5f5] p-4 sm:p-6"
+        style={FIGMA_UI}
+      >
+        <FlowSection label="Old app · 15 steps, 39 screens" steps={OLD_FLOW} />
+        <FlowSection label="New app · 13 stages" after steps={NEW_FLOW} />
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          {(["kept", "new", "moved", "removed"] as Kind[]).map((k) => (
             <span
               key={k}
-              className="flex items-center gap-2 font-mono text-[12px] tracking-[0.1em] text-muted-foreground uppercase"
+              className="flex items-center gap-1.5 text-[11px] text-[#5c5c5c]"
             >
               <span
                 aria-hidden="true"
-                className="size-3 rounded-[3px]"
-                style={{
-                  background: KIND[k].bg,
-                  boxShadow: `inset 0 0 0 1px ${KIND[k].fg}66`,
-                }}
+                className="size-3 rounded-[3px] bg-white"
+                style={{ boxShadow: `inset 0 0 0 1.5px ${KIND[k].stroke}` }}
               />
-              {KIND[k].label}
+              {k === "kept"
+                ? "Kept"
+                : KIND[k].tag![0] === "New"
+                  ? "New step"
+                  : KIND[k].tag![0]}
             </span>
           ))}
         </div>
