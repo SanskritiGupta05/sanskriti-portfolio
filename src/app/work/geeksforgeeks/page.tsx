@@ -268,6 +268,8 @@ export default function GeeksforGeeks() {
             </Mark>
             , praising the fresh approach and usability of my designs.
           </P>
+          {/* from the GFG page of her Figma file (286:35) */}
+          <Shot src="/assets/cases/gfg/premium-landing-page.webp" w={1057} h={4096} alt="The GeeksforGeeks Premium landing page re-design" />
           <Quote>&ldquo;I&apos;m incredibly thankful for the head start GFG provided.&rdquo;</Quote>
           <Link href="/work#early" className="label mt-6 w-fit !text-ink underline-offset-4 hover:underline">
             ← Back to all work
