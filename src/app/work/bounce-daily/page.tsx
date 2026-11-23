@@ -23,6 +23,7 @@ import {
   Takeaways,
 } from "@/components/casestudy/bounceStory";
 import { Mark } from "@/components/casestudy/Mark";
+import { HubMergeFigma } from "@/components/casestudy/HubMergeFigma";
 
 // a key fact inside body text: bold, in the heading ink
 function B({ children }: { children: React.ReactNode }) {
@@ -446,8 +447,7 @@ export default function BounceDaily() {
             n={2}
             title="Map first, nearest hub first"
             principle="Riders think “where's the closest scooter?”, not in hub names."
-            fig="hubs"
-            alt="Before: the old hub list. After: the allow-location screen and the hub map opening on the nearest hub."
+            figure={<HubMergeFigma />}
             call={
               <>
                 A short allow-location step explains why, with &quot;Enter my

@@ -7,6 +7,23 @@ import type { ReactNode } from "react";
 // (exported 2× to public/assets/cases/bounce/v5) and decision canvases with a "The call" bar.
 
 const FIG = "/assets/cases/bounce/v5";
+// the figures restyled as a Figma file (sections, frame names, selection), exported at 3× into v5/hq
+const HQ: Record<string, [number, number]> = {
+  "old-signup": [2688, 1652],
+  onboarding: [2688, 1452],
+  plans: [2688, 1720],
+  pay: [2688, 1822],
+  home: [2688, 1712],
+  errors: [2688, 1799],
+  "ui-layer": [2688, 2737],
+  scooter: [2544, 1742],
+  "kyc-status": [2544, 1940],
+  renewals: [2544, 1728],
+};
+const figSrc = (name: string) =>
+  HQ[name] ? `${FIG}/hq/${name}.webp` : `${FIG}/${name}.webp`;
+const figSize = (name: string): [number, number] =>
+  HQ[name] ?? SIZES[name] ?? [1792, 1000];
 const SIZES: Record<string, [number, number]> = {
   "old-signup": [1792, 1066],
   journey: [1792, 539],
@@ -103,10 +120,11 @@ export function Fig({
 }) {
   const img = (
     <Image
-      src={`${FIG}/${name}.webp`}
+      src={figSrc(name)}
       alt={alt}
-      width={(SIZES[name] ?? [1792, 1000])[0]}
-      height={(SIZES[name] ?? [1792, 1000])[1]}
+      width={figSize(name)[0]}
+      height={figSize(name)[1]}
+      unoptimized
       sizes="(min-width: 1100px) 900px, 100vw"
       className="block h-auto w-full rounded-[20px]"
     />
@@ -316,8 +334,9 @@ export function Decision({
   title,
   principle,
   children,
-  fig,
-  alt,
+  fig = "",
+  alt = "",
+  figure,
   call,
 }: {
   id: string;
@@ -325,8 +344,10 @@ export function Decision({
   title: string;
   principle: string;
   children: ReactNode;
-  fig: string;
-  alt: string;
+  fig?: string;
+  alt?: string;
+  // a live figure (e.g. the hub merge) instead of an image
+  figure?: ReactNode;
   call: ReactNode;
 }) {
   return (
@@ -339,15 +360,18 @@ export function Decision({
         {principle}
       </p>
       <Body>{children}</Body>
-      <div className="grid gap-0 overflow-hidden rounded-[24px] bg-[#F8F8F8] px-3 pb-3 sm:px-6 sm:pb-6 dark:bg-surface">
-        <Image
-          src={`${FIG}/${fig}.webp`}
-          alt={alt}
-          width={(SIZES[fig] ?? [1792, 1000])[0]}
-          height={(SIZES[fig] ?? [1792, 1000])[1]}
-          sizes="(min-width: 1100px) 860px, 100vw"
-          className="block h-auto w-full"
-        />
+      <div className="grid gap-0 overflow-hidden rounded-[24px] bg-[#f5f5f5] px-3 pb-3 sm:px-6 sm:pb-6 dark:bg-surface">
+        {figure ?? (
+          <Image
+            src={figSrc(fig)}
+            alt={alt}
+            width={figSize(fig)[0]}
+            height={figSize(fig)[1]}
+            unoptimized
+            sizes="(min-width: 1100px) 860px, 100vw"
+            className="block h-auto w-full"
+          />
+        )}
         <div
           className={`${SKEU} flex flex-col gap-2 rounded-[14px] px-5 py-4 sm:flex-row sm:gap-4`}
         >
