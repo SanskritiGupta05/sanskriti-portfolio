@@ -3,7 +3,8 @@ import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Ticket } from "@/components/casestudy/pieces";
-import { CaseStudyFrame, P, Quote, Section, Shot, type TocItem } from "@/components/casestudy/Margin";
+import Image from "next/image";
+import { CaseStudyFrame, P, Quote, Section, type TocItem } from "@/components/casestudy/Margin";
 
 export const metadata: Metadata = {
   title: "Keploy · Sanskriti",
@@ -44,6 +45,17 @@ const SKETCH_NOTES: [string, string][] = [
   ["Unit Testing", "Puzzle blocks or simple blocks a speedometer type visual to represent full coverage a button in the middle with a hand clicking on it to represent one click testing."],
   ["Integration Testing", "glowing mock/test icon in the center. Arrows looping inwards and outwards from a central node, symbolizing interaction and replication. mock tests representation"],
 ];
+
+// Her work shown as-is: no rounded frame, outline or backing (they boxed in artwork that has its own
+// rounded corners), served unoptimized so Next doesn't re-compress it.
+function Shot({ src, w, h, alt, caption }: { src: string; w: number; h: number; alt: string; caption?: string }) {
+  return (
+    <figure className="grid gap-2">
+      <Image src={src} alt={alt} width={w} height={h} unoptimized className="block h-auto w-full" />
+      {caption && <figcaption className="label">{caption}</figcaption>}
+    </figure>
+  );
+}
 
 function Grid({ items, cols = "sm:grid-cols-2" }: { items: Img[]; cols?: string }) {
   return (
@@ -89,7 +101,7 @@ export default function Keploy() {
               />
             </div>
             <div className="mt-10">
-              <Shot src="/assets/cases/early-keploy.webp" w={1200} h={883} alt="Keploy work at a glance" />
+              <Shot src="/assets/cases/early-keploy.webp" w={1800} h={1324} alt="Keploy work at a glance" />
             </div>
           </header>
         }

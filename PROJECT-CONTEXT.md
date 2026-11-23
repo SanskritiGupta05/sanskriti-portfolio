@@ -769,3 +769,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-24:** GFG page: the 1px outline around images is gone too (her report of a "weird stroke": the cover art has its own transparent rounded corners, so a rectangular outline boxed it in). Images now sit bare on the sheet.
 - **2026-11-24:** Removed "· Admit one" from the ticket labels on the GFG and Keploy pages (her question; it was my copy, carried over from the eight.money ticket). eight.money still has its own.
 - **2026-11-24:** "Admit one" removed from the eight.money and Spider-Verse ticket labels too (her call); no page says it now.
+- **2026-11-24:** Keploy page: images no longer use the shared framed `Shot` (rounded corners, outline, grey backing boxed in her cover art). A page-local bare `Shot`, served `unoptimized`, matches GFG; the cover uses the 1800px early-keploy.webp.
