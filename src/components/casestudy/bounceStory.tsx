@@ -61,7 +61,7 @@ export function Tldr({ items }: { items: { k: string; v: string }[] }) {
       <span className="label normal-case tracking-normal">tl;dr</span>
       <dl className="grid gap-4 sm:grid-cols-2">
         {items.map((i) => (
-          <div key={i.k} className="grid content-start gap-2.5 rounded-2xl bg-white px-5 py-5 ring-1 ring-black/[0.08] dark:bg-surface dark:ring-white/10">
+          <div key={i.k} className="grid content-start gap-2.5 skeu rounded-2xl px-5 py-5">
             <dt className="label tracking-[0.14em]">{i.k}</dt>
             <dd className="printed text-[15px] leading-[24px] text-ink">{i.v}</dd>
           </div>

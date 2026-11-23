@@ -65,7 +65,23 @@ export default function BounceDaily() {
               <PlayStoreButton className="mt-6" />
             </div>
             <div className="mt-8">
-              <MetaBar role="Product Designer" duration="3 months" partners="Product manager" />
+              <MetaBar
+                role="Product Designer"
+                duration="3 months"
+                partners={
+                  <span className="inline-flex flex-wrap items-center">
+                    Aum Vats (PM @
+                    <Image
+                      src="/assets/cases/bounce/bounce-daily-logo.svg"
+                      alt="Bounce Daily"
+                      width={77}
+                      height={67}
+                      className="mx-1 inline-block h-[22px] w-auto drop-shadow-[0_1px_1px_rgba(0,0,0,0.12)]"
+                    />
+                    )
+                  </span>
+                }
+              />
             </div>
             <div className="mt-10">
               <Image

@@ -200,7 +200,7 @@ export function Compare({ old, next, width = 160, caption }: { old: Screen[]; ne
 }
 
 // role · duration · who I worked with, as one soft bar with icons
-export function MetaBar({ role, duration, partners }: { role: string; duration: string; partners: string }) {
+export function MetaBar({ role, duration, partners }: { role: string; duration: string; partners: ReactNode }) {
   const cells = [
     { icon: User, k: "Role", v: role },
     { icon: CalendarDays, k: "Duration", v: duration },
