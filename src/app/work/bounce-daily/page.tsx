@@ -25,6 +25,12 @@ import {
 import { Mark } from "@/components/casestudy/Mark";
 import { HubMergeFigma } from "@/components/casestudy/HubMergeFigma";
 import {
+  CheckoutStory,
+  KycCardsStory,
+  PlansStory,
+  ScooterStory,
+} from "@/components/casestudy/bounceAnims";
+import {
   CreditCard,
   House,
   Layers,
@@ -384,8 +390,7 @@ export default function BounceDaily() {
             id="s2"
             label="Solution #2 · Choose"
             title="Choose without doing maths"
-            fig="plans"
-            alt="Before: old plan boxes with four numbers each. After: plan cards led by the price per day."
+            figure={<PlansStory />}
           >
             Each screen asks one decision, and each plan leads with one number
             to compare: its price per day. Kilometres get their own step, and a
@@ -395,8 +400,7 @@ export default function BounceDaily() {
             id="s3"
             label="Solution #3 · Book"
             title="Book in two steps"
-            fig="pay"
-            alt="Confirm and pay with every charge listed, and the payment success screen with the hub card."
+            figure={<CheckoutStory />}
           >
             KYC and payment read as one short checkout. Every charge is listed
             before paying, and the success screen tells riders exactly which hub
@@ -431,8 +435,7 @@ export default function BounceDaily() {
             n={1}
             title="Scooter type gets its own step"
             principle="Fewer taps doesn't always mean better understanding."
-            fig="scooter"
-            alt="The low and high speed toggle with the licence rule on each side, and the Switch to high speed sheet."
+            figure={<ScooterStory />}
             call={
               <>
                 Scooter type is its own step, with the licence rule on every
@@ -500,8 +503,7 @@ export default function BounceDaily() {
             n={4}
             title="KYC status on home, one next step"
             principle="Riders should never have to guess what's happening."
-            fig="kyc-status"
-            alt="Home with the account status card: KYC in review, KYC not approved with the reason and a fix, and KYC approved."
+            figure={<KycCardsStory />}
             call={
               <>
                 A three-step checklist replaces the seven-step wall. Home shows

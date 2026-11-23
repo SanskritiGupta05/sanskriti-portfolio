@@ -9,7 +9,7 @@ import type { ReactNode } from "react";
 const FIG = "/assets/cases/bounce/v5";
 // the figures restyled as a Figma file (sections, frame names, selection), exported at 3× into v5/hq
 const HQ: Record<string, [number, number]> = {
-  "kyc-spots": [2544, 1157],
+  "kyc-spots": [2544, 2345],
   "old-signup": [2688, 1652],
   onboarding: [2688, 1452],
   plans: [2688, 1720],
@@ -326,15 +326,17 @@ export function Solution({
   label,
   title,
   children,
-  fig,
-  alt,
+  fig = "",
+  alt = "",
+  figure,
 }: {
   id?: string;
   label: string;
   title: string;
   children: ReactNode;
-  fig: string;
-  alt: string;
+  fig?: string;
+  alt?: string;
+  figure?: ReactNode;
 }) {
   return (
     <div id={id} className="grid min-w-0 scroll-mt-16 gap-3.5 pt-9">
@@ -343,7 +345,7 @@ export function Solution({
         {title}
       </h3>
       <Body>{children}</Body>
-      <Fig name={fig} alt={alt} />
+      {figure ?? <Fig name={fig} alt={alt} />}
     </div>
   );
 }

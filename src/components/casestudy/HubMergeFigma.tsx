@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { CommentCard } from "./figmaStage";
 
 // Design decision #2 as a live Figma-style storyboard (HTML/CSS, not a video: sharp at any size and replayable).
 // Five steps, each with a caption, so a first-time viewer can follow it:
@@ -439,24 +440,13 @@ export function HubMergeFigma() {
           style={{ left: 646, top: 66 }}
         >
           {PINS.map((p, i) => (
-            <div
+            <CommentCard
               key={p.n}
-              className={`grid gap-1 rounded-[10px] bg-white p-2.5 shadow-[0_4px_14px_rgba(0,0,0,0.1),0_0_0_1px_rgba(0,0,0,0.08)] transition-all duration-500 ease-out ${t >= T_PINS + i * 550 ? "translate-x-0 opacity-100" : "translate-x-3 opacity-0"}`}
-            >
-              <span className="flex items-center gap-1.5">
-                <span className="size-4 rounded-full bg-[#9747ff]" />
-                <span className="text-[11px] font-semibold text-[#1e1e1e]">
-                  Sanskriti
-                </span>
-                <span className="text-[10px] text-[#8c8c8c]">#{p.n}</span>
-              </span>
-              <span className="text-[12px] font-semibold text-[#1e1e1e]">
-                {p.title}
-              </span>
-              <span className="text-[11px] leading-[15px] text-[#5c5c5c]">
-                {p.sub}
-              </span>
-            </div>
+              n={p.n}
+              title={p.title}
+              sub={p.sub}
+              show={t >= T_PINS + i * 550}
+            />
           ))}
         </div>
 
