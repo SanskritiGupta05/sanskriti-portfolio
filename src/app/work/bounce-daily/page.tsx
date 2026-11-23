@@ -24,6 +24,15 @@ import {
 } from "@/components/casestudy/bounceStory";
 import { Mark } from "@/components/casestudy/Mark";
 import { HubMergeFigma } from "@/components/casestudy/HubMergeFigma";
+import {
+  CreditCard,
+  House,
+  Layers,
+  ListChecks,
+  Palette,
+  Repeat,
+  Sparkles,
+} from "lucide-react";
 
 // a key fact inside body text: bold, in the heading ink
 function B({ children }: { children: React.ReactNode }) {
@@ -537,36 +546,43 @@ export default function BounceDaily() {
               items={[
                 {
                   k: "Onboarding",
+                  icon: Sparkles,
                   t: "7 form steps became 2 screens",
                   l: "Splash, three illustrated intros, then phone and OTP. Pictures and real riders before any form (aesthetic-usability effect).",
                 },
                 {
                   k: "Plans",
+                  icon: ListChecks,
                   t: "One price per day to compare",
                   l: "One decision per screen: scooter, plan, kilometres, review. Fewer options at once, faster decisions (Hick's law).",
                 },
                 {
                   k: "Pay",
+                  icon: CreditCard,
                   t: "Every charge before paying",
                   l: "A full price breakdown with Bounce Shield and referral, and the success screen shows exactly which hub to visit (peak-end rule).",
                 },
                 {
                   k: "Home",
+                  icon: House,
                   t: "Tracker only until the ride starts",
                   l: "Paid, KYC, picked up, riding. Once the ride starts, the card shows the plan and kilometres instead.",
                 },
                 {
                   k: "Switch scooter",
+                  icon: Repeat,
                   t: "Mid-rental only, from home",
                   l: "An entry on home while the rental runs. Low to high checks only the licence; high to low needs no documents; the swap happens at a hub.",
                 },
                 {
                   k: "Colour",
+                  icon: Palette,
                   t: "One red action per screen",
                   l: "I flagged early that red was on buttons, headers, icons and cards. We put flows first; the system now keeps red for the one action that matters.",
                 },
                 {
                   k: "System",
+                  icon: Layers,
                   t: "Tokens, 16 text styles, 14 components",
                   l: "The app's first design system, so a pattern learned once works on every screen, for the next designer too.",
                 },

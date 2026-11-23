@@ -9,6 +9,7 @@ import type { ReactNode } from "react";
 const FIG = "/assets/cases/bounce/v5";
 // the figures restyled as a Figma file (sections, frame names, selection), exported at 3× into v5/hq
 const HQ: Record<string, [number, number]> = {
+  "kyc-spots": [2544, 1157],
   "old-signup": [2688, 1652],
   onboarding: [2688, 1452],
   plans: [2688, 1720],
@@ -21,7 +22,7 @@ const HQ: Record<string, [number, number]> = {
   renewals: [2544, 1728],
 };
 const figSrc = (name: string) =>
-  HQ[name] ? `${FIG}/hq/${name}.webp` : `${FIG}/${name}.webp`;
+  HQ[name] ? `${FIG}/figma/${name}.webp` : `${FIG}/${name}.webp`;
 const figSize = (name: string): [number, number] =>
   HQ[name] ?? SIZES[name] ?? [1792, 1000];
 const SIZES: Record<string, [number, number]> = {
@@ -222,7 +223,13 @@ const TONES = {
 export function Cards({
   items,
 }: {
-  items: { k?: string; t?: string; l: string; tone?: keyof typeof TONES }[];
+  items: {
+    k?: string;
+    t?: string;
+    l: string;
+    tone?: keyof typeof TONES;
+    icon?: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  }[];
 }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
@@ -231,11 +238,25 @@ export function Cards({
           key={c.t ?? c.k}
           className={`${c.tone ? TONES[c.tone] + " dark:bg-none dark:bg-surface" : SKEU} grid content-start gap-2 rounded-2xl p-[22px]`}
         >
-          {c.k && (
-            <span className="font-mono text-[11px] tracking-[0.14em] text-[#c8553b] uppercase">
-              {c.k}
-            </span>
-          )}
+          {c.k &&
+            (c.icon ? (
+              // a stronger label: a small tinted icon tile, then bold caps
+              <span className="flex items-center gap-2.5">
+                <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-[#fdeeea] shadow-[inset_0_1px_0_#fff,0_0_0_1px_rgba(200,85,59,0.18)] dark:bg-[#3a2622]">
+                  <c.icon
+                    className="size-[15px] text-[#c8553b]"
+                    strokeWidth={2}
+                  />
+                </span>
+                <span className="font-mono text-[13px] font-bold tracking-[0.14em] text-[#c8553b] uppercase">
+                  {c.k}
+                </span>
+              </span>
+            ) : (
+              <span className="font-mono text-[11px] tracking-[0.14em] text-[#c8553b] uppercase">
+                {c.k}
+              </span>
+            ))}
           {c.t && (
             <span className="font-serif text-[20px] leading-[26px] text-head">
               {c.t}
