@@ -12,7 +12,7 @@ export function Nav() {
       <nav className="grid grid-cols-[1fr_auto_1fr] items-center gap-10">
         <div className="flex items-center justify-end gap-8">
           <Link href="/work" className={link}>Work</Link>
-          <a href="#about" className={link}>About</a>
+          <Link href="/about" className={link}>About</Link>
         </div>
         <Link href="/" aria-label="Sanskriti, home" className="group">
           {/* a pre-sharpened copy at 4× its shown size, served as-is (Next's resizing made it soft) */}
