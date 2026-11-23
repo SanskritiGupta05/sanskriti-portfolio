@@ -197,26 +197,8 @@
   }
 }
 
-/* Case study highlighter (Mark): a soft peach marker stroke that draws in while a key phrase is in the
-   reading band and fades once it leaves. The colour is the peach of the tape on the case study notes. */
-:root { --mark: 244 199 189; }
-:root[data-theme="dark"] { --mark: 200 85 59; }
-.mark {
-  background-image: linear-gradient(100deg, rgb(var(--mark) / 0) 0.6%, rgb(var(--mark) / 0.85) 2%, rgb(var(--mark) / 0.6) 6%, rgb(var(--mark) / 0.5) 94%, rgb(var(--mark) / 0.75) 98%, rgb(var(--mark) / 0) 99.5%);
-  background-repeat: no-repeat;
-  background-position: 0 85%;
-  background-size: 0% 0.62em;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-  padding-inline: 0.08em;
-  margin-inline: -0.08em;
-  transition: background-size 420ms ease-in 0ms;
-}
-.mark[data-on="true"] {
-  background-size: 100% 0.62em;
-  transition: background-size 750ms cubic-bezier(0.2, 0.7, 0.2, 1) var(--mark-delay, 0ms);
-}
-:root[data-theme="dark"] .mark { background-image: linear-gradient(100deg, rgb(var(--mark) / 0) 0.6%, rgb(var(--mark) / 0.5) 2%, rgb(var(--mark) / 0.38) 6%, rgb(var(--mark) / 0.32) 94%, rgb(var(--mark) / 0.45) 98%, rgb(var(--mark) / 0) 99.5%); }
-@media (prefers-reduced-motion: reduce) {
-  .mark, .mark[data-on="true"] { transition: none; }
-}
+/* Case study scribbles (Mark): hand-drawn rough-notation marks on key phrases. These are the ink colours;
+   the drawing and the scroll behaviour live in src/components/casestudy/Mark.tsx. */
+:root { --scribble: #c8553b; --scribble-fill: #f6cdbf; }
+:root[data-theme="dark"] { --scribble: #e07a62; --scribble-fill: rgba(200, 85, 59, 0.45); }
+.mark { position: relative; }
