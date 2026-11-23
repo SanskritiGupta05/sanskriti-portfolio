@@ -68,7 +68,7 @@ const BANNERS_OTHER = [
   { ...g("banner-discord", 1000, 470), alt: "Banner: Top Discord servers for developers" },
 ];
 
-// Her work shown as-is: square corners (rounded corners clipped the edges of the artwork),
+// Her work shown as-is: square corners and no outline (rounded corners clipped the artwork, and an outline boxed in artwork that has its own rounded corners),
 // served unoptimized so Next doesn't re-compress the lossless files.
 function Shot({ src, w, h, alt, caption, native = false }: { src: string; w: number; h: number; alt: string; caption?: string; native?: boolean }) {
   return (
@@ -79,7 +79,7 @@ function Shot({ src, w, h, alt, caption, native = false }: { src: string; w: num
         width={w}
         height={h}
         unoptimized
-        className={`block h-auto border border-line ${native ? "w-full max-w-[250px]" : "w-full"}`}
+        className={`block h-auto ${native ? "w-full max-w-[250px]" : "w-full"}`}
       />
       {caption && <figcaption className="label">{caption}</figcaption>}
     </figure>
