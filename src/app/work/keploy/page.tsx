@@ -4,6 +4,7 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Ticket } from "@/components/casestudy/pieces";
 import Image from "next/image";
+import { Mark } from "@/components/casestudy/Mark";
 import {
   Megaphone,
   PenTool,
@@ -192,7 +193,15 @@ function Sub({ children }: { children: React.ReactNode }) {
 export default function Keploy() {
   return (
     // the contents list in Redaction (her ask, like the Bounce page)
-    <div className="w-full [&_nav[aria-label=Contents]]:font-serif [&_nav[aria-label=Contents]_.label]:text-[15px] [&_nav[aria-label=Contents]_.label]:tracking-normal [&_nav[aria-label=Contents]_.label]:normal-case [&_nav[aria-label=Contents]_a]:text-[15px]">
+    <div
+      style={
+        {
+          "--scribble": "#E8762E",
+          "--scribble-fill": "#F9B98A",
+        } as React.CSSProperties
+      }
+      className="w-full [&_nav[aria-label=Contents]]:font-serif [&_nav[aria-label=Contents]_.label]:text-[15px] [&_nav[aria-label=Contents]_.label]:tracking-normal [&_nav[aria-label=Contents]_.label]:normal-case [&_nav[aria-label=Contents]_a]:text-[15px]"
+    >
       <div className="mx-auto max-w-[826px] px-6">
         <Nav />
       </div>
@@ -251,17 +260,21 @@ export default function Keploy() {
           <div className="skeu rounded-2xl p-6">
             <span className="label">Overall challenges</span>
             <p className="printed mt-3 text-sm leading-relaxed">
-              Designing for developer-facing tools was no easy feat. It required
-              a lot of brainstorming, constant iteration, and close
-              collaboration with both developers &amp; stakeholders to ensure
-              the designs genuinely communicated what Keploy is about.
+              Designing for developer-facing tools was{" "}
+              <Mark type="marker">no easy feat</Mark>. It required a lot of
+              brainstorming, constant iteration, and close collaboration with
+              both developers &amp; stakeholders to ensure the designs genuinely
+              communicated what Keploy is about.
             </p>
             <p className="printed mt-3 text-sm leading-relaxed">
               Understanding technical workflows and translating them into
-              intuitive, visually engaging interfaces pushed me out of my
-              comfort zone, but in the best way possible. This challenge turned
-              out to be one of my biggest learning experiences, and I&apos;m
-              grateful for it.
+              intuitive, visually engaging interfaces{" "}
+              <Mark type="marker">pushed me out of my comfort zone</Mark>, but
+              in the best way possible. This challenge turned out to be{" "}
+              <Mark type="marker" order={1}>
+                one of my biggest learning experiences
+              </Mark>
+              , and I&apos;m grateful for it.
             </p>
           </div>
         </Section>
@@ -335,13 +348,18 @@ export default function Keploy() {
           title="Technical accuracy, visual clarity."
         >
           <P>
-            One of the most challenging yet rewarding tasks was crafting custom
-            illustrations for the website.
+            <strong className="font-bold text-head">
+              One of the most challenging yet rewarding tasks was crafting
+              custom illustrations for the website.
+            </strong>
           </P>
           <P>
             Designing for Keploy, a developer-focused tool, meant I had to
-            strike the right balance between technical accuracy and visual
-            clarity, all while ensuring the illustrations aligned with our brand
+            strike{" "}
+            <Mark type="marker">
+              the right balance between technical accuracy and visual clarity
+            </Mark>
+            , all while ensuring the illustrations aligned with our brand
             aesthetics and tone.
           </P>
           <Sub>Card illustrations</Sub>

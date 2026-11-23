@@ -117,7 +117,8 @@ export function Mark({ children, type = "underline", order = 0 }: { children: Re
         return;
       }
       showT = window.setTimeout(() => {
-        const css = getComputedStyle(document.documentElement);
+        // read the ink from the marked text, so a page can tint its own marks (e.g. Keploy orange); defaults come from :root
+        const css = getComputedStyle(el);
         const stroke = css.getPropertyValue("--scribble").trim() || "#c8553b";
         const fill = css.getPropertyValue("--scribble-fill").trim() || "#f4c7bd";
         if (type === "swoosh" || type === "spark") {
