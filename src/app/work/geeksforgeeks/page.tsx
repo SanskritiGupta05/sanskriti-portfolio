@@ -126,7 +126,8 @@ const TOOLS = [
 export default function GeeksforGeeks() {
   return (
     // green highlights on this page (GFG brand green, lightened), with the same taller band as Keploy
-    <div className="w-full" style={{ "--scribble": "#2F8D46", "--scribble-fill": "#BFE6C8", "--marker-height": "13px" } as React.CSSProperties}>
+    // section labels styled as tickers (her ask, like Bounce): a glowing dot in the page green, then bold mono caps
+    <div className="w-full [&_article>section>.label:first-child]:flex [&_article>section>.label:first-child]:items-center [&_article>section>.label:first-child]:gap-2.5 [&_article>section>.label:first-child]:font-mono [&_article>section>.label:first-child]:!text-[14px] [&_article>section>.label:first-child]:font-bold [&_article>section>.label:first-child]:!tracking-[0.14em] [&_article>section>.label:first-child]:!text-(--cs-accent) [&_article>section>.label:first-child]:before:content-[''] [&_article>section>.label:first-child]:before:size-[7px] [&_article>section>.label:first-child]:before:shrink-0 [&_article>section>.label:first-child]:before:rounded-full [&_article>section>.label:first-child]:before:bg-(--cs-accent) [&_article>section>.label:first-child]:before:shadow-[0_0_0_3px_color-mix(in_srgb,var(--cs-accent)_35%,transparent)]" style={{ "--scribble": "#2F8D46", "--scribble-fill": "#BFE6C8", "--marker-height": "13px" } as React.CSSProperties}>
       <div className="mx-auto max-w-[826px] px-6">
         <Nav />
       </div>
