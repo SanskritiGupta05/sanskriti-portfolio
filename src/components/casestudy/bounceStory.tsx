@@ -35,9 +35,14 @@ export function Eyebrow({
   className?: string;
 }) {
   return (
+    // a section label like a ticker: a small glowing red dot, then bold mono caps
     <span
-      className={`font-mono text-[12px] tracking-[0.14em] text-[#c8553b] uppercase ${className}`}
+      className={`flex items-center gap-2.5 font-mono text-[14px] font-bold tracking-[0.14em] text-[#c8553b] uppercase ${className}`}
     >
+      <span
+        aria-hidden="true"
+        className="size-[7px] shrink-0 rounded-full bg-[#c8553b] shadow-[0_0_0_3px_rgba(200,85,59,0.35)]"
+      />
       {children}
     </span>
   );
