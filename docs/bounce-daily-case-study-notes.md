@@ -9,7 +9,7 @@ A short, decision-led case study: each key decision shows problem → options �
 - Product: Bounce Daily, EV scooter rental for delivery and gig riders (Bangalore, Delhi NCR).
 - Context: worked through DreamLaunch. PM: Aum Vats. Scope: rider (user) app only, not admin.
 - Inputs: old app screenshots plus her own walkthrough of the live old app; PM picked UI references, Yulu first (onboarding is close to Yulu's).
-- Live on Play Store (`com.bouncedaily.app`, "Bounce Daily — EV Bike Rental"). Checked 2026-11-20: 4.8★, ~4.9K reviews, 1L+ downloads; listing claims 50,000+ riders. No pre-redesign rating known, so the rating is not credited to the redesign.
+- Shipped: the revamp took 3 months (her confirmation, 2026-11-23) and is live on Play Store (`com.bouncedaily.app`, "Bounce Daily — EV Bike Rental"). Checked 2026-11-20: 4.8★, ~4.9K reviews, 1L+ downloads; listing claims 50,000+ riders. No pre-redesign rating known, so the rating is not credited to the redesign.
 - Licence rule (high-speed needs a driving licence, low-speed doesn't) was the PM's business rule; competitors do the same. Present it as a constraint she designed around.
 - Numbers in the old Figma draft (42% KYC abandonment, SUS 58→79, n=24, 12 weeks, dark mode) are NOT real. Never use them.
 - Figma: personal file `eJ4fYjVQr9UC9cwEYrLDgP` (old vs new boards); shared file with Aum `z8dq27bSORUWXSJnSToYAV` (reference only, don't describe its "structured flow" process on the page).
@@ -29,6 +29,39 @@ A short, decision-led case study: each key decision shows problem → options �
 ## Core design challenge (from Sanskriti, 2026-11-21)
 - Many riders aren't highly educated and want every piece of information easy to reach. The challenge: show everything they need without the UI looking complex, and without putting all the data on one screen, which overwhelms. This tension should run through the case study (a good candidate for the problem statement and the "challenges" section).
 - She confirmed it was a major challenge and was kept in mind throughout. Placement on the page: (1) one line in the summary card; (2) its own short section right after "Who it's for": "Everything visible, nothing overwhelming"; (3) each decision card gets a one-line "For the rider" note showing how that decision served it (scooter step: Yes/No licence on each card; hubs: a map, not names to read; KYC: one status card with one next step; dead ends: an illustration plus one action; dues/renewals: status on home, not remembered dates; onboarding: pictures and real riders before any form).
+
+## The brief: what Aum came with (from Sanskriti, 2026-11-23)
+Why the old app needed an urgent revamp. These are the PM's concerns when he first brought the project to her.
+1. **Riders with low literacy.** Many riders can't read much. Information has to be up front, but not overwhelming.
+2. **Drop-off at plan selection.** Riders were leaving while choosing a plan because they couldn't understand or compare the plans.
+3. **KYC before any look at the app.** The old app made riders finish KYC before they could see anything in it. We wanted riders to get a feel for the app first, so they could judge whether it was useful to them.
+4. **Where KYC belongs.** KYC is a big part of the journey, and there were disagreements and agreements with Aum about where to place it: before onboarding, during onboarding, after onboarding, before choosing a hub, after choosing a plan, before payment, or after payment. (Outcome: see "Decision: when KYC happens" below.)
+5. Other concerns: to confirm with Sanskriti. Candidates from the notes: unclear system states (countdown timer, failed-payment toast), dead ends (sold-out hub, out of area), and the overuse of red.
+- No drop-off numbers are known. Describe drop-off as what the PM saw, never as a percentage.
+- Wording on the page: "low literacy" or "not comfortable reading long text", not "illiterate".
+
+## Page structure v2 (proposed 2026-11-23, UX-led)
+Every decision answers: which concern from the brief it solves, where in the journey it happens and why there, what options we weighed, what we chose and why, and what it means for the rider.
+1. Header and summary card: role, 3 months, shipped and live on Play Store, DreamLaunch with PM Aum Vats.
+2. Who rides Bounce: delivery and gig riders whose income depends on the scooter; many have low literacy.
+3. Why it needed a revamp: the brief's concerns, each shown with the old screen as evidence.
+4. The principle: everything visible, nothing overwhelming (plus "Where am I? What's happening? What next?").
+5. The big move: re-ordering the journey. Old: sign up → KYC wall → then the app. New: Discover → Choose → Verify → Pay → Ride → Manage → Renew. Value before effort.
+6. Decisions, in journey order:
+   - A look before the commitment (onboarding and a 2-screen sign-up) → concern 3
+   - Map-first hubs (with the hub-merge transition) → concern 1
+   - Scooter type as its own step (the disagreement with Aum) → concern 2
+   - Plans you can compare (price per day, KM sheet, review) → concern 2
+   - Where KYC goes (every placement weighed, three rounds, the hybrid) → concerns 3 and 4
+   - Status, not memory (KYC status, dues, renewals, booking card on home) → concern 1
+   - No dead ends → concern 5
+7. The UI layer, kept short: calm visual language, illustrations, design system.
+8. Outcome: shipped, the before → after table, what changed for riders.
+9. What I learned and closing thought.
+
+## Page assets (v2, 2026-11-23)
+- The page uses only the old app screenshots and the revamped screens from Page 1 section "App flows · old journey → new journey" (1227:8313), exported at 1.5x into `public/assets/cases/bounce/v2/{old,new}/` (sizes in `src/components/casestudy/bounceScreens.ts`). The earlier Framer images (a.webp, hero.webp, d.webp …) are no longer used.
+- Old sign-up count, from that board's numbering: steps 8–25, i.e. 18 screens (name and phone → wait for verification) before the first hub screen (26). This replaces the conflicting 7 / 9 / 11 figures above.
 
 ## Working with Aum
 - Regular calls. Sanskriti brought her thinking for each flow, they brainstormed, Aum added his ideas, opinions and feedback, and she improved the flows from that. Sometimes he made his own versions too (the "Aum's version for reference" frames).
@@ -89,7 +122,9 @@ Built in her file `eJ4fYjVQr9UC9cwEYrLDgP`, page "Case study — assets" (1115:7
 - Scooter choice demo built (1172:10988): fixes the bug where the Low speed card was tagged "License Required" while its row said NO; tray of two cards with radio, sentence-case titles, dark speeds, meaning-coloured licence lines, "from ₹X a day"; bigger scooter image; helper tip "No driving licence? Pick Low speed. You can switch later."; full-width "Continue with high speed →". Not yet applied to the D01 Option B scooter copy (1157:7949).
 
 ## Decision: when KYC happens (Plan → KYC → Pay) — discussed 2026-11-22
-She had a similar discussion with Aum. This is a strong candidate for a decision card ("problem → options → choice → why").
+She had a similar discussion with Aum, and this order is what they agreed (confirmed 2026-11-23): KYC is submitted before paying; riders can skip it for now, but can't collect the scooter without verified KYC, so everyone completes it before pick-up. This is a strong candidate for a decision card ("problem → options → choice → why").
+
+**Correction to the Framer draft:** its lifecycle (Discover → Choose → Pay → Verify → Ride → Manage → Renew) is outdated. Use Discover → Choose → Verify → Pay → Ride → Manage → Renew.
 
 **How we got there (three rounds):**
 1. First assumption (from the v1 "Onboard in 3 steps" checklist: plan → KYC → payment): KYC between plan and pay, with the rider waiting for approval before paying. Problems found on the flow map: the Review button said "Confirm and pay" but led to KYC; Verify identity said "Continue to payment" but led to a 2–4 hour wait; after approval the rider had to tap "Start booking" to get back to a plan they had already chosen, and the hub could sell out meanwhile.
@@ -131,8 +166,20 @@ Plan → KM → Review ("Continue to KYC", with "2 steps to book: ① KYC · ②
 - Page 1 sections: "App flows · old journey → new journey" (overview, old journey as numbered screenshots, new journey by stage), "New app · flow map" (every new screen connected with arrows, branches and return paths), "Revamp · remaining screens" (the last v1 screens rebuilt with the new components).
 - New page "Design system": the old variables and styles were deleted (her call) and replaced with v1 tokens (Primitives, Color, Spacing, Radius), 16 text styles, 2 shadows, 22 icons and 14 components (Button, Chip, Radio, Step, Progress bar, Icon tile, Input, List row, Card, Tray, Header, Bottom bar, Sheet, Slot). The screens are not linked to these components yet; she chose to skip that for now.
 
+
+## Her own revamp of the editable screens (2026-11-23)
+Sanskriti revamped the screens in "Case study screens (editable)" (1157:7577) herself with the new components. These refined frames are now the source for the case study:
+- D01 A: 1157:7579 (plan), 1170:10999 (switch sheet). D01 B: 1157:7949 (scooter choice, not yet refined), 1177:11013 (plan).
+- D02: 1180:22160 (960 wide, hub map + sold-out sheet), 1232:9713 "Allow location" (new screen: why location helps, nearest hub first, distance, only hubs with scooters; "Allow location access" / "Enter my area instead").
+- D03: 1157:8883 (onboard in 3 steps), 1196:10983 / 1199:10994 / 1199:12410 (KYC pending, not approved with reason + "Re-upload Aadhaar", approved), each with an "Account status" tray and a Submitted → In review → Approved stepper.
+- D04: 1157:12114, 1157:12365, 1206:10953. D05: 1201:10980, 1202:10991, 1203:10952, 1224:8316.
+- D06: 1211:11170 (splash, "A · Pure"), 1157:19553 / 19777 / 19792, 1157:19956 / 20287 / 20612.
+- D07: 1180:24391, 1209:10956, 1209:11281. D08: 1211:10955 (confirm and pay: "Your booking" tray with Change, Shield, referral, price breakdown, "Pay ₹11,398 →"), 1211:11051 (payment successful, "Your hub" card, "Go to home").
+- D09: 1216:10982, 1216:12433, 1217:11030 ("Your booking" tray per stage, step chips Paid / KYC / Picked up / Riding).
+- V01: loyalty 1222:11028, 1222:13223, 1222:15419, 1220:11016 (rewards trays with progress "Unlock at …"); illustrations 1157:31055.
+
 ## Still open
-- Timeline: old screenshots are May 2025; workspace labels say Dec 2025. Need real start and end months.
+- Timeline: the revamp took 3 months. Exact start and end months still to confirm (old screenshots are May 2025; workspace labels say Dec 2025). The Framer draft and the interview-prep guide say 2 months, and the prep guide calls it "not shipped"; both are wrong.
 - Any feedback after launch from Aum or the team.
 - KYC: refund policy if KYC fails after payment; instant vs manual verification (see the KYC decision above).
 - Switch scooter: price difference and unused KM.
