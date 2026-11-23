@@ -101,7 +101,6 @@ const ON_WHITE = new Set([
   "email-flyer-1",
   "email-flyer-2",
   "signup",
-  "dashboard",
   "vscode-1",
   "vscode-2",
   "vscode-3",
@@ -266,7 +265,7 @@ export default function Keploy() {
         <Section
           id="product"
           label="Product design"
-          title="VS Code extension, sign-up and dashboard."
+          title="VS Code extension and sign-up."
         >
           <div className="max-w-[560px]">
             <Shot
@@ -296,10 +295,6 @@ export default function Keploy() {
               750,
               "Welcome to Keploy Console sign-up screen",
             )}
-          />
-          <Sub>Dashboard screen</Sub>
-          <Shot
-            {...k("dashboard", 1315, 935, "Keploy dashboard: generate tests")}
           />
         </Section>
 
