@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { CaseStudyFrame, type TocItem } from "@/components/casestudy/Margin";
-import { PlayStoreButton } from "@/components/casestudy/bounce";
 import {
   BigStats,
   Body,
@@ -14,6 +13,7 @@ import {
   Eyebrow,
   Facts,
   Fig,
+  PlayLink,
   QuoteCard,
   RiderCard,
   Section,
@@ -79,7 +79,6 @@ export default function BounceDaily() {
                 Redesigning an EV scooter rental app for delivery riders, so they see hubs, scooters and prices before the app asks anything of
                 them.
               </p>
-              <PlayStoreButton className="mt-6" />
             </div>
             <div className="mt-8">
               <Facts
@@ -103,7 +102,7 @@ export default function BounceDaily() {
                     sub: "My role: product designer, the app's first UI designer, dev handoffs",
                   },
                   { k: "Timeline", v: "3 months, 2025" },
-                  { k: "Platform", v: "Android rider app", sub: "Live on Google Play" },
+                  { k: "Platform", v: "Android rider app", sub: <PlayLink /> },
                 ]}
               />
             </div>

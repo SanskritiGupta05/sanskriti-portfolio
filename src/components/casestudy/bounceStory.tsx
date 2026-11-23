@@ -90,7 +90,7 @@ export function Tags({ items }: { items: string[] }) {
 }
 
 // Company / Team / Timeline / Platform, under a hairline
-export function Facts({ items }: { items: { k: string; v: ReactNode; sub?: string }[] }) {
+export function Facts({ items }: { items: { k: string; v: ReactNode; sub?: ReactNode }[] }) {
   return (
     <dl className="grid gap-x-10 gap-y-7 border-t border-line pt-7 sm:grid-cols-2">
       {items.map((i) => (
@@ -229,5 +229,25 @@ export function Takeaways({ items }: { items: [string, string][] }) {
         </li>
       ))}
     </ol>
+  );
+}
+
+// "Live on Google Play" as a quiet text link with the Play logo, for the Platform fact
+export function PlayLink() {
+  return (
+    <a
+      href="https://play.google.com/store/apps/details?id=com.bouncedaily.app"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1.5 underline decoration-line underline-offset-4 transition-colors hover:text-ink hover:decoration-ink"
+    >
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4 shrink-0">
+        <path d="M4.5 2.6 13.4 12l-8.9 9.4c-.3-.2-.5-.6-.5-1V3.6c0-.4.2-.8.5-1Z" fill="#00D7FE" />
+        <path d="m16.4 9-3 3 3 3 3.4-1.9c1-.6 1-1.6 0-2.2L16.4 9Z" fill="#FFCE00" />
+        <path d="M13.4 12 4.5 21.4c.3.2.8.2 1.2 0L16.4 15l-3-3Z" fill="#FF3A44" />
+        <path d="M4.5 2.6c.4-.2.8-.2 1.2 0L16.4 9l-3 3-8.9-9.4Z" fill="#00F076" />
+      </svg>
+      Live on Google Play
+    </a>
   );
 }
