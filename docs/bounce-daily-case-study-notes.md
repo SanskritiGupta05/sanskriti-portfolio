@@ -178,6 +178,12 @@ Sanskriti revamped the screens in "Case study screens (editable)" (1157:7577) he
 - D09: 1216:10982, 1216:12433, 1217:11030 ("Your booking" tray per stage, step chips Paid / KYC / Picked up / Riding).
 - V01: loyalty 1222:11028, 1222:13223, 1222:15419, 1220:11016 (rewards trays with progress "Unlock at …"); illustrations 1157:31055.
 
+## Facts added 2026-11-23
+- Platform: **Android only** (3 months). Why Android first, in her words: many riders come from lower-income backgrounds, and Android phones are cheaper and what they already use.
+- She did the developer handoffs herself.
+- Post-launch feedback (product manager's testimonial, used on her site): the redesign unlocked several new product capabilities, with noticeable improvements in rider onboarding and plan adoption after launch; exact numbers withheld for business reasons. In the case study it's credited to "Product Manager, Bounce Daily" (no name).
+- All revamped screens in "Case study screens (editable)" now use the local component "Android/Status bar" (1317:10868, Components page, Roboto, punch-hole camera); the iOS home-indicator lines were removed (iOS components). Same swap applied inside case study v4's screen copies.
+
 ## Still open
 - Timeline: the revamp took 3 months. Exact start and end months still to confirm (old screenshots are May 2025; workspace labels say Dec 2025). The Framer draft and the interview-prep guide say 2 months, and the prep guide calls it "not shipped"; both are wrong.
 - Any feedback after launch from Aum or the team.
