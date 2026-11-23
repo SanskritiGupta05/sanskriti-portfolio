@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 // Pieces for the Bounce Daily story page. They follow her Figma v4 frame (file eJ4fYjVQ…, page
 // "Case study · web page", frame 1312:9945) one to one: a serif section name, an italic lead line
-// on a red rule, mono body text, her composed figures (exported 2× to public/assets/cases/bounce/v4/fig)
+// on a red rule, mono body text, her composed figures (exported 2× to public/assets/cases/bounce/v4/figures)
 // with a small mono caption, numbered journey steps, the tl;dr cards and the product manager's words.
 
 // a section: serif name, then the italic lead line on a thin red rule
@@ -32,7 +32,7 @@ export function Step({ id, label, title, children }: { id: string; label: string
 export function Fig({ name, h, alt, caption, href }: { name: string; h: number; alt: string; caption?: string; href?: string }) {
   const img = (
     <Image
-      src={`/assets/cases/bounce/v4/fig/${name}.webp`}
+      src={`/assets/cases/bounce/v4/figures/${name}.webp`}
       alt={alt}
       width={1792}
       height={h}
