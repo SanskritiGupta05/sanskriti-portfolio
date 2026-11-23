@@ -1,41 +1,64 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 
-// Pieces for the Bounce Daily story page. They follow her Figma v4 frame (file eJ4fYjVQ…, page
-// "Case study · web page", frame 1312:9945) one to one: a serif section name, an italic lead line
-// on a red rule, mono body text, her composed figures (exported 2× to public/assets/cases/bounce/v4/figures)
-// with a small mono caption, numbered journey steps, the tl;dr cards and the product manager's words.
+// Pieces for the Bounce Daily case study v5 (Qmentis structure). They mirror her Figma frame
+// "Bounce Daily · case study v5" (file eJ4fYjVQ…, page "Case study · web page", frame 1337:10605):
+// a red mono eyebrow + serif headline per section, mono body, soft skeu cards, her composed figures
+// (exported 2× to public/assets/cases/bounce/v4/figures) and decision canvases with a "The call" bar.
 
-// a section: serif name, then the italic lead line on a thin red rule
-export function Chapter({ id, name, lead, children }: { id: string; name: string; lead?: ReactNode; children: ReactNode }) {
+const FIG = "/assets/cases/bounce/v4/figures";
+const SIZES: Record<string, number> = {
+  "old-signup": 1066,
+  journey: 539,
+  onboarding: 981,
+  hubs: 1069,
+  scooter: 1056,
+  plans: 1138,
+  "kyc-spots": 780,
+  pay: 1046,
+  "kyc-status": 1315,
+  home: 1172,
+  renewals: 1085,
+  errors: 1144,
+  "ui-layer": 1916,
+  "flow-map": 977,
+};
+
+const SKEU = "bg-[linear-gradient(180deg,#ffffff,#f7f7f7)] shadow-[inset_0_1px_0_#fff,0_0_0_1px_rgba(0,0,0,0.07),0_1px_2px_rgba(0,0,0,0.05),0_12px_24px_-14px_rgba(40,30,20,0.2)] dark:bg-none dark:bg-surface";
+
+export function Eyebrow({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return <span className={`font-mono text-[12px] tracking-[0.14em] text-[#c8553b] uppercase ${className}`}>{children}</span>;
+}
+
+export function Body({ children }: { children: ReactNode }) {
+  return <p className="printed max-w-none text-[16px] leading-[26px] text-pretty text-ink">{children}</p>;
+}
+
+// a top-level section: red eyebrow, serif statement headline, then the story
+export function Section({ id, eyebrow, headline, tone = "head", size = "md", children }: { id: string; eyebrow: string; headline: ReactNode; tone?: "head" | "red"; size?: "md" | "lg"; children: ReactNode }) {
   return (
     <section id={id} className="grid min-w-0 scroll-mt-16 gap-5">
-      <h2 className="font-serif text-[30px] leading-[1.14] text-head md:text-[36px]">{name}</h2>
-      {lead && <p className="border-l-2 border-[#c8553b] pl-[18px] font-serif text-[21px] leading-snug text-head italic md:text-[24px]">{lead}</p>}
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2
+        className={`font-serif text-balance ${tone === "red" ? "text-[#c8553b]" : "text-head"} ${
+          size === "lg" ? "text-[34px] leading-[1.12] md:text-[46px]" : "text-[28px] leading-[1.15] md:text-[36px]"
+        }`}
+      >
+        {headline}
+      </h2>
       {children}
     </section>
   );
 }
 
-// one step of the journey: "1. Onboarding", then its own serif line
-export function Step({ id, label, title, children }: { id: string; label: string; title: ReactNode; children: ReactNode }) {
-  return (
-    <section id={id} className="grid min-w-0 scroll-mt-16 gap-4">
-      <span className="label tracking-[0.14em]">{label}</span>
-      <h3 className="-mt-1 font-serif text-[24px] leading-[1.2] text-balance text-head md:text-[28px]">{title}</h3>
-      {children}
-    </section>
-  );
-}
-
-// one of her figures, as composed in Figma, with its caption
-export function Fig({ name, h, alt, caption, href }: { name: string; h: number; alt: string; caption?: string; href?: string }) {
+// one of her figures, as composed in Figma
+export function Fig({ name, alt, caption, href }: { name: string; alt: string; caption?: string; href?: string }) {
   const img = (
     <Image
-      src={`/assets/cases/bounce/v4/figures/${name}.webp`}
+      src={`${FIG}/${name}.webp`}
       alt={alt}
       width={1792}
-      height={h}
+      height={SIZES[name] ?? 1000}
       sizes="(min-width: 1100px) 900px, 100vw"
       className="block h-auto w-full rounded-[20px]"
     />
@@ -54,29 +77,157 @@ export function Fig({ name, h, alt, caption, href }: { name: string; h: number; 
   );
 }
 
-// tl;dr: four white cards in two columns
-export function Tldr({ items }: { items: { k: string; v: string }[] }) {
+export function Tags({ items }: { items: string[] }) {
   return (
-    <div className="grid gap-3">
-      <span className="label normal-case tracking-normal">tl;dr</span>
-      <dl className="grid gap-4 sm:grid-cols-2">
-        {items.map((i) => (
-          <div key={i.k} className="grid content-start gap-2.5 skeu rounded-2xl px-5 py-5">
-            <dt className="label tracking-[0.14em]">{i.k}</dt>
-            <dd className="printed text-[15px] leading-[24px] text-ink">{i.v}</dd>
-          </div>
-        ))}
-      </dl>
+    <div className="flex flex-wrap gap-2">
+      {items.map((t) => (
+        <span key={t} className={`${SKEU} rounded-full px-3.5 py-1.5 font-mono text-[12px] tracking-[0.1em] text-[#c8553b] uppercase`}>
+          {t}
+        </span>
+      ))}
     </div>
   );
 }
 
-// the product manager's words, on a soft grey card
-export function Testimonial({ children, by }: { children: ReactNode; by: string }) {
+// Company / Team / Timeline / Platform, under a hairline
+export function Facts({ items }: { items: { k: string; v: ReactNode; sub?: string }[] }) {
   return (
-    <figure className="grid gap-4 rounded-[20px] bg-[#F8F8F8] px-6 py-6 shadow-[0_10px_24px_-16px_rgba(60,40,20,0.35)] sm:px-7 dark:bg-surface">
-      <blockquote className="font-serif text-[19px] leading-[1.5] text-pretty text-head italic sm:text-[21px]">“{children}”</blockquote>
-      <figcaption className="label tracking-[0.14em]">{by}</figcaption>
+    <dl className="grid gap-x-10 gap-y-7 border-t border-line pt-7 sm:grid-cols-2">
+      {items.map((i) => (
+        <div key={i.k} className="grid content-start gap-1.5">
+          <dt className="font-mono text-[12px] tracking-[0.12em] text-muted-foreground uppercase">{i.k}</dt>
+          <dd className="font-serif text-[18px] leading-6 text-head">{i.v}</dd>
+          {i.sub && <dd className="font-serif text-[15px] leading-5 text-muted-foreground">{i.sub}</dd>}
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+export function BigStats({ items }: { items: { n: string; l: string }[] }) {
+  return (
+    <div className="grid gap-8 pt-4 sm:grid-cols-2 sm:gap-10">
+      {items.map((s) => (
+        <div key={s.n} className="grid content-start gap-2">
+          <span className="font-serif text-[80px] leading-none text-head md:text-[96px]">{s.n}</span>
+          <span className="printed text-[14px] leading-[22px] text-muted-foreground">{s.l}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// small soft cards in two columns: optional red label, serif title, mono line
+export function Cards({ items }: { items: { k?: string; t?: string; l: string }[] }) {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      {items.map((c) => (
+        <div key={c.t ?? c.k} className={`${SKEU} grid content-start gap-2 rounded-2xl p-[22px]`}>
+          {c.k && <span className="font-mono text-[11px] tracking-[0.14em] text-[#c8553b] uppercase">{c.k}</span>}
+          {c.t && <span className="font-serif text-[20px] leading-[26px] text-head">{c.t}</span>}
+          <span className={c.t ? "printed text-[14px] leading-[22px] text-muted-foreground" : "printed text-[15px] leading-6 text-ink"}>{c.l}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function RiderCard({ title, lines, questions }: { title: string; lines: string[]; questions: string[] }) {
+  return (
+    <div className="grid gap-4 md:grid-cols-2">
+      <div className={`${SKEU} grid content-start gap-3 rounded-[20px] p-7`}>
+        <span className="w-fit rounded-full bg-[#fdeeea] px-3 py-1 font-mono text-[11px] tracking-[0.12em] text-[#c8553b] uppercase">Primary user</span>
+        <span className="font-serif text-[28px] leading-8 text-head">{title}</span>
+        <ul className="grid gap-2">
+          {lines.map((l) => (
+            <li key={l} className="printed text-[14px] leading-[22px] text-ink">
+              ·&nbsp;&nbsp;{l}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="grid content-start gap-3 rounded-[20px] bg-[#F8F8F8] p-7 dark:bg-surface">
+        <span className="font-mono text-[12px] tracking-[0.14em] text-muted-foreground uppercase">At every stage, they ask</span>
+        {questions.map((q) => (
+          <span key={q} className="rounded-[14px] bg-white px-[18px] py-3.5 font-serif text-[20px] text-head ring-1 ring-black/[0.07] dark:bg-bg">
+            {q}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// one part of the solution walk-through
+export function Solution({ label, title, children, fig, alt }: { label: string; title: string; children: ReactNode; fig: string; alt: string }) {
+  return (
+    <div className="grid min-w-0 gap-3.5 pt-9">
+      <Eyebrow>{label}</Eyebrow>
+      <h3 className="font-serif text-[24px] leading-[1.2] text-head md:text-[28px]">{title}</h3>
+      <Body>{children}</Body>
+      <Fig name={fig} alt={alt} />
+    </div>
+  );
+}
+
+// a design decision: number, title, principle, why, then her figure on a canvas with "The call"
+export function Decision({ id, n, title, principle, children, fig, alt, call }: { id: string; n: number; title: string; principle: string; children: ReactNode; fig: string; alt: string; call: ReactNode }) {
+  return (
+    <div id={id} className="grid min-w-0 scroll-mt-16 gap-4">
+      <Eyebrow>Design decision #{n}</Eyebrow>
+      <h3 className="font-serif text-[28px] leading-[1.18] text-head md:text-[32px]">{title}</h3>
+      <p className="font-serif text-[19px] leading-7 text-muted-foreground italic md:text-[21px]">{principle}</p>
+      <Body>{children}</Body>
+      <div className="grid gap-0 overflow-hidden rounded-[24px] bg-[#F8F8F8] px-3 pb-3 sm:px-6 sm:pb-6 dark:bg-surface">
+        <Image
+          src={`${FIG}/${fig}.webp`}
+          alt={alt}
+          width={1792}
+          height={SIZES[fig] ?? 1000}
+          sizes="(min-width: 1100px) 860px, 100vw"
+          className="block h-auto w-full"
+        />
+        <div className={`${SKEU} flex flex-col gap-2 rounded-[14px] px-5 py-4 sm:flex-row sm:gap-4`}>
+          <span className="shrink-0 pt-0.5 font-mono text-[12px] tracking-[0.14em] text-[#c8553b] uppercase">The call</span>
+          <span className="printed text-[15px] leading-6 text-ink">{call}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function Chips({ items }: { items: string[] }) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {items.map((c) => (
+        <span key={c} className={`${SKEU} rounded-full px-3.5 py-2 font-mono text-[13px] text-ink`}>
+          {c}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+export function QuoteCard({ children, by }: { children: ReactNode; by: string }) {
+  return (
+    <figure className="grid gap-[18px] rounded-[24px] bg-[#f3d6cc] px-6 py-8 sm:px-10 sm:pt-10 sm:pb-9 dark:bg-[#3a2622]">
+      <blockquote className="font-serif text-[21px] leading-[1.35] text-pretty text-head md:text-[26px]">“{children}”</blockquote>
+      <figcaption className="font-mono text-[12px] tracking-[0.14em] text-ink uppercase">{by}</figcaption>
     </figure>
+  );
+}
+
+// numbered takeaways in two columns, each under a hairline
+export function Takeaways({ items }: { items: [string, string][] }) {
+  return (
+    <ol className="grid gap-x-8 sm:grid-cols-2">
+      {items.map(([a, b], i) => (
+        <li key={a} className="grid content-start gap-2 border-t border-line pt-5 pb-6">
+          <span className="font-mono text-[12px] tracking-[0.1em] text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
+          <span className="font-serif text-[20px] leading-[26px] text-head">{a}</span>
+          <span className="printed text-[14px] leading-[22px] text-muted-foreground">{b}</span>
+        </li>
+      ))}
+    </ol>
   );
 }
