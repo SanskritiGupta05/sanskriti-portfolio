@@ -750,3 +750,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 - **2026-11-23:** Bounce v5 subtitle swapped (her pick) to the grey summary "Redesigning an EV scooter rental app for delivery riders, so they see hubs, scooters and prices before the app asks anything of them." in Figma v5 and on the site; the "document wall → rider journey" squiggle line is gone.
 - **2026-11-23:** Bounce v5: the big Google Play button is gone; "Live on Google Play" in the Platform fact is now a quiet underlined link with the small Play logo (`PlayLink` in bounceStory.tsx). Mirrored in Figma v5.
 - **2026-11-23:** Bounce v5 Platform fact on one line: "Android rider app · ▶ Live on Google Play" (site + Figma v5).
+- **2026-11-23:** Bounce v5 big numbers (39 / 11) smaller: 64px desktop, 52px mobile (site + Figma v5).

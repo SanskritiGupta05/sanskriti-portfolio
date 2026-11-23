@@ -109,7 +109,7 @@ export function BigStats({ items }: { items: { n: string; l: string }[] }) {
     <div className="grid gap-8 pt-4 sm:grid-cols-2 sm:gap-10">
       {items.map((s) => (
         <div key={s.n} className="grid content-start gap-2">
-          <span className="font-serif text-[80px] leading-none text-head md:text-[96px]">{s.n}</span>
+          <span className="font-serif text-[52px] leading-none text-head md:text-[64px]">{s.n}</span>
           <span className="printed text-[14px] leading-[22px] text-muted-foreground">{s.l}</span>
         </div>
       ))}
