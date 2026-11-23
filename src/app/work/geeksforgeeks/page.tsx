@@ -116,16 +116,6 @@ function CardIcon({ name }: { name: string }) {
   );
 }
 
-function Grid({ items, cols = "sm:grid-cols-2" }: { items: { src: string; w: number; h: number; alt: string }[]; cols?: string }) {
-  return (
-    <div className={`grid gap-4 ${cols}`}>
-      {items.map((s) => (
-        <Shot key={s.src} {...s} />
-      ))}
-    </div>
-  );
-}
-
 // the tools she used day to day, with their official logos (public/assets/tools/, from Wikimedia Commons)
 const TOOLS = [
   { name: "Adobe Photoshop", logo: "/assets/tools/photoshop.svg", w: 240, h: 234 },
@@ -202,6 +192,12 @@ export default function GeeksforGeeks() {
         </Section>
 
         <Section id="portfolio" label="What's in my GFG portfolio?" title="A diverse range of design projects.">
+          {/* her words (2026-11-24), lightly tidied */}
+          <P>
+            During my tenure at GeeksforGeeks, I was responsible, as an intern, for{" "}
+            <Mark type="marker">all the visual design and the thinking behind it</Mark>: what each banner needed to communicate, and making sure it looked
+            visually appealing too.
+          </P>
           <P>Here&apos;s a summary of what I contributed:</P>
           <ul className="grid gap-4 sm:grid-cols-2">
             {CONTRIBUTIONS.map(([k, v]) => (
@@ -235,7 +231,9 @@ export default function GeeksforGeeks() {
             </Mark>
             .
           </P>
-          <Grid items={BANNERS} />
+          {BANNERS.map((b) => (
+            <Shot key={b.src} {...b} />
+          ))}
           <Note label="Fun fact">
             All these article banners are live on the website! Just search for the article title, and you&apos;ll see the banner featured directly on the page.
           </Note>
@@ -244,7 +242,9 @@ export default function GeeksforGeeks() {
 
         <Section id="banners-other" label="Article banners" title="Beyond design and UX/UI.">
           <P>Article banners for topics other than the design and UX/UI domain.</P>
-          <Grid items={BANNERS_OTHER} />
+          {BANNERS_OTHER.map((b) => (
+            <Shot key={b.src} {...b} />
+          ))}
         </Section>
 
         <Section id="thumbnails" label="YouTube thumbnails" title="Grab attention, say what the video is about.">
