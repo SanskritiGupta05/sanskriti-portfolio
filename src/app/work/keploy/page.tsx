@@ -5,6 +5,13 @@ import { Footer } from "@/components/Footer";
 import { Ticket } from "@/components/casestudy/pieces";
 import Image from "next/image";
 import {
+  Megaphone,
+  PenTool,
+  Share2,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
+import {
   CaseStudyFrame,
   P,
   Section,
@@ -141,6 +148,27 @@ function Shot({
   );
 }
 
+// a small soft-orange tile with an icon for each "What I worked on" group (Keploy orange)
+const WORK_ICONS: Record<string, LucideIcon> = {
+  "Product Design": PenTool,
+  "Marketing & Growth": Megaphone,
+  "Social Media Assets": Share2,
+  "Brand & Community": Users,
+};
+
+function WorkIcon({ head }: { head: string }) {
+  const Icon = WORK_ICONS[head];
+  if (!Icon) return null;
+  return (
+    <span
+      aria-hidden="true"
+      className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#FDEBDD] text-[#E8762E] shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_0_0_1px_rgba(232,118,46,0.15)]"
+    >
+      <Icon size={18} strokeWidth={1.8} />
+    </span>
+  );
+}
+
 function Grid({
   items,
   cols = "sm:grid-cols-2",
@@ -246,7 +274,10 @@ export default function Keploy() {
           <ul className="grid gap-4 sm:grid-cols-2">
             {WORKED_ON.map(([head, items]) => (
               <li key={head} className="skeu rounded-2xl p-5">
-                <span className="font-serif text-h1m text-head">{head}</span>
+                <span className="flex items-center gap-3">
+                  <WorkIcon head={head} />
+                  <span className="font-serif text-h1m text-head">{head}</span>
+                </span>
                 <ul className="printed mt-3 grid gap-1.5 text-sm leading-relaxed">
                   {items.map((t) => (
                     <li key={t} className="flex gap-2">
