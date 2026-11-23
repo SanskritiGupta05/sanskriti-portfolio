@@ -124,7 +124,7 @@ export default function GeeksforGeeks() {
             <p className="mt-3 max-w-[34ch] font-worn text-h1 text-balance text-head">Designing for growth at GeeksforGeeks, a game-changer in ed-tech.</p>
             <div className="mt-8">
               <Ticket
-                kicker="Graphic design intern · Admit one"
+                kicker="Graphic design intern"
                 text="During my time at GeeksforGeeks, I worked on a diverse range of design projects that allowed me to explore my creativity and hone my skills."
                 meta={[
                   { k: "My role", v: "Graphic design intern" },

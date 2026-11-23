@@ -79,7 +79,7 @@ export default function Keploy() {
             <p className="mt-3 max-w-[34ch] font-worn text-h1 text-balance text-head">Open-source test case generation for developers.</p>
             <div className="mt-8">
               <Ticket
-                kicker="Product and visual designer · Admit one"
+                kicker="Product and visual designer"
                 text="Keploy is an open-source end-to-end test case generation platform that allows developers to generate tests straight from their API calls, without writing them manually."
                 meta={[
                   { k: "My role", v: "Product and visual designer" },
