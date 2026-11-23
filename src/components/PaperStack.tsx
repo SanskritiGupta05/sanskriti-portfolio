@@ -163,7 +163,7 @@ function Sheet({
 }
 
 // a small steel paperclip, slid over the sheet's top edge
-function Paperclip({ className = "" }: { className?: string }) {
+export function Paperclip({ className = "" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 16 46"

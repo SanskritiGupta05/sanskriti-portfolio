@@ -3,32 +3,101 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useScroll } from "motion/react";
+import { Paperclip } from "@/components/PaperStack";
 
 // The "margin notes" case study language, as reusable parts:
 // a page frame with a sticky contents list (its dot follows the section you're in) and a thin
 // reading-progress line, plus sections, screens, a before/after switch, taped notes and flow chips.
 
-export type TocItem = { id: string; label: string };
+export type TocItem = { id: string; label: string; match?: string[] };
 
-export function CaseStudyFrame({ toc, header, children }: { toc: TocItem[]; header: ReactNode; children: ReactNode }) {
+export function CaseStudyFrame({
+  toc,
+  header,
+  children,
+  layout = "column",
+  contentClassName = "",
+}: {
+  toc: TocItem[];
+  header: ReactNode;
+  children: ReactNode;
+  // "column": contents list beside the article in one centred column.
+  // "sheet": contents list on the dotted page at the left, the case study on a clipped paper sheet that runs off the right edge.
+  layout?: "column" | "sheet";
+  // extra classes for the sheet's content, e.g. a body font for one case study
+  contentClassName?: string;
+}) {
   const box = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: box, offset: ["start start", "end end"] });
   const [active, setActive] = useState(toc[0]?.id);
 
   useEffect(() => {
-    const io = new IntersectionObserver((entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)), {
+    // a contents item can stand for several sections (match); whichever of them is in view lights it up
+    const owner = new Map<string, string>();
+    toc.forEach((t) => (t.match ?? [t.id]).forEach((id) => owner.set(id, t.id)));
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => e.isIntersecting && setActive(owner.get(e.target.id) ?? e.target.id)), {
       rootMargin: "-35% 0px -60% 0px",
     });
-    toc.forEach((s) => {
-      const el = document.getElementById(s.id);
+    owner.forEach((_, id) => {
+      const el = document.getElementById(id);
       if (el) io.observe(el);
     });
     return () => io.disconnect();
   }, [toc]);
 
+  const bar = <motion.div aria-hidden="true" className="fixed inset-x-0 top-0 z-50 h-[2px] origin-left bg-[#c8553b]" style={{ scaleX: scrollYProgress }} />;
+
+  if (layout === "sheet") {
+    return (
+      <div ref={box} className="relative">
+        {bar}
+        <div className="md:grid md:grid-cols-[minmax(220px,22vw)_1fr] md:items-start">
+          <nav aria-label="Contents" className="hidden md:block md:sticky md:top-0 md:pt-24 md:pr-6 md:pl-[max(24px,3vw)]">
+            <span className="label mb-5 block tracking-[0.18em]">Contents</span>
+            <ol className="grid gap-3.5">
+              {toc.map((s, i) => {
+                const on = active === s.id;
+                return (
+                  <li key={s.id}>
+                    <a href={`#${s.id}`} className={`flex items-center gap-3 text-sm transition-colors ${on ? "text-[#c8553b]" : "text-muted-foreground hover:text-ink"}`}>
+                      <span className={`size-1.5 shrink-0 rounded-full transition-all ${on ? "scale-125 bg-[#c8553b]" : "bg-line"}`} />
+                      <span className="tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                      <span>·</span>
+                      <span>{s.label}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ol>
+          </nav>
+          <div className="relative mt-4 rounded-t-[22px] border border-line bg-bg shadow-[0_-10px_50px_-24px_rgba(60,40,20,0.35)] md:mt-0 md:rounded-tr-none md:border-r-0">
+            <Paperclip className="absolute -top-6 left-6 z-10 !h-[70px] !w-6 rotate-[18deg]" />
+            {/* a woven fabric label hanging from the top edge, text reading bottom to top */}
+            <span
+              aria-hidden="true"
+              className="absolute top-0 left-16 z-10 hidden w-[34px] rotate-180 rounded-t-[2px] px-[9px] py-5 font-mono text-[12px] font-bold tracking-[0.2em] text-[#f6e4d8] uppercase [writing-mode:vertical-rl] [text-shadow:0_1px_0_rgba(90,20,15,0.45)] sm:block md:left-12"
+              style={{
+                backgroundColor: "#c64a40",
+                backgroundImage:
+                  "repeating-linear-gradient(0deg, rgba(255,255,255,0.07) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(0,0,0,0.06) 0 1px, transparent 1px 3px)",
+                boxShadow: "inset 0 0 0 2px rgba(120,25,20,0.25), inset 0 0 0 3px rgba(255,235,225,0.12), 0 8px 14px -8px rgba(110,30,20,0.55)",
+              }}
+            >
+              Case study
+            </span>
+            <div className={`max-w-[1040px] px-6 pt-12 pb-24 sm:pr-10 sm:pl-24 md:pl-[104px] [&_h2]:max-w-[44ch] [&_p.printed]:max-w-[82ch] ${contentClassName}`}>
+              {header}
+              <article className="mt-24 grid min-w-0 gap-28">{children}</article>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div ref={box} className="relative">
-      <motion.div aria-hidden="true" className="fixed inset-x-0 top-0 z-50 h-[2px] origin-left bg-[#c8553b]" style={{ scaleX: scrollYProgress }} />
+      {bar}
       {header}
       <div className="mt-20 grid gap-12 md:grid-cols-[180px_1fr]">
         <nav aria-label="Contents" className="hidden md:block">

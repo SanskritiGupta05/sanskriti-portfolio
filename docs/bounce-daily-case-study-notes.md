@@ -197,3 +197,6 @@ Not for the current version. Add numbers that can be measured honestly from the 
 - KYC: refund policy if KYC fails after payment; instant vs manual verification (see the KYC decision above).
 - Switch scooter: price difference and unused KM.
 - Security deposit in 4 parts: real offer or not.
+
+## Site build (2026-11-23)
+The v4 story is now the live page at `/work/bounce-daily` (code: `src/app/work/bounce-daily/page.tsx` + `src/components/casestudy/bounceStory.tsx`). Screens in `public/assets/cases/bounce/v4/` come from these Page 1 frames: intro 1157:19553/19777/19792, location 1232:9713, hub map 1180:22161, scooter 1157:7949, plan 1157:7579, switch sheet 1170:10999, pay 1211:10955, success 1211:11051, KYC 1196:10983/1199:10994/1199:12410, home 1216:10982/1216:12433/1217:11030, renewals 1201:10980/1202:10991/1203:10952, dues 1224:8316, errors 1157:12114/1157:12365/1206:10953, loyalty 1222:11028, illustrations 1157:31055, flow map 1231:9036. Re-export these if a screen changes.
