@@ -1,4 +1,6 @@
-import { PinnedPhoto } from "./paper";
+import { Hi, PinnedPhoto } from "./paper";
+import { Pixel } from "./pixel";
+import { Bookshelf } from "./Bookshelf";
 import clay from "../../../public/assets/about/clay-koi-sunflowers.jpg";
 import rose from "../../../public/assets/about/painting-rose.jpg";
 import wallArt from "../../../public/assets/about/wall-art.jpg";
@@ -84,13 +86,27 @@ export function OffScreen() {
   return (
     <section aria-labelledby="off-screen" className="grid gap-10 pb-24">
       <header className="mx-auto grid max-w-[36rem] gap-3 text-center">
-        <p className="label">Off the screen</p>
-        <h2 id="off-screen" className="font-serif text-h2m text-head md:text-h2">
+        <p className="label flex items-center justify-center gap-2">
+          <Pixel name="heart" className="size-5" /> Off the screen{" "}
+          <Pixel name="heart" className="size-5" />
+        </p>
+        <h2
+          id="off-screen"
+          className="font-serif text-h2m text-head md:text-h2"
+        >
           Still making things <span className="font-worn">by hand</span>
         </h2>
-        <p className="printed text-base text-ink">
-          I paint, sketch, make clay pieces and rangoli, watch anime and movies, read, and go cafe hopping.
-          And I never say no to ramen.
+        <p className="printed text-base leading-8 text-ink">
+          I <Hi c="pink">paint</Hi> <Pixel name="palette" />,{" "}
+          <Hi c="yellow">sketch</Hi> <Pixel name="pencil" />, make{" "}
+          <Hi c="orange">clay pieces</Hi> <Pixel name="clay" /> and{" "}
+          <Hi c="green">rangoli</Hi> <Pixel name="flower" />, watch{" "}
+          <Hi c="lilac">anime</Hi> <Pixel name="sparkle" /> and{" "}
+          <Hi c="blue">movies</Hi> <Pixel name="clapper" />,{" "}
+          <Hi c="yellow">read</Hi> <Pixel name="book" />, and go{" "}
+          <Hi c="orange">cafe hopping</Hi> <Pixel name="coffee" />. And I never
+          say no to <Hi c="pink">ramen</Hi>{" "}
+          <Pixel name="ramen" className="size-[2em] align-[-0.55em]" />
         </p>
       </header>
       <div className="columns-2 gap-5 md:columns-3 md:gap-8 [&>figure]:mb-7">
@@ -103,6 +119,7 @@ export function OffScreen() {
           />
         ))}
       </div>
+      <Bookshelf />
     </section>
   );
 }

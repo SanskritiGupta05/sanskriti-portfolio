@@ -1,5 +1,6 @@
 import Image, { type StaticImageData } from "next/image";
-import { hand, PinnedPhoto, printPhoto } from "./paper";
+import { hand, Hi, PinnedPhoto, printPhoto } from "./paper";
+import { Pixel } from "./pixel";
 import portraitNow from "../../../public/assets/about/portrait-now.jpg";
 import kidSchool from "../../../public/assets/about/kid-school.jpg";
 import kidPhone from "../../../public/assets/about/kid-phone.jpg";
@@ -90,7 +91,11 @@ export function AboutCollage() {
 
           {/* pinned photos */}
           {pins.map((p) => (
-            <PinnedPhoto key={p.alt} {...p} sizes="(min-width: 768px) 190px, 36vw" />
+            <PinnedPhoto
+              key={p.alt}
+              {...p}
+              sizes="(min-width: 768px) 190px, 36vw"
+            />
           ))}
         </div>
       </div>
@@ -101,10 +106,12 @@ export function AboutCollage() {
           About · Delhi NCR, India
         </p>
         <p className="printed order-1 text-base text-ink md:order-2 md:text-justify md:[hyphens:auto]">
-          A designer by role, a builder by instinct and an engineer by degree.
-          From product thinking and design systems to prototyping, AI and code,
-          I like working across the gaps between disciplines. These days
-          that&apos;s as a product designer at AppX (YC&apos;21).
+          A <Hi c="pink">designer</Hi> by role, a <Hi c="yellow">builder</Hi> by
+          instinct and an <Hi c="blue">engineer</Hi> by degree. From product
+          thinking and design systems to prototyping, AI <Pixel name="bot" />{" "}
+          and code, I like working across the gaps between disciplines. These
+          days that&apos;s as a product designer at{" "}
+          <Hi c="orange">AppX (YC&apos;21)</Hi>.
         </p>
       </div>
     </section>
