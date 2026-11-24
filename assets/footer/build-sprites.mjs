@@ -8,7 +8,7 @@
 // Cleaning only removes things that aren't part of the sprite (the cherry branch, background specks,
 // sushi in front) and snaps colours to the home mascot's palette; no pixel of her or the bag is redrawn.
 import { readFileSync, writeFileSync } from 'node:fs';
-import { PALETTE } from '../mascot/mascot.js';
+import { PALETTE, buildFrame } from '../mascot/mascot.js';
 
 const load = (f) => JSON.parse(readFileSync(new URL(f, import.meta.url)));
 const toCells = (rows) => rows.map((r) => [...r]);
@@ -118,9 +118,61 @@ defringe(girl, girlColours); defringe(bubble, girlColours); defringe(sparkles, g
 gradeHair([girl, bubble], girlColours);
 snap([girl, bubble, steam], girlColours, [...GIRL_KEYS]);
 for (const row of sparkles) for (let x = 0; x < row.length; x++) if (row[x] !== '.') row[x] = 'G'; // the home mascot's sparkle gold
+// Open eyes, shown now and then: the home coffee pose's own open eyes (7×7, read from her reference),
+// copied pixel for pixel over the closed ^ ^ arcs. A separate layer, so her picked sprite is untouched:
+// the arcs' area is painted skin ('e') and the home eye pixels go on top.
+const home = buildFrame('coffee', 0); // the reference eyes are open on frame 0
+const eyes = girl.map((r) => r.map(() => '.'));
+for (const [arc, homeBox] of [
+  [{ x0: 41, x1: 47 }, { x0: 19, x1: 25, cx: 44 }], // left eye: home x19–25 → centred on the left arc (col 44)
+  [{ x0: 59, x1: 65 }, { x0: 33, x1: 39, cx: 62 }], // right eye: home x33–39 → centred on the right arc (col 62)
+]) {
+  for (let y = 44; y <= 48; y++) for (let x = arc.x0; x <= arc.x1; x++) if (girl[y][x] !== 'e' && girl[y][x] !== 'k') eyes[y][x] = 'e';
+  const dx = homeBox.cx - (homeBox.x0 + homeBox.x1) / 2;
+  for (let y = 23; y <= 29; y++) for (let x = homeBox.x0; x <= homeBox.x1; x++) {
+    const c = home[y][x];
+    if ('aqngb'.includes(c)) eyes[y + 20][Math.round(x + dx)] = c; // home rows 23–29 → footer rows 43–49
+  }
+}
+
+// Sparkles: four-point stars (✦, curved-in sides, a bright centre) drawn here in place of the reference's
+// plain crosses, at the same two spots. G = the home sparkle gold, = = its light gold. Two layers so
+// they can twinkle in turn.
+const STAR_BIG = [
+  '.....G.....',
+  '.....G.....',
+  '....GGG....',
+  '....GGG....',
+  '...GG=GG...',
+  'GGGG===GGGG',
+  '...GG=GG...',
+  '....GGG....',
+  '....GGG....',
+  '.....G.....',
+  '.....G.....',
+];
+const STAR_SMALL = ['...G...', '...G...', '..GGG..', 'GGG=GGG', '..GGG..', '...G...', '...G...'];
+const star = (cx, cy, art) => {
+  const l = girl.map((r) => r.map(() => '.'));
+  const h = (art.length - 1) / 2;
+  art.forEach((row, y) => [...row].forEach((c, x) => { if (c !== '.') l[cy - h + y][cx - h + x] = c; }));
+  return l;
+};
+const sparkleBig = star(21, 27, STAR_BIG);
+const sparkleSmall = star(15, 36, STAR_SMALL);
+
 // the reference's speech bubble is taken out of her (and still counts in the hair grading above) but not
 // exported: the footer draws its own crisp bubble that cycles through her socials
-const GIRL = { w: girl[0].length, h: girl.length, palette: pal(girlRaw, [girl, sparkles, steam]), body: rows(girl), sparkles: rows(sparkles), steam: rows(steam) };
+const GIRL = {
+  w: girl[0].length,
+  h: girl.length,
+  palette: pal(girlRaw, [girl, steam, eyes, sparkleBig, sparkleSmall]),
+  body: rows(girl),
+  eyes: rows(eyes),
+  sparkleBig: rows(sparkleBig),
+  sparkleSmall: rows(sparkleSmall),
+  steam: rows(steam),
+};
 
 // --- the travel suitcase, with four stickers that peel off ---
 const caseRaw = load('./case.raw.json');

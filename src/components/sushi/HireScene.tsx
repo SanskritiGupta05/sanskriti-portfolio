@@ -2,13 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "motion/react";
-import { useTheme } from "@/components/ThemeProvider";
 import { CASE, GIRL } from "../../../assets/footer/sprites.js";
 
 // The footer's sign-off scene, from Sanskriti's footer reference: "One last thing", the hire-me line
 // with "Japan trip." underlined in red, a Calendly button, pixel Sanskriti resting her chin on her
-// hands (with her heart mug and a heart bubble), her travel suitcase whose stickers are her socials,
-// and Mount Fuji with a red sun and a shinkansen gliding past.
+// hands (with her heart mug and a speech bubble that cycles her socials), and her travel suitcase
+// whose stickers are her socials. (Mount Fuji was removed at her request.)
 
 export type Social = { name: string; href: string; icon: "x" | "linkedin" | "instagram" };
 
@@ -152,6 +151,26 @@ function SpeechBubble({ socials, className = "", style }: { socials: Social[]; c
 export function PixelGirl({ className = "", socials = [] }: { className?: string; socials?: Social[] }) {
   const still = useReducedMotion();
   const loop = (d: number, delay = 0) => ({ duration: d, delay, repeat: Infinity, ease: "easeInOut" as const });
+  // her eyes are closed in a smile (^ ^); every 7–12 s she opens them for a couple of seconds, with a blink
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (still) return;
+    let timer = 0;
+    const steps: [boolean, number][] = [[true, 1100], [false, 140], [true, 1200], [false, 0]];
+    const cycle = () => {
+      timer = window.setTimeout(() => {
+        let i = 0;
+        const run = () => {
+          const [o, ms] = steps[i++];
+          setOpen(o);
+          timer = window.setTimeout(i < steps.length ? run : cycle, ms);
+        };
+        run();
+      }, 7000 + Math.random() * 5000);
+    };
+    cycle();
+    return () => window.clearTimeout(timer);
+  }, [still]);
   return (
     <div className={className || "relative"} style={{ aspectRatio: `${GIRL.w} / ${GIRL.h}` }} role="group" aria-label="Pixel-art Sanskriti resting her chin on her hands, smiling">
       <Layer rows={GIRL.body} palette={GIRL.palette} />
@@ -159,9 +178,13 @@ export function PixelGirl({ className = "", socials = [] }: { className?: string
       <motion.div className="absolute inset-0" animate={still ? undefined : { y: ["0%", "-2%", "0%"], opacity: [0.95, 0.55, 0.95] }} transition={loop(3.2)}>
         <Layer rows={GIRL.steam} palette={GIRL.palette} />
       </motion.div>
-      {/* the sparkles twinkle */}
-      <motion.div className="absolute inset-0" animate={still ? undefined : { opacity: [1, 0.25, 1, 1] }} transition={{ ...loop(2.6, 0.4), times: [0, 0.3, 0.6, 1] }}>
-        <Layer rows={GIRL.sparkles} palette={GIRL.palette} />
+      {open && <Layer rows={GIRL.eyes} palette={GIRL.palette} />}
+      {/* two four-point sparkles twinkle in turn */}
+      <motion.div className="absolute inset-0" animate={still ? undefined : { opacity: [1, 0.15, 1, 1] }} transition={{ ...loop(2.4), times: [0, 0.25, 0.5, 1] }}>
+        <Layer rows={GIRL.sparkleBig} palette={GIRL.palette} />
+      </motion.div>
+      <motion.div className="absolute inset-0" animate={still ? undefined : { opacity: [1, 1, 0.15, 1] }} transition={{ ...loop(2.4), times: [0, 0.5, 0.75, 1] }}>
+        <Layer rows={GIRL.sparkleSmall} palette={GIRL.palette} />
       </motion.div>
       {/* the speech bubble by her head: a heart, then her socials, one a second (3px cells: 51px wide) */}
       <SpeechBubble socials={socials} className="z-10 w-[51px]" style={{ left: "72%", top: "2%" }} />
@@ -277,114 +300,6 @@ export function PixelSuitcase({ links, className = "" }: { links: Partial<Record
   );
 }
 
-// ---------- Mount Fuji, a red sun, clouds and a shinkansen, in pixel art ----------
-// The scene is drawn as vector shapes onto a tiny canvas (114×50, one pixel per art cell), each shape
-// in its own key colour at 8× size; every cell then takes the colour most of its 64 samples have, so
-// there are no blended edges, just flat pixel-art colours. Shown at 2px cells (228px) and 3px from xl (342px).
-const FUJI_W = 114;
-const FUJI_H = 50;
-const FUJI_KEYS: Record<string, [number, number, number]> = {
-  s: [255, 0, 0], // sun
-  m: [0, 255, 0], // mountain (split into a lit left face L and a shaded right face R afterwards)
-  w: [255, 255, 0], // snow (split into lit w and shaded h afterwards)
-  c: [0, 255, 255], // cloud outline
-  f: [128, 0, 0], // cloud fill
-  g: [0, 0, 255], // ground line
-  t: [255, 0, 255], // track dashes
-};
-const SS = 8; // supersampling: each art cell is read from 8×8 samples and takes the colour most of them have
-const RIDGE = 49; // cells from this column right are on the shaded side
-function rasterFuji(): string[] {
-  const cv = document.createElement("canvas");
-  cv.width = FUJI_W * SS;
-  cv.height = FUJI_H * SS;
-  const ctx = cv.getContext("2d")!;
-  ctx.scale(SS / 3, SS / 3); // shapes are in the old 342×150 units
-  const fill = (k: string, path: Path2D) => { ctx.fillStyle = `rgb(${FUJI_KEYS[k].join(",")})`; ctx.fill(path); };
-  const stroke = (k: string, path: Path2D, w = 3) => { ctx.strokeStyle = `rgb(${FUJI_KEYS[k].join(",")})`; ctx.lineWidth = w; ctx.lineJoin = "round"; ctx.stroke(path); };
-  const sun = new Path2D(); sun.arc(140, 46, 40, 0, Math.PI * 2); fill("s", sun);
-  const cloud = "M0 18 H62 C66 18 66 10 60 10 C60 3 51 1 47 6 C44 -2 31 -3 28 6 C24 2 16 4 17 11 C10 9 6 13 8 18Z";
-  for (const [x, y, sc] of [[18, 34, 1], [246, 56, 1.05]]) {
-    ctx.save(); ctx.translate(x, y); ctx.scale(sc, sc);
-    const p = new Path2D(cloud); fill("f", p); stroke("c", p, 3 / sc);
-    ctx.restore();
-  }
-  fill("m", new Path2D("M0 132 C 40 124, 78 92, 112 58 L 124 46 Q 140 40 156 46 L 168 58 C 210 96, 280 126, 342 132Z"));
-  fill("w", new Path2D("M112 58 L124 46 Q140 40 156 46 L168 58 L162 66 L156 60 L150 72 L144 62 L138 74 L132 61 L126 70 L121 62Z"));
-  ctx.fillStyle = `rgb(${FUJI_KEYS.g.join(",")})`; ctx.fillRect(0, 132, 342, 3);
-  ctx.fillStyle = `rgb(${FUJI_KEYS.t.join(",")})`;
-  for (let x = 12; x < 330; x += 15) ctx.fillRect(x, 126, 6, 3);
-  const { data } = ctx.getImageData(0, 0, FUJI_W * SS, FUJI_H * SS);
-  const keys = Object.entries(FUJI_KEYS);
-  const rows: string[] = [];
-  for (let y = 0; y < FUJI_H; y++) {
-    let row = "";
-    for (let x = 0; x < FUJI_W; x++) {
-      const votes: Record<string, number> = {};
-      for (let sy = 0; sy < SS; sy++) for (let sx = 0; sx < SS; sx++) {
-        const i = ((y * SS + sy) * FUJI_W * SS + x * SS + sx) * 4;
-        let k = ".";
-        if (data[i + 3] > 127) {
-          let bd = Infinity;
-          for (const [key, c] of keys) { const d = (data[i] - c[0]) ** 2 + (data[i + 1] - c[1]) ** 2 + (data[i + 2] - c[2]) ** 2; if (d < bd) { bd = d; k = key; } }
-        }
-        votes[k] = (votes[k] || 0) + 1;
-      }
-      let k = Object.entries(votes).sort((p, q) => q[1] - p[1])[0][0];
-      if (k === "m") k = x < RIDGE ? "L" : "R";
-      else if (k === "w") k = x < RIDGE ? "w" : "h";
-      row += k;
-    }
-    rows.push(row);
-  }
-  return rows;
-}
-const FUJI_DAY = { s: "#e8643c", L: "#b4c1d4", R: "#94a5be", w: "#fbfbf8", h: "#d9e1ec", c: "#cdb9a2", f: "#fbf7f0", g: "#d9cbb8", t: "#cfc2b0" };
-const FUJI_NIGHT = { ...FUJI_DAY, s: "#efe0b4", c: "#5b5566", f: "#17161e", g: "#4a4655", t: "#4a4655" };
-
-// a small pixel shinkansen: white body, blue stripe, dark windows, grey outline
-const TRAIN = [
-  "..ggggggggggggggggggggggg.....",
-  ".gwkkwkkwkkwkkwkkwkkwkkwwgg...",
-  "gwwwwwwwwwwwwwwwwwwwwwwwwwkkg.",
-  "gbbbbbbbbbbbbbbbbbbbbbbbbbbbbg",
-  "gwwwwwwwwwwwwwwwwwwwwwwwwwwwwg",
-  ".gggggggggggggggggggggggggggg.",
-];
-const TRAIN_PAL = { g: "#8d98a8", w: "#fbfbf8", k: "#33435c", b: "#2d58a6" };
-
-export function FujiScene({ className = "" }: { className?: string }) {
-  const still = useReducedMotion();
-  const { night } = useTheme();
-  const ref = useRef<HTMLDivElement>(null);
-  const seen = useInView(ref, { margin: "100px" });
-  const [rows, setRows] = useState<string[] | null>(null);
-  // drawn on the client (it needs a canvas), on the first frame after mounting
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setRows(rasterFuji()));
-    return () => cancelAnimationFrame(id);
-  }, []);
-  const cells = FUJI_W + TRAIN[0].length; // the train travels from just off the left to just off the right
-  return (
-    <div ref={ref} aria-hidden="true" className={`overflow-hidden ${className}`} style={{ aspectRatio: `${FUJI_W} / ${FUJI_H}` }}>
-      {rows && <Layer rows={rows} palette={night ? FUJI_NIGHT : FUJI_DAY} />}
-      {/* the train runs along the track (rows 36–41), moving a whole cell at a time; it fades in and out
-          near both ends of the track instead of being sliced off by the edge of the scene */}
-      <div className="absolute inset-0 [mask-image:linear-gradient(90deg,transparent_0%,#000_22%,#000_78%,transparent_100%)]">
-      <motion.div
-        className="absolute"
-        style={{ width: `${(TRAIN[0].length / FUJI_W) * 100}%`, aspectRatio: `${TRAIN[0].length} / ${TRAIN.length}`, top: `${(36 / FUJI_H) * 100}%`, left: `${(-TRAIN[0].length / FUJI_W) * 100}%` }}
-        initial={{ x: "0%" }}
-        animate={still || !seen ? { x: `${(60 / TRAIN[0].length) * 100}%` } : { x: ["0%", `${(cells / TRAIN[0].length) * 100}%`] }}
-        transition={still || !seen ? { duration: 0 } : { duration: 9, repeat: Infinity, repeatDelay: 5, ease: (t: number) => Math.floor(t * cells) / cells }}
-      >
-        <Layer rows={TRAIN} palette={TRAIN_PAL} />
-      </motion.div>
-      </div>
-    </div>
-  );
-}
-
 // ---------- the heading, underline and button ----------
 // `calendly` is null until her link is in: the button then shows but isn't a link yet
 export function HireHeading({ calendly }: { calendly: string | null }) {
@@ -414,8 +329,10 @@ export function HireHeading({ calendly }: { calendly: string | null }) {
         </span>
       </h2>
       {(() => {
+        // skeuomorphic, in the site's own skeu-red (raised, soft red gradient, inner highlight); it lifts a
+        // little on hover and presses in on click
         const cls =
-          "group mt-3 inline-flex items-center gap-2 rounded-full border-[1.5px] border-[#c23a2b] px-6 py-2.5 text-[14px] tracking-[0.08em] text-[#c23a2b] uppercase transition-colors dark:border-[#ec7a62] dark:text-[#ec7a62]";
+          "skeu-red group mt-3 inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-[14px] tracking-[0.08em] text-[#b4321f] uppercase transition-transform dark:text-[#ec7a62]";
         const label = (
           <>
             Let&apos;s make something good
@@ -423,7 +340,12 @@ export function HireHeading({ calendly }: { calendly: string | null }) {
           </>
         );
         return calendly ? (
-          <a href={calendly} target="_blank" rel="noreferrer" className={`${cls} hover:bg-[#c23a2b] hover:text-[#fffaf3] dark:hover:bg-[#ec7a62] dark:hover:text-[#17161e]`}>
+          <a
+            href={calendly}
+            target="_blank"
+            rel="noreferrer"
+            className={`${cls} hover:-translate-y-0.5 active:translate-y-px active:shadow-[inset_0_2px_5px_rgba(180,50,31,0.22),0_0_0_1px_rgba(200,85,59,0.3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c23a2b]`}
+          >
             {label}
           </a>
         ) : (
@@ -443,8 +365,7 @@ export function HireScene({ calendly, stickers }: { calendly: string | null; sti
   return (
     <div className="relative pt-6 pb-[108px] xl:pb-[44px]">
       <HireHeading calendly={calendly} />
-      {/* Fuji sits a little above the belt so its train stays in view; Sanskriti and the bag are tucked ~10px behind the back rail (its top edge is 74px below this stage) */}
-      <FujiScene className="absolute right-[max(-24px,calc(50%-330px))] bottom-[-30px] w-[228px] md:right-[max(0px,calc(50%-370px))] xl:right-auto xl:left-[calc(50%+284px)] xl:w-[342px]" />
+      {/* Sanskriti and the bag are tucked ~10px behind the back rail (its top edge is 74px below this stage) */}
       <PixelSuitcase
         links={stickers}
         className="absolute right-[max(20px,calc(50%-300px))] bottom-[-84px] w-[92px] md:right-[max(24px,calc(50%-300px))] xl:right-auto xl:left-[calc(50%+193px)]"
