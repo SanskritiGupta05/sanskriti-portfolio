@@ -16,6 +16,7 @@ import postmanBox from "../../../public/assets/about/postman-box.jpg";
 import designareCard from "../../../public/assets/about/designare-card.jpg";
 import designareBanner from "../../../public/assets/about/designare-banner.jpg";
 import designareMics from "../../../public/assets/about/designare-mics.jpg";
+import gdscLead from "../../../public/assets/about/gdsc-open-source-lead.jpg";
 import deskNow from "../../../public/assets/about/desk-now.jpg";
 
 // The journey, told as pinned moments. All copy comes from Sanskriti's own notes and posts.
@@ -188,6 +189,13 @@ I wrote this when I was in my first sem. However, the mentorship I received from
             box="relative mt-3 inline-block w-full"
             tilt="rotate-[3deg]"
             caption="designare, jan '25"
+          />
+          <PinnedPhoto
+            src={gdscLead}
+            alt="Sanskriti from behind in a Google Developer Student Clubs T-shirt reading Open Source Lead, Sanskriti Gupta"
+            box="relative mt-3 inline-block w-full"
+            tilt="-rotate-[3deg]"
+            caption="open source lead, gdsc"
           />
           <PinnedPhoto
             src={devfestSelfie}
