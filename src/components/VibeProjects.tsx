@@ -4,13 +4,16 @@
 // Thumbnails: Spider-Verse and UX Laws from her Framer site; Little Lights is a capture of
 // the live site. Copy is from her reference.
 import Image from "next/image";
+import { ToolIcons, type ToolId } from "./Tools";
 import { Tamagotchi } from "./Tamagotchi";
 
-const PROJECTS = [
+// tools per project, as she listed them (2026-11-24)
+const PROJECTS: { name: string; line: string; tags: string[]; img: string; href: string; tools: ToolId[] }[] = [
   {
     name: "Spider-Verse Interaction",
     line: "What if a mystery card could come to life? An interactive Spider-Verse-inspired experiment with a little cinematic magic.",
     tags: ["Creative Coding", "AI"],
+    tools: ["chatgpt", "figma", "cursor"],
     img: "/assets/cases/spider-verse.webp",
     href: "/work/spider-verse",
   },
@@ -18,6 +21,7 @@ const PROJECTS = [
     name: "UX Laws: Learn Design Psychology",
     line: "An interactive way to explore UX laws, understand the psychology behind better design and make it easier to remember.",
     tags: ["Learning Experience", "AI"],
+    tools: ["figma", "claude"],
     img: "/assets/cases/uxie.webp",
     href: "/work/ux-laws",
   },
@@ -25,6 +29,7 @@ const PROJECTS = [
     name: "Little Lights",
     line: "A Diwali-inspired experiment exploring light, interaction and the joy of making something just for this occasion.",
     tags: ["Creative Experiment", "Diwali"],
+    tools: ["figma", "claude"],
     img: "/assets/cases/little-lights.webp",
     href: "https://diwali-album.vercel.app/",
   },
@@ -71,12 +76,15 @@ export function VibeProjects() {
                     )}
                   </span>
                   <span className="printed max-w-[52ch] text-sm leading-relaxed">{p.line}</span>
-                  <span className="mt-auto flex flex-wrap gap-2 pt-1">
-                    {p.tags.map((t) => (
-                      <span key={t} className="rounded-full bg-[#fde7e1] px-3 py-1 text-sm text-[#b53424]">
-                        {t}
-                      </span>
-                    ))}
+                  <span className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-1">
+                    <span className="flex flex-wrap gap-2">
+                      {p.tags.map((t) => (
+                        <span key={t} className="rounded-full bg-[#fde7e1] px-3 py-1 text-sm text-[#b53424]">
+                          {t}
+                        </span>
+                      ))}
+                    </span>
+                    <ToolIcons tools={p.tools} />
                   </span>
                 </span>
               </Card>

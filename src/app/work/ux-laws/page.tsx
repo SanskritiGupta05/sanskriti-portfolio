@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
+import { ToolRow } from "@/components/Tools";
 import { Footer } from "@/components/Footer";
 import { Ticket } from "@/components/casestudy/pieces";
 import { CaseStudyFrame, Note, P, Quote, Section, type TocItem } from "@/components/casestudy/Margin";
@@ -74,6 +75,9 @@ export default function UxLaws() {
                   { k: "Content", v: "106 UX laws · 8 categories" },
                 ]}
               />
+            </div>
+            <div className="mt-8">
+              <ToolRow tools={["figma", "claude"]} />
             </div>
             <div className="mt-10">
               <Reel />

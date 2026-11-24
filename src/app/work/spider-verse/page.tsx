@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
+import { ToolRow } from "@/components/Tools";
 import { Footer } from "@/components/Footer";
 import { Ticket } from "@/components/casestudy/pieces";
 import { CaseStudyFrame, Note, P, Quote, Section, type TocItem } from "@/components/casestudy/Margin";
@@ -60,6 +61,9 @@ export default function SpiderVerse() {
                   { k: "Cards", v: "7 Spider-People, 7 Earths" },
                 ]}
               />
+            </div>
+            <div className="mt-8">
+              <ToolRow tools={["chatgpt", "figma", "cursor"]} />
             </div>
             {/* the three key moments, captured from the live site */}
             <div className="relative mt-10 overflow-hidden rounded-[22px] px-6 pt-10" style={{ background: STAGE }}>
