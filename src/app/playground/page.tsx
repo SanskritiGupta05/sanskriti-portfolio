@@ -15,7 +15,9 @@ export const metadata: Metadata = {
 // (public/assets/playground/), served unoptimized; videos are her X clips re-encoded (see LazyVideo).
 type Img = { kind: "img"; src: string; w: number; h: number; alt: string };
 type Vid = { kind: "video"; src: string; w: number; h: number; alt: string; caption?: string; link?: string };
-type Piece = Img | Vid;
+// screens laid straight on the paper (no frame), slightly fanned, each with its own shadow
+type Screens = { kind: "screens"; srcs: string[]; w: number; h: number; alt: string };
+type Piece = Img | Vid | Screens;
 
 const A = "/assets/playground";
 const img = (file: string, w: number, h: number, alt: string): Img => ({ kind: "img", src: `${A}/${file}`, w, h, alt });
@@ -41,7 +43,15 @@ const ROWS: Piece[][] = [
     img("pandao-figma.webp", 1500, 2000, "The PanDAO onboarding screen being designed in Figma on a laptop"),
   ],
   [vid("inkwork", 1920, 954, "Inkwork Press, a tool that generates illustrations with geometric motifs and decorative patterns", "Saw some cool illustrations with \u201cgeometric motifs and decorative patterns\u201d on Pinterest, so I decided to build my own fun lil tool to generate them. 👾", "https://inkwork-press.vercel.app")],
-  [img("tab-onboarding.jpg", 2838, 1864, "TAB, a spending tracker: three bold onboarding screens in lime, pink and blue")],
+  [
+    {
+      kind: "screens",
+      srcs: [1, 2, 3].map((n) => `${A}/tab-${n}.png`),
+      w: 786,
+      h: 1704,
+      alt: "TAB, a spending tracker: three bold onboarding screens in lime, pink and blue",
+    },
+  ],
   [
     img("tab-icon.webp", 1600, 1600, "The TAB app icon: a torn receipt with an 'every spend counts' sticker"),
     img("espresso.png", 1544, 1544, "A Spotify record-player widget playing Espresso by Sabrina Carpenter"),
@@ -65,7 +75,25 @@ const ROWS: Piece[][] = [
   [img("emoji-screens.webp", 1372, 936, "Pixel-emoji app onboarding: three retro screens on green")],
 ];
 
+const FAN = ["-rotate-3 translate-y-3", "", "rotate-3 translate-y-3"];
+
 function Frame({ p }: { p: Piece }) {
+  if (p.kind === "screens")
+    return (
+      <figure role="group" aria-label={p.alt} className="m-0 flex justify-center gap-4 py-4 md:gap-7">
+        {p.srcs.map((src, i) => (
+          <Image
+            key={src}
+            src={src}
+            alt=""
+            width={p.w}
+            height={p.h}
+            unoptimized
+            className={`h-auto w-[30%] max-w-[240px] rounded-[18px] shadow-[0_24px_40px_-22px_rgba(40,30,20,0.55)] md:rounded-[24px] ${FAN[i] ?? ""}`}
+          />
+        ))}
+      </figure>
+    );
   return (
     <figure className="m-0">
       <div className="overflow-hidden rounded-[20px] border border-line bg-bg p-2 shadow-[0_18px_36px_-26px_rgba(60,40,20,0.35)]">
@@ -116,14 +144,14 @@ export default function PlaygroundPage() {
                   // pairs: each card starts at 18px (its padding + border) and takes the leftover width in
                   // proportion to its image's width-to-height ratio, so both cards end up exactly the same height
                   <div
-                    key={p.src}
+                    key={"src" in p ? p.src : p.alt}
                     className="min-w-0 md:[flex:var(--g)_1_18px]"
                     style={{ "--g": (p.w / p.h).toFixed(4) } as React.CSSProperties}
                   >
                     <Frame p={p} />
                   </div>
                 ) : (
-                  <Frame key={p.src} p={p} />
+                  <Frame key={"src" in p ? p.src : p.alt} p={p} />
                 ),
               )}
             </div>
