@@ -13,12 +13,14 @@ import { CASE, GIRL } from "../../../assets/footer/sprites.js";
 export type Social = { name: string; href: string; icon: "x" | "linkedin" | "instagram" };
 
 // ---------- pixel art ----------
-// every sprite layer is a grid of palette keys ('.' = empty), drawn as crisp SVG rects
+// Every sprite layer is a grid of palette keys ('.' = empty), drawn as inline SVG rects with
+// crispEdges, like the home mascot. (An <img> of the same SVG was rasterised and then scaled, which
+// looked soft on Retina screens; inline SVG stays sharp at any size.)
 const cache = new Map<string, string>();
-function pixelUrl(rows: string[], palette: Record<string, string>) {
-  const key = JSON.stringify(palette) + rows.join("\n"); // same grid in another palette (night) is another image
-  let url = cache.get(key);
-  if (url) return url;
+function pixelSvg(rows: string[], palette: Record<string, string>) {
+  const key = JSON.stringify(palette) + rows.join("\n"); // same grid in another palette (night) is another drawing
+  let svg = cache.get(key);
+  if (svg) return svg;
   const H = rows.length;
   const W = [...rows[0]].length;
   let rects = "";
@@ -33,16 +35,13 @@ function pixelUrl(rows: string[], palette: Record<string, string>) {
       x += run;
     }
   });
-  url = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" shape-rendering="crispEdges">${rects}</svg>`,
-  )}`;
-  cache.set(key, url);
-  return url;
+  svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="100%" height="100%" preserveAspectRatio="none" shape-rendering="crispEdges" aria-hidden="true" focusable="false">${rects}</svg>`;
+  cache.set(key, svg);
+  return svg;
 }
 
 function Layer({ rows, palette, className = "" }: { rows: string[]; palette: Record<string, string>; className?: string }) {
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src={pixelUrl(rows, palette)} alt="" draggable={false} className={`absolute inset-0 size-full [image-rendering:pixelated] ${className}`} />;
+  return <span className={`pointer-events-none absolute inset-0 block [&>svg]:block ${className}`} dangerouslySetInnerHTML={{ __html: pixelSvg(rows, palette) }} />;
 }
 
 // ---------- pixel Sanskriti ----------

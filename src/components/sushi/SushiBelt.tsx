@@ -47,29 +47,43 @@ function PickUp({ svg, side, onDone }: { svg: string; side: Side; onDone: () => 
   const ease = [[0.2, 0.7, 0.3, 1], "linear", [0.4, 0, 0.6, 1], [0.5, 0, 0.8, 0.6]] as const;
   return (
     <div className="pointer-events-none absolute inset-0">
-      <motion.div
-        className="absolute inset-0"
-        animate={lift}
-        transition={{ duration: PICK.duration, times: PICK.times, ease: ease as never }}
-        onAnimationComplete={onDone}
-      >
-        <Art svg={svg} w={PLATE_W} h={PLATE_H} className="absolute inset-0" />
-      </motion.div>
-      <motion.div
-        className="absolute"
-        style={{
-          width: CHOP_W,
-          height: CHOP_H,
-          top: SUSHI_AT.y - TIP.y,
-          left: side === "right" ? SUSHI_AT.x - TIP.x : SUSHI_AT.x - (CHOP_W - TIP.x),
-          scaleX: dir,
-        }}
-        initial={{ x: dir * AWAY }}
-        animate={{ x: [dir * AWAY, 0, 0, 0, dir * AWAY], y: lift.y }}
-        transition={{ duration: PICK.duration, times: PICK.times, ease: ease as never }}
-      >
-        <Chopsticks />
-      </motion.div>
+      {/* the lower chopstick goes behind the sushi and the upper one crosses in front, so it reads as a
+          pinch: plate, lower stick, sushi, upper stick */}
+      {(["lower", "upper"] as const).map((part) => {
+        const stickLayer = (
+          <motion.div
+            key={part}
+            className="absolute"
+            style={{
+              width: CHOP_W,
+              height: CHOP_H,
+              top: SUSHI_AT.y - TIP.y,
+              left: side === "right" ? SUSHI_AT.x - TIP.x : SUSHI_AT.x - (CHOP_W - TIP.x),
+              scaleX: dir,
+            }}
+            initial={{ x: dir * AWAY }}
+            animate={{ x: [dir * AWAY, 0, 0, 0, dir * AWAY], y: lift.y }}
+            transition={{ duration: PICK.duration, times: PICK.times, ease: ease as never }}
+          >
+            <Chopsticks part={part} />
+          </motion.div>
+        );
+        return part === "lower" ? (
+          <div key={part} className="absolute inset-0">
+            {stickLayer}
+            <motion.div
+              className="absolute inset-0"
+              animate={lift}
+              transition={{ duration: PICK.duration, times: PICK.times, ease: ease as never }}
+              onAnimationComplete={onDone}
+            >
+              <Art svg={svg} w={PLATE_W} h={PLATE_H} className="absolute inset-0" />
+            </motion.div>
+          </div>
+        ) : (
+          stickLayer
+        );
+      })}
     </div>
   );
 }
@@ -82,30 +96,37 @@ function stick(x1: number, y1: number, x2: number, y2: number, w1: number, w2: n
   return `M${p(x1, y1, w1 / 2, 1)} L${p(x2, y2, w2 / 2, 1)} L${p(x2, y2, w2 / 2, -1)} L${p(x1, y1, w1 / 2, -1)}Z`;
 }
 const along = (x1: number, y1: number, x2: number, y2: number, t: number) => [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t] as const;
-function Chopsticks() {
+// one of the pair: "lower" (drawn behind the sushi) or "upper" (in front, closing down to pinch)
+function Chopsticks({ part }: { part: "lower" | "upper" }) {
   const lower = [298, 30, 24, 86] as const; // [from x, from y, tip x, tip y]
   const upper = [296, 6, 14, 78] as const;
   const tipBand = (s: readonly [number, number, number, number]) => {
     const [mx, my] = along(s[0], s[1], s[2], s[3], 0.78);
     return stick(mx, my, s[2], s[3], 3, 2.2);
   };
+  const wood = `chop-wood-${part}`;
   return (
     <svg viewBox={`0 0 ${CHOP_W} ${CHOP_H}`} className="size-full overflow-visible" aria-hidden="true">
       <defs>
-        <linearGradient id="chop-wood" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={wood} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#e6c592" />
           <stop offset="0.5" stopColor="#c9975c" />
           <stop offset="1" stopColor="#9c6b37" />
         </linearGradient>
       </defs>
-      <path d={stick(...lower, 6.5, 2.4)} fill="url(#chop-wood)" />
-      <path d={tipBand(lower)} fill="#6e4423" opacity="0.85" />
-      {/* the upper stick closes down onto the lower one to pinch */}
-      <motion.g animate={{ y: [-6, -6, 0, 0, 0] }} transition={{ duration: PICK.duration, times: PICK.times }}>
-        <path d={stick(...upper, 6.5, 2.4)} fill="url(#chop-wood)" />
-        <path d={tipBand(upper)} fill="#6e4423" opacity="0.85" />
-        <path d={stick(upper[0], upper[1] - 1.4, upper[2] + 6, upper[3] - 1.2, 1.2, 0.4)} fill="#f6e2bf" opacity="0.6" />
-      </motion.g>
+      {part === "lower" ? (
+        <>
+          <path d={stick(...lower, 6.5, 2.4)} fill={`url(#${wood})`} />
+          <path d={tipBand(lower)} fill="#6e4423" opacity="0.85" />
+        </>
+      ) : (
+        // the upper stick closes down onto the sushi to pinch
+        <motion.g animate={{ y: [-6, -6, 0, 0, 0] }} transition={{ duration: PICK.duration, times: PICK.times }}>
+          <path d={stick(...upper, 6.5, 2.4)} fill={`url(#${wood})`} />
+          <path d={tipBand(upper)} fill="#6e4423" opacity="0.85" />
+          <path d={stick(upper[0], upper[1] - 1.4, upper[2] + 6, upper[3] - 1.2, 1.2, 0.4)} fill="#f6e2bf" opacity="0.6" />
+        </motion.g>
+      )}
     </svg>
   );
 }
