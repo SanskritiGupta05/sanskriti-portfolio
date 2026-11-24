@@ -99,6 +99,13 @@ const BOOKS: {
   },
 ];
 
+// Each book is a little 3D box: the spine faces you; hover (or tap) and it lifts and turns
+// a quarter to show its front cover. Covers are typeset in each book's colours.
+const box =
+  "relative block [--d:96px] [--w:25px] md:[--d:120px] md:[--w:34px] w-[var(--w)] [transform-style:preserve-3d] [transform:translateZ(calc(var(--d)/-2))] transition-transform duration-700 ease-[cubic-bezier(.2,.8,.2,1)] outline-none group-hover:[transform:translateY(-18px)_translateZ(18px)_rotateY(-90deg)] group-focus-within:[transform:translateY(-18px)_translateZ(18px)_rotateY(-90deg)] motion-reduce:transition-none";
+const face =
+  "absolute top-0 h-full [backface-visibility:hidden] ring-1 ring-black/10";
+
 export function Bookshelf() {
   return (
     <figure className="mx-auto w-full max-w-[38rem]">
@@ -107,16 +114,42 @@ export function Bookshelf() {
         aria-label="Books on my shelf"
       >
         {BOOKS.map((b) => (
-          <li key={b.title} className="group">
+          <li
+            key={b.title}
+            className="group relative z-0 [perspective:900px] hover:z-20 focus-within:z-20"
+          >
             <span
               tabIndex={0}
-              title={`${b.title} · ${b.author}`}
               aria-label={`${b.title} by ${b.author}`}
-              className={`flex ${b.h} w-[25px] items-center justify-center rounded-t-[3px] rounded-b-[1px] shadow-[inset_2px_0_0_rgba(255,255,255,0.35),inset_-3px_0_0_rgba(0,0,0,0.12),0_1px_0_rgba(0,0,0,0.25)] ring-1 ring-black/10 transition-transform duration-300 ease-out outline-none group-hover:-translate-y-3 focus-visible:-translate-y-3 md:w-[34px]`}
-              style={{ background: b.bg, color: b.fg }}
+              className={`${box} ${b.h}`}
             >
-              <span className="overflow-hidden text-[13px] leading-none font-bold whitespace-nowrap [text-overflow:ellipsis] [writing-mode:vertical-rl] max-h-[90%] rotate-180">
-                {b.spine}
+              {/* the spine */}
+              <span
+                className={`${face} inset-x-0 flex items-center justify-center rounded-t-[3px] rounded-b-[1px] shadow-[inset_2px_0_0_rgba(255,255,255,0.35),inset_-3px_0_0_rgba(0,0,0,0.12)] [transform:translateZ(calc(var(--d)/2))]`}
+                style={{ background: b.bg, color: b.fg }}
+              >
+                <span className="max-h-[90%] rotate-180 overflow-hidden text-[13px] leading-none font-bold whitespace-nowrap [writing-mode:vertical-rl]">
+                  {b.spine}
+                </span>
+              </span>
+              {/* the front cover, on the box's right side */}
+              <span
+                aria-hidden="true"
+                className={`${face} left-[calc((var(--w)-var(--d))/2)] flex w-[var(--d)] flex-col justify-between rounded-r-[4px] p-2.5 shadow-[inset_4px_0_6px_-3px_rgba(0,0,0,0.25)] [transform:rotateY(90deg)_translateZ(calc(var(--w)/2))] md:p-3`}
+                style={{ background: b.bg, color: b.fg }}
+              >
+                <span className="font-serif text-base leading-tight font-semibold">
+                  {b.title}
+                </span>
+                <span className="grid gap-1.5">
+                  <span
+                    className="h-px w-8 opacity-50"
+                    style={{ background: b.fg }}
+                  />
+                  <span className="text-[13px] leading-snug opacity-80">
+                    {b.author}
+                  </span>
+                </span>
               </span>
             </span>
           </li>
@@ -124,7 +157,9 @@ export function Bookshelf() {
       </ul>
       {/* the shelf board */}
       <div className="h-3 rounded-[3px] bg-[linear-gradient(180deg,#b98a5e_0%,#9c6f45_60%,#7d5634_100%)] shadow-[0_10px_18px_-10px_rgba(60,35,15,0.6),inset_0_1px_0_rgba(255,255,255,0.35)]" />
-      <figcaption className="label mt-3 text-center">On my shelf</figcaption>
+      <figcaption className="label mt-3 text-center">
+        On my shelf · hover a book
+      </figcaption>
     </figure>
   );
 }
