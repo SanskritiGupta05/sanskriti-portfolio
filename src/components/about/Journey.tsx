@@ -1,6 +1,6 @@
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
-import { hand, Pin, PinnedPhoto, printPhoto } from "./paper";
+import { Pin, PinnedPhoto, printPhoto } from "./paper";
 import paintingSetup from "../../../public/assets/about/painting-setup.jpg";
 import sketchEren from "../../../public/assets/about/sketch-eren.jpg";
 import sketchDemonSlayer from "../../../public/assets/about/sketch-demon-slayer.jpg";
@@ -21,6 +21,7 @@ import cardProcess from "../../../public/assets/about/pokemon-card-process.jpg";
 import cardSilver from "../../../public/assets/about/pokemon-card-silver.jpg";
 import keploySwag from "../../../public/assets/about/keploy-swag.jpg";
 import sketchLine from "../../../public/assets/about/sketch-line.jpg";
+import githubDay from "../../../public/assets/about/github-contributions.jpg";
 import deskNow from "../../../public/assets/about/desk-now.jpg";
 
 // The journey, told as pinned moments. All copy comes from Sanskriti's own notes and posts.
@@ -337,18 +338,24 @@ I wrote this when I was in my first sem. However, the mentorship I received from
             learn it.
           </p>
         </Step>
-        <p
-          className={`${hand.className} mx-auto w-fit -rotate-[2deg] rounded-md bg-[#2b2a28] px-4 py-2 text-base whitespace-nowrap text-white md:text-lg shadow-[0_10px_20px_-12px_rgba(0,0,0,0.6)]`}
-        >
-          38 contributions on November 19th.
-        </p>
-        <div className="relative mx-auto mt-4 w-[70%] max-w-[260px]">
+        {/* her GitHub graph (the real screenshot) next to the desk where it happens */}
+        <div className="mt-2 grid grid-cols-[1fr_1.1fr] items-start gap-5 md:gap-8">
+          <PinnedPhoto
+            src={githubDay}
+            alt="Sanskriti's GitHub contribution graph with the tooltip: 38 contributions on November 19th"
+            box="relative mt-8 block w-full"
+            tilt="-rotate-[3deg]"
+            caption="38 in one day"
+            keepColor
+            sizes="(min-width: 768px) 280px, 45vw"
+          />
           <PinnedPhoto
             src={deskNow}
             alt="Sanskriti's desk at night: a laptop running Claude, a monitor, yellow headphones and a stack of books"
             box="relative block w-full"
             tilt="rotate-[2deg]"
             caption="me + claude = a love affair"
+            sizes="(min-width: 768px) 300px, 50vw"
           />
         </div>
       </div>

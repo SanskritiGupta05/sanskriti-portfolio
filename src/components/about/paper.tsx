@@ -28,6 +28,7 @@ export function PinnedPhoto({
   tilt,
   caption,
   sizes = "(min-width: 768px) 220px, 40vw",
+  keepColor = false,
 }: {
   src: StaticImageData;
   alt: string;
@@ -35,13 +36,14 @@ export function PinnedPhoto({
   tilt: string;
   caption?: string;
   sizes?: string;
+  keepColor?: boolean; // skip the greyscale, when the colour is the point
 }) {
   return (
     <figure
       className={`group ${box} ${tilt} z-[5] bg-white p-[3px] shadow-[0_1px_2px_rgba(0,0,0,0.15),0_10px_18px_-10px_rgba(40,30,20,0.5)] transition duration-500 ease-out hover:z-20 hover:scale-[1.1] hover:rotate-0 md:p-[5px]`}
     >
       <Pin />
-      <Image src={src} alt={alt} sizes={sizes} placeholder="blur" className={`block h-auto w-full ${printPhoto}`} />
+      <Image src={src} alt={alt} sizes={sizes} placeholder="blur" className={`block h-auto w-full ${keepColor ? "" : printPhoto}`} />
       {caption && (
         <figcaption className={`${hand.className} px-1 pt-1 text-center text-sm leading-tight text-[#2B2A28] md:text-base`}>
           {caption}
