@@ -89,6 +89,32 @@ const smooth = (g) => {
   }
   for (let y = 0; y < H; y++) g[y] = out[y];
 };
+// Pixel-art clean-up for areas painted in a few shades (the hair): a pixel with at most `keep`
+// same-coloured pixels among its 8 neighbours is noise, and takes the most common colour around it.
+// Repeated a few times this turns speckled strands into solid clusters, like the home sprites.
+const declump = (g, only, keep = 1, passes = 3) => {
+  const H = g.length, W = g[0].length;
+  for (let p = 0; p < passes; p++) {
+    const out = g.map((r) => [...r]);
+    for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
+      const c = g[y][x];
+      if (!only.includes(c)) continue;
+      const count = {};
+      let same = 0, empty = 0;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        if (!dx && !dy) continue;
+        const n = g[y + dy][x + dx];
+        if (n === '.') { empty++; continue; }
+        if (n === c) same++;
+        count[n] = (count[n] || 0) + 1;
+      }
+      if (empty || same > keep) continue; // keep outer edges and pixels that belong to a cluster
+      const [best] = Object.entries(count).sort((a, b) => b[1] - a[1])[0];
+      if (only.includes(best)) out[y][x] = best; // only trade hair shades for hair shades
+    }
+    for (let y = 0; y < H; y++) g[y] = out[y];
+  }
+};
 // grey anti-aliasing on an outer edge becomes the solid outline
 const solidEdge = (g) => {
   const H = g.length, W = g[0].length, empty = (y, x) => y < 0 || y >= H || x < 0 || x >= W || g[y][x] === '.';
@@ -117,6 +143,7 @@ gradeHair([girl, bubble], girlColours);
 snap([girl, bubble, steam], girlColours, [...GIRL_KEYS]);
 for (const row of sparkles) for (let x = 0; x < row.length; x++) if (row[x] !== '.') row[x] = 'G'; // the home mascot's sparkle gold
 smooth(girl);
+declump(girl, 'atir');
 const GIRL = { w: girl[0].length, h: girl.length, palette: pal(girlRaw, [girl, bubble, sparkles, steam]), body: rows(girl), bubble: rows(bubble), sparkles: rows(sparkles), steam: rows(steam) };
 
 // --- the travel suitcase, with four stickers that peel off ---

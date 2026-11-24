@@ -721,7 +721,9 @@ export const ACTIVITIES = {
   drawing: { label: 'drawing', frames: 64, speed: 140 },
 };
 
-export function buildFrame(activity = 'coffee', f = 0, { blink = false } = {}) {
+// `eyes` (coffee pose only) holds one eye shape, e.g. 'happy' for the footer; default: the reference eyes
+/** @param {string} [activity] @param {number} [f] @param {{ blink?: boolean, eyes?: string | null }} [opts] */
+export function buildFrame(activity = 'coffee', f = 0, { blink = false, eyes: eyeHold = null } = {}) {
   if (activity === 'reading') return readingFrame(f, blink);
   if (activity === 'ramen') return ramenFrame(f, blink);
   if (activity === 'drawing') return drawingFrame(f, blink);
@@ -733,7 +735,7 @@ export function buildFrame(activity = 'coffee', f = 0, { blink = false } = {}) {
   if (activity === 'coffee') driftSteam(g, f);
   else removeSteam(g);
 
-  const eyeMode = blink ? 'blink' : (lift || sip) ? 'happy' : 'open';
+  const eyeMode = blink ? 'blink' : eyeHold ?? ((lift || sip) ? 'happy' : 'open');
   eyes(g, eyeMode);
 
 
