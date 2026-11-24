@@ -1,3 +1,12 @@
+import Image, { type StaticImageData } from "next/image";
+import c_ikigai from "../../../public/assets/about/books/ikigai.jpg";
+import c_think_straight from "../../../public/assets/about/books/think-straight.jpg";
+import c_days_morisaki from "../../../public/assets/about/books/days-morisaki.jpg";
+import c_hundred_startup from "../../../public/assets/about/books/100-startup.jpg";
+import c_courage_disliked from "../../../public/assets/about/books/courage-disliked.jpg";
+import c_steal_like_an_artist from "../../../public/assets/about/books/steal-like-an-artist.jpg";
+import c_hooked from "../../../public/assets/about/books/hooked.jpg";
+import c_atomic_habits from "../../../public/assets/about/books/atomic-habits.jpg";
 // The books on her desk stack (read off her photo), as spines on a little wooden shelf.
 // Hover (or focus) a spine and it slides up off the shelf.
 const BOOKS: {
@@ -7,9 +16,11 @@ const BOOKS: {
   bg: string;
   fg: string;
   h: string;
+  cover?: StaticImageData; // the real cover (from Open Library); typeset when missing
 }[] = [
   {
     title: "Ikigai",
+    cover: c_ikigai,
     spine: "IKIGAI",
     author: "Héctor García & Francesc Miralles",
     bg: "#f1ece1",
@@ -35,6 +46,7 @@ const BOOKS: {
   },
   {
     title: "Think Straight",
+    cover: c_think_straight,
     spine: "THINK STRAIGHT",
     author: "Darius Foroux",
     bg: "#e2583e",
@@ -51,6 +63,7 @@ const BOOKS: {
   },
   {
     title: "Days at the Morisaki Bookshop",
+    cover: c_days_morisaki,
     spine: "DAYS AT MORISAKI",
     author: "Satoshi Yagisawa",
     bg: "#f3dc8a",
@@ -59,6 +72,7 @@ const BOOKS: {
   },
   {
     title: "The $100 Startup",
+    cover: c_hundred_startup,
     spine: "THE $100 STARTUP",
     author: "Chris Guillebeau",
     bg: "#fbf7ef",
@@ -67,6 +81,7 @@ const BOOKS: {
   },
   {
     title: "The Courage to Be Disliked",
+    cover: c_courage_disliked,
     spine: "COURAGE·DISLIKED",
     author: "Ichiro Kishimi & Fumitake Koga",
     bg: "#f7f3ea",
@@ -75,6 +90,7 @@ const BOOKS: {
   },
   {
     title: "Steal Like an Artist",
+    cover: c_steal_like_an_artist,
     spine: "STEAL LIKE AN ARTIST",
     author: "Austin Kleon",
     bg: "#1f1e1c",
@@ -83,6 +99,7 @@ const BOOKS: {
   },
   {
     title: "Hooked",
+    cover: c_hooked,
     spine: "HOOKED",
     author: "Nir Eyal",
     bg: "#f5d33b",
@@ -91,6 +108,7 @@ const BOOKS: {
   },
   {
     title: "Atomic Habits",
+    cover: c_atomic_habits,
     spine: "ATOMIC HABITS",
     author: "James Clear",
     bg: "#efe9dc",
@@ -100,7 +118,8 @@ const BOOKS: {
 ];
 
 // Each book is a little 3D box: the spine faces you; hover (or tap) and it lifts and turns
-// a quarter to show its front cover. Covers are typeset in each book's colours.
+// a quarter to show its front cover: the real cover from Open Library where one was found,
+// otherwise typeset in the book's colours.
 const box =
   "relative block [--d:96px] [--w:25px] md:[--d:120px] md:[--w:34px] w-[var(--w)] [transform-style:preserve-3d] [transform:translateZ(calc(var(--d)/-2))] transition-transform duration-700 ease-[cubic-bezier(.2,.8,.2,1)] outline-none group-hover:[transform:translateY(-18px)_translateZ(18px)_rotateY(-90deg)] group-focus-within:[transform:translateY(-18px)_translateZ(18px)_rotateY(-90deg)] motion-reduce:transition-none";
 const face =
@@ -138,18 +157,30 @@ export function Bookshelf() {
                 className={`${face} left-[calc((var(--w)-var(--d))/2)] flex w-[var(--d)] flex-col justify-between rounded-r-[4px] p-2.5 shadow-[inset_4px_0_6px_-3px_rgba(0,0,0,0.25)] [transform:rotateY(90deg)_translateZ(calc(var(--w)/2))] md:p-3`}
                 style={{ background: b.bg, color: b.fg }}
               >
-                <span className="font-serif text-base leading-tight font-semibold">
-                  {b.title}
-                </span>
-                <span className="grid gap-1.5">
-                  <span
-                    className="h-px w-8 opacity-50"
-                    style={{ background: b.fg }}
+                {b.cover ? (
+                  <Image
+                    src={b.cover}
+                    alt=""
+                    fill
+                    sizes="120px"
+                    className="rounded-r-[4px] object-cover"
                   />
-                  <span className="text-[13px] leading-snug opacity-80">
-                    {b.author}
-                  </span>
-                </span>
+                ) : (
+                  <>
+                    <span className="font-serif text-base leading-tight font-semibold">
+                      {b.title}
+                    </span>
+                    <span className="grid gap-1.5">
+                      <span
+                        className="h-px w-8 opacity-50"
+                        style={{ background: b.fg }}
+                      />
+                      <span className="text-[13px] leading-snug opacity-80">
+                        {b.author}
+                      </span>
+                    </span>
+                  </>
+                )}
               </span>
             </span>
           </li>
