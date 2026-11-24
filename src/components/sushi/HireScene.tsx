@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "motion/react";
+import { useTheme } from "@/components/ThemeProvider";
 import { CASE, GIRL } from "../../../assets/footer/sprites.js";
 
 // The footer's sign-off scene, from Sanskriti's footer reference: "One last thing", the hire-me line
@@ -15,7 +16,7 @@ export type Social = { name: string; href: string; icon: "x" | "linkedin" | "ins
 // every sprite layer is a grid of palette keys ('.' = empty), drawn as crisp SVG rects
 const cache = new Map<string, string>();
 function pixelUrl(rows: string[], palette: Record<string, string>) {
-  const key = rows.join("\n");
+  const key = JSON.stringify(palette) + rows.join("\n"); // same grid in another palette (night) is another image
   let url = cache.get(key);
   if (url) return url;
   const H = rows.length;
@@ -277,71 +278,114 @@ export function PixelSuitcase({ links, className = "" }: { links: Partial<Record
   );
 }
 
-// ---------- Mount Fuji, a red sun, clouds and a shinkansen ----------
-function Cloud({ x, y, s = 1 }: { x: number; y: number; s?: number }) {
-  return (
-    <path
-      transform={`translate(${x} ${y}) scale(${s})`}
-      d="M0 18 H62 C66 18 66 10 60 10 C60 3 51 1 47 6 C44 -2 31 -3 28 6 C24 2 16 4 17 11 C10 9 6 13 8 18Z"
-      className="fill-bg stroke-[#d4c2ad] dark:stroke-[#5b5566]"
-      strokeWidth="1.6"
-      strokeLinejoin="round"
-    />
-  );
+// ---------- Mount Fuji, a red sun, clouds and a shinkansen, in pixel art ----------
+// The scene is drawn as vector shapes onto a tiny canvas (114×50, one pixel per art cell), each shape
+// in its own key colour at 8× size; every cell then takes the colour most of its 64 samples have, so
+// there are no blended edges, just flat pixel-art colours. Shown at 2px cells (228px) and 3px from xl (342px).
+const FUJI_W = 114;
+const FUJI_H = 50;
+const FUJI_KEYS: Record<string, [number, number, number]> = {
+  s: [255, 0, 0], // sun
+  m: [0, 255, 0], // mountain (split into a lit left face L and a shaded right face R afterwards)
+  w: [255, 255, 0], // snow (split into lit w and shaded h afterwards)
+  c: [0, 255, 255], // cloud outline
+  f: [128, 0, 0], // cloud fill
+  g: [0, 0, 255], // ground line
+  t: [255, 0, 255], // track dashes
+};
+const SS = 8; // supersampling: each art cell is read from 8×8 samples and takes the colour most of them have
+const RIDGE = 49; // cells from this column right are on the shaded side
+function rasterFuji(): string[] {
+  const cv = document.createElement("canvas");
+  cv.width = FUJI_W * SS;
+  cv.height = FUJI_H * SS;
+  const ctx = cv.getContext("2d")!;
+  ctx.scale(SS / 3, SS / 3); // shapes are in the old 342×150 units
+  const fill = (k: string, path: Path2D) => { ctx.fillStyle = `rgb(${FUJI_KEYS[k].join(",")})`; ctx.fill(path); };
+  const stroke = (k: string, path: Path2D, w = 3) => { ctx.strokeStyle = `rgb(${FUJI_KEYS[k].join(",")})`; ctx.lineWidth = w; ctx.lineJoin = "round"; ctx.stroke(path); };
+  const sun = new Path2D(); sun.arc(140, 46, 40, 0, Math.PI * 2); fill("s", sun);
+  const cloud = "M0 18 H62 C66 18 66 10 60 10 C60 3 51 1 47 6 C44 -2 31 -3 28 6 C24 2 16 4 17 11 C10 9 6 13 8 18Z";
+  for (const [x, y, sc] of [[18, 34, 1], [246, 56, 1.05]]) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(sc, sc);
+    const p = new Path2D(cloud); fill("f", p); stroke("c", p, 3 / sc);
+    ctx.restore();
+  }
+  fill("m", new Path2D("M0 132 C 40 124, 78 92, 112 58 L 124 46 Q 140 40 156 46 L 168 58 C 210 96, 280 126, 342 132Z"));
+  fill("w", new Path2D("M112 58 L124 46 Q140 40 156 46 L168 58 L162 66 L156 60 L150 72 L144 62 L138 74 L132 61 L126 70 L121 62Z"));
+  ctx.fillStyle = `rgb(${FUJI_KEYS.g.join(",")})`; ctx.fillRect(0, 132, 342, 3);
+  ctx.fillStyle = `rgb(${FUJI_KEYS.t.join(",")})`;
+  for (let x = 12; x < 330; x += 15) ctx.fillRect(x, 126, 6, 3);
+  const { data } = ctx.getImageData(0, 0, FUJI_W * SS, FUJI_H * SS);
+  const keys = Object.entries(FUJI_KEYS);
+  const rows: string[] = [];
+  for (let y = 0; y < FUJI_H; y++) {
+    let row = "";
+    for (let x = 0; x < FUJI_W; x++) {
+      const votes: Record<string, number> = {};
+      for (let sy = 0; sy < SS; sy++) for (let sx = 0; sx < SS; sx++) {
+        const i = ((y * SS + sy) * FUJI_W * SS + x * SS + sx) * 4;
+        let k = ".";
+        if (data[i + 3] > 127) {
+          let bd = Infinity;
+          for (const [key, c] of keys) { const d = (data[i] - c[0]) ** 2 + (data[i + 1] - c[1]) ** 2 + (data[i + 2] - c[2]) ** 2; if (d < bd) { bd = d; k = key; } }
+        }
+        votes[k] = (votes[k] || 0) + 1;
+      }
+      let k = Object.entries(votes).sort((p, q) => q[1] - p[1])[0][0];
+      if (k === "m") k = x < RIDGE ? "L" : "R";
+      else if (k === "w") k = x < RIDGE ? "w" : "h";
+      row += k;
+    }
+    rows.push(row);
+  }
+  return rows;
 }
+const FUJI_DAY = { s: "#e8643c", L: "#b4c1d4", R: "#94a5be", w: "#fbfbf8", h: "#d9e1ec", c: "#cdb9a2", f: "#fbf7f0", g: "#d9cbb8", t: "#cfc2b0" };
+const FUJI_NIGHT = { ...FUJI_DAY, s: "#efe0b4", c: "#5b5566", f: "#17161e", g: "#4a4655", t: "#4a4655" };
+
+// a small pixel shinkansen: white body, blue stripe, dark windows, grey outline
+const TRAIN = [
+  "..ggggggggggggggggggggggg.....",
+  ".gwkkwkkwkkwkkwkkwkkwkkwwgg...",
+  "gwwwwwwwwwwwwwwwwwwwwwwwwwkkg.",
+  "gbbbbbbbbbbbbbbbbbbbbbbbbbbbbg",
+  "gwwwwwwwwwwwwwwwwwwwwwwwwwwwwg",
+  ".gggggggggggggggggggggggggggg.",
+];
+const TRAIN_PAL = { g: "#8d98a8", w: "#fbfbf8", k: "#33435c", b: "#2d58a6" };
 
 export function FujiScene({ className = "" }: { className?: string }) {
   const still = useReducedMotion();
-  const ref = useRef<SVGSVGElement>(null);
+  const { night } = useTheme();
+  const ref = useRef<HTMLDivElement>(null);
   const seen = useInView(ref, { margin: "100px" });
+  const [rows, setRows] = useState<string[] | null>(null);
+  // drawn on the client (it needs a canvas), on the first frame after mounting
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setRows(rasterFuji()));
+    return () => cancelAnimationFrame(id);
+  }, []);
+  const cells = FUJI_W + TRAIN[0].length; // the train travels from just off the left to just off the right
   return (
-    <svg ref={ref} viewBox="0 0 342 150" aria-hidden="true" className={`overflow-visible ${className}`}>
-      <defs>
-        <linearGradient id="fuji-slope" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#b9c5d6" />
-          <stop offset="0.55" stopColor="#a3b2c8" />
-          <stop offset="1" stopColor="#8e9fb8" />
-        </linearGradient>
-        <clipPath id="fuji-track">
-          <rect x="0" y="100" width="342" height="40" />
-        </clipPath>
-      </defs>
-      {/* the sun, half behind the peak */}
-      <circle cx="140" cy="44" r="40" className="fill-[#e8643c] dark:fill-[#efe0b4]" />
-      <Cloud x={22} y={36} s={0.9} />
-      <Cloud x={248} y={58} />
-      {/* the mountain */}
-      <path d="M0 132 C 40 124, 78 92, 112 58 L 124 46 Q 140 40 156 46 L 168 58 C 210 96, 280 126, 342 132Z" fill="url(#fuji-slope)" />
-      {/* snow cap with a ragged hem */}
-      <path
-        d="M112 58 L124 46 Q140 40 156 46 L168 58 L162 66 L156 60 L150 72 L144 62 L138 74 L132 61 L126 70 L121 62Z"
-        fill="#fbfbf8"
-      />
-      <path d="M140 44 L134 70 M146 46 L150 70" stroke="#dfe6ef" strokeWidth="1.2" />
-      {/* the ground and the track */}
-      <path d="M0 132 H342" stroke="#d9cbb8" strokeWidth="1.2" className="dark:stroke-[#4a4655]" />
-      <path d="M10 126 H332" stroke="#cfc2b0" strokeWidth="1" strokeDasharray="5 4" className="dark:stroke-[#4a4655]" />
-      {/* the shinkansen glides past now and then */}
-      <g clipPath="url(#fuji-track)">
-        <motion.g
-          initial={{ x: -120 }}
-          animate={still || !seen ? { x: 150 } : { x: [-120, 360] }}
-          transition={still || !seen ? { duration: 0 } : { duration: 9, ease: "linear", repeat: Infinity, repeatDelay: 5 }}
-        >
-          <path d="M0 112 H84 C98 112 110 117 114 124 H0Z" fill="#fbfbf8" stroke="#9aa6b6" strokeWidth="0.8" />
-          <path d="M0 119 H104 L108 121 H0Z" fill="#2d58a6" />
-          {[8, 20, 32, 44, 56, 68].map((x) => (
-            <rect key={x} x={x} y="114" width="8" height="3" rx="1" fill="#33435c" />
-          ))}
-          <path d="M84 113.5 C92 113.5 99 115.5 103 118 H86Z" fill="#33435c" />
-        </motion.g>
-      </g>
-    </svg>
+    <div ref={ref} aria-hidden="true" className={`overflow-hidden ${className}`} style={{ aspectRatio: `${FUJI_W} / ${FUJI_H}` }}>
+      {rows && <Layer rows={rows} palette={night ? FUJI_NIGHT : FUJI_DAY} />}
+      {/* the train runs along the track (rows 36–41), moving a whole cell at a time */}
+      <motion.div
+        className="absolute"
+        style={{ width: `${(TRAIN[0].length / FUJI_W) * 100}%`, aspectRatio: `${TRAIN[0].length} / ${TRAIN.length}`, top: `${(36 / FUJI_H) * 100}%`, left: `${(-TRAIN[0].length / FUJI_W) * 100}%` }}
+        initial={{ x: "0%" }}
+        animate={still || !seen ? { x: `${(60 / TRAIN[0].length) * 100}%` } : { x: ["0%", `${(cells / TRAIN[0].length) * 100}%`] }}
+        transition={still || !seen ? { duration: 0 } : { duration: 9, repeat: Infinity, repeatDelay: 5, ease: (t: number) => Math.floor(t * cells) / cells }}
+      >
+        <Layer rows={TRAIN} palette={TRAIN_PAL} />
+      </motion.div>
+    </div>
   );
 }
 
 // ---------- the heading, underline and button ----------
-export function HireHeading({ calendly }: { calendly: string }) {
+// `calendly` is null until her link is in: the button then shows but isn't a link yet
+export function HireHeading({ calendly }: { calendly: string | null }) {
   const ref = useRef<HTMLSpanElement>(null);
   const seen = useInView(ref, { once: true, margin: "-60px" });
   const still = useReducedMotion();
@@ -367,15 +411,23 @@ export function HireHeading({ calendly }: { calendly: string }) {
           </svg>
         </span>
       </h2>
-      <a
-        href={calendly}
-        target="_blank"
-        rel="noreferrer"
-        className="group mt-3 inline-flex items-center gap-2 rounded-full border-[1.5px] border-[#c23a2b] px-6 py-2.5 text-[14px] tracking-[0.08em] text-[#c23a2b] uppercase transition-colors hover:bg-[#c23a2b] hover:text-[#fffaf3] dark:border-[#ec7a62] dark:text-[#ec7a62] dark:hover:bg-[#ec7a62] dark:hover:text-[#17161e]"
-      >
-        Let&apos;s make something good
-        <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
-      </a>
+      {(() => {
+        const cls =
+          "group mt-3 inline-flex items-center gap-2 rounded-full border-[1.5px] border-[#c23a2b] px-6 py-2.5 text-[14px] tracking-[0.08em] text-[#c23a2b] uppercase transition-colors dark:border-[#ec7a62] dark:text-[#ec7a62]";
+        const label = (
+          <>
+            Let&apos;s make something good
+            <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+          </>
+        );
+        return calendly ? (
+          <a href={calendly} target="_blank" rel="noreferrer" className={`${cls} hover:bg-[#c23a2b] hover:text-[#fffaf3] dark:hover:bg-[#ec7a62] dark:hover:text-[#17161e]`}>
+            {label}
+          </a>
+        ) : (
+          <span className={cls}>{label}</span>
+        );
+      })()}
     </div>
   );
 }
@@ -385,12 +437,12 @@ const SOCIAL_ORDER: Social["icon"][] = ["x", "linkedin", "instagram"];
 // Below xl the sprites sit in a row under the heading; from xl they flank it like the reference.
 // Pixel sprites are drawn at whole screen pixels per cell (girl 99 cells: 2px = 198px;
 // suitcase 46 cells: 2px) so every pixel is the same size and stays crisp.
-export function HireScene({ calendly, stickers }: { calendly: string; stickers: Partial<Record<StickerName, Social>> }) {
+export function HireScene({ calendly, stickers }: { calendly: string | null; stickers: Partial<Record<StickerName, Social>> }) {
   return (
     <div className="relative pt-6 pb-[108px] xl:pb-[44px]">
       <HireHeading calendly={calendly} />
       {/* Fuji sits a little above the belt so its train stays in view; Sanskriti and the bag are tucked ~10px behind the back rail (its top edge is 74px below this stage) */}
-      <FujiScene className="absolute right-[max(-24px,calc(50%-330px))] bottom-[-30px] w-[210px] md:right-[max(0px,calc(50%-390px))] md:w-[300px] xl:right-auto xl:left-[calc(50%+284px)] xl:w-[342px]" />
+      <FujiScene className="absolute right-[max(-24px,calc(50%-330px))] bottom-[-30px] w-[228px] md:right-[max(0px,calc(50%-370px))] xl:right-auto xl:left-[calc(50%+284px)] xl:w-[342px]" />
       <PixelSuitcase
         links={stickers}
         className="absolute right-[max(20px,calc(50%-300px))] bottom-[-84px] w-[92px] md:right-[max(24px,calc(50%-300px))] xl:right-auto xl:left-[calc(50%+193px)]"
