@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
+import { Testimonial } from "@/components/casestudy/Testimonial";
 import { Footer } from "@/components/Footer";
 import { CaseStudyFrame, type TocItem } from "@/components/casestudy/Margin";
 import {
@@ -15,7 +16,6 @@ import {
   Fig,
   FlowCompare,
   PlayLink,
-  QuoteCard,
   RiderCard,
   Section,
   Solution,
@@ -666,14 +666,35 @@ export default function BounceDaily() {
           eyebrow="Learnings and reflections"
           headline="Shipped on Android in 3 months."
         >
-          <QuoteCard by="Product Manager, Bounce Daily">
-            Since our users are primarily gig and delivery riders, every
-            interaction needed to be clear, trustworthy, and easy to understand.
-            She quickly grasped these nuances and translated them into
-            thoughtful user flows and intuitive interfaces. The redesign
-            unlocked several new product capabilities, and we saw noticeable
-            improvements in rider onboarding and plan adoption after launch.
-          </QuoteCard>
+          {/* Aum's testimonial in the shared card (her ask): words and photo from her Framer testimonial card */}
+          <Testimonial
+            pull={
+              <>
+                She quickly grasped these nuances and translated them into
+                thoughtful user flows and intuitive interfaces.
+              </>
+            }
+            name="Aum Vats"
+            role="Product Manager, Bounce Daily"
+            photo="/assets/cases/bounce/aum-vats.webp"
+            logo={{
+              src: "/assets/cases/bounce/bounce-daily-logo.svg",
+              w: 77,
+              h: 67,
+              alt: "Bounce Daily",
+              className: "h-8 w-auto",
+            }}
+            quoteColor="#c8553b"
+          >
+            Sanskriti redesigned the Bounce Daily Rider App from the ground up
+            as our Product Designer. Since our users are primarily gig and
+            delivery riders, every interaction needed to be clear, trustworthy,
+            and easy to understand. She quickly grasped these nuances and
+            translated them into thoughtful user flows and intuitive interfaces.
+            The redesign unlocked several new product capabilities, and we saw
+            noticeable improvements in rider onboarding and plan adoption after
+            launch. I highly recommend working with her.
+          </Testimonial>
           <Body>
             He later told me I&apos;d set the first benchmark for every designer
             who works on the app after me.
