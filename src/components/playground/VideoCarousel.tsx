@@ -39,11 +39,11 @@ function Strip({ h, copy }: { h: number; copy?: boolean }) {
 }
 
 export function VideoCarousel() {
-  // cards are 240px tall on desktop, 170px on phones
-  const [height, setHeight] = useState(240);
+  // cards are 340px tall on desktop, 250px on phones (tall enough for the phone mockups to read)
+  const [height, setHeight] = useState(340);
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 719px)");
-    const set = () => setHeight(mq.matches ? 170 : 240);
+    const set = () => setHeight(mq.matches ? 250 : 340);
     set();
     mq.addEventListener("change", set);
     return () => mq.removeEventListener("change", set);
@@ -68,7 +68,7 @@ export function VideoCarousel() {
     <div
       role="region"
       aria-label="Interaction videos"
-      className={`relative -mx-6 block py-6 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] md:mx-[calc(50%-50vw)] ${still ? "overflow-x-auto" : "overflow-hidden"}`}
+      className={`relative -mx-6 block pt-6 pb-24 md:pb-32 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] md:mx-[calc(50%-50vw)] ${still ? "overflow-x-auto" : "overflow-hidden"}`}
       onPointerEnter={() => setHeld(true)}
       onPointerLeave={() => setHeld(false)}
     >
