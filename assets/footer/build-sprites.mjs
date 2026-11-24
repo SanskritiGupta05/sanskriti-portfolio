@@ -118,7 +118,9 @@ defringe(girl, girlColours); defringe(bubble, girlColours); defringe(sparkles, g
 gradeHair([girl, bubble], girlColours);
 snap([girl, bubble, steam], girlColours, [...GIRL_KEYS]);
 for (const row of sparkles) for (let x = 0; x < row.length; x++) if (row[x] !== '.') row[x] = 'G'; // the home mascot's sparkle gold
-const GIRL = { w: girl[0].length, h: girl.length, palette: pal(girlRaw, [girl, bubble, sparkles, steam]), body: rows(girl), bubble: rows(bubble), sparkles: rows(sparkles), steam: rows(steam) };
+// the reference's speech bubble is taken out of her (and still counts in the hair grading above) but not
+// exported: the footer draws its own crisp bubble that cycles through her socials
+const GIRL = { w: girl[0].length, h: girl.length, palette: pal(girlRaw, [girl, sparkles, steam]), body: rows(girl), sparkles: rows(sparkles), steam: rows(steam) };
 
 // --- the travel suitcase, with four stickers that peel off ---
 const caseRaw = load('./case.raw.json');

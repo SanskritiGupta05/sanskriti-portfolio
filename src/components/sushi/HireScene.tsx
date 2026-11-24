@@ -45,11 +45,115 @@ function Layer({ rows, palette, className = "" }: { rows: string[]; palette: Rec
 }
 
 // ---------- pixel Sanskriti ----------
-export function PixelGirl({ className = "" }: { className?: string }) {
+// ---------- the speech bubble: a heart, then her socials, one a second ----------
+// Drawn here as clean pixel art (the bubble in the reference was soft and uneven).
+// Keys: a = outline, o = cream fill, s = soft shade inside the bottom edge, X = icon ink.
+const BUBBLE_ROWS = [
+  "...XXXXXXXXXXX...",
+  "..XoooooooooooX..",
+  ".XoooooooooooooX.",
+  "XoooooooooooooooX",
+  "XoooooooooooooooX",
+  "XoooooooooooooooX",
+  "XoooooooooooooooX",
+  "XoooooooooooooooX",
+  "XoooooooooooooooX",
+  "XoooooooooooooooX",
+  "XsssssssssssssssX",
+  ".XsssssssssssssX.",
+  "..XooXXXXXXXXXX..",
+  "..XoX............",
+  "..XX.............",
+];
+// 9×9 pixel icons, drawn at the bubble's centre (columns 4–12, rows 2–10)
+const ICONS: Record<"heart" | Social["icon"], { rows: string[]; ink: string }> = {
+  heart: {
+    ink: "#b3302c",
+    rows: [".XX...XX.", "XXXX.XXXX", "XXXXXXXXX", "XXXXXXXXX", ".XXXXXXX.", "..XXXXX..", "...XXX...", "....X....", "........."],
+  },
+  x: {
+    ink: "#251513",
+    // one thick stroke and one thin, like the X logo
+    rows: ["XX......X", ".XX....X.", "..XX..X..", "...XXX...", "....XX...", "...X.XX..", "..X...XX.", ".X.....XX", "X.......X"],
+  },
+  linkedin: {
+    ink: "#2867b2",
+    rows: [".XXXXXXX.", "XXXXXXXXX", "X.XXXXXXX", "XXXXXXXXX", "X.X....XX", "X.X.XX.XX", "X.X.XX.XX", "X.X.XX.XX", ".XXXXXXX."],
+  },
+  instagram: {
+    ink: "#c43a6e",
+    // rounded frame, the lens ring, and the little dot on its own in the top corner
+    rows: [".XXXXXXX.", "X.....X.X", "X.......X", "X..XXX..X", "X.X...X.X", "X.X...X.X", "X..XXX..X", "X.......X", ".XXXXXXX."],
+  },
+};
+const BUBBLE_W = BUBBLE_ROWS[0].length;
+const BUBBLE_H = BUBBLE_ROWS.length;
+function bubbleGrid(icon: keyof typeof ICONS) {
+  const g = BUBBLE_ROWS.map((r) => [...r]);
+  ICONS[icon].rows.forEach((row, y) => [...row].forEach((c, x) => { if (c === "X") g[2 + y][4 + x] = "i"; }));
+  return g.map((r) => r.join(""));
+}
+const bubblePalette = (icon: keyof typeof ICONS) => ({ X: "#251513", o: "#fdf3e4", s: "#f1dfc6", i: ICONS[icon].ink });
+
+// cycles heart → each social, one a second; clicking takes you to the social on show.
+// Hovering or focusing it holds the current one so it's easy to click.
+function SpeechBubble({ socials, className = "", style }: { socials: Social[]; className?: string; style?: React.CSSProperties }) {
+  const still = useReducedMotion();
+  const steps: ("heart" | Social)[] = ["heart", ...socials];
+  const [i, setI] = useState(0);
+  const [held, setHeld] = useState(false);
+  useEffect(() => {
+    if (held) return;
+    const t = window.setInterval(() => setI((v) => (v + 1) % steps.length), 1000);
+    return () => window.clearInterval(t);
+  }, [held, steps.length]);
+  const step = steps[i];
+  const icon = step === "heart" ? "heart" : step.icon;
+  const body = (
+    <motion.span
+      key={icon}
+      className="relative block size-full"
+      initial={still ? false : { scale: 0.8, y: 2 }}
+      animate={{ scale: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 600, damping: 18 }}
+    >
+      <Layer rows={bubbleGrid(icon)} palette={bubblePalette(icon)} />
+    </motion.span>
+  );
+  const hold = { onPointerEnter: () => setHeld(true), onPointerLeave: () => setHeld(false), onFocus: () => setHeld(true), onBlur: () => setHeld(false) };
+  return (
+    <motion.div
+      className={`absolute ${className}`}
+      style={{ ...style, aspectRatio: `${BUBBLE_W} / ${BUBBLE_H}` }}
+      animate={still ? undefined : { y: ["0%", "-8%", "0%"] }}
+      transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+    >
+      {step === "heart" ? (
+        <span className="block size-full" {...hold}>{body}</span>
+      ) : (
+        <a
+          href={step.href}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`${step.name} (opens in a new tab)`}
+          className="group block size-full cursor-pointer rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[#c23a2b]"
+          {...hold}
+        >
+          {body}
+          <span className="pointer-events-none absolute top-1/2 left-full ml-1.5 -translate-y-1/2 rounded-md bg-head px-2 py-0.5 text-[11px] leading-4 whitespace-nowrap text-bg opacity-0 shadow-[0_4px_10px_-6px_rgba(0,0,0,0.5)] transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+            {step.name} ↗
+          </span>
+        </a>
+      )}
+    </motion.div>
+  );
+}
+
+export function PixelGirl({ className = "", socials = [] }: { className?: string; socials?: Social[] }) {
   const still = useReducedMotion();
   const loop = (d: number, delay = 0) => ({ duration: d, delay, repeat: Infinity, ease: "easeInOut" as const });
   return (
-    <div className={className || "relative"} style={{ aspectRatio: `${GIRL.w} / ${GIRL.h}` }} role="img" aria-label="Pixel-art Sanskriti resting her chin on her hands, smiling">
+    <div className={className || "relative"} style={{ aspectRatio: `${GIRL.w} / ${GIRL.h}` }} role="group" aria-label="Pixel-art Sanskriti resting her chin on her hands, smiling">
       <Layer rows={GIRL.body} palette={GIRL.palette} />
       {/* steam curling up from her mug */}
       <motion.div className="absolute inset-0" animate={still ? undefined : { y: ["0%", "-2%", "0%"], opacity: [0.95, 0.55, 0.95] }} transition={loop(3.2)}>
@@ -59,10 +163,8 @@ export function PixelGirl({ className = "" }: { className?: string }) {
       <motion.div className="absolute inset-0" animate={still ? undefined : { opacity: [1, 0.25, 1, 1] }} transition={{ ...loop(2.6, 0.4), times: [0, 0.3, 0.6, 1] }}>
         <Layer rows={GIRL.sparkles} palette={GIRL.palette} />
       </motion.div>
-      {/* the heart bubble bobs */}
-      <motion.div className="absolute inset-0" animate={still ? undefined : { y: ["0%", "-2.4%", "0%"] }} transition={loop(2.8)}>
-        <Layer rows={GIRL.bubble} palette={GIRL.palette} />
-      </motion.div>
+      {/* the speech bubble by her head: a heart, then her socials, one a second (3px cells: 51px wide) */}
+      <SpeechBubble socials={socials} className="z-10 w-[51px]" style={{ left: "72%", top: "2%" }} />
     </div>
   );
 }
@@ -279,6 +381,7 @@ export function HireHeading({ calendly }: { calendly: string }) {
 }
 
 // ---------- the whole stage over the belt ----------
+const SOCIAL_ORDER: Social["icon"][] = ["x", "linkedin", "instagram"];
 // Below xl the sprites sit in a row under the heading; from xl they flank it like the reference.
 // Pixel sprites are drawn at whole screen pixels per cell (girl 99 cells: 2px = 198px;
 // suitcase 46 cells: 2px) so every pixel is the same size and stays crisp.
@@ -292,7 +395,7 @@ export function HireScene({ calendly, stickers }: { calendly: string; stickers: 
         links={stickers}
         className="absolute right-[max(20px,calc(50%-300px))] bottom-[-84px] w-[92px] md:right-[max(24px,calc(50%-300px))] xl:right-auto xl:left-[calc(50%+193px)]"
       />
-      <PixelGirl className="absolute bottom-[-84px] left-[max(12px,calc(50%-320px))] w-[198px] xl:left-[calc(50%-440px)]" />
+      <PixelGirl socials={SOCIAL_ORDER.map((k) => Object.values(stickers).find((x) => x?.icon === k)).filter((x): x is Social => !!x)} className="absolute bottom-[-84px] left-[max(12px,calc(50%-320px))] w-[198px] xl:left-[calc(50%-440px)]" />
     </div>
   );
 }
