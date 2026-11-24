@@ -11,12 +11,11 @@ import { LazyVideo } from "./LazyVideo";
 const A = "/assets/playground";
 const CLIPS = [
   // the two phone recordings are cropped to the screen only (no phone frame), same card as the rest
-  { name: "spider-verse-screen", w: 538, h: 1244, alt: "A phone revealing a holographic Spider-Verse character card" },
+  { name: "spider-verse-screen", w: 538, h: 1244, screen: true, alt: "A phone revealing a holographic Spider-Verse character card" },
   { name: "chat", w: 1458, h: 1414, alt: "A tutor chat interface with lively message animations" },
   { name: "pixel-buddy", w: 1920, h: 1150, alt: "A context-window meter with a tiny pixel buddy reacting while an agent works" },
-  { name: "mood-screen", w: 670, h: 1436, alt: "A mood check-in app: turning a weather dial changes how the cloud feels" },
+  { name: "mood-screen", w: 670, h: 1436, screen: true, alt: "A mood check-in app: turning a weather dial changes how the cloud feels" },
   { name: "folder", w: 720, h: 720, alt: "A file drawer whose coloured folders lift on hover" },
-  { name: "loading", w: 1892, h: 1246, alt: "A 'Deploying' loading pill with an animated little icon" },
 ];
 
 const SPEED = 40; // px per second
@@ -26,13 +25,17 @@ function Strip({ h, copy }: { h: number; copy?: boolean }) {
   return (
     <div className="flex shrink-0" style={{ gap: GAP, paddingRight: GAP }} aria-hidden={copy || undefined}>
       {CLIPS.map((c) => {
+        const w = Math.round(((h - 12) * c.w) / c.h) + 12;
+        // phone screens follow the iPhone's own corner curve (about 14% of the screen's width),
+        // and the white mat around them follows the same curve, 6px further out
+        const inner = "screen" in c ? Math.round((w - 12) * 0.14) : 13;
         return (
           <div
             key={c.name}
-            className="shrink-0 rounded-[18px] bg-bg p-1.5 shadow-[0_18px_40px_-24px_rgba(60,40,20,0.35)] ring-1 ring-line"
-            style={{ width: Math.round(((h - 12) * c.w) / c.h) + 12 }}
+            className="shrink-0 bg-bg p-1.5 shadow-[0_18px_40px_-24px_rgba(60,40,20,0.35)] ring-1 ring-line"
+            style={{ width: w, borderRadius: inner + 6 }}
           >
-            <div className="overflow-hidden rounded-[13px]">
+            <div className="overflow-hidden" style={{ borderRadius: inner }}>
               <LazyVideo src={`${A}/${c.name}.mp4`} poster={`${A}/${c.name}-poster.jpg`} width={c.w} height={c.h} label={copy ? "" : c.alt} />
             </div>
           </div>
