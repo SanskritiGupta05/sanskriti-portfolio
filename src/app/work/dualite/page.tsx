@@ -24,10 +24,10 @@ const TOC: TocItem[] = [
   { id: "overview", label: "Overview" },
   { id: "builder-fridays", label: "Builder Fridays" },
   { id: "podcast", label: "Design to Dev podcast" },
-  { id: "demos", label: "Product demos" },
   { id: "posts", label: "Social posts" },
   { id: "thumbnails", label: "Video thumbnails" },
   { id: "campus", label: "Campus collab" },
+  { id: "demos", label: "Product demos" },
 ];
 
 // her work shown as-is: no frame or outline, not re-compressed
@@ -112,19 +112,6 @@ export default function Dualite() {
           />
         </Section>
 
-        <Section id="demos" label="Product demos" title="Built with alpha.">
-          {[
-            d("demo-fintech", 1920, 1080, "FinTech app + React Native by alpha itself"),
-            d("demo-figma-import", 1920, 1080, "Import your Figma file & integrate with alpha itself"),
-            d("demo-marketplace", 1920, 1080, "Build end-to-end marketplace with alpha"),
-            d("demo-apis", 1920, 1080, "Integrating multiple APIs with alpha"),
-            d("demo-finance-dashboard", 1920, 1080, "Build production grade finance dashboard with alpha"),
-            d("demo-no-code", 1920, 1080, "No code builder by alpha itself"),
-          ].map((p) => (
-            <Shot key={p.src} {...p} />
-          ))}
-        </Section>
-
         <Section id="posts" label="Social posts" title="Concept to launch, Figma to code.">
           <Row
             items={[
@@ -161,6 +148,18 @@ export default function Dualite() {
               d("bits-signup", 1920, 2400, "Dualite x BITS: Rohan's gift to all the BITSians, sign up now"),
             ]}
           />
+        </Section>
+        <Section id="demos" label="Product demos" title="Built with alpha.">
+          {[
+            d("demo-fintech", 1920, 1080, "FinTech app + React Native by alpha itself"),
+            d("demo-figma-import", 1920, 1080, "Import your Figma file & integrate with alpha itself"),
+            d("demo-marketplace", 1920, 1080, "Build end-to-end marketplace with alpha"),
+            d("demo-apis", 1920, 1080, "Integrating multiple APIs with alpha"),
+            d("demo-finance-dashboard", 1920, 1080, "Build production grade finance dashboard with alpha"),
+            d("demo-no-code", 1920, 1080, "No code builder by alpha itself"),
+          ].map((p) => (
+            <Shot key={p.src} {...p} />
+          ))}
           <Link href="/work#early" className="label mt-6 w-fit !text-ink underline-offset-4 hover:underline">
             ← Back to all work
           </Link>
