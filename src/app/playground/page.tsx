@@ -32,12 +32,12 @@ const vid = (name: string, w: number, h: number, alt: string, caption?: string, 
 });
 
 const ROWS: Piece[][] = [
-  [vid("diwali", 1920, 954, "Little Lights, a Diwali photo album: photos clipped into a red album under lanterns and fireworks", "Little Lights (Sound ON!)", "https://diwali-album.vercel.app")],
-  [img("mosaic.webp", 2000, 1337, "Mosaic, a bedtime story app: sign up, new releases and a story chapter on three phones")],
   [
     vid("spider-verse", 1012, 1466, "A phone revealing a holographic Spider-Verse character card", "Let's see which spider-verse chooses YOU!", "https://spider-verse-cards.netlify.app"),
     vid("mood", 1300, 1740, "A mood check-in app: turning a weather dial changes how the cloud feels", "What if checking in with yourself felt as simple as picking today's weather? 🌞🌩️⛅️ Designed this fun little interaction over the weekend! 🪄🎨"),
   ],
+  [vid("diwali", 1920, 954, "Little Lights, a Diwali photo album: photos clipped into a red album under lanterns and fireworks", "Little Lights (Sound ON!)", "https://diwali-album.vercel.app")],
+  [img("mosaic.webp", 2000, 1337, "Mosaic, a bedtime story app: sign up, new releases and a story chapter on three phones")],
   [
     img("mosaic-closeup.webp", 1684, 1817, "Close-up of the Mosaic home screen"),
     img("pandao-figma.webp", 1500, 2000, "The PanDAO onboarding screen being designed in Figma on a laptop"),
@@ -56,10 +56,7 @@ const ROWS: Piece[][] = [
     img("tab-icon.webp", 1600, 1600, "The TAB app icon: a torn receipt with an 'every spend counts' sticker"),
     img("espresso.png", 1544, 1544, "A Spotify record-player widget playing Espresso by Sabrina Carpenter"),
   ],
-  [
-    vid("chat", 1458, 1414, "A tutor chat interface with lively message animations", "making chat interfaces feel a little more alive. 🪄"),
-    vid("whimsy", 1088, 1102, "A sign-in card with a little creature peeking over the top", "trying to make the little things on the internet a little more delightful, by adding a bit of whimsy 🪄"),
-  ],
+  [vid("chat", 1458, 1414, "A tutor chat interface with lively message animations", "making chat interfaces feel a little more alive. 🪄")],
   [img("learning-controls.png", 1340, 938, "Learning player controls: play, pause, captions, hints and text buttons with Back and Next")],
   [vid("pixel-buddy", 1920, 1150, "A context-window meter with a tiny pixel buddy reacting while an agent works", "A tiny pixel buddy making the coding process a little more fun with agents 🪄")],
   [
@@ -71,15 +68,14 @@ const ROWS: Piece[][] = [
     vid("work-folder", 534, 536, "A work folder that opens to show project screens", "Work Folder - Interaction Design 🪄"),
   ],
   [vid("loading", 1892, 1246, "A 'Deploying' loading pill with an animated little icon", "Even a loading state deserves a little personality ✨")],
-  [vid("figma-proto", 796, 512, "A sticky-note to-do list prototyped in Figma, items checking off", "Been dabbling around prototyping in Figma. 🎨🧑‍🎨")],
   [
-    img("../work/keploy.webp", 1264, 945, "Keploy AI test run screen"),
-    img("../work/context-window.webp", 1044, 798, "A context window usage card"),
+    vid("whimsy", 1088, 1102, "A sign-in card with a little creature peeking over the top", "trying to make the little things on the internet a little more delightful, by adding a bit of whimsy 🪄"),
+    vid("figma-proto", 796, 512, "A sticky-note to-do list prototyped in Figma, items checking off", "Been dabbling around prototyping in Figma. 🎨🧑‍🎨"),
   ],
-  [
-    img("../work/concertpal.webp", 1400, 1140, "ConcertPal Calendar feature cards"),
-    img("../work/figma-to-react.webp", 1400, 670, "Figma to React, two folder icons"),
-  ],
+  [img("../work/keploy.webp", 1264, 945, "Keploy AI test run screen")],
+  [img("../work/context-window.webp", 1044, 798, "A context window usage card")],
+  [img("../work/concertpal.webp", 1400, 1140, "ConcertPal Calendar feature cards")],
+  [img("../work/figma-to-react.webp", 1400, 670, "Figma to React, two folder icons")],
   [img("emoji-screens.webp", 1372, 936, "Pixel-emoji app onboarding: three retro screens on green")],
 ];
 
