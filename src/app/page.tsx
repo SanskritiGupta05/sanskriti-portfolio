@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { SakuraButtonLink } from "@/components/ui/sakura-button";
 import { NameSwap } from "@/components/NameSwap";
 import { Keyword } from "@/components/Keyword";
-import { WorkArc } from "@/components/work/WorkArc";
+import { VideoCarousel } from "@/components/playground/VideoCarousel";
 import { PaperStack } from "@/components/PaperStack";
 import { CaseStudies } from "@/components/CaseStudies";
 import { VibeProjects } from "@/components/VibeProjects";
@@ -95,8 +95,8 @@ export default function Home() {
                 </div>
               </section>
 
-              {/* work visuals fanned out under the hero */}
-              <WorkArc />
+              {/* her interaction videos gliding past on their own (the static fan moved to the Playground) */}
+              <VideoCarousel />
             </main>
           </>
         }

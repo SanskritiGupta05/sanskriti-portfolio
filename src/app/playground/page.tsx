@@ -72,6 +72,14 @@ const ROWS: Piece[][] = [
   ],
   [vid("loading", 1892, 1246, "A 'Deploying' loading pill with an animated little icon", "Even a loading state deserves a little personality ✨")],
   [vid("figma-proto", 796, 512, "A sticky-note to-do list prototyped in Figma, items checking off", "Been dabbling around prototyping in Figma. 🎨🧑‍🎨")],
+  [
+    img("../work/keploy.webp", 1264, 945, "Keploy AI test run screen"),
+    img("../work/context-window.webp", 1044, 798, "A context window usage card"),
+  ],
+  [
+    img("../work/concertpal.webp", 1400, 1140, "ConcertPal Calendar feature cards"),
+    img("../work/figma-to-react.webp", 1400, 670, "Figma to React, two folder icons"),
+  ],
   [img("emoji-screens.webp", 1372, 936, "Pixel-emoji app onboarding: three retro screens on green")],
 ];
 
