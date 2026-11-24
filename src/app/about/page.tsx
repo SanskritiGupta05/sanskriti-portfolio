@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { AboutCollage } from "@/components/about/AboutCollage";
+import { Journey } from "@/components/about/Journey";
 
 export const metadata: Metadata = {
   title: "About · Sanskriti",
@@ -15,6 +16,7 @@ export default function AboutPage() {
       <Nav />
       <main>
         <AboutCollage />
+        <Journey />
       </main>
       <Footer />
     </div>
