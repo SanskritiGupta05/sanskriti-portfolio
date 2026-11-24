@@ -112,9 +112,10 @@ function Chopsticks() {
 
 // optional slots (all empty by default): `noren` replaces the plain noren drawing, `above` sits in the
 // open space over the noren, `aside` is pinned beside the noren, `below` comes after the belt
-type Slots = { noren?: ReactNode; above?: ReactNode; aside?: ReactNode; below?: ReactNode };
+// `onPick` hears about every sushi a visitor picks up, with its plate colour
+type Slots = { noren?: ReactNode; above?: ReactNode; aside?: ReactNode; below?: ReactNode; onPick?: (plate: string) => void };
 
-export function SushiBelt({ noren, above, aside, below }: Slots = {}) {
+export function SushiBelt({ noren, above, aside, below, onPick }: Slots = {}) {
   const box = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
   const onScreen = useInView(box, { margin: "200px 0px" });
@@ -152,6 +153,7 @@ export function SushiBelt({ noren, above, aside, below }: Slots = {}) {
   const [eaten, setEaten] = useState<Set<number>>(() => new Set());
   const [picking, setPicking] = useState<Map<number, Side>>(() => new Map());
   const pick = (id: number, side: Side) => {
+    onPick?.(MENU[((id % MENU.length) + MENU.length) % MENU.length].plate);
     if (still) return setEaten((e) => new Set(e).add(id));
     setPicking((p) => new Map(p).set(id, side));
   };
@@ -199,7 +201,7 @@ export function SushiBelt({ noren, above, aside, below }: Slots = {}) {
       {above}
 
       {/* the noren over the counter */}
-      <div className={`relative grid justify-items-center ${above ? "mt-[100px]" : "mt-[180px]"}`}>
+      <div className={`relative grid justify-items-center ${above ? "mt-16" : "mt-[180px]"}`}>
         {aside}
         {noren ?? <Art svg={NOREN} w={220} h={76} />}
       </div>

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { PALETTE, buildFrame } from "../../../assets/mascot/mascot.js";
 
 // The footer noren with Sanskriti's socials on its three panels (X · LinkedIn · Instagram).
 // Same drawing as NOREN in art.ts (220×76: a wooden rod and three red panels, a steaming bowl
@@ -12,8 +11,7 @@ import { PALETTE, buildFrame } from "../../../assets/mascot/mascot.js";
 //   crest  – hovering a panel makes it sway and its printed crest turns into the logo
 //   tags   – hovering the noren lifts it in a breeze and three wooden tags pop up on the rod
 //   enter  – clicking the noren swings all three panels open onto a lit doorway with the links
-//   peek   – hovering a panel: pixel Sanskriti pops up over the rod and the crest turns into the logo
-export type NorenVariant = "part" | "crest" | "tags" | "enter" | "peek";
+export type NorenVariant = "part" | "crest" | "tags" | "enter";
 
 export type Social = { name: string; href: string; icon: "x" | "linkedin" | "instagram" };
 
@@ -129,7 +127,6 @@ export function SocialNoren({ variant, socials }: { variant: NorenVariant; socia
       {variant === "crest" && <Crest {...props} />}
       {variant === "tags" && <Tags {...props} />}
       {variant === "enter" && <Enter {...props} />}
-      {variant === "peek" && <Peek {...props} />}
     </div>
   );
 }
@@ -351,97 +348,3 @@ function Enter({ socials }: { socials: Social[] }) {
   );
 }
 
-// Pixel Sanskriti's head and shoulders, cut from the coffee pose (her reference sprite, unchanged),
-// so she can peek over the noren rod. Sparkles are left out. 2 screen px per art pixel keeps it chunky.
-const CROP = { x: 3, y: 2, w: 56, h: 41 };
-const FACE_SCALE = 2;
-function faceSvg(blink: boolean) {
-  const g = buildFrame("coffee", 0, { blink }) as string[][];
-  let rects = "";
-  for (let y = CROP.y; y < CROP.y + CROP.h; y++) {
-    let x = CROP.x;
-    while (x < CROP.x + CROP.w) {
-      const c = g[y][x];
-      if (c === "." || c === "G") { x++; continue; }
-      let run = 1;
-      while (x + run < CROP.x + CROP.w && g[y][x + run] === c) run++;
-      rects += `<rect x="${x - CROP.x}" y="${y - CROP.y}" width="${run}" height="1" fill="${(PALETTE as Record<string, string>)[c]}"/>`;
-      x += run;
-    }
-  }
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${CROP.w} ${CROP.h}" width="${CROP.w * FACE_SCALE}" height="${CROP.h * FACE_SCALE}" shape-rendering="crispEdges">${rects}</svg>`;
-}
-const FACES = typeof window === "undefined" ? null : { open: faceSvg(false), blink: faceSvg(true) };
-
-function Face({ blink }: { blink: boolean }) {
-  const svg = (FACES ?? { open: faceSvg(false), blink: faceSvg(true) })[blink ? "blink" : "open"];
-  return <span aria-hidden="true" className="block [&_svg]:block" dangerouslySetInnerHTML={{ __html: svg }} />;
-}
-
-// E · peek: hover a panel and pixel Sanskriti pops up over the rod above it (a little tilt, a blink),
-// while the panel sways and its crest turns into the logo
-function Peek({ socials }: { socials: Social[] }) {
-  const canHover = useCanHover();
-  const still = useReducedMotion();
-  const [on, setOn] = useState<number | null>(null);
-  const [blink, setBlink] = useState(false);
-  useEffect(() => {
-    if (on === null) return;
-    const t = [window.setTimeout(() => setBlink(true), 700), window.setTimeout(() => setBlink(false), 860)];
-    return () => t.forEach(clearTimeout);
-  }, [on]);
-  const fw = CROP.w * FACE_SCALE;
-  const fh = CROP.h * FACE_SCALE;
-  return (
-    <>
-      {/* the face rises from behind the rod; everything below the rod is cut off */}
-      <div aria-hidden="true" className="pointer-events-none absolute overflow-hidden" style={{ left: 110 - fw, width: fw * 2, bottom: 76 - 6, height: fh + 12 }}>
-        <AnimatePresence>
-          {on !== null && (
-            <motion.div
-              key={on}
-              className="absolute bottom-0"
-              style={{ left: PANEL_X[on] + PANEL_W / 2 - (110 - fw), x: "-50%", scaleX: on === 2 ? -1 : 1 }}
-              initial={{ y: fh * 0.75 }}
-              animate={{ y: 0, rotate: still ? 0 : on === 1 ? 0 : on === 0 ? -6 : 6 }}
-              exit={{ y: fh * 0.75, transition: { duration: 0.18 } }}
-              transition={{ type: "spring", stiffness: 380, damping: 22 }}
-            >
-              <Face blink={blink} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-      {socials.map((s, i) => {
-        const open = on === i || !canHover;
-        return (
-          <motion.a
-            key={s.name}
-            href={s.href}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={s.name}
-            className="absolute z-10 block outline-none"
-            style={{ ...slot(i), originY: 0 }}
-            animate={on === i && !still ? { rotate: [0, 4, -3, 1.5, 0] } : { rotate: 0 }}
-            transition={{ duration: 0.9, ease: "easeOut" }}
-            onPointerEnter={(e) => e.pointerType === "mouse" && setOn(i)}
-            onPointerLeave={(e) => e.pointerType === "mouse" && setOn(null)}
-            onFocus={() => setOn(i)}
-            onBlur={() => setOn(null)}
-          >
-            <Cloth crest={i === 1 ? <motion.g animate={{ opacity: open ? 0 : 1 }}><Bowl /></motion.g> : undefined} />
-            <motion.span
-              className="absolute inset-0 grid place-items-center pb-1 text-[#fdf3ea]"
-              initial={false}
-              animate={{ opacity: open ? 1 : 0, scale: open ? 1 : 0.6 }}
-              transition={{ duration: 0.25 }}
-            >
-              <SocialIcon icon={s.icon} className="size-[22px]" />
-            </motion.span>
-          </motion.a>
-        );
-      })}
-    </>
-  );
-}
