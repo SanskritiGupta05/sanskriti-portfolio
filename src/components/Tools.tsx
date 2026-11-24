@@ -11,7 +11,7 @@ export const TOOLS: Record<ToolId, { name: string; logo: string; w: number; h: n
   claude: { name: "Claude", logo: "/assets/tools/claude.svg", w: 24, h: 24 },
   chatgpt: { name: "ChatGPT", logo: "/assets/tools/chatgpt.svg", w: 24, h: 24, invertDark: true },
   cursor: { name: "Cursor", logo: "/assets/tools/cursor.svg", w: 24, h: 24 },
-  xcode: { name: "Xcode", logo: "/assets/tools/xcode.svg", w: 40, h: 40 },
+  xcode: { name: "Xcode", logo: "/assets/tools/xcode-tile.svg", w: 40, h: 40 },
   photoshop: { name: "Adobe Photoshop", logo: "/assets/tools/photoshop.svg", w: 240, h: 234 },
   illustrator: { name: "Adobe Illustrator", logo: "/assets/tools/illustrator.svg", w: 240, h: 234 },
 };
