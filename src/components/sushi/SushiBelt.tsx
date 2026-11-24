@@ -113,9 +113,17 @@ function Chopsticks() {
 // optional slots (all empty by default): `noren` replaces the plain noren drawing, `above` sits in the
 // open space over the noren, `aside` is pinned beside the noren, `below` comes after the belt
 // `onPick` hears about every sushi a visitor picks up, with its plate colour
-type Slots = { noren?: ReactNode; above?: ReactNode; aside?: ReactNode; below?: ReactNode; onPick?: (plate: string) => void };
+// `noren={null}` leaves the noren out; `branchTop` is how far down the cherry branches hang (px)
+type Slots = {
+  noren?: ReactNode;
+  above?: ReactNode;
+  aside?: ReactNode;
+  below?: ReactNode;
+  onPick?: (plate: string) => void;
+  branchTop?: number;
+};
 
-export function SushiBelt({ noren, above, aside, below, onPick }: Slots = {}) {
+export function SushiBelt({ noren, above, aside, below, onPick, branchTop = 150 }: Slots = {}) {
   const box = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
   const onScreen = useInView(box, { margin: "200px 0px" });
@@ -187,9 +195,12 @@ export function SushiBelt({ noren, above, aside, below, onPick }: Slots = {}) {
           aria-hidden="true"
           className={`pointer-events-none absolute top-0 hidden h-full w-[380px] overflow-hidden md:block ${right ? "right-0 -scale-x-100" : "left-0"}`}
         >
-          <Shoji className="absolute top-[252px] left-0 w-[84px]" />
-          <Branch className="absolute top-[150px] left-0 w-[380px]" />
-          <div className="absolute" style={{ left: HANG_X * (380 / 270) - 34, top: 150 + (HANG_Y - 4) * (380 / 270) }}>
+          {/* the shoji stands on the belt: its bottom is hidden behind the rails */}
+          <Shoji className="absolute bottom-[28px] left-0 w-[84px]" />
+          <div className="absolute left-0 w-[380px]" style={{ top: branchTop }}>
+            <Branch className="block w-full" />
+          </div>
+          <div className="absolute" style={{ left: HANG_X * (380 / 270) - 34, top: branchTop + (HANG_Y - 4) * (380 / 270) }}>
             <Lantern className="w-[68px]" delay={right ? 1.4 : 0} />
           </div>
         </div>
@@ -201,10 +212,12 @@ export function SushiBelt({ noren, above, aside, below, onPick }: Slots = {}) {
       {above}
 
       {/* the noren over the counter */}
-      <div className={`relative grid justify-items-center ${above ? "mt-16" : "mt-[180px]"}`}>
-        {aside}
-        {noren ?? <Art svg={NOREN} w={220} h={76} />}
-      </div>
+      {noren !== null && (
+        <div className={`relative grid justify-items-center ${above ? "mt-16" : "mt-[180px]"}`}>
+          {aside}
+          {noren ?? <Art svg={NOREN} w={220} h={76} />}
+        </div>
+      )}
 
       {/* the belt */}
       <div
