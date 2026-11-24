@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
+import { Testimonial } from "@/components/casestudy/Testimonial";
 import { Footer } from "@/components/Footer";
 import { Ticket } from "@/components/casestudy/pieces";
 import Image from "next/image";
@@ -239,7 +240,7 @@ export default function Keploy() {
           "--marker-height": "13px",
         } as React.CSSProperties
       }
-      className="w-full [&_nav[aria-label=Contents]]:font-serif [&_nav[aria-label=Contents]_.label]:text-[15px] [&_nav[aria-label=Contents]_.label]:tracking-normal [&_nav[aria-label=Contents]_.label]:normal-case [&_nav[aria-label=Contents]_a]:text-[15px]"
+      className="w-full [&_article>section>.label:first-child]:flex [&_article>section>.label:first-child]:items-center [&_article>section>.label:first-child]:gap-2.5 [&_article>section>.label:first-child]:font-mono [&_article>section>.label:first-child]:!text-[14px] [&_article>section>.label:first-child]:font-bold [&_article>section>.label:first-child]:!tracking-[0.14em] [&_article>section>.label:first-child]:!text-(--cs-accent) [&_article>section>.label:first-child]:before:content-[''] [&_article>section>.label:first-child]:before:size-[7px] [&_article>section>.label:first-child]:before:shrink-0 [&_article>section>.label:first-child]:before:rounded-full [&_article>section>.label:first-child]:before:bg-(--cs-accent) [&_article>section>.label:first-child]:before:shadow-[0_0_0_3px_color-mix(in_srgb,var(--cs-accent)_35%,transparent)] [&_nav[aria-label=Contents]]:font-serif [&_nav[aria-label=Contents]_.label]:text-[15px] [&_nav[aria-label=Contents]_.label]:tracking-normal [&_nav[aria-label=Contents]_.label]:normal-case [&_nav[aria-label=Contents]_a]:text-[15px]"
     >
       <div className="mx-auto max-w-[826px] px-6">
         <Nav />
@@ -701,57 +702,31 @@ export default function Keploy() {
 
         <Section id="words" label="Kind words">
           {/* her client's testimonial (words, photo from her Framer testimonial card; logo from her Keploy board) */}
-          <figure className="skeu relative overflow-hidden rounded-3xl px-6 pt-10 pb-6 sm:px-10 sm:pt-12">
-            <span
-              aria-hidden="true"
-              className="absolute top-2 left-5 font-serif text-[96px] leading-none text-[#F8904A]/35 sm:left-8"
-            >
-              &ldquo;
-            </span>
-            <blockquote className="relative grid gap-5">
-              <p className="max-w-[30ch] font-serif text-h1 text-balance text-head sm:text-[28px] sm:leading-snug">
+          <Testimonial
+            pull={
+              <>
                 Her ownership, reliability, and attention to detail make her
                 someone I&apos;d happily recommend to any product team.
-              </p>
-              <p className="printed max-w-[64ch] text-sm leading-relaxed">
-                Sanskriti has been an absolute pleasure to work with. She
-                consistently delivers high-quality work on time and brings a
-                deep understanding of the developer tools ecosystem, which
-                reflects in every design decision she makes. Beyond strong
-                visual design skills, she approaches problems with a product
-                mindset, collaborates seamlessly with engineering, and takes
-                feedback exceptionally well.
-              </p>
-            </blockquote>
-            <figcaption className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-dashed border-line pt-5">
-              <span className="flex items-center gap-3">
-                <Image
-                  src="/assets/cases/keploy/neha-gupta.webp"
-                  alt="Neha Gupta"
-                  width={320}
-                  height={320}
-                  unoptimized
-                  className="size-12 rounded-full object-cover ring-2 ring-white shadow-[0_4px_10px_-4px_rgba(60,40,20,0.4)]"
-                />
-                <span className="grid">
-                  <span className="font-serif text-lg leading-tight text-head">
-                    Neha Gupta
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    Co-Founder, Keploy
-                  </span>
-                </span>
-              </span>
-              <Image
-                src="/assets/cases/keploy/keploy-logo.webp"
-                alt="Keploy"
-                width={1056}
-                height={251}
-                unoptimized
-                className="h-6 w-auto mix-blend-multiply"
-              />
-            </figcaption>
-          </figure>
+              </>
+            }
+            name="Neha Gupta"
+            role="Co-Founder, Keploy"
+            photo="/assets/cases/keploy/neha-gupta.webp"
+            logo={{
+              src: "/assets/cases/keploy/keploy-logo.webp",
+              w: 1056,
+              h: 251,
+              alt: "Keploy",
+            }}
+            quoteColor="#F8904A"
+          >
+            Sanskriti has been an absolute pleasure to work with. She
+            consistently delivers high-quality work on time and brings a deep
+            understanding of the developer tools ecosystem, which reflects in
+            every design decision she makes. Beyond strong visual design skills,
+            she approaches problems with a product mindset, collaborates
+            seamlessly with engineering, and takes feedback exceptionally well.
+          </Testimonial>
           <Link
             href="/work#early"
             className="label mt-6 w-fit !text-ink underline-offset-4 hover:underline"
