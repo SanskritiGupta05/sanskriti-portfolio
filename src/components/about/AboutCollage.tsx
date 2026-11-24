@@ -1,13 +1,13 @@
 import Image, { type StaticImageData } from "next/image";
 import { hand, PinnedPhoto, printPhoto } from "./paper";
-import deskNow from "../../../public/assets/about/desk-now.jpg";
+import portraitNow from "../../../public/assets/about/portrait-now.jpg";
 import kidSchool from "../../../public/assets/about/kid-school.jpg";
 import kidPhone from "../../../public/assets/about/kid-phone.jpg";
 import kidPhone2 from "../../../public/assets/about/kid-phone-2.jpg";
 import wisteria from "../../../public/assets/about/painting-wisteria.jpg";
 import swans from "../../../public/assets/about/pastel-swans.jpg";
 
-// The opening of the About page, after a magazine collage Sanskriti picked: one "now" photo in a white
+// The opening of the About page, after a magazine collage Sanskriti picked: her portrait in a white
 // frame, with old photos and her artwork pinned around it. Photos are greyscale until hovered.
 // Positions are percentages of the collage box, so the whole thing scales down on phones.
 const pins: {
@@ -73,8 +73,8 @@ export function AboutCollage() {
           <figure className="absolute top-[4%] left-[20%] w-[60%] md:top-[9%] bg-white p-[1.6%] shadow-[0_1px_2px_rgba(0,0,0,0.12),0_18px_36px_-18px_rgba(40,30,20,0.45)] md:left-[25%] md:w-[50%]">
             <div className="group relative overflow-hidden">
               <Image
-                src={deskNow}
-                alt="Sanskriti's desk at night: a laptop running Claude, a monitor, yellow headphones and a stack of books"
+                src={portraitNow}
+                alt="Sanskriti smiling, taking a mirror selfie with a red checked phone case"
                 sizes="(min-width: 768px) 380px, 56vw"
                 placeholder="blur"
                 loading="eager"

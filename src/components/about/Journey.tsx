@@ -13,6 +13,10 @@ import aohBanner from "../../../public/assets/about/aoh-banner.jpg";
 import aohSwag from "../../../public/assets/about/aoh-swag.jpg";
 import aohTalk from "../../../public/assets/about/aoh-talk.jpg";
 import postmanBox from "../../../public/assets/about/postman-box.jpg";
+import designareCard from "../../../public/assets/about/designare-card.jpg";
+import designareBanner from "../../../public/assets/about/designare-banner.jpg";
+import designareMics from "../../../public/assets/about/designare-mics.jpg";
+import deskNow from "../../../public/assets/about/desk-now.jpg";
 
 // The journey, told as pinned moments. All copy comes from Sanskriti's own notes and posts.
 
@@ -158,55 +162,74 @@ I wrote this when I was in my first sem. However, the mentorship I received from
           <Step n="03" title="Showing up">
             <p>
               Meetups became my favourite thing: DevFest 2023 in New Delhi, design evenings at AOH (After
-              Office Hours), Postman&apos;s API Fundamentals Student Expert programme, and a talk on
+              Office Hours), Designare&apos;s Design Dialogue in Delhi, Postman&apos;s API Fundamentals Student Expert programme, and a talk on
               Hacktoberfest 2023 as Open Source Lead at GDSC IIMT.
             </p>
           </Step>
         </div>
-        {/* the pinboard: positions are % of the board, with a taller board on phones */}
-        <div className="grid grid-cols-2 gap-x-4 gap-y-7 md:relative md:block md:aspect-[826/460] md:w-full">
+        {/* the pinboard: tilted prints in loose columns (2 on phones, 4 on desktop) */}
+        <div className="columns-2 gap-5 md:columns-4 md:gap-6 [&>figure]:mb-6">
           <PinnedPhoto
             src={devfestScreen}
             alt="Sanskriti in front of the DevFest 2023 New Delhi screen"
-            box="relative md:absolute md:left-[1%] md:top-[5%] md:w-[27%]"
+            box="relative mt-3 inline-block w-full"
             tilt="-rotate-[3deg]"
             caption="devfest '23, new delhi"
           />
           <PinnedPhoto
             src={devfestGroup}
             alt="A group photo behind the Google Developer Groups DevFest 2023 sign"
-            box="relative md:absolute md:right-auto md:left-[30%] md:top-[1%] md:w-[33%]"
+            box="relative mt-3 inline-block w-full"
             tilt="rotate-[2deg]"
+          />
+          <PinnedPhoto
+            src={designareCard}
+            alt="Sanskriti's trading-card style attendee pass from Designare's Design Dialogue, 11 Jan 2025"
+            box="relative mt-3 inline-block w-full"
+            tilt="rotate-[3deg]"
+            caption="designare, jan '25"
           />
           <PinnedPhoto
             src={devfestSelfie}
             alt="A selfie with friends at DevFest 2023"
-            box="relative md:absolute md:right-[1%] md:top-[4%] md:w-[30%]"
-            tilt="rotate-[4deg]"
+            box="relative mt-3 inline-block w-full"
+            tilt="-rotate-[2deg]"
           />
           <PinnedPhoto
             src={aohBanner}
             alt="The After Office Hours welcome banner at a design event"
-            box="relative md:absolute md:left-[3%] md:top-[53%] md:w-[24%]"
+            box="relative mt-3 inline-block w-full"
             tilt="rotate-[3deg]"
             caption="after office hours"
           />
           <PinnedPhoto
+            src={designareBanner}
+            alt="Designare's Design Dialogue Delhi banner, 11 Jan 2025"
+            box="relative mt-3 inline-block w-full"
+            tilt="-rotate-[2deg]"
+          />
+          <PinnedPhoto
             src={aohTalk}
             alt="A speaker presenting 'The theory of everyday joy' at an AOH design event"
-            box="relative md:absolute md:right-auto md:left-[29%] md:top-[49%] md:w-[17%]"
+            box="relative mt-3 inline-block w-full"
             tilt="-rotate-[3deg]"
+          />
+          <PinnedPhoto
+            src={designareMics}
+            alt="Two people speaking into microphones at Designare's Design Dialogue"
+            box="relative mt-3 inline-block w-full"
+            tilt="rotate-[2deg]"
           />
           <PinnedPhoto
             src={aohSwag}
             alt="Summer of AOH illustrated cards, a bookmark and postcards from the event"
-            box="relative md:absolute md:left-[48%] md:top-[56%] md:w-[26%]"
+            box="relative mt-3 inline-block w-full"
             tilt="-rotate-[2deg]"
           />
           <PinnedPhoto
             src={postmanBox}
             alt="Postman API Fundamentals Student Expert swag: a notebook, pen, bottle and stickers"
-            box="relative md:absolute md:right-[1%] md:top-[60%] md:w-[24%]"
+            box="relative mt-3 inline-block w-full"
             tilt="rotate-[3deg]"
             caption="postman student expert"
           />
@@ -275,6 +298,15 @@ I wrote this when I was in my first sem. However, the mentorship I received from
         >
           38 contributions on November 19th.
         </p>
+        <div className="relative mx-auto mt-4 w-[70%] max-w-[260px]">
+          <PinnedPhoto
+            src={deskNow}
+            alt="Sanskriti's desk at night: a laptop running Claude, a monitor, yellow headphones and a stack of books"
+            box="relative block w-full"
+            tilt="rotate-[2deg]"
+            caption="me + claude = a love affair"
+          />
+        </div>
       </div>
     </section>
   );
