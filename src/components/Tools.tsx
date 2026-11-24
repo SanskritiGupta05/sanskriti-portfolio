@@ -1,15 +1,16 @@
 // The tools Sanskriti used on a project, with their official logos (public/assets/tools/):
 // Photoshop, Illustrator, Figma from Wikimedia Commons; Claude and Cursor from LobeHub icons;
-// the OpenAI mark (for ChatGPT) from Simple Icons, inverted in dark mode so it stays visible.
+// the OpenAI mark (for ChatGPT) and the Xcode mark (in Xcode blue) from Simple Icons; the OpenAI one is inverted in dark mode so it stays visible.
 import Image from "next/image";
 
-export type ToolId = "figma" | "claude" | "chatgpt" | "cursor" | "photoshop" | "illustrator";
+export type ToolId = "figma" | "claude" | "chatgpt" | "cursor" | "xcode" | "photoshop" | "illustrator";
 
 export const TOOLS: Record<ToolId, { name: string; logo: string; w: number; h: number; invertDark?: boolean }> = {
   figma: { name: "Figma", logo: "/assets/tools/figma.svg", w: 200, h: 300 },
   claude: { name: "Claude", logo: "/assets/tools/claude.svg", w: 24, h: 24 },
   chatgpt: { name: "ChatGPT", logo: "/assets/tools/chatgpt.svg", w: 24, h: 24, invertDark: true },
   cursor: { name: "Cursor", logo: "/assets/tools/cursor.svg", w: 24, h: 24 },
+  xcode: { name: "Xcode", logo: "/assets/tools/xcode.svg", w: 24, h: 24 },
   photoshop: { name: "Adobe Photoshop", logo: "/assets/tools/photoshop.svg", w: 240, h: 234 },
   illustrator: { name: "Adobe Illustrator", logo: "/assets/tools/illustrator.svg", w: 240, h: 234 },
 };

@@ -77,7 +77,7 @@ export default function UxLaws() {
               />
             </div>
             <div className="mt-8">
-              <ToolRow tools={["figma", "claude"]} />
+              <ToolRow tools={["figma", "claude", "xcode"]} />
             </div>
             <div className="mt-10">
               <Reel />

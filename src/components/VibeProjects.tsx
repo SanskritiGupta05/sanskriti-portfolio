@@ -21,7 +21,7 @@ const PROJECTS: { name: string; line: string; tags: string[]; img: string; href:
     name: "UX Laws: Learn Design Psychology",
     line: "An interactive way to explore UX laws, understand the psychology behind better design and make it easier to remember.",
     tags: ["Learning Experience", "AI"],
-    tools: ["figma", "claude"],
+    tools: ["figma", "claude", "xcode"],
     img: "/assets/cases/uxie.webp",
     href: "/work/ux-laws",
   },
