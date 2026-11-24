@@ -10,42 +10,59 @@ export const metadata: Metadata = {
 };
 
 // The Playground: Sanskriti's visual explorations, one after another at full column width
-// (tall pieces sit in pairs so they don't tower). Visuals only; the only captions are on
-// pieces with a live link. All assets are hers (public/assets/playground/), served unoptimized.
+// (tall or small pieces sit in pairs so they don't tower). Images have no captions; videos carry
+// the line she posted with them on X, plus the live link where there is one. All assets are hers
+// (public/assets/playground/), served unoptimized; videos are her X clips re-encoded (see LazyVideo).
 type Img = { kind: "img"; src: string; w: number; h: number; alt: string };
-type Vid = { kind: "video"; src: string; poster: string; w: number; h: number; alt: string; caption?: { text: string; href?: string } };
+type Vid = { kind: "video"; src: string; w: number; h: number; alt: string; caption?: string; link?: string };
 type Piece = Img | Vid;
 
 const A = "/assets/playground";
+const img = (file: string, w: number, h: number, alt: string): Img => ({ kind: "img", src: `${A}/${file}`, w, h, alt });
+const vid = (name: string, w: number, h: number, alt: string, caption?: string, link?: string): Vid => ({
+  kind: "video",
+  src: `${A}/${name}.mp4`,
+  w,
+  h,
+  alt,
+  caption,
+  link,
+});
 
 const ROWS: Piece[][] = [
+  [vid("diwali", 1920, 954, "Little Lights, a Diwali photo album: photos clipped into a red album under lanterns and fireworks", "Little Lights (Sound ON!)", "https://diwali-album.vercel.app")],
+  [img("mosaic.webp", 2000, 1337, "Mosaic, a bedtime story app: sign up, new releases and a story chapter on three phones")],
   [
-    {
-      kind: "video",
-      src: `${A}/diwali.mp4`,
-      poster: `${A}/diwali-poster.jpg`,
-      w: 1920,
-      h: 954,
-      alt: "Little Lights, a Diwali photo album: photos clipped into a red album under lanterns and fireworks",
-      caption: { text: "Little Lights · diwali-album.vercel.app (sound on!)", href: "https://diwali-album.vercel.app" },
-    },
+    vid("spider-verse", 1012, 1466, "A phone revealing a holographic Spider-Verse character card", "Let's see which spider-verse chooses YOU!", "https://spider-verse-cards.netlify.app"),
+    vid("mood", 1300, 1740, "A mood check-in app: turning a weather dial changes how the cloud feels", "What if checking in with yourself felt as simple as picking today's weather? 🌞🌩️⛅️ Designed this fun little interaction over the weekend! 🪄🎨"),
   ],
-  [{ kind: "img", src: `${A}/mosaic.webp`, w: 2000, h: 1337, alt: "Mosaic, a bedtime story app: sign up, new releases and a story chapter on three phones" }],
   [
-    { kind: "img", src: `${A}/mosaic-closeup.webp`, w: 1684, h: 1817, alt: "Close-up of the Mosaic home screen" },
-    { kind: "img", src: `${A}/pandao-figma.webp`, w: 1500, h: 2000, alt: "The PanDAO onboarding screen being designed in Figma on a laptop" },
+    img("mosaic-closeup.webp", 1684, 1817, "Close-up of the Mosaic home screen"),
+    img("pandao-figma.webp", 1500, 2000, "The PanDAO onboarding screen being designed in Figma on a laptop"),
   ],
-  [{ kind: "img", src: `${A}/tab-onboarding.jpg`, w: 2838, h: 1864, alt: "TAB, a spending tracker: three bold onboarding screens in lime, pink and blue" }],
+  [vid("inkwork", 1920, 954, "Inkwork Press, a tool that generates illustrations with geometric motifs and decorative patterns", "Saw some cool illustrations with \u201cgeometric motifs and decorative patterns\u201d on Pinterest, so I decided to build my own fun lil tool to generate them. 👾", "https://inkwork-press.vercel.app")],
+  [img("tab-onboarding.jpg", 2838, 1864, "TAB, a spending tracker: three bold onboarding screens in lime, pink and blue")],
   [
-    { kind: "img", src: `${A}/tab-icon.webp`, w: 1600, h: 1600, alt: "The TAB app icon: a torn receipt with an 'every spend counts' sticker" },
-    { kind: "img", src: `${A}/espresso.png`, w: 1544, h: 1544, alt: "A Spotify record-player widget playing Espresso by Sabrina Carpenter" },
+    img("tab-icon.webp", 1600, 1600, "The TAB app icon: a torn receipt with an 'every spend counts' sticker"),
+    img("espresso.png", 1544, 1544, "A Spotify record-player widget playing Espresso by Sabrina Carpenter"),
   ],
-  [{ kind: "img", src: `${A}/learning-controls.png`, w: 1340, h: 938, alt: "Learning player controls: play, pause, captions, hints and text buttons with Back and Next" }],
   [
-    { kind: "img", src: `${A}/eight-christmas.jpg`, w: 900, h: 1600, alt: "An eight money Christmas story: the card in a Santa hat, coming soon" },
-    { kind: "img", src: `${A}/mood-checkin.png`, w: 480, h: 539, alt: "A mood check-in app that asks how your weather is today" },
+    vid("chat", 1458, 1414, "A tutor chat interface with lively message animations", "making chat interfaces feel a little more alive. 🪄"),
+    vid("whimsy", 1088, 1102, "A sign-in card with a little creature peeking over the top", "trying to make the little things on the internet a little more delightful, by adding a bit of whimsy 🪄"),
   ],
-  [{ kind: "img", src: `${A}/emoji-screens.webp`, w: 1372, h: 936, alt: "Pixel-emoji app onboarding: three retro screens on green" }],
+  [img("learning-controls.png", 1340, 938, "Learning player controls: play, pause, captions, hints and text buttons with Back and Next")],
+  [vid("pixel-buddy", 1920, 1150, "A context-window meter with a tiny pixel buddy reacting while an agent works", "A tiny pixel buddy making the coding process a little more fun with agents 🪄")],
+  [
+    img("eight-christmas.jpg", 900, 1600, "An eight money Christmas story: the card in a Santa hat, coming soon"),
+    vid("figma-to-react", 720, 900, "A step-by-step demo of Dualite Alpha, from a Figma design to React"),
+  ],
+  [
+    vid("folder", 720, 720, "A file drawer whose coloured folders lift on hover", "Saw this interaction somewhere, hence i tried recreating it! 📂✨"),
+    vid("work-folder", 534, 536, "A work folder that opens to show project screens", "Work Folder - Interaction Design 🪄"),
+  ],
+  [vid("loading", 1892, 1246, "A 'Deploying' loading pill with an animated little icon", "Even a loading state deserves a little personality ✨")],
+  [vid("figma-proto", 796, 512, "A sticky-note to-do list prototyped in Figma, items checking off", "Been dabbling around prototyping in Figma. 🎨🧑‍🎨")],
+  [img("emoji-screens.webp", 1372, 936, "Pixel-emoji app onboarding: three retro screens on green")],
 ];
 
 function Frame({ p }: { p: Piece }) {
@@ -56,18 +73,17 @@ function Frame({ p }: { p: Piece }) {
           {p.kind === "img" ? (
             <Image src={p.src} alt={p.alt} width={p.w} height={p.h} unoptimized className="block h-auto w-full" />
           ) : (
-            <LazyVideo src={p.src} poster={p.poster} width={p.w} height={p.h} label={p.alt} />
+            <LazyVideo src={p.src} poster={p.src.replace(".mp4", "-poster.jpg")} width={p.w} height={p.h} label={p.alt} />
           )}
         </div>
       </div>
-      {p.kind === "video" && p.caption && (
-        <figcaption className="mt-3 px-1 text-sm text-muted-foreground">
-          {p.caption.href ? (
-            <a href={p.caption.href} target="_blank" rel="noreferrer" className="underline-offset-4 hover:text-ink hover:underline">
-              {p.caption.text} ↗
+      {p.kind === "video" && (p.caption || p.link) && (
+        <figcaption className="mt-3 px-1 text-sm leading-5 text-pretty text-muted-foreground">
+          {p.caption}
+          {p.link && (
+            <a href={p.link} target="_blank" rel="noreferrer" className="mt-1 block w-fit text-ink underline underline-offset-4 hover:text-[#c8553b]">
+              {p.link.replace(/^https?:\/\//, "")} ↗
             </a>
-          ) : (
-            p.caption.text
           )}
         </figcaption>
       )}

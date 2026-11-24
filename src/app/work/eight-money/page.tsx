@@ -1,18 +1,25 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Ticket } from "@/components/casestudy/pieces";
-import { CaseStudyFrame, P, Quote, Section, Shot, type TocItem } from "@/components/casestudy/Margin";
+import { CaseStudyFrame, P, Quote, Section, type TocItem } from "@/components/casestudy/Margin";
 
 export const metadata: Metadata = {
   title: "eight.money · Sanskriti",
   description: "Designing eight.money from 0 to 1: one place to see, use and optimise your cards and wallets.",
 };
 
-// eight.money case study, in the "margin notes" language. Copy and screens are from
-// Sanskriti's Framer case study (/work/eightmoney).
+// eight.money case study, in the same clipped-sheet layout as Bounce, GFG, Keploy and Dualite
+// (Redaction contents, ticker section labels, bare images, eight.money purple as the accent).
+// Copy and screens are from Sanskriti's Framer case study (/work/eightmoney).
 const img = (name: string, h: number, w = 1600) => ({ src: `/assets/cases/eight/${name}.webp`, w, h });
+
+// her screens shown as-is: no frame, not re-compressed (tap to zoom comes from the /work layout)
+function Shot({ src, w, h, alt }: { src: string; w: number; h: number; alt: string }) {
+  return <Image src={src} alt={alt} width={w} height={h} unoptimized className="block h-auto w-full" />;
+}
 
 const TOC: TocItem[] = [
   { id: "overview", label: "Overview" },
@@ -45,16 +52,18 @@ const FLOWS: [string, string, string, ReturnType<typeof img>[]][] = [
 
 export default function EightMoney() {
   return (
-    <div className="mx-auto w-full max-w-[1080px] px-6">
-      <div className="mx-auto max-w-[826px]">
+    <div className="w-full [&_nav[aria-label=Contents]]:font-serif [&_nav[aria-label=Contents]_.label]:text-[15px] [&_nav[aria-label=Contents]_.label]:tracking-normal [&_nav[aria-label=Contents]_.label]:normal-case [&_nav[aria-label=Contents]_a]:text-[15px] [&_article>section>.label:first-child]:flex [&_article>section>.label:first-child]:items-center [&_article>section>.label:first-child]:gap-2.5 [&_article>section>.label:first-child]:font-mono [&_article>section>.label:first-child]:!text-[14px] [&_article>section>.label:first-child]:font-bold [&_article>section>.label:first-child]:!tracking-[0.14em] [&_article>section>.label:first-child]:!text-(--cs-accent) [&_article>section>.label:first-child]:before:content-[''] [&_article>section>.label:first-child]:before:size-[7px] [&_article>section>.label:first-child]:before:shrink-0 [&_article>section>.label:first-child]:before:rounded-full [&_article>section>.label:first-child]:before:bg-(--cs-accent) [&_article>section>.label:first-child]:before:shadow-[0_0_0_3px_color-mix(in_srgb,var(--cs-accent)_35%,transparent)]">
+      <div className="mx-auto max-w-[826px] px-6">
         <Nav />
       </div>
 
       <CaseStudyFrame
+        layout="sheet"
+        accent="#7040E0"
         toc={TOC}
         header={
           <header className="pt-6">
-            <Link href="/#work" className="label !text-ink underline-offset-4 hover:underline">
+            <Link href="/work#primary" className="label !text-ink underline-offset-4 hover:underline">
               ← All work
             </Link>
             <span className="label mt-8 block">Case study · 0 → 1</span>
@@ -83,7 +92,7 @@ export default function EightMoney() {
                 ["My role", "I designed the eight.money app from 0 to 1: core flows, interface patterns, system states and components, alongside the marketing site and investor pitch decks."],
                 ["The build", "I designed the home experience, wallet and balance flows, transaction history, analytics, rewards, bill payments, KYC and account security."],
               ].map(([q, a]) => (
-                <div key={q} className="rounded-2xl border border-line bg-bg p-5">
+                <div key={q} className="skeu rounded-2xl p-5">
                   <dt className="label">{q}</dt>
                   <dd className="printed mt-2 text-sm leading-relaxed">{a}</dd>
                 </div>
@@ -131,7 +140,7 @@ export default function EightMoney() {
             “I started this project thinking about how to design a finance app. I finished it thinking about how to design the one screen someone opens first thing in the
             morning to ask: where do I stand?”
           </Quote>
-          <Link href="/#work" className="label mt-6 w-fit !text-ink underline-offset-4 hover:underline">
+          <Link href="/work#primary" className="label mt-6 w-fit !text-ink underline-offset-4 hover:underline">
             ← Back to all work
           </Link>
         </Section>
