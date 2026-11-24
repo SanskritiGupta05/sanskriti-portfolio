@@ -26,16 +26,29 @@ import figurines from "../../../public/assets/about/desk-figurines.jpg";
 import deskBooks from "../../../public/assets/about/desk-books.jpg";
 import talkRoles from "../../../public/assets/about/talk-design-roles.jpg";
 import talkRoles2 from "../../../public/assets/about/talk-design-roles-2.jpg";
+import gfgLogoWall from "../../../public/assets/cases/gfg/office-logo-wall.webp";
+import gfgSelfie from "../../../public/assets/cases/gfg/office-selfie.webp";
+import gfgCake from "../../../public/assets/cases/gfg/office-farewell-cake.webp";
 import deskNow from "../../../public/assets/about/desk-now.jpg";
 
 // The journey, told as pinned moments. All copy comes from Sanskriti's own notes and posts.
 
 // one step: a number, a heading and the typed story
-function Step({ n, title, children }: { n: string; title: string; children: React.ReactNode }) {
+function Step({
+  n,
+  title,
+  children,
+}: {
+  n: string;
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="grid content-start gap-3">
       <p className="label !text-[#c8553b]">{n}</p>
-      <h3 className="font-serif text-h2m leading-tight text-head md:text-h2">{title}</h3>
+      <h3 className="font-serif text-h2m leading-tight text-head md:text-h2">
+        {title}
+      </h3>
       <div className="printed grid gap-3 text-base text-ink">{children}</div>
     </div>
   );
@@ -56,7 +69,9 @@ function Post({
   className?: string;
 }) {
   return (
-    <figure className={`skeu group relative rounded-xl p-4 text-sm ${className}`}>
+    <figure
+      className={`skeu group relative rounded-xl p-4 text-sm ${className}`}
+    >
       <Pin />
       <div className="mb-2 flex items-baseline gap-2">
         <span className="font-serif text-base text-head">Sanskriti Gupta</span>
@@ -77,11 +92,36 @@ function Post({
   );
 }
 
-const workStops: { role: string; place: string; when: string; href?: string }[] = [
-  { role: "Graphic design intern", place: "GeeksforGeeks", when: "May – Oct 2024", href: "/work/geeksforgeeks" },
-  { role: "Freelance product designer", place: "Keploy", when: "Freelance", href: "/work/keploy" },
-  { role: "Freelance designer", place: "Dualite", when: "Freelance", href: "/work/dualite" },
-  { role: "Product designer, Bounce Daily", place: "DreamLaunch", when: "Jan – Oct 2025", href: "/work/bounce-daily" },
+const workStops: {
+  role: string;
+  place: string;
+  when: string;
+  href?: string;
+}[] = [
+  {
+    role: "Graphic design intern",
+    place: "GeeksforGeeks",
+    when: "May – Oct 2024",
+    href: "/work/geeksforgeeks",
+  },
+  {
+    role: "Freelance product designer",
+    place: "Keploy",
+    when: "Freelance",
+    href: "/work/keploy",
+  },
+  {
+    role: "Freelance designer",
+    place: "Dualite",
+    when: "Freelance",
+    href: "/work/dualite",
+  },
+  {
+    role: "Product designer, Bounce Daily",
+    place: "DreamLaunch",
+    when: "Jan – Oct 2025",
+    href: "/work/bounce-daily",
+  },
   { role: "Product designer", place: "AppX (YC'21)", when: "Nov 2025 – now" },
 ];
 
@@ -99,12 +139,13 @@ export function Journey() {
       <div className="grid items-center gap-10 md:grid-cols-2">
         <Step n="01" title="A computer at home">
           <p>
-            My dad was the first in our family to get a computer, and he loved digital gadgets. That&apos;s
-            where my interest in tech came from.
+            My dad was the first in our family to get a computer, and he loved
+            digital gadgets. That&apos;s where my interest in tech came from.
           </p>
           <p>
-            I started with MS Paint and Photoshop. I was always the kid drawing, the one teachers loved and
-            sent to drawing competitions. I never stopped.
+            I started with MS Paint and Photoshop. I was always the kid drawing,
+            the one teachers loved and sent to drawing competitions. I never
+            stopped.
           </p>
         </Step>
         <div className="relative mx-auto aspect-[10/12] w-full max-w-[420px]">
@@ -154,19 +195,24 @@ But we all start somewhere, I guess. 😌`}
 
 I wrote this when I was in my first sem. However, the mentorship I received from this platform was amazing✨`}
             <span className="skeu-sunk mt-1 block rounded-md px-3 py-2">
-              <span className="font-serif text-base text-head">How To Get Started With Programming</span>
-              <span className="block text-[#77716A]">Hashnode · 8 min read · 1.0K views</span>
+              <span className="font-serif text-base text-head">
+                How To Get Started With Programming
+              </span>
+              <span className="block text-[#77716A]">
+                Hashnode · 8 min read · 1.0K views
+              </span>
             </span>
           </Post>
         </div>
         <div className="order-1 md:order-2">
           <Step n="02" title="Curious about how it works">
             <p>
-              I was amazed by how much was on the internet, and I wanted to know how tech works.
+              I was amazed by how much was on the internet, and I wanted to know
+              how tech works.
             </p>
             <p>
-              So I joined Twitter, went to tech meetups, wrote blogs and did 100 Days of Code, mostly
-              frontend. Yes, with handwritten CSS notes.
+              So I joined Twitter, went to tech meetups, wrote blogs and did 100
+              Days of Code, mostly frontend. Yes, with handwritten CSS notes.
             </p>
           </Step>
         </div>
@@ -177,9 +223,11 @@ I wrote this when I was in my first sem. However, the mentorship I received from
         <div className="mx-auto max-w-[36rem] text-center">
           <Step n="03" title="Showing up">
             <p>
-              Meetups became my favourite thing: DevFest 2023 in New Delhi, design evenings at AOH (After
-              Office Hours), Designare&apos;s Design Dialogue in Delhi, Postman&apos;s API Fundamentals Student Expert programme, and a talk on
-              Hacktoberfest 2023 as Open Source Lead at GDSC IIMT.
+              Meetups became my favourite thing: DevFest 2023 in New Delhi,
+              design evenings at AOH (After Office Hours), Designare&apos;s
+              Design Dialogue in Delhi, Postman&apos;s API Fundamentals Student
+              Expert programme, and a talk on Hacktoberfest 2023 as Open Source
+              Lead at GDSC IIMT.
             </p>
           </Step>
         </div>
@@ -283,16 +331,17 @@ I wrote this when I was in my first sem. However, the mentorship I received from
       <div className="grid items-start gap-10 md:grid-cols-2">
         <Step n="04" title="Design, for real">
           <p>
-            Interning at GeeksforGeeks, one of the biggest tech-education platforms, was a dream come true. I
-            picked up design there, explored a lot of visual design, and got a really nice farewell.
+            Interning at GeeksforGeeks, one of the biggest tech-education
+            platforms, was a dream come true. I picked up design there, explored
+            a lot of visual design, and got a really nice farewell.
           </p>
           <p>
-            Then the sky was the limit: freelance work with Bangalore startups, a design studio, and now a
-            YC-backed company.
+            Then the sky was the limit: freelance work with Bangalore startups,
+            a design studio, and now a YC-backed company.
           </p>
         </Step>
         {/* a side project from those days (the silver Pokémon card, from sketch to Figma) and Keploy swag */}
-        <div className="relative mx-auto aspect-[10/12] w-full max-w-[420px] md:col-start-1">
+        <div className="relative order-3 mx-auto aspect-[10/12] w-full max-w-[420px] md:order-none md:col-start-1">
           <PinnedPhoto
             src={cardProcess}
             alt="A hand-drawn design process sketch held in front of a laptop showing the silver Pokémon card case study in Figma"
@@ -317,41 +366,78 @@ I wrote this when I was in my first sem. However, the mentorship I received from
             caption="keploy swag"
           />
         </div>
-        <ol className="skeu grid rounded-2xl px-5 py-2 md:col-start-2 md:row-span-2 md:row-start-1 md:self-start">
-          {workStops.map((w, i) => {
-            const row = (
-              <>
-                <span className="grid">
-                  <span className="font-serif text-lg leading-snug text-head">{w.place}</span>
-                  <span className="text-sm text-[#77716A]">{w.role}</span>
-                </span>
-                <span className="text-sm whitespace-nowrap text-ink">{w.when}</span>
-              </>
-            );
-            return (
-              <li key={w.place} className={i ? "border-t border-dashed border-line" : ""}>
-                {w.href ? (
-                  <Link
-                    href={w.href}
-                    className="flex items-center justify-between gap-4 py-3 underline-offset-4 hover:[&_.font-serif]:underline"
-                  >
-                    {row}
-                  </Link>
-                ) : (
-                  <div className="flex items-center justify-between gap-4 py-3">{row}</div>
-                )}
-              </li>
-            );
-          })}
-        </ol>
+        <div className="order-2 grid gap-10 md:order-none md:col-start-2 md:row-span-2 md:row-start-1 md:self-start">
+          {/* GeeksforGeeks days (the same office photos as the GFG case study) */}
+          <div className="relative mx-auto aspect-[10/8] w-full max-w-[420px]">
+            <PinnedPhoto
+              src={gfgLogoWall}
+              alt="The GeeksforGeeks logo wall at the office"
+              box="absolute left-[2%] top-[4%] w-[30%]"
+              tilt="-rotate-[3deg]"
+              caption="geeksforgeeks"
+              sizes="(min-width: 768px) 130px, 30vw"
+            />
+            <PinnedPhoto
+              src={gfgSelfie}
+              alt="A mirror selfie at the GeeksforGeeks office"
+              box="absolute left-[35%] top-[0%] w-[30%]"
+              tilt="rotate-[2deg]"
+              sizes="(min-width: 768px) 130px, 30vw"
+            />
+            <PinnedPhoto
+              src={gfgCake}
+              alt="Sanskriti's farewell cake at GeeksforGeeks, with a Thank You topper"
+              box="absolute right-[1%] top-[6%] w-[30%]"
+              tilt="rotate-[4deg]"
+              caption="the farewell"
+              sizes="(min-width: 768px) 130px, 30vw"
+            />
+          </div>
+          <ol className="skeu grid rounded-2xl px-5 py-2">
+            {workStops.map((w, i) => {
+              const row = (
+                <>
+                  <span className="grid">
+                    <span className="font-serif text-lg leading-snug text-head">
+                      {w.place}
+                    </span>
+                    <span className="text-sm text-[#77716A]">{w.role}</span>
+                  </span>
+                  <span className="text-sm whitespace-nowrap text-ink">
+                    {w.when}
+                  </span>
+                </>
+              );
+              return (
+                <li
+                  key={w.place}
+                  className={i ? "border-t border-dashed border-line" : ""}
+                >
+                  {w.href ? (
+                    <Link
+                      href={w.href}
+                      className="flex items-center justify-between gap-4 py-3 underline-offset-4 hover:[&_.font-serif]:underline"
+                    >
+                      {row}
+                    </Link>
+                  ) : (
+                    <div className="flex items-center justify-between gap-4 py-3">
+                      {row}
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       </div>
 
       {/* 05 · now */}
       <div className="mx-auto grid max-w-[44rem] gap-5 text-center">
         <Step n="05" title="Now I build too">
           <p>
-            These days I design products and build ideas in code with AI. If I don&apos;t know something, I
-            learn it.
+            These days I design products and build ideas in code with AI. If I
+            don&apos;t know something, I learn it.
           </p>
         </Step>
         {/* her GitHub graph (the real screenshot) next to the desk where it happens */}
