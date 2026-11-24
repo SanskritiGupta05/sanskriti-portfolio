@@ -451,7 +451,7 @@ export function Journey() {
             <p>
               These days I design products and{" "}
               <Hi c="green">build ideas in code with AI</Hi>{" "}
-              <Pixel name="bot" /> <ToolMark tool="claude" />: a Spider-Verse
+              <span className="whitespace-nowrap"><Pixel name="bot" /> <ToolMark tool="claude" />:</span> a Spider-Verse
               card reveal, a UX Laws app, Little Lights for Diwali, and this
               very site.{" "}
               <Hi c="lilac">If I don&apos;t know something, I learn it.</Hi>
