@@ -4,6 +4,12 @@ import rose from "../../../public/assets/about/painting-rose.jpg";
 import wallArt from "../../../public/assets/about/wall-art.jpg";
 import cafe from "../../../public/assets/about/cafe.jpg";
 import beach from "../../../public/assets/about/beach.jpg";
+import nails from "../../../public/assets/about/nail-art.jpg";
+import magnets from "../../../public/assets/about/clay-magnets.jpg";
+import pixelArt from "../../../public/assets/about/pixel-art.jpg";
+import catCroc from "../../../public/assets/about/acrylic-cat-croc.jpg";
+import ramenCat from "../../../public/assets/about/sketch-ramen-cat.jpg";
+import rangoli from "../../../public/assets/about/diwali-rangoli.jpg";
 
 // Life off the screen: the things she makes and the places she goes. Interests are from her own notes.
 const prints = [
@@ -30,6 +36,42 @@ const prints = [
     alt: "Sanskriti's pink Starry Night canvas above three painted mandala panels on her wall",
     tilt: "-rotate-[2deg]",
     caption: "my wall, my paintings",
+  },
+  {
+    src: magnets,
+    alt: "Tiny painted clay magnets in Sanskriti's palm: a cat, an onigiri, egg toast, a camera and a dotted red square",
+    tilt: "rotate-[2deg]",
+    caption: "clay magnets",
+  },
+  {
+    src: pixelArt,
+    alt: "Pixel-art Pikachu, a flower and a butterfly coloured with markers on grid notebooks",
+    tilt: "-rotate-[3deg]",
+    caption: "pixel art, by hand",
+  },
+  {
+    src: nails,
+    alt: "Spider-Man themed nail art on Sanskriti's hand",
+    tilt: "rotate-[3deg]",
+    caption: "spidey nails",
+  },
+  {
+    src: catCroc,
+    alt: "Two small acrylic canvases: a cat in a lion mane and a crocodile hugging a Diet Coke",
+    tilt: "-rotate-[2deg]",
+    caption: "acrylics",
+  },
+  {
+    src: ramenCat,
+    alt: "A coloured-pencil sketch of a sleepy cat in a ramen bowl with chopsticks",
+    tilt: "rotate-[2deg]",
+    caption: "ramen, obviously",
+  },
+  {
+    src: rangoli,
+    alt: "Two people in festive clothes beside a flower rangoli ringed with diyas for Diwali",
+    tilt: "-rotate-[2deg]",
+    caption: "diwali rangoli",
   },
   {
     src: beach,

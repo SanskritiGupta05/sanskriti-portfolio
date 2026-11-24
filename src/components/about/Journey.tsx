@@ -22,6 +22,10 @@ import cardSilver from "../../../public/assets/about/pokemon-card-silver.jpg";
 import keploySwag from "../../../public/assets/about/keploy-swag.jpg";
 import sketchLine from "../../../public/assets/about/sketch-line.jpg";
 import githubDay from "../../../public/assets/about/github-contributions.jpg";
+import figurines from "../../../public/assets/about/desk-figurines.jpg";
+import deskBooks from "../../../public/assets/about/desk-books.jpg";
+import talkRoles from "../../../public/assets/about/talk-design-roles.jpg";
+import talkRoles2 from "../../../public/assets/about/talk-design-roles-2.jpg";
 import deskNow from "../../../public/assets/about/desk-now.jpg";
 
 // The journey, told as pinned moments. All copy comes from Sanskriti's own notes and posts.
@@ -234,6 +238,18 @@ I wrote this when I was in my first sem. However, the mentorship I received from
             tilt="-rotate-[3deg]"
           />
           <PinnedPhoto
+            src={talkRoles}
+            alt="A speaker at a design meetup presenting a chart titled 'Design roles have plateaued'"
+            box="relative mt-3 inline-block w-full"
+            tilt="rotate-[2deg]"
+          />
+          <PinnedPhoto
+            src={talkRoles2}
+            alt="The same speaker mid-talk in front of a slide about AI-powered systems and shipping small features"
+            box="relative mt-3 inline-block w-full"
+            tilt="-rotate-[2deg]"
+          />
+          <PinnedPhoto
             src={designareMics}
             alt="Two people speaking into microphones at Designare's Design Dialogue"
             box="relative mt-3 inline-block w-full"
@@ -331,7 +347,7 @@ I wrote this when I was in my first sem. However, the mentorship I received from
       </div>
 
       {/* 05 · now */}
-      <div className="mx-auto grid max-w-[36rem] gap-5 text-center">
+      <div className="mx-auto grid max-w-[44rem] gap-5 text-center">
         <Step n="05" title="Now I build too">
           <p>
             These days I design products and build ideas in code with AI. If I don&apos;t know something, I
@@ -339,7 +355,7 @@ I wrote this when I was in my first sem. However, the mentorship I received from
           </p>
         </Step>
         {/* her GitHub graph (the real screenshot) next to the desk where it happens */}
-        <div className="mt-2 grid grid-cols-[1fr_1.1fr] items-start gap-5 md:gap-8">
+        <div className="mt-2 grid grid-cols-2 items-start gap-x-5 gap-y-8 md:grid-cols-[1fr_1.15fr_1fr] md:gap-x-7">
           <PinnedPhoto
             src={githubDay}
             alt="Sanskriti's GitHub contribution graph with the tooltip: 38 contributions on November 19th"
@@ -357,6 +373,23 @@ I wrote this when I was in my first sem. However, the mentorship I received from
             caption="me + claude = a love affair"
             sizes="(min-width: 768px) 300px, 50vw"
           />
+          <div className="col-span-2 grid grid-cols-2 items-start gap-5 md:col-span-1 md:grid-cols-1 md:gap-7">
+            <PinnedPhoto
+              src={figurines}
+              alt="Little Spider-Man, Harry Potter and Flash figurines lined up under the monitor"
+              box="relative block w-full"
+              tilt="rotate-[3deg]"
+              caption="desk crew"
+              sizes="(min-width: 768px) 220px, 45vw"
+            />
+            <PinnedPhoto
+              src={deskBooks}
+              alt="A pen holder on a stack of books beside yellow headphones and the laptop"
+              box="relative block w-full"
+              tilt="-rotate-[2deg]"
+              sizes="(min-width: 768px) 220px, 45vw"
+            />
+          </div>
         </div>
       </div>
     </section>
