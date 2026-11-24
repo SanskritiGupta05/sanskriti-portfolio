@@ -1,10 +1,12 @@
 // Builds the footer's pixel sprites (pixel Sanskriti resting her chin on her hands, and her
-// travel suitcase) from Sanskriti's footer reference, read cell by cell with the mascot tool:
-//   node assets/mascot/tools/extract.mjs explorations/_ref/footer-ref.png 3.5 3.5 322 196 99 90 assets/footer/girl.raw.json
-//   node assets/mascot/tools/extract.mjs explorations/_ref/footer-ref.png 2.9 2.9 1268 348 50 56 assets/footer/case.raw.json
+// travel suitcase) from Sanskriti's footer reference. Its pixel grid isn't regular (it drifts by up
+// to ~1.5 px between areas), so the cells are found by extract-adaptive.mjs, which cuts on the real
+// pixel edges instead of a fixed grid:
+//   node assets/footer/extract-adaptive.mjs explorations/_ref/footer-ref.png 320 195 668 494 3 4 assets/footer/girl.raw.json 0.75
+//   node assets/footer/extract-adaptive.mjs explorations/_ref/footer-ref.png 1268 348 1414 510 2 4 assets/footer/case.raw.json 0.75
 // then: node assets/footer/build-sprites.mjs  →  assets/footer/sprites.js
 // Cleaning only removes things that aren't part of the sprite (the cherry branch, background specks,
-// sushi in front); no pixel of her or the bag is redrawn.
+// sushi in front) and snaps colours to the home mascot's palette; no pixel of her or the bag is redrawn.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { PALETTE } from '../mascot/mascot.js';
 
@@ -77,6 +79,22 @@ const snap = (layers, colours, keys) => {
     row[x] = memo[c] ??= near(colours[c], keys);
   }
 };
+// a lone pixel whose four neighbours all share one other colour takes that colour
+// (texture noise from the reference; pixel art keeps flat areas flat)
+const smooth = (g) => {
+  const H = g.length, W = g[0].length, out = g.map((r) => [...r]);
+  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
+    const n = [g[y - 1][x], g[y + 1][x], g[y][x - 1], g[y][x + 1]];
+    if (g[y][x] !== '.' && n[0] !== '.' && n.every((c) => c === n[0]) && n[0] !== g[y][x]) out[y][x] = n[0];
+  }
+  for (let y = 0; y < H; y++) g[y] = out[y];
+};
+// grey anti-aliasing on an outer edge becomes the solid outline
+const solidEdge = (g) => {
+  const H = g.length, W = g[0].length, empty = (y, x) => y < 0 || y >= H || x < 0 || x >= W || g[y][x] === '.';
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++)
+    if ('gjrp'.includes(g[y][x]) && (empty(y - 1, x) || empty(y + 1, x) || empty(y, x - 1) || empty(y, x + 1))) g[y][x] = 'a';
+};
 const pal = (raw, layers) => {
   const all = { ...PALETTE, ...raw.newColours }, used = {};
   for (const l of layers) for (const r of l) for (const c of r) if (c !== '.') used[c] = all[c];
@@ -86,31 +104,34 @@ const rows = (g) => g.map((r) => r.join(''));
 
 // --- pixel Sanskriti, chin on her hands, with her heart mug ---
 const girlRaw = load('./girl.raw.json');
-let girl = toCells(girlRaw.grid).slice(0, 85); // below row 84 is the counter and the sushi in front
+let girl = toCells(girlRaw.grid);
 blank(girl, 0, 15, 0, 46); // the cherry branch in the top-left corner
-blank(girl, 78, 84, 88, 98); // a plate peeking in at the bottom right
+blank(girl, 80, girl.length - 1, 88, 96); // a plate peeking in at the bottom right
 girl = despeck(girl);
 const girlColours = { ...PALETTE, ...girlRaw.newColours };
-const bubble = take(girl, 0, 19, 70, 98);
-const sparkles = take(girl, 20, 41, 9, 27);
-const steam = take(girl, 50, 71, 0, 14); // steam is pale by nature: not defringed
+const bubble = take(girl, 0, 20, 66, 96);
+const sparkles = take(girl, 19, 40, 9, 28);
+const steam = take(girl, 50, 72, 0, 13); // steam is pale by nature: not defringed
 defringe(girl, girlColours); defringe(bubble, girlColours); defringe(sparkles, girlColours);
 gradeHair([girl, bubble], girlColours);
 snap([girl, bubble, steam], girlColours, [...GIRL_KEYS]);
 for (const row of sparkles) for (let x = 0; x < row.length; x++) if (row[x] !== '.') row[x] = 'G'; // the home mascot's sparkle gold
+smooth(girl);
 const GIRL = { w: girl[0].length, h: girl.length, palette: pal(girlRaw, [girl, bubble, sparkles, steam]), body: rows(girl), bubble: rows(bubble), sparkles: rows(sparkles), steam: rows(steam) };
 
 // --- the travel suitcase, with four stickers that peel off ---
 const caseRaw = load('./case.raw.json');
-let bag = toCells(caseRaw.grid).slice(0, 52); // rows 52+ are sushi rolls in front of it
+let bag = toCells(caseRaw.grid).slice(0, 51); // rows 51+ are sushi rolls in front of it
 bag[0] = bag[0].map(() => '.');
-blank(bag, 0, 13, 38, 49); // background specks right of the handle
-bag.push(bag[0].map((_, x) => (x >= 2 && x <= 49 ? 'a' : '.'))); // close the bottom edge where the sushi was
+blank(bag, 0, 10, 36, 45); // background specks right of the handle
+// rows 49–50: sushi in front of the bottom-left corner; fill with the case's own outline and body
+for (const y of [49, 50]) for (let x = 0; x <= 21; x++) bag[y][x] = x === 0 ? '.' : x === 1 ? 'a' : 'n';
+bag.push(bag[0].map((_, x) => (x >= 1 && x <= 45 ? 'a' : '.'))); // close the bottom edge
 bag = despeck(bag);
 defringe(bag, { ...PALETTE, ...caseRaw.newColours });
 const BODY = new Set(['n', 'b', 'q', 'e', 'Á', '.']);
 // each sticker: its rectangle; the sticker is everything between its first and last non-case pixel on each row
-const STICKERS = { cat: [23, 34, 8, 19], torii: [28, 38, 23, 35], fox: [38, 50, 8, 19], sakura: [41, 51, 22, 36] };
+const STICKERS = { cat: [23, 34, 6, 18], torii: [27, 37, 22, 32], fox: [38, 47, 5, 17], sakura: [42, 50, 21, 32] };
 const stickers = {};
 for (const [name, [y0, y1, x0, x1]] of Object.entries(STICKERS)) {
   const layer = bag.map((r) => r.map(() => '.'));
@@ -126,6 +147,7 @@ for (const [name, [y0, y1, x0, x1]] of Object.entries(STICKERS)) {
   const caseColours = { ...PALETTE, ...caseRaw.newColours };
   const layers = [bag, ...Object.values(stickers).map((st) => toCells(st.rows))];
   snap(layers, caseColours, [...GIRL_KEYS, '}', '{', '1']);
+  smooth(bag); solidEdge(bag);
   Object.values(stickers).forEach((st, i) => { st.rows = rows(layers[i + 1]); });
 }
 const CASE = { w: bag[0].length, h: bag.length, palette: pal(caseRaw, [bag, ...Object.values(stickers).map((s) => toCells(s.rows))]), body: rows(bag), stickers };
