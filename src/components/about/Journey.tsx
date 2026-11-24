@@ -19,6 +19,8 @@ import designareMics from "../../../public/assets/about/designare-mics.jpg";
 import gdscLead from "../../../public/assets/about/gdsc-open-source-lead.jpg";
 import cardProcess from "../../../public/assets/about/pokemon-card-process.jpg";
 import cardSilver from "../../../public/assets/about/pokemon-card-silver.jpg";
+import keploySwag from "../../../public/assets/about/keploy-swag.jpg";
+import sketchLine from "../../../public/assets/about/sketch-line.jpg";
 import deskNow from "../../../public/assets/about/desk-now.jpg";
 
 // The journey, told as pinned moments. All copy comes from Sanskriti's own notes and posts.
@@ -100,7 +102,7 @@ export function Journey() {
             sent to drawing competitions. I never stopped.
           </p>
         </Step>
-        <div className="relative mx-auto aspect-[10/9] w-full max-w-[420px]">
+        <div className="relative mx-auto aspect-[10/12] w-full max-w-[420px]">
           <PinnedPhoto
             src={paintingSetup}
             alt="Sanskriti's painting table: brushes, paint pots, a sketchbook and a laptop showing Starry Night references"
@@ -119,6 +121,12 @@ export function Journey() {
             alt="Sanskriti's pencil sketch of an anime character next to a red Demon Slayer logo"
             box="absolute right-[4%] top-[50%] w-[50%]"
             tilt="-rotate-[2deg]"
+          />
+          <PinnedPhoto
+            src={sketchLine}
+            alt="Sanskriti's pen line drawing of a girl with flowing hair and roses, on paper lying on grass"
+            box="absolute left-[4%] top-[61%] w-[34%]"
+            tilt="rotate-[3deg]"
           />
         </div>
       </div>
@@ -266,8 +274,8 @@ I wrote this when I was in my first sem. However, the mentorship I received from
             YC-backed company.
           </p>
         </Step>
-        {/* a side project from those days: the silver Pokémon card, from sketch to Figma */}
-        <div className="relative mx-auto aspect-[10/7] w-full max-w-[420px] md:col-start-1">
+        {/* a side project from those days (the silver Pokémon card, from sketch to Figma) and Keploy swag */}
+        <div className="relative mx-auto aspect-[10/12] w-full max-w-[420px] md:col-start-1">
           <PinnedPhoto
             src={cardProcess}
             alt="A hand-drawn design process sketch held in front of a laptop showing the silver Pokémon card case study in Figma"
@@ -283,6 +291,13 @@ I wrote this when I was in my first sem. However, the mentorship I received from
             tilt="rotate-[5deg]"
             caption="silver pokémon card"
             sizes="(min-width: 768px) 150px, 34vw"
+          />
+          <PinnedPhoto
+            src={keploySwag}
+            alt="A black Keploy T-shirt and Keploy rabbit stickers next to a laptop"
+            box="absolute left-[30%] top-[60%] w-[38%]"
+            tilt="rotate-[2deg]"
+            caption="keploy swag"
           />
         </div>
         <ol className="skeu grid rounded-2xl px-5 py-2 md:col-start-2 md:row-span-2 md:row-start-1 md:self-start">

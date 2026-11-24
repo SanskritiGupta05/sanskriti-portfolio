@@ -3,6 +3,7 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { AboutCollage } from "@/components/about/AboutCollage";
 import { Journey } from "@/components/about/Journey";
+import { OffScreen } from "@/components/about/OffScreen";
 
 export const metadata: Metadata = {
   title: "About · Sanskriti",
@@ -17,6 +18,7 @@ export default function AboutPage() {
       <main>
         <AboutCollage />
         <Journey />
+        <OffScreen />
       </main>
       <Footer />
     </div>
