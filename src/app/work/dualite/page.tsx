@@ -87,7 +87,7 @@ export default function Dualite() {
           {/* her line from the Framer page, word for word apart from the capital I */}
           <P>All of the illustration that I made for marketing team of Dualite.</P>
           <div className="mx-auto w-full max-w-[460px]">
-            <Shot {...d("alpha-launch", 2000, 3540, "Dualite Alpha is now launched: the launch creative with the app")} />
+            <Shot {...d("alpha-launch", 2000, 3586, "Dualite Alpha is now launched: the launch creative with the app")} />
           </div>
         </Section>
 
