@@ -853,3 +853,4 @@ _Sanskriti picked **A**, with the Fuji scene moved to the footer (see 8d)._
 
 - **Playground: Halo still added (2026-11-24).** Her Figma frame "Haloe - 12" (file c2GH2WuMbC17mi3kImhzwP, node 223:225) exported at 2× as `public/assets/playground/halo.png` (1740×1954). It sits full width as row 3, right after pixel buddy, so her first two rows stay as she set them.
 - **Playground: haloe card paired with the Halo still (2026-11-24).** Her Figma card (Haloe file, node 223:332, cloud + "haloe" wordmark) exported at 2× as `haloe-card.png` (2482×3162). Row 3 is now that card next to `halo.png`, same height (pairs stack on phones).
+- **Playground: haloe construction beside the card (2026-11-24).** Her pasted image of the logo's construction lines (`haloe-construction.png`, 1152×1350, as given) now pairs with `haloe-card.png` in row 3; `halo.png` moved to its own full-width row 4 just below.
