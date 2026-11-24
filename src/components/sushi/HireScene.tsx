@@ -369,7 +369,9 @@ export function FujiScene({ className = "" }: { className?: string }) {
   return (
     <div ref={ref} aria-hidden="true" className={`overflow-hidden ${className}`} style={{ aspectRatio: `${FUJI_W} / ${FUJI_H}` }}>
       {rows && <Layer rows={rows} palette={night ? FUJI_NIGHT : FUJI_DAY} />}
-      {/* the train runs along the track (rows 36–41), moving a whole cell at a time */}
+      {/* the train runs along the track (rows 36–41), moving a whole cell at a time; it fades in and out
+          near both ends of the track instead of being sliced off by the edge of the scene */}
+      <div className="absolute inset-0 [mask-image:linear-gradient(90deg,transparent_0%,#000_22%,#000_78%,transparent_100%)]">
       <motion.div
         className="absolute"
         style={{ width: `${(TRAIN[0].length / FUJI_W) * 100}%`, aspectRatio: `${TRAIN[0].length} / ${TRAIN.length}`, top: `${(36 / FUJI_H) * 100}%`, left: `${(-TRAIN[0].length / FUJI_W) * 100}%` }}
@@ -379,6 +381,7 @@ export function FujiScene({ className = "" }: { className?: string }) {
       >
         <Layer rows={TRAIN} palette={TRAIN_PAL} />
       </motion.div>
+      </div>
     </div>
   );
 }
