@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { CASE, GIRL } from "../../../assets/footer/sprites.js";
-import { PALETTE, buildFrame } from "../../../assets/mascot/mascot.js";
 
 // The footer's sign-off scene, from Sanskriti's footer reference: "One last thing", the hire-me line
 // with "Japan trip." underlined in red, a Calendly button, pixel Sanskriti resting her chin on her
@@ -63,53 +62,6 @@ export function PixelGirl({ className = "" }: { className?: string }) {
       {/* the heart bubble bobs */}
       <motion.div className="absolute inset-0" animate={still ? undefined : { y: ["0%", "-2.4%", "0%"] }} transition={loop(2.8)}>
         <Layer rows={GIRL.bubble} palette={GIRL.palette} />
-      </motion.div>
-    </div>
-  );
-}
-
-// ---------- or: the home coffee pose itself (same sprite as the hero), with happy eyes ----------
-// the heart bubble, cropped out of the footer sprite as its own small layer
-const BUBBLE = (() => {
-  const rows = GIRL.bubble.map((r: string) => [...r]);
-  const ys = rows.map((r: string[], y: number) => (r.some((c) => c !== ".") ? y : -1)).filter((y: number) => y >= 0);
-  const xs = rows.flatMap((r: string[]) => r.map((c, x) => (c !== "." ? x : -1))).filter((x: number) => x >= 0);
-  const [y0, y1, x0, x1] = [Math.min(...ys), Math.max(...ys), Math.min(...xs), Math.max(...xs)];
-  return { w: x1 - x0 + 1, h: y1 - y0 + 1, rows: rows.slice(y0, y1 + 1).map((r: string[]) => r.slice(x0, x1 + 1).join("")) };
-})();
-
-export function CoffeeGirl({ className = "" }: { className?: string }) {
-  const still = useReducedMotion();
-  const [f, setF] = useState(0);
-  const [blink, setBlink] = useState(false);
-  useEffect(() => {
-    if (still) return;
-    let frame = 0, timer = 0, next = Date.now() + 2500;
-    const tick = () => {
-      frame = (frame + 1) % 8;
-      const now = Date.now();
-      const b = now > next && now < next + 160;
-      if (now > next + 160) next = now + 2500 + Math.random() * 2500;
-      setF(frame);
-      setBlink(b);
-      timer = window.setTimeout(tick, b ? 160 : 360);
-    };
-    timer = window.setTimeout(tick, 360);
-    return () => window.clearTimeout(timer);
-  }, [still]);
-  const grid = buildFrame("coffee", f, { blink, eyes: "happy" }) as string[][];
-  const rows = grid.map((r) => r.join(""));
-  return (
-    <div className={className || "relative"} style={{ aspectRatio: "1 / 1" }} role="img" aria-label="Pixel-art Sanskriti with her heart mug, smiling">
-      <Layer rows={rows} palette={PALETTE as Record<string, string>} />
-      {/* the heart bubble by her head, bobbing (its cells are ¾ of hers: 3px when she is drawn at 4px) */}
-      <motion.div
-        className="absolute"
-        style={{ width: `${((BUBBLE.w * 0.75) / 64) * 100}%`, aspectRatio: `${BUBBLE.w} / ${BUBBLE.h}`, left: "70%", top: "-6%" }}
-        animate={still ? undefined : { y: ["0%", "-8%", "0%"] }}
-        transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <Layer rows={BUBBLE.rows} palette={GIRL.palette} />
       </motion.div>
     </div>
   );
@@ -328,19 +280,11 @@ export function HireHeading({ calendly }: { calendly: string }) {
 
 // ---------- the whole stage over the belt ----------
 // Below xl the sprites sit in a row under the heading; from xl they flank it like the reference.
-// Pixel sprites are drawn at whole screen pixels per cell (girl 97 cells: 2px, 3px from xl;
+// Pixel sprites are drawn at whole screen pixels per cell (girl 99 cells: 2px = 198px;
 // suitcase 46 cells: 2px) so every pixel is the same size and stays crisp.
-export function HireScene({
-  calendly,
-  stickers,
-  pose = "chin",
-}: {
-  calendly: string;
-  stickers: Partial<Record<StickerName, Social>>;
-  pose?: "chin" | "coffee";
-}) {
+export function HireScene({ calendly, stickers }: { calendly: string; stickers: Partial<Record<StickerName, Social>> }) {
   return (
-    <div className="relative pt-6 pb-[132px] md:pb-[140px] xl:pb-[44px]">
+    <div className="relative pt-6 pb-[108px] xl:pb-[44px]">
       <HireHeading calendly={calendly} />
       {/* Fuji sits a little above the belt so its train stays in view; Sanskriti and the bag are tucked ~10px behind the back rail (its top edge is 74px below this stage) */}
       <FujiScene className="absolute right-[max(-24px,calc(50%-330px))] bottom-[-30px] w-[210px] md:right-[max(0px,calc(50%-390px))] md:w-[300px] xl:right-auto xl:left-[calc(50%+284px)] xl:w-[342px]" />
@@ -348,12 +292,7 @@ export function HireScene({
         links={stickers}
         className="absolute right-[max(20px,calc(50%-300px))] bottom-[-84px] w-[92px] md:right-[max(24px,calc(50%-300px))] xl:right-auto xl:left-[calc(50%+193px)]"
       />
-      {pose === "chin" ? (
-        <PixelGirl className="absolute bottom-[-84px] left-[max(4px,calc(50%-330px))] w-[194px] xl:left-[calc(50%-536px)] xl:w-[291px]" />
-      ) : (
-        // the coffee sprite is 64×64: 3px cells (192px) below xl, 4px (256px) from xl
-        <CoffeeGirl className="absolute bottom-[-84px] left-[max(4px,calc(50%-330px))] w-[192px] xl:left-[calc(50%-560px)] xl:w-[256px]" />
-      )}
+      <PixelGirl className="absolute bottom-[-84px] left-[max(12px,calc(50%-320px))] w-[198px] xl:left-[calc(50%-440px)]" />
     </div>
   );
 }

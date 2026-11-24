@@ -1,8 +1,8 @@
 // Builds the footer's pixel sprites (pixel Sanskriti resting her chin on her hands, and her
 // travel suitcase) from Sanskriti's footer reference. Its pixel grid isn't regular (it drifts by up
 // to ~1.5 px between areas), so the cells are found by extract-adaptive.mjs, which cuts on the real
-// pixel edges instead of a fixed grid:
-//   node assets/footer/extract-adaptive.mjs explorations/_ref/footer-ref.png 320 195 668 494 3 4 assets/footer/girl.raw.json 0.75
+// pixel edges instead of a fixed grid (used for the suitcase; the girl looked best on the regular grid):
+//   node assets/mascot/tools/extract.mjs explorations/_ref/footer-ref.png 3.5 3.5 322 196 99 90 assets/footer/girl.raw.json  (girl: regular grid)
 //   node assets/footer/extract-adaptive.mjs explorations/_ref/footer-ref.png 1268 348 1414 510 2 4 assets/footer/case.raw.json 0.75
 // then: node assets/footer/build-sprites.mjs  →  assets/footer/sprites.js
 // Cleaning only removes things that aren't part of the sprite (the cherry branch, background specks,
@@ -89,32 +89,6 @@ const smooth = (g) => {
   }
   for (let y = 0; y < H; y++) g[y] = out[y];
 };
-// Pixel-art clean-up for areas painted in a few shades (the hair): a pixel with at most `keep`
-// same-coloured pixels among its 8 neighbours is noise, and takes the most common colour around it.
-// Repeated a few times this turns speckled strands into solid clusters, like the home sprites.
-const declump = (g, only, keep = 1, passes = 3) => {
-  const H = g.length, W = g[0].length;
-  for (let p = 0; p < passes; p++) {
-    const out = g.map((r) => [...r]);
-    for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
-      const c = g[y][x];
-      if (!only.includes(c)) continue;
-      const count = {};
-      let same = 0, empty = 0;
-      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
-        if (!dx && !dy) continue;
-        const n = g[y + dy][x + dx];
-        if (n === '.') { empty++; continue; }
-        if (n === c) same++;
-        count[n] = (count[n] || 0) + 1;
-      }
-      if (empty || same > keep) continue; // keep outer edges and pixels that belong to a cluster
-      const [best] = Object.entries(count).sort((a, b) => b[1] - a[1])[0];
-      if (only.includes(best)) out[y][x] = best; // only trade hair shades for hair shades
-    }
-    for (let y = 0; y < H; y++) g[y] = out[y];
-  }
-};
 // grey anti-aliasing on an outer edge becomes the solid outline
 const solidEdge = (g) => {
   const H = g.length, W = g[0].length, empty = (y, x) => y < 0 || y >= H || x < 0 || x >= W || g[y][x] === '.';
@@ -129,21 +103,21 @@ const pal = (raw, layers) => {
 const rows = (g) => g.map((r) => r.join(''));
 
 // --- pixel Sanskriti, chin on her hands, with her heart mug ---
+// Read on the regular 3.5 px grid (her pick: this version, with home colours and hair shades, looked
+// best; the adaptive re-read and the hair clean-up were rolled back for her).
 const girlRaw = load('./girl.raw.json');
-let girl = toCells(girlRaw.grid);
+let girl = toCells(girlRaw.grid).slice(0, 85); // below row 84 is the counter and the sushi in front
 blank(girl, 0, 15, 0, 46); // the cherry branch in the top-left corner
-blank(girl, 80, girl.length - 1, 88, 96); // a plate peeking in at the bottom right
+blank(girl, 78, 84, 88, 98); // a plate peeking in at the bottom right
 girl = despeck(girl);
 const girlColours = { ...PALETTE, ...girlRaw.newColours };
-const bubble = take(girl, 0, 20, 66, 96);
-const sparkles = take(girl, 19, 40, 9, 28);
-const steam = take(girl, 50, 72, 0, 13); // steam is pale by nature: not defringed
+const bubble = take(girl, 0, 19, 70, 98);
+const sparkles = take(girl, 20, 41, 9, 27);
+const steam = take(girl, 50, 71, 0, 14); // steam is pale by nature: not defringed
 defringe(girl, girlColours); defringe(bubble, girlColours); defringe(sparkles, girlColours);
 gradeHair([girl, bubble], girlColours);
 snap([girl, bubble, steam], girlColours, [...GIRL_KEYS]);
 for (const row of sparkles) for (let x = 0; x < row.length; x++) if (row[x] !== '.') row[x] = 'G'; // the home mascot's sparkle gold
-smooth(girl);
-declump(girl, 'atir');
 const GIRL = { w: girl[0].length, h: girl.length, palette: pal(girlRaw, [girl, bubble, sparkles, steam]), body: rows(girl), bubble: rows(bubble), sparkles: rows(sparkles), steam: rows(steam) };
 
 // --- the travel suitcase, with four stickers that peel off ---
