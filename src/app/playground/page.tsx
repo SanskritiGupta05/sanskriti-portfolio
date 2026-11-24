@@ -37,8 +37,12 @@ const ROWS: Piece[][] = [
     vid("mood", 1300, 1740, "A mood check-in app: turning a weather dial changes how the cloud feels", "What if checking in with yourself felt as simple as picking today's weather? 🌞🌩️⛅️ Designed this fun little interaction over the weekend! 🪄🎨"),
   ],
   [vid("pixel-buddy", 1920, 1150, "A context-window meter with a tiny pixel buddy reacting while an agent works", "A tiny pixel buddy making the coding process a little more fun with agents 🪄")],
-  // Halo (Figma "Haloe - 12" at 2×): the weather mood check-in screen with its dial colours and icons
-  [img("halo.png", 1740, 1954, "Halo, a mood check-in app: the 'How's your weather today?' screen beside its weather dial and icon set")],
+  // Halo (Figma file "Haloe", nodes 223:332 and 223:225 at 2×): the app's cloud card, then the
+  // weather mood check-in screen with its dial colours and icons, as a pair
+  [
+    img("haloe-card.png", 2482, 3162, "The haloe app card: a soft pastel cloud winking above the haloe wordmark"),
+    img("halo.png", 1740, 1954, "Halo, a mood check-in app: the 'How's your weather today?' screen beside its weather dial and icon set"),
+  ],
   [vid("diwali", 1920, 954, "Little Lights, a Diwali photo album: photos clipped into a red album under lanterns and fireworks", "Little Lights (Sound ON!)", "https://diwali-album.vercel.app")],
   [img("mosaic.webp", 2000, 1337, "Mosaic, a bedtime story app: sign up, new releases and a story chapter on three phones")],
   [
