@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Ticket } from "@/components/casestudy/pieces";
-import { CaseStudyFrame, Note, P, Quote, Section, Shot, type TocItem } from "@/components/casestudy/Margin";
+import { CaseStudyFrame, Note, P, Quote, Section, type TocItem } from "@/components/casestudy/Margin";
 import { Anatomy, AppMap, Beat, CategoryGrid, Clip, LawBehind, LoopChart, Reel, Screen, Screens } from "@/components/uxie/Uxie";
 
 export const metadata: Metadata = {
@@ -14,6 +14,16 @@ export const metadata: Metadata = {
 
 // UXie case study. Recordings are Sanskriti's own screen captures of the app; screens are from her
 // "UX laws iOS app" Figma file; illustrations are the redrawn in-app ones (never the early reference cards).
+// her screens shown as-is: no frame, not re-compressed, with an optional caption (tap to zoom comes from the /work layout)
+function Shot({ src, w, h, alt, caption }: { src: string; w: number; h: number; alt: string; caption?: string }) {
+  return (
+    <figure className="grid gap-2">
+      <Image src={src} alt={alt} width={w} height={h} unoptimized className="block h-auto w-full" />
+      {caption && <figcaption className="label">{caption}</figcaption>}
+    </figure>
+  );
+}
+
 const img = (name: string, w: number, h: number) => ({ src: `/assets/cases/uxie/${name}.webp`, w, h });
 
 const TOC: TocItem[] = [
@@ -35,16 +45,17 @@ const TOC: TocItem[] = [
 
 export default function UxLaws() {
   return (
-    <div className="mx-auto w-full max-w-[1080px] px-6">
-      <div className="mx-auto max-w-[826px]">
+    <div className="w-full [&_nav[aria-label=Contents]]:font-serif [&_nav[aria-label=Contents]_.label]:text-[15px] [&_nav[aria-label=Contents]_.label]:tracking-normal [&_nav[aria-label=Contents]_.label]:normal-case [&_nav[aria-label=Contents]_a]:text-[15px] [&_article>section>.label:first-child]:flex [&_article>section>.label:first-child]:items-center [&_article>section>.label:first-child]:gap-2.5 [&_article>section>.label:first-child]:font-mono [&_article>section>.label:first-child]:!text-[14px] [&_article>section>.label:first-child]:font-bold [&_article>section>.label:first-child]:!tracking-[0.14em] [&_article>section>.label:first-child]:!text-(--cs-accent) [&_article>section>.label:first-child]:before:content-[''] [&_article>section>.label:first-child]:before:size-[7px] [&_article>section>.label:first-child]:before:shrink-0 [&_article>section>.label:first-child]:before:rounded-full [&_article>section>.label:first-child]:before:bg-(--cs-accent) [&_article>section>.label:first-child]:before:shadow-[0_0_0_3px_color-mix(in_srgb,var(--cs-accent)_35%,transparent)]">
+      <div className="mx-auto max-w-[826px] px-6">
         <Nav />
       </div>
 
       <CaseStudyFrame
+        layout="sheet"
         toc={TOC}
         header={
           <header className="pt-6">
-            <Link href="/#work" className="label !text-ink underline-offset-4 hover:underline">
+            <Link href="/work#vibe" className="label !text-ink underline-offset-4 hover:underline">
               ← All work
             </Link>
             <div className="mt-8 flex items-center gap-4">
@@ -259,7 +270,7 @@ export default function UxLaws() {
           </P>
           <P>I&apos;m still refining dark mode and getting the experience ready for more people to use.</P>
           <Quote>The best way to learn UX laws is to start designing with them.</Quote>
-          <Link href="/#work" className="label mt-6 w-fit !text-ink underline-offset-4 hover:underline">
+          <Link href="/work#vibe" className="label mt-6 w-fit !text-ink underline-offset-4 hover:underline">
             ← Back to all work
           </Link>
         </Section>

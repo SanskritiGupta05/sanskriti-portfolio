@@ -33,16 +33,18 @@ const TOC: TocItem[] = [
 
 export default function SpiderVerse() {
   return (
-    <div className="mx-auto w-full max-w-[1080px] px-6">
-      <div className="mx-auto max-w-[826px]">
+    <div className="w-full [&_nav[aria-label=Contents]]:font-serif [&_nav[aria-label=Contents]_.label]:text-[15px] [&_nav[aria-label=Contents]_.label]:tracking-normal [&_nav[aria-label=Contents]_.label]:normal-case [&_nav[aria-label=Contents]_a]:text-[15px] [&_article>section>.label:first-child]:flex [&_article>section>.label:first-child]:items-center [&_article>section>.label:first-child]:gap-2.5 [&_article>section>.label:first-child]:font-mono [&_article>section>.label:first-child]:!text-[14px] [&_article>section>.label:first-child]:font-bold [&_article>section>.label:first-child]:!tracking-[0.14em] [&_article>section>.label:first-child]:!text-(--cs-accent) [&_article>section>.label:first-child]:before:content-[''] [&_article>section>.label:first-child]:before:size-[7px] [&_article>section>.label:first-child]:before:shrink-0 [&_article>section>.label:first-child]:before:rounded-full [&_article>section>.label:first-child]:before:bg-(--cs-accent) [&_article>section>.label:first-child]:before:shadow-[0_0_0_3px_color-mix(in_srgb,var(--cs-accent)_35%,transparent)]">
+      <div className="mx-auto max-w-[826px] px-6">
         <Nav />
       </div>
 
       <CaseStudyFrame
+        layout="sheet"
+        accent="#E21B22"
         toc={TOC}
         header={
           <header className="pt-6">
-            <Link href="/#vibe" className="label !text-ink underline-offset-4 hover:underline">
+            <Link href="/work#vibe" className="label !text-ink underline-offset-4 hover:underline">
               ← All work
             </Link>
             <span className="label mt-8 block">Vibe-coded project · Web + iOS</span>
@@ -243,7 +245,7 @@ export default function SpiderVerse() {
             <a href={LIVE} target="_blank" rel="noreferrer" className="rounded-full bg-[#e3342f] px-5 py-2.5 text-sm text-white transition hover:-translate-y-0.5">
               Ready to meet your spider? ↗
             </a>
-            <Link href="/#vibe" className="label !text-ink underline-offset-4 hover:underline">
+            <Link href="/work#vibe" className="label !text-ink underline-offset-4 hover:underline">
               ← Back to all work
             </Link>
           </div>
