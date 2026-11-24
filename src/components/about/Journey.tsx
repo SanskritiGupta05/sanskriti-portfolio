@@ -17,6 +17,8 @@ import designareCard from "../../../public/assets/about/designare-card.jpg";
 import designareBanner from "../../../public/assets/about/designare-banner.jpg";
 import designareMics from "../../../public/assets/about/designare-mics.jpg";
 import gdscLead from "../../../public/assets/about/gdsc-open-source-lead.jpg";
+import cardProcess from "../../../public/assets/about/pokemon-card-process.jpg";
+import cardSilver from "../../../public/assets/about/pokemon-card-silver.jpg";
 import deskNow from "../../../public/assets/about/desk-now.jpg";
 
 // The journey, told as pinned moments. All copy comes from Sanskriti's own notes and posts.
@@ -264,7 +266,26 @@ I wrote this when I was in my first sem. However, the mentorship I received from
             YC-backed company.
           </p>
         </Step>
-        <ol className="skeu grid rounded-2xl px-5 py-2">
+        {/* a side project from those days: the silver Pokémon card, from sketch to Figma */}
+        <div className="relative mx-auto aspect-[10/7] w-full max-w-[420px] md:col-start-1">
+          <PinnedPhoto
+            src={cardProcess}
+            alt="A hand-drawn design process sketch held in front of a laptop showing the silver Pokémon card case study in Figma"
+            box="absolute left-[0%] top-[6%] w-[64%]"
+            tilt="-rotate-[3deg]"
+            caption="sketch first, then figma"
+            sizes="(min-width: 768px) 270px, 60vw"
+          />
+          <PinnedPhoto
+            src={cardSilver}
+            alt="Sanskriti's silver holo Pokémon card design featuring Pikachu"
+            box="absolute right-[2%] top-[0%] w-[34%]"
+            tilt="rotate-[5deg]"
+            caption="silver pokémon card"
+            sizes="(min-width: 768px) 150px, 34vw"
+          />
+        </div>
+        <ol className="skeu grid rounded-2xl px-5 py-2 md:col-start-2 md:row-span-2 md:row-start-1 md:self-start">
           {workStops.map((w, i) => {
             const row = (
               <>
