@@ -284,13 +284,13 @@ export function HireScene({ calendly, stickers }: { calendly: string; stickers: 
   return (
     <div className="relative pt-6 pb-[96px] md:pb-[130px] xl:pb-[44px]">
       <HireHeading calendly={calendly} />
-      {/* Fuji sits a little above the belt so its train stays in view; Sanskriti and the bag are tucked behind the back rail */}
+      {/* Fuji sits a little above the belt so its train stays in view; Sanskriti and the bag are tucked ~10px behind the back rail (its top edge is 74px below this stage) */}
       <FujiScene className="absolute right-[max(-24px,calc(50%-330px))] bottom-[-30px] w-[210px] md:right-[max(0px,calc(50%-390px))] md:w-[300px] xl:right-auto xl:left-[calc(50%+284px)] xl:w-[342px]" />
       <PixelSuitcase
         links={stickers}
-        className="absolute right-[max(20px,calc(50%-300px))] bottom-[-64px] w-[78px] md:right-[max(24px,calc(50%-300px))] md:w-[92px] xl:right-auto xl:left-[calc(50%+193px)] xl:w-[104px]"
+        className="absolute right-[max(20px,calc(50%-300px))] bottom-[-84px] w-[78px] md:right-[max(24px,calc(50%-300px))] md:w-[92px] xl:right-auto xl:left-[calc(50%+193px)] xl:w-[104px]"
       />
-      <PixelGirl className="absolute bottom-[-64px] left-[max(4px,calc(50%-330px))] w-[168px] md:w-[210px] xl:left-[calc(50%-488px)] xl:w-[248px]" />
+      <PixelGirl className="absolute bottom-[-84px] left-[max(4px,calc(50%-330px))] w-[168px] md:w-[210px] xl:left-[calc(50%-488px)] xl:w-[248px]" />
     </div>
   );
 }
