@@ -19,7 +19,7 @@ export function Nav() {
           <Image src="/assets/stamp-s-nav.png" alt="" width={36} height={39} unoptimized className="-rotate-6 transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110" priority />
         </Link>
         <div className="flex items-center justify-start gap-8">
-          <a href="#playground" className={link}>Playground</a>
+          <Link href="/playground" className={link}>Playground</Link>
           <VisitorCount />
         </div>
       </nav>
