@@ -9,6 +9,7 @@ import sketchLine from "../../../public/assets/about/sketch-line.jpg";
 import tweetCss from "../../../public/assets/about/tweet-css-notes.png";
 import tweetHashnode from "../../../public/assets/about/tweet-hashnode.png";
 import tweetHacktoberfest from "../../../public/assets/about/tweet-hacktoberfest.png";
+import majorProject from "../../../public/assets/about/major-project.jpg";
 import gdscLead from "../../../public/assets/about/gdsc-open-source-lead.jpg";
 import postmanBox from "../../../public/assets/about/postman-box.jpg";
 import devfestScreen from "../../../public/assets/about/devfest-screen.jpg";
@@ -205,7 +206,9 @@ export function Journey() {
               <ToolMark tool="github" />, gave a talk on{" "}
               <Hi c="orange">Hacktoberfest 2023</Hi> <Pixel name="mic" />,
               became a Postman API Fundamentals Student Expert, and went to
-              DevFest 2023 in New Delhi.
+              DevFest 2023 in New Delhi. In my last semester we wrapped up with
+              our major project, <Hi c="green">Health Cure</Hi>.{" "}
+              <Pixel name="sparkle" />
             </p>
           </Step>
         </div>
@@ -248,6 +251,13 @@ export function Journey() {
             tilt="-rotate-[1deg]"
             keepColor
             sizes="(min-width: 768px) 260px, 45vw"
+          />
+          <PinnedPhoto
+            src={majorProject}
+            alt="Sanskriti holding her bound B.Tech major project report, Health Cure (CSE, 2023-24), in front of the IIMT College of Engineering sign; the students' names and roll numbers are blurred"
+            box={board}
+            tilt="-rotate-[2deg]"
+            caption="major project: done and dusted"
           />
           <PinnedPhoto
             src={devfestScreen}
@@ -451,9 +461,11 @@ export function Journey() {
             <p>
               These days I design products and{" "}
               <Hi c="green">build ideas in code with AI</Hi>{" "}
-              <span className="whitespace-nowrap"><Pixel name="bot" /> <ToolMark tool="claude" />:</span> a Spider-Verse
-              card reveal, a UX Laws app, Little Lights for Diwali, and this
-              very site.{" "}
+              <span className="whitespace-nowrap">
+                <Pixel name="bot" /> <ToolMark tool="claude" />:
+              </span>{" "}
+              a Spider-Verse card reveal, a UX Laws app, Little Lights for
+              Diwali, and this very site.{" "}
               <Hi c="lilac">If I don&apos;t know something, I learn it.</Hi>
             </p>
           </Step>
