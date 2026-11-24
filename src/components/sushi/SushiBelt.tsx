@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { motion, useAnimationFrame, useInView, useMotionValue, useReducedMotion, useTransform } from "motion/react";
 import { BELT_H, MENU, NOREN, SURFACE, beltSvg } from "./art";
 import { Branch, FallingPetals, HANG_X, HANG_Y, Lantern, Shoji } from "./Decor";
@@ -110,7 +110,11 @@ function Chopsticks() {
   );
 }
 
-export function SushiBelt() {
+// optional slots (all empty by default): `noren` replaces the plain noren drawing, `above` sits in the
+// open space over the noren, `aside` is pinned beside the noren, `below` comes after the belt
+type Slots = { noren?: ReactNode; above?: ReactNode; aside?: ReactNode; below?: ReactNode };
+
+export function SushiBelt({ noren, above, aside, below }: Slots = {}) {
   const box = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
   const onScreen = useInView(box, { margin: "200px 0px" });
@@ -192,9 +196,12 @@ export function SushiBelt() {
       {/* petals drifting down from both branches, fading before the counter */}
       <FallingPetals active={onScreen} className="absolute inset-0 hidden overflow-hidden md:block" />
 
+      {above}
+
       {/* the noren over the counter */}
-      <div className="relative mt-[180px] grid justify-items-center">
-        <Art svg={NOREN} w={220} h={76} />
+      <div className={`relative grid justify-items-center ${above ? "mt-[100px]" : "mt-[180px]"}`}>
+        {aside}
+        {noren ?? <Art svg={NOREN} w={220} h={76} />}
       </div>
 
       {/* the belt */}
@@ -286,6 +293,7 @@ export function SushiBelt() {
         </div>
       </div>
 
+      {below}
     </footer>
   );
 }
