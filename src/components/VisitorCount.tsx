@@ -3,6 +3,8 @@
 import { Eye } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { getVisitCount, registerVisit } from "@/app/actions/visits";
+
 let request: Promise<number | null> | null = null;
 function load() {
     if (request) return request;
@@ -10,9 +12,8 @@ function load() {
     try {
         seen = localStorage.getItem("visited") === "1";
     } catch {}
-    request = fetch("/api/visits", { method: seen ? "GET" : "POST" })
-        .then((r) => r.json())
-        .then(({ count }: { count: number | null }) => {
+    request = (seen ? getVisitCount() : registerVisit())
+        .then((count) => {
             if (!seen && count !== null)
                 try {
                     localStorage.setItem("visited", "1");
