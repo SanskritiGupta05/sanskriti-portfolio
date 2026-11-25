@@ -1,744 +1,637 @@
+import { type LucideIcon, Megaphone, PenTool, Share2, Users } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { Nav } from "@/components/Nav";
+
+import { CaseStudyFrame, P, Section, type TocItem } from "@/components/casestudy/Margin";
+import { Mark } from "@/components/casestudy/Mark";
+import { Ticket } from "@/components/casestudy/pieces";
 import { Testimonial } from "@/components/casestudy/Testimonial";
 import { Footer } from "@/components/Footer";
-import { Ticket } from "@/components/casestudy/pieces";
-import Image from "next/image";
-import { Mark } from "@/components/casestudy/Mark";
-import {
-  Megaphone,
-  PenTool,
-  Share2,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
-import {
-  CaseStudyFrame,
-  P,
-  Section,
-  type TocItem,
-} from "@/components/casestudy/Margin";
+import { Nav } from "@/components/Nav";
 
 export const metadata: Metadata = {
-  title: "Keploy · Sanskriti",
-  description:
-    "Product and visual design for Keploy, an open-source test case generation platform for developers.",
+    title: "Keploy · Sanskriti",
+    description:
+        "Product and visual design for Keploy, an open-source test case generation platform for developers.",
 };
 
-// Keploy (early career), in the clipped-sheet case study layout.
-// Copy and visuals are Sanskriti's own, from her Keploy boards in the Portfolio Figma file
-// (section 1554:1985); Neha Gupta's words are from her Framer site. Nothing added.
-// Images in public/assets/cases/keploy/.
 type Img = { src: string; w: number; h: number; alt: string };
 const k = (name: string, w: number, h: number, alt: string): Img => ({
-  src: `/assets/cases/keploy/${name}.webp`,
-  w,
-  h,
-  alt,
+    src: `/assets/cases/keploy/${name}.webp`,
+    w,
+    h,
+    alt,
 });
 
 const TOC: TocItem[] = [
-  { id: "about", label: "Working for Keploy" },
-  { id: "worked-on", label: "What I worked on" },
-  { id: "product", label: "Product design" },
-  { id: "illustrations", label: "Custom illustrations" },
-  { id: "website", label: "Website illustrations" },
-  { id: "email", label: "E-mail graphics" },
-  { id: "marketing", label: "Marketing graphics" },
-  { id: "social", label: "Social media assets" },
-  { id: "vectors", label: "Other vector illustrations" },
-  { id: "words", label: "Kind words" },
+    { id: "about", label: "Working for Keploy" },
+    { id: "worked-on", label: "What I worked on" },
+    { id: "product", label: "Product design" },
+    { id: "illustrations", label: "Custom illustrations" },
+    { id: "website", label: "Website illustrations" },
+    { id: "email", label: "E-mail graphics" },
+    { id: "marketing", label: "Marketing graphics" },
+    { id: "social", label: "Social media assets" },
+    { id: "vectors", label: "Other vector illustrations" },
+    { id: "words", label: "Kind words" },
 ];
 
 const WORKED_ON: [string, string[]][] = [
-  [
-    "Product Design",
     [
-      "Revamped the VS Code extension UI.",
-      "Improved Sign-up flow for a smoother onboarding.",
-      "Worked on Navbar Assets.",
+        "Product Design",
+        [
+            "Revamped the VS Code extension UI.",
+            "Improved Sign-up flow for a smoother onboarding.",
+            "Worked on Navbar Assets.",
+        ],
     ],
-  ],
-  [
-    "Marketing & Growth",
     [
-      "Created custom illustrations for website and documentation.",
-      "Designed email campaigns and event graphics.",
-      "Contributed to pitch decks & flyers for clients and investors.",
+        "Marketing & Growth",
+        [
+            "Created custom illustrations for website and documentation.",
+            "Designed email campaigns and event graphics.",
+            "Contributed to pitch decks & flyers for clients and investors.",
+        ],
     ],
-  ],
-  [
-    "Social Media Assets",
     [
-      "Built visuals showcasing community milestones.",
-      "Designed graphics for LinkedIn growth campaigns.",
+        "Social Media Assets",
+        [
+            "Built visuals showcasing community milestones.",
+            "Designed graphics for LinkedIn growth campaigns.",
+        ],
     ],
-  ],
-  [
-    "Brand & Community",
     [
-      "Maintained visual consistency across platforms.",
-      "Built design templates to streamline future assets.",
+        "Brand & Community",
+        [
+            "Maintained visual consistency across platforms.",
+            "Built design templates to streamline future assets.",
+        ],
     ],
-  ],
 ];
 
-// her notes beside the first sketches, word for word
-// the tools she used day to day, with their official logos (public/assets/tools/, from Wikimedia Commons)
 const TOOLS = [
-  {
-    name: "Adobe Illustrator",
-    logo: "/assets/tools/illustrator.svg",
-    w: 240,
-    h: 234,
-  },
-  {
-    name: "Adobe Photoshop",
-    logo: "/assets/tools/photoshop.svg",
-    w: 240,
-    h: 234,
-  },
-  { name: "Figma", logo: "/assets/tools/figma.svg", w: 200, h: 300 },
+    {
+        name: "Adobe Illustrator",
+        logo: "/assets/tools/illustrator.svg",
+        w: 240,
+        h: 234,
+    },
+    {
+        name: "Adobe Photoshop",
+        logo: "/assets/tools/photoshop.svg",
+        w: 240,
+        h: 234,
+    },
+    { name: "Figma", logo: "/assets/tools/figma.svg", w: 200, h: 300 },
 ];
 
-// [title, note, phrase to highlight]
 const SKETCH_NOTES: [string, string, string][] = [
-  [
-    "API Testing",
-    "circuit-like visual connected blocks, with some blocks highlighted to represent “issues caught.”",
-    "circuit-like visual connected blocks",
-  ],
-  [
-    "API Testing",
-    "we can use code graphics then API test generation",
-    "code graphics",
-  ],
-  [
-    "Unit Testing",
-    "Puzzle blocks or simple blocks a speedometer type visual to represent full coverage a button in the middle with a hand clicking on it to represent one click testing.",
-    "a speedometer type visual to represent full coverage",
-  ],
-  [
-    "Integration Testing",
-    "glowing mock/test icon in the center. Arrows looping inwards and outwards from a central node, symbolizing interaction and replication. mock tests representation",
-    "glowing mock/test icon in the center",
-  ],
+    [
+        "API Testing",
+        "circuit-like visual connected blocks, with some blocks highlighted to represent “issues caught.”",
+        "circuit-like visual connected blocks",
+    ],
+    ["API Testing", "we can use code graphics then API test generation", "code graphics"],
+    [
+        "Unit Testing",
+        "Puzzle blocks or simple blocks a speedometer type visual to represent full coverage a button in the middle with a hand clicking on it to represent one click testing.",
+        "a speedometer type visual to represent full coverage",
+    ],
+    [
+        "Integration Testing",
+        "glowing mock/test icon in the center. Arrows looping inwards and outwards from a central node, symbolizing interaction and replication. mock tests representation",
+        "glowing mock/test icon in the center",
+    ],
 ];
 
-// Her work shown as-is: no rounded frame or backing (they boxed in artwork that has its own
-// rounded corners), served unoptimized so Next doesn't re-compress it. Pieces on a plain white
-// canvas get a thin outline so they don't melt into the white page.
-// the vector illustrations sit on a soft grey panel instead (her pick); multiply turns their white canvas grey
 const ON_GREY = new Set(["vector-2", "vector-4"]);
 const ON_WHITE = new Set([
-  "email-flyer-1",
-  "email-flyer-2",
-  "signup",
-  "vscode-1",
-  "vscode-2",
-  "vscode-3",
-  "linkedin-1",
-  "linkedin-2",
-  "web-1",
-  "card-illustrations",
+    "email-flyer-1",
+    "email-flyer-2",
+    "signup",
+    "vscode-1",
+    "vscode-2",
+    "vscode-3",
+    "linkedin-1",
+    "linkedin-2",
+    "web-1",
+    "card-illustrations",
 ]);
 
 function Shot({
-  src,
-  w,
-  h,
-  alt,
-  caption,
+    src,
+    w,
+    h,
+    alt,
+    caption,
 }: {
-  src: string;
-  w: number;
-  h: number;
-  alt: string;
-  caption?: string;
+    src: string;
+    w: number;
+    h: number;
+    alt: string;
+    caption?: string;
 }) {
-  const name = src.split("/").pop()?.replace(".webp", "") ?? "";
-  return (
-    <figure
-      className={`grid gap-2 ${ON_GREY.has(name) ? "bg-[#f3f2ef] p-3 sm:p-4" : ""}`}
-    >
-      <Image
-        src={src}
-        alt={alt}
-        width={w}
-        height={h}
-        unoptimized
-        className={`block h-auto w-full ${ON_WHITE.has(name) ? "border border-line" : ""} ${ON_GREY.has(name) ? "mix-blend-multiply" : ""}`}
-      />
-      {caption && <figcaption className="label">{caption}</figcaption>}
-    </figure>
-  );
+    const name = src.split("/").pop()?.replace(".webp", "") ?? "";
+    return (
+        <figure className={`grid gap-2 ${ON_GREY.has(name) ? "bg-[#f3f2ef] p-3 sm:p-4" : ""}`}>
+            <Image
+                src={src}
+                alt={alt}
+                width={w}
+                height={h}
+                unoptimized
+                className={`block h-auto w-full ${ON_WHITE.has(name) ? "border border-line" : ""} ${ON_GREY.has(name) ? "mix-blend-multiply" : ""}`}
+            />
+            {caption && <figcaption className="label">{caption}</figcaption>}
+        </figure>
+    );
 }
 
-// a small soft-orange tile with an icon for each "What I worked on" group (Keploy orange)
 const WORK_ICONS: Record<string, LucideIcon> = {
-  "Product Design": PenTool,
-  "Marketing & Growth": Megaphone,
-  "Social Media Assets": Share2,
-  "Brand & Community": Users,
+    "Product Design": PenTool,
+    "Marketing & Growth": Megaphone,
+    "Social Media Assets": Share2,
+    "Brand & Community": Users,
 };
 
 function WorkIcon({ head }: { head: string }) {
-  const Icon = WORK_ICONS[head];
-  if (!Icon) return null;
-  return (
-    <span
-      aria-hidden="true"
-      className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#FDEBDD] text-[#E8762E] shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_0_0_1px_rgba(232,118,46,0.15)]"
-    >
-      <Icon size={18} strokeWidth={1.8} />
-    </span>
-  );
+    const Icon = WORK_ICONS[head];
+    if (!Icon) return null;
+    return (
+        <span
+            aria-hidden="true"
+            className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#FDEBDD] text-[#E8762E] shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_0_0_1px_rgba(232,118,46,0.15)]"
+        >
+            <Icon size={18} strokeWidth={1.8} />
+        </span>
+    );
 }
 
-// a sketch note with one phrase highlighted (orange marker, like the rest of the page)
 function MarkedNote({ note, mark }: { note: string; mark: string }) {
-  const at = note.indexOf(mark);
-  if (at < 0) return <>{note}</>;
-  return (
-    <>
-      {note.slice(0, at)}
-      <Mark type="marker">{mark}</Mark>
-      {note.slice(at + mark.length)}
-    </>
-  );
+    const at = note.indexOf(mark);
+    if (at < 0) return <>{note}</>;
+    return (
+        <>
+            {note.slice(0, at)}
+            <Mark type="marker">{mark}</Mark>
+            {note.slice(at + mark.length)}
+        </>
+    );
 }
 
-function Grid({
-  items,
-  cols = "sm:grid-cols-2",
-}: {
-  items: Img[];
-  cols?: string;
-}) {
-  return (
-    <div className={`grid items-start gap-4 ${cols}`}>
-      {items.map((s) => (
-        <Shot key={s.src} {...s} />
-      ))}
-    </div>
-  );
+function Grid({ items, cols = "sm:grid-cols-2" }: { items: Img[]; cols?: string }) {
+    return (
+        <div className={`grid items-start gap-4 ${cols}`}>
+            {items.map((s) => (
+                <Shot key={s.src} {...s} />
+            ))}
+        </div>
+    );
 }
 
 function Sub({ children }: { children: React.ReactNode }) {
-  return <h3 className="mt-4 font-serif text-h1m text-head">{children}</h3>;
+    return <h3 className="mt-4 font-serif text-h1m text-head">{children}</h3>;
 }
 
 export default function Keploy() {
-  return (
-    // the contents list in Redaction (her ask, like the Bounce page)
-    <div
-      style={
-        {
-          "--scribble": "#E8762E",
-          "--scribble-fill": "#FCD5B5",
-          "--marker-height": "13px",
-        } as React.CSSProperties
-      }
-      className="w-full [&_article>section>.label:first-child]:flex [&_article>section>.label:first-child]:items-center [&_article>section>.label:first-child]:gap-2.5 [&_article>section>.label:first-child]:font-mono [&_article>section>.label:first-child]:!text-[14px] [&_article>section>.label:first-child]:font-bold [&_article>section>.label:first-child]:!tracking-[0.14em] [&_article>section>.label:first-child]:!text-(--cs-accent) [&_article>section>.label:first-child]:before:content-[''] [&_article>section>.label:first-child]:before:size-[7px] [&_article>section>.label:first-child]:before:shrink-0 [&_article>section>.label:first-child]:before:rounded-full [&_article>section>.label:first-child]:before:bg-(--cs-accent) [&_article>section>.label:first-child]:before:shadow-[0_0_0_3px_color-mix(in_srgb,var(--cs-accent)_35%,transparent)] [&_nav[aria-label=Contents]]:font-serif [&_nav[aria-label=Contents]_.label]:text-[15px] [&_nav[aria-label=Contents]_.label]:tracking-normal [&_nav[aria-label=Contents]_.label]:normal-case [&_nav[aria-label=Contents]_a]:text-[15px]"
-    >
-      <div className="mx-auto max-w-[826px] px-6">
-        <Nav />
-      </div>
-
-      <CaseStudyFrame
-        layout="sheet"
-        accent="#F8904A"
-        toc={TOC}
-        header={
-          <header>
-            <Link
-              href="/work#early"
-              className="label !text-ink underline-offset-4 hover:underline"
-            >
-              ← All work
-            </Link>
-            <span className="label mt-8 block">Early career · Freelance</span>
-            <h1 className="mt-3 font-serif text-h2 text-head">Keploy</h1>
-            <p className="mt-3 max-w-[34ch] font-worn text-h1 text-balance text-head">
-              Open-source test case generation for developers.
-            </p>
-            <div className="mt-8">
-              <Ticket
-                kicker="Product and visual designer"
-                text="Keploy is an open-source end-to-end test case generation platform that allows developers to generate tests straight from their API calls, without writing them manually."
-                meta={[
-                  { k: "My role", v: "Product and visual designer" },
-                  { k: "Duration", v: "3 months" },
-                  { k: "Scope", v: "Product, marketing, social, brand" },
-                ]}
-              />
-            </div>
-            <div className="mt-8">
-              <span className="label">Tools I used day to day</span>
-              <ul className="mt-3 flex flex-wrap gap-3">
-                {TOOLS.map((t) => (
-                  <li
-                    key={t.name}
-                    className="skeu flex items-center gap-2.5 rounded-full py-2 pr-4 pl-2.5"
-                  >
-                    <Image
-                      src={t.logo}
-                      alt=""
-                      width={t.w}
-                      height={t.h}
-                      unoptimized
-                      className="h-6 w-auto"
-                    />
-                    <span className="text-sm text-head">{t.name}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="mt-10">
-              <Shot
-                src="/assets/cases/early-keploy.webp"
-                w={1800}
-                h={1324}
-                alt="Keploy work at a glance"
-              />
-            </div>
-          </header>
-        }
-      >
-        <Section
-          id="about"
-          label="Working for Keploy"
-          title="Built for speed, reliability, and a seamless developer experience."
-        >
-          <P>
-            Keploy is an open-source end-to-end test case generation platform
-            that allows developers to generate tests straight from their API
-            calls, without writing them manually. It&apos;s built for speed,
-            reliability, and making testing a seamless part of the developer
-            experience.
-          </P>
-          <div className="skeu rounded-2xl p-6">
-            <span className="label">Overall challenges</span>
-            <p className="printed mt-3 text-sm leading-relaxed">
-              Designing for developer-facing tools was{" "}
-              <Mark type="marker">no easy feat</Mark>.{" "}
-              <span className="text-[#F8904A]">
-                It required a lot of brainstorming, constant iteration, and
-                close collaboration with both developers &amp; stakeholders to
-                ensure the designs genuinely communicated what{" "}
-                <span className="whitespace-nowrap">
-                  <Image
-                    src="/assets/cases/keploy/keploy-icon.webp"
-                    alt=""
-                    width={197}
-                    height={251}
-                    unoptimized
-                    className="mr-1 inline-block h-[1.05em] w-auto -translate-y-[0.1em] align-middle mix-blend-multiply"
-                  />
-                  Keploy
-                </span>{" "}
-                is about.
-              </span>
-            </p>
-            <p className="printed mt-3 text-sm leading-relaxed">
-              Understanding technical workflows and translating them into
-              intuitive, visually engaging interfaces{" "}
-              <Mark type="marker">pushed me out of my comfort zone</Mark>, but
-              in the best way possible. This challenge turned out to be{" "}
-              <Mark type="marker" order={1}>
-                one of my biggest learning experiences
-              </Mark>
-              , and I&apos;m grateful for it.
-            </p>
-          </div>
-        </Section>
-
-        <Section
-          id="worked-on"
-          label="What I worked on"
-          title="Product, marketing, social and brand."
-        >
-          <ul className="grid gap-4 sm:grid-cols-2">
-            {WORKED_ON.map(([head, items]) => (
-              <li key={head} className="skeu rounded-2xl p-5">
-                <span className="flex items-center gap-3">
-                  <WorkIcon head={head} />
-                  <span className="font-serif text-h1m text-head">{head}</span>
-                </span>
-                <ul className="printed mt-3 grid gap-1.5 text-sm leading-relaxed">
-                  {items.map((t) => (
-                    <li key={t} className="flex gap-2">
-                      <span aria-hidden="true" className="text-[#e8833a]">
-                        ◆
-                      </span>
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section
-          id="product"
-          label="Product design"
-          title="VS Code extension and sign-up."
-        >
-          <div className="max-w-[560px]">
-            <Shot
-              {...k(
-                "vscode-hero",
-                931,
-                931,
-                "Welcome to Keploy in the VS Code extension: generate unit and integration tests",
-              )}
-            />
-          </div>
-          <Sub>VS Code screens · dark mode + light mode</Sub>
-          <Shot
-            {...k("vscode-1", 1348, 708, "Keploy VS Code extension, dark mode")}
-          />
-          <Grid
-            items={[
-              k("vscode-2", 1337, 708, "Keploy VS Code extension, dark mode"),
-              k("vscode-3", 1337, 708, "Keploy VS Code extension, light mode"),
-            ]}
-          />
-          <Sub>Sign-up screen</Sub>
-          <Shot
-            {...k(
-              "signup",
-              1315,
-              750,
-              "Welcome to Keploy Console sign-up screen",
-            )}
-          />
-        </Section>
-
-        <Section
-          id="illustrations"
-          label="Custom illustrations"
-          title="Technical accuracy, visual clarity."
-        >
-          <P>
-            <strong className="font-normal text-head [-webkit-text-stroke:0.45px_currentColor]">
-              One of the most challenging yet rewarding tasks was crafting
-              custom illustrations for the website.
-            </strong>
-          </P>
-          <P>
-            Designing for Keploy, a developer-focused tool, meant I had to
-            strike{" "}
-            <Mark type="marker">
-              the right balance between technical accuracy and visual clarity
-            </Mark>
-            , all while ensuring the illustrations aligned with our brand
-            aesthetics and tone.
-          </P>
-          <Sub>Card illustrations</Sub>
-          <Shot
-            {...k(
-              "card-illustrations",
-              1179,
-              837,
-              "Card illustrations: Ease your testing journey",
-            )}
-          />
-
-          <Sub>Initial sketches</Sub>
-          <div className="grid items-start gap-4 sm:grid-cols-2">
-            {[
-              k("sketch-1", 401, 161, "Sketch: API testing"),
-              k("sketch-2", 401, 164, "Sketch: API testing"),
-              k("sketch-3", 359, 204, "Sketch: Unit testing"),
-              k("sketch-4", 339, 204, "Sketch: Integration testing"),
-            ].map((s, i) => (
-              <figure key={s.src} className="grid gap-2">
-                <Shot {...s} />
-                <figcaption className="printed text-sm leading-relaxed">
-                  <strong className="font-normal text-head">
-                    {SKETCH_NOTES[i][0]}:
-                  </strong>{" "}
-                  <MarkedNote
-                    note={SKETCH_NOTES[i][1]}
-                    mark={SKETCH_NOTES[i][2]}
-                  />
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-
-          <Sub>First ideation</Sub>
-          <Grid
-            cols="grid-cols-1 sm:grid-cols-3"
-            items={[
-              k("idea-a", 417, 311, "First ideation"),
-              k("idea-b", 417, 311, "First ideation"),
-              k("idea-c", 417, 311, "First ideation"),
-            ]}
-          />
-          <Sub>Second ideation</Sub>
-          <Grid
-            cols="grid-cols-1 sm:grid-cols-3"
-            items={[
-              k("idea2-api", 422, 315, "Second ideation: API testing"),
-              k("idea2-unit", 422, 315, "Second ideation: Unit testing"),
-              k(
-                "idea2-integration",
-                422,
-                315,
-                "Second ideation: Integration testing",
-              ),
-            ]}
-          />
-          <Sub>Final ideations</Sub>
-          <Shot {...k("final-api", 2054, 2368, "Final: API testing")} />
-          <Shot {...k("final-unit", 2054, 2368, "Final: Unit testing")} />
-          <Shot
-            {...k(
-              "final-integration",
-              2054,
-              2276,
-              "Final: Integration testing",
-            )}
-          />
-        </Section>
-
-        <Section
-          id="website"
-          label="Other website illustrations"
-          title="For bento sections and beyond."
-        >
-          {/* bento tiles, the "Confident" section, then the graphics (her headings) */}
-          <Sub>For bento sections</Sub>
-          <Shot
-            {...k(
-              "web-1",
-              1189,
-              966,
-              "Bento section: trusted, secure, community-driven",
-            )}
-          />
-          <Shot
-            {...k(
-              "web-2",
-              1190,
-              371,
-              "Graphic: security and compliance badges",
-            )}
-          />
-          <Shot
-            {...k("web-bento", 1191, 894, "Graphic: Keploy trending on GitHub")}
-          />
-          <Shot
-            {...k("web-other", 1143, 571, "Graphic: programs and recognitions")}
-          />
-          <Sub>For other sections</Sub>
-          <Shot
-            {...k(
-              "web-3",
-              1148,
-              604,
-              "Section: Confident. Scalable. Reliable. Testing with AI for all scenarios",
-            )}
-          />
-          <Sub>The graphics</Sub>
-          <Shot
-            {...k(
-              "graphic-1",
-              1325,
-              939,
-              "Section illustration: Keploy test agent in a pull request",
-            )}
-          />
-          <Shot
-            {...k(
-              "graphic-2",
-              1324,
-              943,
-              "Section illustration: Keploy test dashboard",
-            )}
-          />
-          <Shot
-            {...k(
-              "graphic-3",
-              1325,
-              899,
-              "Section illustration: Keploy coverage analytics",
-            )}
-          />
-        </Section>
-
-        <Section id="email" label="E-mail graphics" title="Banners and flyers.">
-          <Sub>E-mail banners</Sub>
-          <Shot
-            {...k(
-              "email-banner-1",
-              1308,
-              347,
-              "E-mail banner: Record & mock live traffic",
-            )}
-          />
-          <Shot
-            {...k(
-              "email-banner-2",
-              1308,
-              347,
-              "E-mail banner: Record & mock live traffic",
-            )}
-          />
-          <Sub>E-mail flyers</Sub>
-          <Grid
-            items={[
-              k(
-                "email-flyer-1",
-                642,
-                1161,
-                "E-mail flyer: You're out of credits",
-              ),
-              k("email-flyer-2", 643, 681, "E-mail flyer: Credits added"),
-            ]}
-          />
-        </Section>
-
-        <Section
-          id="marketing"
-          label="Marketing graphics"
-          title="Pitch decks and advertisements."
-        >
-          <Sub>Pitch deck for clients</Sub>
-          <Shot
-            {...k(
-              "pitch-deck",
-              1344,
-              866,
-              "Pitch deck for clients (confidential, blurred)",
-            )}
-            caption="Confidential 🔐"
-          />
-          <Sub>Website advertisements</Sub>
-          <Grid
-            items={[
-              k(
-                "web-ad-light",
-                1278,
-                2342,
-                "Website ad: Get to 90% coverage fast",
-              ),
-              k(
-                "web-ad-dark",
-                1306,
-                2340,
-                "Website ad: 90% coverage, zero manual effort",
-              ),
-            ]}
-          />
-          <Sub>LinkedIn advertisements</Sub>
-          <Grid
-            items={[
-              k(
-                "linkedin-1",
-                1273,
-                1273,
-                "LinkedIn ad: 100+ working API tests",
-              ),
-              k(
-                "linkedin-2",
-                1271,
-                1271,
-                "LinkedIn ad: Get to 90% coverage fast",
-              ),
-            ]}
-          />
-        </Section>
-
-        <Section
-          id="social"
-          label="Social media assets"
-          title="Community milestones."
-        >
-          <Grid
-            items={[
-              k(
-                "social-1",
-                1263,
-                747,
-                "VS Code extension crossed 255K+ installs",
-              ),
-              k(
-                "social-2",
-                1267,
-                749,
-                "VS Code extension crossed 255K+ installs, dark",
-              ),
-            ]}
-          />
-          <Grid
-            items={[
-              k("social-3", 1267, 951, "Keploy is #1 on GitHub"),
-              k("social-4", 1265, 807, "We have surpassed Rest Assured"),
-            ]}
-          />
-          <Shot
-            {...k(
-              "social-5",
-              1257,
-              707,
-              "Keploy picked up G2 Spring 2025 badges",
-            )}
-          />
-        </Section>
-
-        <Section id="vectors" label="Other vector illustrations">
-          <Grid
-            items={[
-              k("vector-2", 759, 629, "Vector: Keploy savings"),
-              k("vector-4", 1000, 568, "Vector: test checklist"),
-            ]}
-          />
-        </Section>
-
-        <Section id="words" label="Kind words">
-          {/* her client's testimonial (words, photo from her Framer testimonial card; logo from her Keploy board) */}
-          <Testimonial
-            pull={
-              <>
-                Her ownership, reliability, and attention to detail make her
-                someone I&apos;d happily recommend to any product team.
-              </>
+    return (
+        <div
+            style={
+                {
+                    "--scribble": "#E8762E",
+                    "--scribble-fill": "#FCD5B5",
+                    "--marker-height": "13px",
+                } as React.CSSProperties
             }
-            name="Neha Gupta"
-            role="Co-Founder, Keploy"
-            photo="/assets/cases/keploy/neha-gupta.webp"
-            logo={{
-              src: "/assets/cases/keploy/keploy-logo.webp",
-              w: 1056,
-              h: 251,
-              alt: "Keploy",
-            }}
-            quoteColor="#F8904A"
-          >
-            Sanskriti has been an absolute pleasure to work with. She
-            consistently delivers high-quality work on time and brings a deep
-            understanding of the developer tools ecosystem, which reflects in
-            every design decision she makes. Beyond strong visual design skills,
-            she approaches problems with a product mindset, collaborates
-            seamlessly with engineering, and takes feedback exceptionally well.
-          </Testimonial>
-          <Link
-            href="/work#early"
-            className="label mt-6 w-fit !text-ink underline-offset-4 hover:underline"
-          >
-            ← Back to all work
-          </Link>
-        </Section>
-      </CaseStudyFrame>
+            className="w-full [&_article>section>.label:first-child]:flex [&_article>section>.label:first-child]:items-center [&_article>section>.label:first-child]:gap-2.5 [&_article>section>.label:first-child]:font-mono [&_article>section>.label:first-child]:!text-[14px] [&_article>section>.label:first-child]:font-bold [&_article>section>.label:first-child]:!tracking-[0.14em] [&_article>section>.label:first-child]:!text-(--cs-accent) [&_article>section>.label:first-child]:before:content-[''] [&_article>section>.label:first-child]:before:size-[7px] [&_article>section>.label:first-child]:before:shrink-0 [&_article>section>.label:first-child]:before:rounded-full [&_article>section>.label:first-child]:before:bg-(--cs-accent) [&_article>section>.label:first-child]:before:shadow-[0_0_0_3px_color-mix(in_srgb,var(--cs-accent)_35%,transparent)] [&_nav[aria-label=Contents]]:font-serif [&_nav[aria-label=Contents]_.label]:text-[15px] [&_nav[aria-label=Contents]_.label]:tracking-normal [&_nav[aria-label=Contents]_.label]:normal-case [&_nav[aria-label=Contents]_a]:text-[15px]"
+        >
+            <div className="mx-auto max-w-[826px] px-6">
+                <Nav />
+            </div>
 
-      <div className="mx-auto max-w-[826px]">
-        <Footer />
-      </div>
-    </div>
-  );
+            <CaseStudyFrame
+                layout="sheet"
+                accent="#F8904A"
+                toc={TOC}
+                header={
+                    <header>
+                        <Link
+                            href="/work#early"
+                            className="label !text-ink underline-offset-4 hover:underline"
+                        >
+                            ← All work
+                        </Link>
+                        <span className="label mt-8 block">Early career · Freelance</span>
+                        <h1 className="mt-3 font-serif text-h2 text-head">Keploy</h1>
+                        <p className="mt-3 max-w-[34ch] font-worn text-h1 text-balance text-head">
+                            Open-source test case generation for developers.
+                        </p>
+                        <div className="mt-8">
+                            <Ticket
+                                kicker="Product and visual designer"
+                                text="Keploy is an open-source end-to-end test case generation platform that allows developers to generate tests straight from their API calls, without writing them manually."
+                                meta={[
+                                    { k: "My role", v: "Product and visual designer" },
+                                    { k: "Duration", v: "3 months" },
+                                    { k: "Scope", v: "Product, marketing, social, brand" },
+                                ]}
+                            />
+                        </div>
+                        <div className="mt-8">
+                            <span className="label">Tools I used day to day</span>
+                            <ul className="mt-3 flex flex-wrap gap-3">
+                                {TOOLS.map((t) => (
+                                    <li
+                                        key={t.name}
+                                        className="skeu flex items-center gap-2.5 rounded-full py-2 pr-4 pl-2.5"
+                                    >
+                                        <Image
+                                            src={t.logo}
+                                            alt=""
+                                            width={t.w}
+                                            height={t.h}
+                                            unoptimized
+                                            className="h-6 w-auto"
+                                        />
+                                        <span className="text-sm text-head">{t.name}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="mt-10">
+                            <Shot
+                                src="/assets/cases/early-keploy.webp"
+                                w={1800}
+                                h={1324}
+                                alt="Keploy work at a glance"
+                            />
+                        </div>
+                    </header>
+                }
+            >
+                <Section
+                    id="about"
+                    label="Working for Keploy"
+                    title="Built for speed, reliability, and a seamless developer experience."
+                >
+                    <P>
+                        Keploy is an open-source end-to-end test case generation platform that
+                        allows developers to generate tests straight from their API calls, without
+                        writing them manually. It&apos;s built for speed, reliability, and making
+                        testing a seamless part of the developer experience.
+                    </P>
+                    <div className="skeu rounded-2xl p-6">
+                        <span className="label">Overall challenges</span>
+                        <p className="printed mt-3 text-sm leading-relaxed">
+                            Designing for developer-facing tools was{" "}
+                            <Mark type="marker">no easy feat</Mark>.{" "}
+                            <span className="text-[#F8904A]">
+                                It required a lot of brainstorming, constant iteration, and close
+                                collaboration with both developers &amp; stakeholders to ensure the
+                                designs genuinely communicated what{" "}
+                                <span className="whitespace-nowrap">
+                                    <Image
+                                        src="/assets/cases/keploy/keploy-icon.webp"
+                                        alt=""
+                                        width={197}
+                                        height={251}
+                                        unoptimized
+                                        className="mr-1 inline-block h-[1.05em] w-auto -translate-y-[0.1em] align-middle mix-blend-multiply"
+                                    />
+                                    Keploy
+                                </span>{" "}
+                                is about.
+                            </span>
+                        </p>
+                        <p className="printed mt-3 text-sm leading-relaxed">
+                            Understanding technical workflows and translating them into intuitive,
+                            visually engaging interfaces{" "}
+                            <Mark type="marker">pushed me out of my comfort zone</Mark>, but in the
+                            best way possible. This challenge turned out to be{" "}
+                            <Mark type="marker" order={1}>
+                                one of my biggest learning experiences
+                            </Mark>
+                            , and I&apos;m grateful for it.
+                        </p>
+                    </div>
+                </Section>
+
+                <Section
+                    id="worked-on"
+                    label="What I worked on"
+                    title="Product, marketing, social and brand."
+                >
+                    <ul className="grid gap-4 sm:grid-cols-2">
+                        {WORKED_ON.map(([head, items]) => (
+                            <li key={head} className="skeu rounded-2xl p-5">
+                                <span className="flex items-center gap-3">
+                                    <WorkIcon head={head} />
+                                    <span className="font-serif text-h1m text-head">{head}</span>
+                                </span>
+                                <ul className="printed mt-3 grid gap-1.5 text-sm leading-relaxed">
+                                    {items.map((t) => (
+                                        <li key={t} className="flex gap-2">
+                                            <span aria-hidden="true" className="text-[#e8833a]">
+                                                ◆
+                                            </span>
+                                            {t}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </li>
+                        ))}
+                    </ul>
+                </Section>
+
+                <Section id="product" label="Product design" title="VS Code extension and sign-up.">
+                    <div className="max-w-[560px]">
+                        <Shot
+                            {...k(
+                                "vscode-hero",
+                                931,
+                                931,
+                                "Welcome to Keploy in the VS Code extension: generate unit and integration tests",
+                            )}
+                        />
+                    </div>
+                    <Sub>VS Code screens · dark mode + light mode</Sub>
+                    <Shot {...k("vscode-1", 1348, 708, "Keploy VS Code extension, dark mode")} />
+                    <Grid
+                        items={[
+                            k("vscode-2", 1337, 708, "Keploy VS Code extension, dark mode"),
+                            k("vscode-3", 1337, 708, "Keploy VS Code extension, light mode"),
+                        ]}
+                    />
+                    <Sub>Sign-up screen</Sub>
+                    <Shot {...k("signup", 1315, 750, "Welcome to Keploy Console sign-up screen")} />
+                </Section>
+
+                <Section
+                    id="illustrations"
+                    label="Custom illustrations"
+                    title="Technical accuracy, visual clarity."
+                >
+                    <P>
+                        <strong className="font-normal text-head [-webkit-text-stroke:0.45px_currentColor]">
+                            One of the most challenging yet rewarding tasks was crafting custom
+                            illustrations for the website.
+                        </strong>
+                    </P>
+                    <P>
+                        Designing for Keploy, a developer-focused tool, meant I had to strike{" "}
+                        <Mark type="marker">
+                            the right balance between technical accuracy and visual clarity
+                        </Mark>
+                        , all while ensuring the illustrations aligned with our brand aesthetics and
+                        tone.
+                    </P>
+                    <Sub>Card illustrations</Sub>
+                    <Shot
+                        {...k(
+                            "card-illustrations",
+                            1179,
+                            837,
+                            "Card illustrations: Ease your testing journey",
+                        )}
+                    />
+
+                    <Sub>Initial sketches</Sub>
+                    <div className="grid items-start gap-4 sm:grid-cols-2">
+                        {[
+                            k("sketch-1", 401, 161, "Sketch: API testing"),
+                            k("sketch-2", 401, 164, "Sketch: API testing"),
+                            k("sketch-3", 359, 204, "Sketch: Unit testing"),
+                            k("sketch-4", 339, 204, "Sketch: Integration testing"),
+                        ].map((s, i) => (
+                            <figure key={s.src} className="grid gap-2">
+                                <Shot {...s} />
+                                <figcaption className="printed text-sm leading-relaxed">
+                                    <strong className="font-normal text-head">
+                                        {SKETCH_NOTES[i][0]}:
+                                    </strong>{" "}
+                                    <MarkedNote
+                                        note={SKETCH_NOTES[i][1]}
+                                        mark={SKETCH_NOTES[i][2]}
+                                    />
+                                </figcaption>
+                            </figure>
+                        ))}
+                    </div>
+
+                    <Sub>First ideation</Sub>
+                    <Grid
+                        cols="grid-cols-1 sm:grid-cols-3"
+                        items={[
+                            k("idea-a", 417, 311, "First ideation"),
+                            k("idea-b", 417, 311, "First ideation"),
+                            k("idea-c", 417, 311, "First ideation"),
+                        ]}
+                    />
+                    <Sub>Second ideation</Sub>
+                    <Grid
+                        cols="grid-cols-1 sm:grid-cols-3"
+                        items={[
+                            k("idea2-api", 422, 315, "Second ideation: API testing"),
+                            k("idea2-unit", 422, 315, "Second ideation: Unit testing"),
+                            k(
+                                "idea2-integration",
+                                422,
+                                315,
+                                "Second ideation: Integration testing",
+                            ),
+                        ]}
+                    />
+                    <Sub>Final ideations</Sub>
+                    <Shot {...k("final-api", 2054, 2368, "Final: API testing")} />
+                    <Shot {...k("final-unit", 2054, 2368, "Final: Unit testing")} />
+                    <Shot {...k("final-integration", 2054, 2276, "Final: Integration testing")} />
+                </Section>
+
+                <Section
+                    id="website"
+                    label="Other website illustrations"
+                    title="For bento sections and beyond."
+                >
+                    <Sub>For bento sections</Sub>
+                    <Shot
+                        {...k(
+                            "web-1",
+                            1189,
+                            966,
+                            "Bento section: trusted, secure, community-driven",
+                        )}
+                    />
+                    <Shot {...k("web-2", 1190, 371, "Graphic: security and compliance badges")} />
+                    <Shot {...k("web-bento", 1191, 894, "Graphic: Keploy trending on GitHub")} />
+                    <Shot {...k("web-other", 1143, 571, "Graphic: programs and recognitions")} />
+                    <Sub>For other sections</Sub>
+                    <Shot
+                        {...k(
+                            "web-3",
+                            1148,
+                            604,
+                            "Section: Confident. Scalable. Reliable. Testing with AI for all scenarios",
+                        )}
+                    />
+                    <Sub>The graphics</Sub>
+                    <Shot
+                        {...k(
+                            "graphic-1",
+                            1325,
+                            939,
+                            "Section illustration: Keploy test agent in a pull request",
+                        )}
+                    />
+                    <Shot
+                        {...k(
+                            "graphic-2",
+                            1324,
+                            943,
+                            "Section illustration: Keploy test dashboard",
+                        )}
+                    />
+                    <Shot
+                        {...k(
+                            "graphic-3",
+                            1325,
+                            899,
+                            "Section illustration: Keploy coverage analytics",
+                        )}
+                    />
+                </Section>
+
+                <Section id="email" label="E-mail graphics" title="Banners and flyers.">
+                    <Sub>E-mail banners</Sub>
+                    <Shot
+                        {...k(
+                            "email-banner-1",
+                            1308,
+                            347,
+                            "E-mail banner: Record & mock live traffic",
+                        )}
+                    />
+                    <Shot
+                        {...k(
+                            "email-banner-2",
+                            1308,
+                            347,
+                            "E-mail banner: Record & mock live traffic",
+                        )}
+                    />
+                    <Sub>E-mail flyers</Sub>
+                    <Grid
+                        items={[
+                            k("email-flyer-1", 642, 1161, "E-mail flyer: You're out of credits"),
+                            k("email-flyer-2", 643, 681, "E-mail flyer: Credits added"),
+                        ]}
+                    />
+                </Section>
+
+                <Section
+                    id="marketing"
+                    label="Marketing graphics"
+                    title="Pitch decks and advertisements."
+                >
+                    <Sub>Pitch deck for clients</Sub>
+                    <Shot
+                        {...k(
+                            "pitch-deck",
+                            1344,
+                            866,
+                            "Pitch deck for clients (confidential, blurred)",
+                        )}
+                        caption="Confidential 🔐"
+                    />
+                    <Sub>Website advertisements</Sub>
+                    <Grid
+                        items={[
+                            k("web-ad-light", 1278, 2342, "Website ad: Get to 90% coverage fast"),
+                            k(
+                                "web-ad-dark",
+                                1306,
+                                2340,
+                                "Website ad: 90% coverage, zero manual effort",
+                            ),
+                        ]}
+                    />
+                    <Sub>LinkedIn advertisements</Sub>
+                    <Grid
+                        items={[
+                            k("linkedin-1", 1273, 1273, "LinkedIn ad: 100+ working API tests"),
+                            k("linkedin-2", 1271, 1271, "LinkedIn ad: Get to 90% coverage fast"),
+                        ]}
+                    />
+                </Section>
+
+                <Section id="social" label="Social media assets" title="Community milestones.">
+                    <Grid
+                        items={[
+                            k("social-1", 1263, 747, "VS Code extension crossed 255K+ installs"),
+                            k(
+                                "social-2",
+                                1267,
+                                749,
+                                "VS Code extension crossed 255K+ installs, dark",
+                            ),
+                        ]}
+                    />
+                    <Grid
+                        items={[
+                            k("social-3", 1267, 951, "Keploy is #1 on GitHub"),
+                            k("social-4", 1265, 807, "We have surpassed Rest Assured"),
+                        ]}
+                    />
+                    <Shot {...k("social-5", 1257, 707, "Keploy picked up G2 Spring 2025 badges")} />
+                </Section>
+
+                <Section id="vectors" label="Other vector illustrations">
+                    <Grid
+                        items={[
+                            k("vector-2", 759, 629, "Vector: Keploy savings"),
+                            k("vector-4", 1000, 568, "Vector: test checklist"),
+                        ]}
+                    />
+                </Section>
+
+                <Section id="words" label="Kind words">
+                    <Testimonial
+                        pull={
+                            <>
+                                Her ownership, reliability, and attention to detail make her someone
+                                I&apos;d happily recommend to any product team.
+                            </>
+                        }
+                        name="Neha Gupta"
+                        role="Co-Founder, Keploy"
+                        photo="/assets/cases/keploy/neha-gupta.webp"
+                        logo={{
+                            src: "/assets/cases/keploy/keploy-logo.webp",
+                            w: 1056,
+                            h: 251,
+                            alt: "Keploy",
+                        }}
+                        quoteColor="#F8904A"
+                    >
+                        Sanskriti has been an absolute pleasure to work with. She consistently
+                        delivers high-quality work on time and brings a deep understanding of the
+                        developer tools ecosystem, which reflects in every design decision she
+                        makes. Beyond strong visual design skills, she approaches problems with a
+                        product mindset, collaborates seamlessly with engineering, and takes
+                        feedback exceptionally well.
+                    </Testimonial>
+                    <Link
+                        href="/work#early"
+                        className="label mt-6 w-fit !text-ink underline-offset-4 hover:underline"
+                    >
+                        ← Back to all work
+                    </Link>
+                </Section>
+            </CaseStudyFrame>
+
+            <div className="mx-auto max-w-[826px]">
+                <Footer />
+            </div>
+        </div>
+    );
 }
