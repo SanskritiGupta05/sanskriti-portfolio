@@ -39,7 +39,7 @@ const SIZES: Record<string, [number, number]> = {
   renewals: [1696, 1085],
   errors: [1792, 1144],
   "ui-layer": [1792, 1916],
-  "flow-map": [1792, 977],
+  "flow-map": [2688, 1405],
 };
 
 const SKEU =
@@ -360,6 +360,7 @@ export function Decision({
   fig = "",
   alt = "",
   figure,
+  extra,
   call,
 }: {
   id: string;
@@ -371,6 +372,8 @@ export function Decision({
   alt?: string;
   // a live figure (e.g. the hub merge) instead of an image
   figure?: ReactNode;
+  // a second container under the figure (e.g. the flow as screens)
+  extra?: ReactNode;
   call: ReactNode;
 }) {
   return (
@@ -395,6 +398,7 @@ export function Decision({
             className="block h-auto w-full"
           />
         )}
+        {extra}
         <div
           className={`${SKEU} flex flex-col gap-2 rounded-[14px] px-5 py-4 sm:flex-row sm:gap-4`}
         >

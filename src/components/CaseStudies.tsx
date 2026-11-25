@@ -5,7 +5,7 @@
 import Image from "next/image";
 import { LuckyCat } from "./LuckyCat";
 
-// Bounce Daily leads (full width); eight.money and AppX sit side by side below it.
+// Bounce Daily leads (full width); AppX and eight.money sit side by side below it.
 // AppX has no case study page yet, so its card is "Coming soon" and doesn't link anywhere.
 const PROJECTS: { name: string; line: string; tags: string[]; img: string; href?: string }[] = [
   {
@@ -16,17 +16,17 @@ const PROJECTS: { name: string; line: string; tags: string[]; img: string; href?
     href: "/work/bounce-daily",
   },
   {
+    name: "AppX (YC'21)",
+    line: "Building and refining digital experiences across the AppX ecosystem, from product interfaces to design systems and brand experiences.",
+    tags: ["Product Design", "Coming soon"],
+    img: "/assets/cases/appx.webp",
+  },
+  {
     name: "eight.money",
     line: "Exploring the digital experience of a fintech product through thoughtful interfaces and product design.",
     tags: ["Product Design", "0 → 1"],
     img: "/assets/cases/eight-money.webp",
     href: "/work/eight-money",
-  },
-  {
-    name: "AppX (YC'21)",
-    line: "Building and refining digital experiences across the AppX ecosystem, from product interfaces to design systems and brand experiences.",
-    tags: ["Product Design", "Coming soon"],
-    img: "/assets/cases/appx.webp",
   },
 ];
 

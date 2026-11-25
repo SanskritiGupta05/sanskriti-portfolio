@@ -131,15 +131,21 @@ export function Caption({
   text,
   done,
   onReplay,
+  color,
 }: {
   step: number;
   text: string;
   done: boolean;
   onReplay: () => void;
+  // the badge takes a spotlight's colour (and number) while one is on, so caption and pin match
+  color?: string;
 }) {
   return (
     <div className="absolute right-6 bottom-5 left-6 flex items-center gap-3 rounded-lg border border-[#e2e2e2] bg-white px-4 py-3 shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-      <span className="grid size-6 shrink-0 place-items-center rounded-full bg-[#1e1e1e] text-[11px] font-semibold text-white">
+      <span
+        className="grid size-6 shrink-0 place-items-center rounded-full text-[11px] font-semibold text-white transition-colors duration-300"
+        style={{ background: color ?? "#1e1e1e" }}
+      >
         {step}
       </span>
       <span
@@ -410,5 +416,96 @@ export function Cursor({
         />
       </svg>
     </span>
+  );
+}
+
+// a spotlight on one area of a phone screen: the area keeps its colour inside a thin ring, the rest of the
+// phone dims (a huge box-shadow, clipped to the phone). Only one should be on at a time.
+export function Spotlight({
+  phone,
+  area,
+  color,
+  show,
+}: {
+  phone: { x: number; y: number; w: number; h: number };
+  area: { x: number; y: number; w: number; h: number };
+  color: string;
+  show: boolean;
+}) {
+  const pad = 4;
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute overflow-hidden rounded-[14px]"
+      style={{ left: phone.x, top: phone.y, width: phone.w, height: phone.h }}
+    >
+      <span
+        className="absolute rounded-[8px]"
+        style={{
+          left: area.x - phone.x - pad,
+          top: area.y - phone.y - pad,
+          width: area.w + pad * 2,
+          height: area.h + pad * 2,
+          border: `1.5px solid ${show ? color : "transparent"}`,
+          boxShadow: `0 0 0 999px rgba(24,24,27,${show ? 0.34 : 0})`,
+          transform: show ? "scale(1)" : "scale(1.04)",
+          transition:
+            "box-shadow 450ms cubic-bezier(0.22,1,0.36,1), border-color 450ms cubic-bezier(0.22,1,0.36,1), transform 450ms cubic-bezier(0.22,1,0.36,1)",
+        }}
+      />
+    </div>
+  );
+}
+
+// a comment card that can be the one in focus, a quieter one already read, or hidden; hovering or
+// focusing it calls onFocus so the stage can light up its area again
+export function NoteCard({
+  n,
+  title,
+  sub,
+  color,
+  state,
+  onFocus,
+  onBlur,
+  compact,
+}: {
+  n: number;
+  title: string;
+  sub: string;
+  color: string;
+  state: "hidden" | "active" | "read" | "rest";
+  onFocus?: () => void;
+  onBlur?: () => void;
+  // stacked (number above the text), for narrow cards set in a row
+  compact?: boolean;
+}) {
+  const shown = state !== "hidden";
+  const active = state === "active";
+  return (
+    <div
+      tabIndex={state === "rest" ? 0 : -1}
+      onMouseEnter={onFocus}
+      onMouseLeave={onBlur}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      className={`relative flex rounded-[10px] bg-white outline-none transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${compact ? "flex-col gap-2 p-2.5" : "gap-2.5 p-3"} ${shown ? "translate-0" : `pointer-events-none ${compact ? "translate-y-2" : "translate-x-3"}`} ${state === "rest" ? "cursor-default hover:-translate-y-0.5" : ""}`}
+      style={{
+        opacity: !shown ? 0 : state === "read" ? 0.5 : 1,
+        boxShadow: active
+          ? `0 8px 22px -6px rgba(0,0,0,0.16), 0 0 0 1.5px ${color}`
+          : "0 4px 14px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.07)",
+      }}
+    >
+      <span
+        className="grid size-5 shrink-0 place-items-center rounded-[10px] rounded-bl-[2px] text-[10px] font-semibold text-white"
+        style={{ background: color }}
+      >
+        {n}
+      </span>
+      <span className="grid gap-1">
+        <span className="text-[12px] leading-4 font-semibold text-[#1e1e1e]">{title}</span>
+        <span className="text-[11px] leading-[15px] text-[#5c5c5c]">{sub}</span>
+      </span>
+    </div>
   );
 }

@@ -52,15 +52,7 @@ const pins: {
 export function AboutCollage() {
   return (
     <section className="relative pt-6 pb-16 md:pb-20">
-      {/* corner note, like a slip of paper taped to the page */}
-      <p className="skeu-sunk printed mb-8 ml-auto w-fit max-w-[15rem] rotate-[1.5deg] rounded-sm px-5 py-4 text-sm text-[#c8553b] md:absolute md:top-0 md:right-0 md:mb-0">
-        If I don&apos;t know
-        <br />
-        something,
-        <br />I learn it.
-      </p>
-
-      <div className="relative md:mt-24">
+      <div className="relative md:mt-12">
         {/* the handwritten title, overlapping the frame's top edge */}
         <h1
           className={`${hand.className} relative z-10 mb-1 text-center text-balance text-h2m leading-none text-head md:absolute md:top-0 md:right-0 md:left-0 md:mb-0 md:text-h2`}
@@ -89,6 +81,17 @@ export function AboutCollage() {
             </div>
           </figure>
 
+          {/* her motto, as a sticky note taped into the collage's empty top-left corner */}
+          <p
+            className={`${hand.className} absolute top-[-2%] left-[-1%] z-10 w-[30%] -rotate-[5deg] bg-[#fff3c4] px-[3%] pt-[3.2%] pb-[2.4%] text-[15px] leading-[1.15] text-head shadow-[0_12px_20px_-12px_rgba(60,40,20,0.5)] md:top-[7%] md:left-[0%] md:w-[18%] md:text-[19px] dark:bg-[#3a3424]`}
+          >
+            <span
+              aria-hidden="true"
+              className="absolute -top-2.5 left-1/2 h-5 w-14 -translate-x-1/2 rotate-[4deg] bg-white/70 shadow-[0_1px_2px_rgba(0,0,0,0.08)]"
+            />
+            If I don&apos;t know something, <span className="text-[#c8553b]">I learn it.</span>
+          </p>
+
           {/* pinned photos */}
           {pins.map((p) => (
             <PinnedPhoto
@@ -102,8 +105,15 @@ export function AboutCollage() {
 
       {/* masthead line + the typed paragraph */}
       <div className="mt-10 grid gap-6 md:mt-6 md:grid-cols-[1fr_minmax(0,25rem)] md:items-end">
-        <p className="label order-2 !text-ink md:order-1">
-          About · Delhi NCR, India
+        <p className="order-2 flex flex-wrap items-center gap-2.5 md:order-1">
+          <span className="label !text-ink">About</span>
+          <span className="skeu-chip inline-flex items-center gap-1.5 rounded-full bg-bg px-3 py-1 text-[13px] text-ink">
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-3.5 text-[#c8553b]">
+              <path d="M12 21s-6.5-5.7-6.5-11a6.5 6.5 0 0 1 13 0c0 5.3-6.5 11-6.5 11Z" fill="currentColor" />
+              <circle cx="12" cy="10" r="2.4" fill="#fff" />
+            </svg>
+            Delhi NCR, India
+          </span>
         </p>
         <p className="printed order-1 text-base text-ink md:order-2 md:text-justify md:[hyphens:auto]">
           A <Hi c="pink">designer</Hi> by role, a <Hi c="yellow">builder</Hi> by

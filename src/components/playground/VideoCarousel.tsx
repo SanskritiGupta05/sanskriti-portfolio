@@ -15,7 +15,7 @@ const CLIPS = [
   { name: "spider-verse-screen", w: 538, h: 1244, screen: true, alt: "A phone revealing a holographic Spider-Verse character card" },
   { name: "chat", w: 1458, h: 1414, alt: "A tutor chat interface with lively message animations" },
   { name: "pixel-buddy", w: 1920, h: 1150, alt: "A context-window meter with a tiny pixel buddy reacting while an agent works" },
-  { name: "mood-screen", w: 670, h: 1436, screen: true, alt: "A mood check-in app: turning a weather dial changes how the cloud feels" },
+  { name: "mood-screen", w: 662, h: 1436, screen: true, alt: "A mood check-in app: turning a weather dial changes how the cloud feels" },
   { name: "folder", w: 720, h: 720, alt: "A file drawer whose coloured folders lift on hover" },
 ];
 
@@ -129,7 +129,7 @@ export function VideoCarousel() {
       ref={box}
       role="region"
       aria-label="Interaction videos"
-      className={`relative -mx-6 block pt-6 pb-24 select-none md:pb-32 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] md:mx-[calc(50%-50vw)] ${still ? "overflow-x-auto" : `touch-pan-y overflow-hidden ${dragging ? "cursor-grabbing" : "cursor-grab"}`}`}
+      className={`relative -mx-6 block pt-12 pb-24 select-none md:pt-16 md:pb-32 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] md:mx-[calc(50%-50vw)] ${still ? "overflow-x-auto" : `touch-pan-y overflow-hidden ${dragging ? "cursor-grabbing" : "cursor-grab"}`}`}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}

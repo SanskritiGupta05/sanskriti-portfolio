@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
-import { Testimonial } from "@/components/casestudy/Testimonial";
+import { Benchmark, FeatureTestimonial, MarkerBand, OutcomeCards } from "@/components/casestudy/bounceOutcome";
 import { Footer } from "@/components/Footer";
 import { CaseStudyFrame, type TocItem } from "@/components/casestudy/Margin";
 import {
@@ -20,12 +20,15 @@ import {
   Section,
   Solution,
   Tags,
-  Takeaways,
 } from "@/components/casestudy/bounceStory";
 import { Mark } from "@/components/casestudy/Mark";
+import { KycFlowScreens } from "@/components/casestudy/kycFlow";
+import { TakeStatements, UiBento } from "@/components/casestudy/uiLayer";
 import { HubMergeFigma } from "@/components/casestudy/HubMergeFigma";
 import {
   CheckoutStory,
+  RideStory,
+  RenewStory,
   KycCardsStory,
   PlansStory,
   ScooterStory,
@@ -33,7 +36,6 @@ import {
 import {
   CreditCard,
   House,
-  Layers,
   ListChecks,
   Palette,
   Repeat,
@@ -201,6 +203,7 @@ export default function BounceDaily() {
                 priority
                 sizes="(min-width: 1100px) 900px, 100vw"
                 className="block h-auto w-full rounded-[20px]"
+                unoptimized
               />
             </div>
           </header>
@@ -410,8 +413,7 @@ export default function BounceDaily() {
             id="s4"
             label="Solution #4 · Ride and renew"
             title="Know where you stand, every day"
-            fig="home"
-            alt="Before: the old booking countdown. After: home with the booking card ready to collect, ready to ride, and active."
+            figure={<RideStory />}
           >
             The old countdown is gone. One booking card on home changes with the
             rider&apos;s stage, and always shows one next step.
@@ -481,6 +483,7 @@ export default function BounceDaily() {
             title="KYC just before paying"
             principle="When you ask matters as much as what you ask."
             fig="kyc-spots"
+            extra={<KycFlowScreens />}
             alt="Five places KYC could sit on the journey. Ruled out: during sign-up, before choosing a hub, approved before paying, after paying. Chosen: submitted right before paying."
             call={
               <>
@@ -523,8 +526,7 @@ export default function BounceDaily() {
             n={5}
             title="Dues and renewals up front"
             principle="The app remembers, so the rider doesn't have to."
-            fig="renewals"
-            alt="Plan ending soon, plan ended, kilometres running low, and dues explained."
+            figure={<RenewStory />}
             call={
               <>
                 Plan ending, plan ended and kilometres low appear on home with
@@ -582,12 +584,6 @@ export default function BounceDaily() {
                   t: "One red action per screen",
                   l: "I flagged early that red was on buttons, headers, icons and cards. We put flows first; the system now keeps red for the one action that matters.",
                 },
-                {
-                  k: "System",
-                  icon: Layers,
-                  t: "Tokens, 16 text styles, 14 components",
-                  l: "The app's first design system, so a pattern learned once works on every screen, for the next designer too.",
-                },
               ]}
             />
           </div>
@@ -634,11 +630,7 @@ export default function BounceDaily() {
             programme with four tiers, Start, Cruise, Power and Nitro, gives
             riders a reason to keep riding, with rewards like extra kilometres.
           </Body>
-          <Fig
-            name="ui-layer"
-            alt="The custom illustration set, and the loyalty screen with four tiers."
-            caption="The illustration set, and the loyalty tiers."
-          />
+          <UiBento />
         </Section>
 
         <Section
@@ -666,25 +658,19 @@ export default function BounceDaily() {
           eyebrow="Learnings and reflections"
           headline="Shipped on Android in 3 months."
         >
-          {/* Aum's testimonial in the shared card (her ask): words and photo from her Framer testimonial card */}
-          <Testimonial
+          {/* the product manager's testimonial (words and photo from her Framer testimonial card), in a warm
+              featured card; then his benchmark line, and what shipped / what moved */}
+          <FeatureTestimonial
             pull={
               <>
-                She quickly grasped these nuances and translated them into
-                thoughtful user flows and intuitive interfaces.
+                She quickly grasped these nuances and translated them into{" "}
+                <MarkerBand color="#fbe3da">thoughtful user flows and intuitive interfaces.</MarkerBand>
               </>
             }
             name="Aum Vats"
             role="Product Manager, Bounce Daily"
             photo="/assets/cases/bounce/aum-vats.webp"
-            logo={{
-              src: "/assets/cases/bounce/bounce-daily-logo.svg",
-              w: 77,
-              h: 67,
-              alt: "Bounce Daily",
-              className: "h-8 w-auto",
-            }}
-            quoteColor="#c8553b"
+            logo={{ src: "/assets/cases/bounce/bounce-daily-logo.svg", w: 77, h: 67, alt: "Bounce Daily" }}
           >
             Sanskriti redesigned the Bounce Daily Rider App from the ground up
             as our Product Designer. Since our users are primarily gig and
@@ -694,48 +680,42 @@ export default function BounceDaily() {
             The redesign unlocked several new product capabilities, and we saw
             noticeable improvements in rider onboarding and plan adoption after
             launch. I highly recommend working with her.
-          </Testimonial>
-          <Body>
-            He later told me I&apos;d set the first benchmark for every designer
-            who works on the app after me.
-          </Body>
-          <Cards
-            items={[
-              {
-                k: "Shipped",
-                l: "Live on the Play Store, rated 4.8 with over a lakh downloads.",
-              },
-              {
-                k: "After launch",
-                l: "Noticeable improvements in rider onboarding and plan adoption, the two places the redesign was meant to move. Exact numbers stay with Bounce.",
-              },
-            ]}
-          />
+          </FeatureTestimonial>
+          <Benchmark>
+            He later told me I&apos;d set <MarkerBand>the first benchmark</MarkerBand> for every
+            designer who works on the app after me.
+          </Benchmark>
+          <OutcomeCards />
           <h3 className="pt-6 font-serif text-[24px] leading-[1.2] text-head md:text-[28px]">
             What I&apos;m taking with me
           </h3>
-          <Takeaways
+          <TakeStatements
             items={[
-              [
-                "When you ask matters as much as what you ask.",
-                "KYC asked for the same documents before and after. Moving it to just before paying turned a wall into a last step.",
-              ],
-              [
-                "Fewer taps doesn't always mean better understanding.",
-                "The extra scooter step cost one screen and made the licence rule impossible to miss.",
-              ],
-              [
-                "Riders who read little need a different form, not less.",
-                "A map, a picture, a chip or a number, never a paragraph.",
-              ],
-              [
-                "Push for launch data from day one.",
-                "So the next round of decisions comes from riders, not only from principles, and open questions like KYC refunds get settled early.",
-              ],
-              [
-                "Make the case with screens, not words.",
-                "The red concern was deferred. Next time I'd show a few screens side by side from the first week.",
-              ],
+              {
+                a: "When you ask matters as much as what you ask.",
+                key: "When you ask",
+                b: "KYC asked for the same documents before and after. Moving it to just before paying turned a wall into a last step.",
+              },
+              {
+                a: "Fewer taps doesn't always mean better understanding.",
+                key: "Fewer taps",
+                b: "The extra scooter step cost one screen and made the licence rule impossible to miss.",
+              },
+              {
+                a: "Riders who read little need a different form, not less.",
+                key: "a different form",
+                b: "A map, a picture, a chip or a number, never a paragraph.",
+              },
+              {
+                a: "Push for launch data from day one.",
+                key: "launch data",
+                b: "So the next round of decisions comes from riders, not only from principles, and open questions like KYC refunds get settled early.",
+              },
+              {
+                a: "Make the case with screens, not words.",
+                key: "screens, not words",
+                b: "The red concern was deferred. Next time I'd show a few screens side by side from the first week.",
+              },
             ]}
           />
           <div className="mt-4 grid gap-3 border-t border-line pt-8">

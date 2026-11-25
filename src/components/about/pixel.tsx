@@ -1,6 +1,6 @@
 // Little pixel-art icons for the About page, drawn as crisp SVG squares (no image files),
 // in the same chunky 16-bit spirit as her pixel mascot. Some have a tiny loop: ramen steam,
-// a blinking bot, a snapping clapper, a twinkling sparkle.
+// a blinking bot, a snapping clapper, a twinkling sparkle; the rest bob, wiggle, sway or beat, in pixel steps.
 
 const PAL: Record<string, string> = {
   k: "#2b2a28", // ink
@@ -121,19 +121,20 @@ const SPRITES = {
       "k...........",
     ],
   },
+  // a tiny code editor: window dots, then coloured lines of code
   code: {
     rows: [
       "............",
-      "............",
-      "...k....k...",
-      "..k....k.k..",
-      ".k....k...k.",
-      "k.....k....k",
-      ".k...k....k.",
-      "..k..k...k..",
-      "...k.k..k...",
-      ".....k......",
-      "............",
+      ".kkkkkkkkkk.",
+      ".krkykekkkk.",
+      ".kkkkkkkkkk.",
+      ".kwwwwwwwwk.",
+      ".kwbbbwppwk.",
+      ".kwwwyyyywk.",
+      ".kwwwwoowwk.",
+      ".kweeewbbwk.",
+      ".kwwwwwwwwk.",
+      ".kkkkkkkkkk.",
       "............",
     ],
   },
@@ -265,7 +266,26 @@ const CSS = `
 @keyframes px-clap{0%,60%,100%{transform:rotate(0)}70%,85%{transform:rotate(-14deg)}}
 .px-twinkle{transform-box:fill-box;transform-origin:center;animation:px-twinkle 1.8s ease-in-out infinite}
 @keyframes px-twinkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
-@media (prefers-reduced-motion:reduce){.px-steam,.px-blink,.px-clap,.px-twinkle{animation:none}}
+.px-all{transform-box:fill-box;transform-origin:center}
+.px-computer{animation:px-bob 2.6s steps(2) infinite}
+@keyframes px-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
+.px-palette{animation:px-wiggle 2.8s steps(3) infinite}
+@keyframes px-wiggle{0%,60%,100%{transform:rotate(0)}70%{transform:rotate(-10deg)}85%{transform:rotate(10deg)}}
+.px-pencil{animation:px-scribble 1.6s steps(4) infinite}
+@keyframes px-scribble{0%,100%{transform:translate(0,0)}25%{transform:translate(1px,-1px)}50%{transform:translate(0,0)}75%{transform:translate(1px,1px)}}
+.px-code{animation:px-pulse 2.2s steps(2) infinite}
+@keyframes px-pulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
+.px-mic{transform-origin:50% 100%;animation:px-tilt 2.4s steps(3) infinite}
+@keyframes px-tilt{0%,100%{transform:rotate(0)}50%{transform:rotate(-12deg)}}
+.px-book{animation:px-flip 3s steps(3) infinite}
+@keyframes px-flip{0%,70%,100%{transform:scaleX(1)}80%{transform:scaleX(-1)}90%{transform:scaleX(1)}}
+.px-clay{transform-origin:50% 100%;animation:px-squish 2.4s steps(3) infinite}
+@keyframes px-squish{0%,100%{transform:scale(1,1)}50%{transform:scale(1.1,.88)}}
+.px-flower{transform-origin:50% 100%;animation:px-sway 2.8s steps(4) infinite}
+@keyframes px-sway{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.px-heart{animation:px-beat 1.4s steps(2) infinite}
+@keyframes px-beat{0%,40%,100%{transform:scale(1)}20%,60%{transform:scale(1.15)}}
+@media (prefers-reduced-motion:reduce){.px-steam,.px-blink,.px-clap,.px-twinkle,.px-all{animation:none}}
 `;
 
 function rects(rows: string[], only?: number[]) {
@@ -315,7 +335,8 @@ export function Pixel({
       className={`inline-block shrink-0 align-[-0.25em] [filter:none] ${className}`}
     >
       <style>{CSS}</style>
-      {rects(still)}
+      {/* icons without a loop of their own get a small whole-icon one (bob, wiggle, beat…) */}
+      <g className={s.anim ? undefined : `px-all px-${name}`}>{rects(still)}</g>
       {s.anim && <g className={s.anim.cls}>{rects(s.rows, s.anim.rows)}</g>}
     </svg>
   );

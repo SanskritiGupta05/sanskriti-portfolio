@@ -94,7 +94,7 @@ export function OffScreen() {
           id="off-screen"
           className="font-serif text-h2m text-head md:text-h2"
         >
-          Still making things <span className="font-worn">by hand</span>
+          I still love making things <span className="font-worn">by hand</span>
         </h2>
         <p className="printed text-base leading-8 text-ink">
           I <Hi c="pink">paint</Hi> <Pixel name="palette" />,{" "}

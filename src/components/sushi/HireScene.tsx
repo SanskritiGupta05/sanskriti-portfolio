@@ -368,9 +368,9 @@ export function HireScene({ calendly, stickers }: { calendly: string | null; sti
       {/* Sanskriti and the bag are tucked ~10px behind the back rail (its top edge is 74px below this stage) */}
       <PixelSuitcase
         links={stickers}
-        className="absolute right-[max(20px,calc(50%-300px))] bottom-[-84px] w-[92px] md:right-[max(24px,calc(50%-300px))] xl:right-auto xl:left-[calc(50%+193px)]"
+        className="absolute right-[max(20px,calc(50%-320px))] bottom-[-84px] w-[92px] md:right-[max(24px,calc(50%-320px))] xl:right-auto xl:left-[calc(50%+270px)]"
       />
-      <PixelGirl socials={SOCIAL_ORDER.map((k) => Object.values(stickers).find((x) => x?.icon === k)).filter((x): x is Social => !!x)} className="absolute bottom-[-84px] left-[max(12px,calc(50%-320px))] w-[198px] xl:left-[calc(50%-440px)]" />
+      <PixelGirl socials={SOCIAL_ORDER.map((k) => Object.values(stickers).find((x) => x?.icon === k)).filter((x): x is Social => !!x)} className="absolute bottom-[-84px] left-[max(12px,calc(50%-320px))] w-[198px] xl:left-[calc(50%-362px)]" />
     </div>
   );
 }

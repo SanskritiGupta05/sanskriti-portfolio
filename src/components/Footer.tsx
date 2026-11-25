@@ -19,5 +19,5 @@ const STICKERS: Record<string, Social> = {
 };
 
 export function Footer() {
-  return <SushiBelt noren={null} branchTop={40} above={<HireScene calendly={CALENDLY} stickers={STICKERS} />} />;
+  return <SushiBelt noren={null} branchTop={120} above={<HireScene calendly={CALENDLY} stickers={STICKERS} />} />;
 }

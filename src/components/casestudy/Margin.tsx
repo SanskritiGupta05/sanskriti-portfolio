@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { motion, useScroll } from "motion/react";
+import { motion, useScroll, type MotionValue } from "motion/react";
 import { Paperclip } from "@/components/PaperStack";
 
 // The "margin notes" case study language, as reusable parts:
@@ -16,6 +16,49 @@ export type TocItem = {
   match?: string[];
   sub?: { id: string; label: string }[];
 };
+
+// a quiet nudge back to the top, bottom right: it appears once the reader is past the header, its ring
+// fills with reading progress, and it steps away once the case study has ended (so it never sits on the footer)
+function BackToTop({ progress, end }: { progress: MotionValue<number>; end: React.RefObject<HTMLDivElement | null> }) {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const on = () => {
+      const bottom = end.current?.getBoundingClientRect().bottom ?? Infinity;
+      setShow(window.scrollY > 900 && bottom > window.innerHeight - 40);
+    };
+    on();
+    window.addEventListener("scroll", on, { passive: true });
+    window.addEventListener("resize", on);
+    return () => {
+      window.removeEventListener("scroll", on);
+      window.removeEventListener("resize", on);
+    };
+  }, [end]);
+  const toTop = () => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+  };
+  return (
+    <button
+      type="button"
+      onClick={toTop}
+      aria-label="Back to the top"
+      tabIndex={show ? 0 : -1}
+      className={`skeu group fixed right-5 bottom-5 z-40 grid size-12 place-items-center rounded-full transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 md:right-8 md:bottom-8 ${show ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"}`}
+    >
+      <svg aria-hidden="true" viewBox="0 0 48 48" className="absolute inset-0 size-full -rotate-90">
+        <circle cx="24" cy="24" r="21" fill="none" stroke="var(--line)" strokeWidth="2" />
+        <motion.circle cx="24" cy="24" r="21" fill="none" stroke="var(--cs-accent)" strokeWidth="2" strokeLinecap="round" style={{ pathLength: progress }} />
+      </svg>
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="relative size-[18px] text-[var(--cs-accent)] transition-transform group-hover:-translate-y-0.5">
+        <path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      <span className="pointer-events-none absolute right-[calc(100%+10px)] rounded-md bg-[#1e1e1e] px-2 py-1 text-[11px] whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+        Back to top
+      </span>
+    </button>
+  );
+}
 
 export function CaseStudyFrame({
   toc,
@@ -72,11 +115,14 @@ export function CaseStudyFrame({
   }, [toc]);
 
   const bar = (
-    <motion.div
-      aria-hidden="true"
-      className="fixed inset-x-0 top-0 z-50 h-[2px] origin-left bg-[var(--cs-accent)]"
-      style={{ scaleX: scrollYProgress }}
-    />
+    <>
+      <motion.div
+        aria-hidden="true"
+        className="fixed inset-x-0 top-0 z-50 h-[2px] origin-left bg-[var(--cs-accent)]"
+        style={{ scaleX: scrollYProgress }}
+      />
+      <BackToTop progress={scrollYProgress} end={box} />
+    </>
   );
 
   if (layout === "sheet") {
@@ -143,7 +189,7 @@ export function CaseStudyFrame({
               })}
             </ol>
           </nav>
-          <div className="relative mt-4 rounded-t-[22px] border border-line bg-bg shadow-[0_-10px_50px_-24px_rgba(60,40,20,0.35)] md:mt-0 md:rounded-tr-none md:border-r-0">
+          <div className="relative mt-4 rounded-t-[22px] rounded-bl-[22px] border border-line bg-bg shadow-[0_-10px_50px_-24px_rgba(60,40,20,0.35)] md:mt-0 md:rounded-tr-none md:border-r-0">
             <Paperclip className="absolute -top-6 left-6 z-10 !h-[70px] !w-6 rotate-[18deg]" />
             {/* a woven fabric label hanging from the top edge, text reading bottom to top */}
             <span

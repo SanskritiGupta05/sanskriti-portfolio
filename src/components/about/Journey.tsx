@@ -40,15 +40,14 @@ import littleLights from "../../../public/assets/cases/little-lights.webp";
 // The journey, told as pinned moments with pixel icons and colourful highlights.
 // All copy comes from Sanskriti's own notes and posts.
 
-// one step: a number with its pixel icon, a heading and the typed story
+// one step: its pixel icon, a heading and the typed story (`n` orders the steps in the source; it isn't shown)
 function Step({
-  n,
   icon,
   title,
   children,
   center = false,
 }: {
-  n: string;
+  n?: string;
   icon: PixelName;
   title: string;
   children: React.ReactNode;
@@ -58,10 +57,9 @@ function Step({
     <div
       className={`grid content-start gap-3 ${center ? "justify-items-center text-center" : ""}`}
     >
-      <p className="label flex items-center gap-2 !text-[#c8553b]">
+      <span aria-hidden="true" className="flex">
         <Pixel name={icon} className="size-6" />
-        {n}
-      </p>
+      </span>
       <h3 className="font-serif text-h2m leading-tight text-head md:text-h2">
         {title}
       </h3>
@@ -131,7 +129,8 @@ const builds = [
 export function Journey() {
   return (
     <section aria-labelledby="journey" className="grid gap-20 pb-24 md:gap-28">
-      <header className="grid justify-items-center gap-2 text-center">
+      {/* the section's big gap is for the stories below; the heading sits closer to its first one */}
+      <header className="-mb-8 grid justify-items-center gap-2 text-center md:-mb-14">
         <p className="label flex items-center gap-2">
           <Pixel name="sparkle" className="size-5" /> Journey{" "}
           <Pixel name="sparkle" className="size-5" />

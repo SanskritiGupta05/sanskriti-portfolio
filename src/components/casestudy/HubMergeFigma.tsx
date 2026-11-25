@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { CommentCard } from "./figmaStage";
+import { C, NoteCard, Pin, Spotlight } from "./figmaStage";
 
 // Design decision #2 as a live Figma-style storyboard (HTML/CSS, not a video: sharp at any size and replayable).
 // Five steps, each with a caption, so a first-time viewer can follow it:
@@ -25,8 +25,11 @@ const BLUE = "#0d99ff";
 const ORANGE = "#ff7a29";
 
 // where the phones sit on the stage
-const OLD = { w: 128, h: 285, y: 154, listX: 42, detailX: 196 };
-const NEW = { w: 172, h: 374, x: 440, y: 134 };
+// layout: every column starts at y 72 (Before, After, notes); sections are 460 tall, the old phones sit
+// centred in Before, the new phone 60px under the After label; the caption bar sits 30px below.
+const SEC = { y: 72, h: 460 };
+const OLD = { w: 128, h: 285, y: SEC.y + (SEC.h - 285) / 2 + 10, listX: 42, detailX: 196 };
+const NEW = { w: 172, h: 374, x: 440, y: SEC.y + 60 };
 const so = OLD.w / 440;
 const sn = NEW.w / 440;
 
@@ -107,43 +110,20 @@ const CAPTIONS = [
   "On the detail screen: the hub photo, its address and the available bike.",
   "The redesign brings every piece onto one screen.",
   "After: one screen. The map opens on the nearest hub, with its details on the card.",
-  "What else got better, in comments.",
+  "What else got better, one note at a time.",
+  "One screen, map first: riders find the closest scooter without reading a list.",
 ];
 const TABS = ["Before", "Spot the parts", "Merge", "After"];
 const tabOf = (phase: number) =>
-  phase === 0 ? 0 : phase <= 2 ? 1 : phase === 3 ? 2 : 3;
+  phase === 0 ? 0 : phase <= 2 ? 1 : phase === 3 ? 2 : 3; // phases 4–6 are all "After"
 
-const PINS: { n: number; x: number; y: number; title: string; sub: string }[] =
-  [
-    {
-      n: 1,
-      x: 0.4,
-      y: 0.21,
-      title: "Map first",
-      sub: "Hubs around the rider, instead of a list of names to read.",
-    },
-    {
-      n: 2,
-      x: 0.8,
-      y: 0.555,
-      title: "Nearest hub first",
-      sub: "Distance and a Nearest tag, up front.",
-    },
-    {
-      n: 3,
-      x: 0.06,
-      y: 0.7,
-      title: "Scooters + batteries as chips",
-      sub: "Both counts read at a glance, side by side.",
-    },
-    {
-      n: 4,
-      x: 0.86,
-      y: 0.875,
-      title: "The CTA confirms your hub",
-      sub: "“Pick scooter at RR Nagar” names the hub and invites the rider on.",
-    },
-  ];
+// what else got better, each pointing at an area of the new screen (440-wide design space)
+const NOTES: { area: Rect; title: string; sub: string }[] = [
+  { area: [0, 62, 440, 470], title: "Map first", sub: "Hubs around the rider, instead of a list of names to read." },
+  { area: [190, 566, 240, 46], title: "Nearest hub first", sub: "Distance and a Nearest tag, up front." },
+  { area: [56, 672, 280, 30], title: "Scooters + batteries as chips", sub: "Both counts read at a glance, side by side." },
+  { area: [24, 868, 392, 48], title: "The CTA confirms your hub", sub: "“Pick scooter at RR Nagar” names the hub and invites the rider on." },
+];
 
 // timeline: when each step starts (ms)
 const T_LIST = 2000;
@@ -151,7 +131,8 @@ const T_DETAIL = 4000;
 const T_MERGE = 6200;
 const T_AFTER = 8600;
 const T_PINS = 9400;
-const T_DONE = T_PINS + 4 * 550 + 300;
+const STEP = 1600;
+const T_DONE = T_PINS + NOTES.length * STEP + 300;
 
 function PhoneImg({
   src,
@@ -187,6 +168,7 @@ export function HubMergeFigma() {
   const wrap = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [t, setT] = useState(0); // elapsed ms on a coarse clock
+  const [hover, setHover] = useState<number | null>(null);
   const raf = useRef<number | undefined>(undefined);
   const start = useRef(0);
 
@@ -242,11 +224,17 @@ export function HubMergeFigma() {
             ? 3
             : t < T_PINS
               ? 4
-              : 5;
+              : t < T_DONE
+                ? 5
+                : 6;
   const merged = t >= T_MERGE;
   const showAfter = t >= T_MERGE - 200;
   const piecesGone = t >= T_AFTER;
   const done = t >= T_DONE;
+  const focus = t >= T_PINS && t < T_PINS + NOTES.length * STEP ? Math.floor((t - T_PINS) / STEP) : -1;
+  const lit = (i: number) => focus === i || (done && hover === i);
+  const newPhone = { x: NEW.x, y: NEW.y, w: NEW.w, h: NEW.h };
+  const noteArea = (r: Rect) => ({ x: NEW.x + r[0] * sn, y: NEW.y + r[1] * sn, w: r[2] * sn, h: r[3] * sn });
   const ease = "transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]";
 
   return (
@@ -282,11 +270,11 @@ export function HubMergeFigma() {
         {/* Before section */}
         <div
           className="absolute rounded-md border border-[#e2e2e2] bg-white"
-          style={{ left: 24, top: 86, width: 318, height: 372 }}
+          style={{ left: 24, top: SEC.y, width: 318, height: SEC.h }}
         />
         <span
           className="absolute rounded bg-[#e6e6e6] px-2 py-[3px] text-[11px] font-medium text-[#1e1e1e]"
-          style={{ left: 42, top: 100 }}
+          style={{ left: 42, top: SEC.y + 14 }}
         >
           Before · 2 screens
         </span>
@@ -364,7 +352,7 @@ export function HubMergeFigma() {
         {/* After section */}
         <div
           className={`absolute ${ease} ${showAfter ? "opacity-100" : "translate-y-3 opacity-0"}`}
-          style={{ left: 422, top: 66, width: 208, height: 460 }}
+          style={{ left: 422, top: SEC.y, width: 208, height: SEC.h }}
         >
           <div className="absolute inset-0 rounded-md border border-[#bfe7c9] bg-[#f3fbf5]" />
           <span
@@ -375,13 +363,13 @@ export function HubMergeFigma() {
           </span>
           <span
             className="absolute text-[11px] text-[#8c8c8c]"
-            style={{ left: 18, top: NEW.y - 66 - 20 }}
+            style={{ left: 18, top: NEW.y - SEC.y - 20 }}
           >
             Pick a hub · Map
           </span>
           <div
             className="absolute"
-            style={{ left: NEW.x - 422, top: NEW.y - 66 }}
+            style={{ left: NEW.x - 422, top: NEW.y - SEC.y }}
           >
             <PhoneImg
               src="hub-new-map"
@@ -389,15 +377,6 @@ export function HubMergeFigma() {
               h={NEW.h}
               alt="New app: the hub map opening on the nearest hub"
             />
-            {PINS.map((p, i) => (
-              <span
-                key={p.n}
-                className={`absolute grid size-6 place-items-center rounded-[12px] rounded-bl-[2px] border-2 border-white bg-[#9747ff] text-[11px] font-semibold text-white shadow-[0_2px_6px_rgba(0,0,0,0.2)] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${t >= T_PINS + i * 550 ? "scale-100 opacity-100" : "scale-0 opacity-0"}`}
-                style={{ left: p.x * NEW.w, top: p.y * NEW.h }}
-              >
-                {p.n}
-              </span>
-            ))}
           </div>
         </div>
 
@@ -434,26 +413,42 @@ export function HubMergeFigma() {
           );
         })}
 
-        {/* comment threads */}
-        <div
-          className="absolute grid w-[192px] gap-2"
-          style={{ left: 646, top: 66 }}
+        {/* what else got better: one spotlight at a time, its pin in the margin, its card lit */}
+        {NOTES.map((n, i) => {
+          const b = noteArea(n.area);
+          return (
+            <span key={n.title}>
+              <Spotlight phone={newPhone} area={b} color={C.purple} show={lit(i)} />
+              <Pin x={NEW.x - 13} y={Math.min(b.y + b.h / 2, b.y + 40) - 12} n={i + 1} show={lit(i)} color={C.purple} />
+            </span>
+          );
+        })}
+        <span
+          className={`absolute top-[26px] right-6 text-[11px] text-[#8c8c8c] transition-opacity duration-500 ${done ? "opacity-100" : "opacity-0"}`}
         >
-          {PINS.map((p, i) => (
-            <CommentCard
-              key={p.n}
-              n={p.n}
-              title={p.title}
-              sub={p.sub}
-              show={t >= T_PINS + i * 550}
+          Hover a note to find it on the screen
+        </span>
+        <div className="absolute grid w-[192px] gap-2" style={{ left: 646, top: SEC.y }}>
+          {NOTES.map((n, i) => (
+            <NoteCard
+              key={n.title}
+              n={i + 1}
+              title={n.title}
+              sub={n.sub}
+              color={C.purple}
+              state={t < T_PINS + i * STEP ? "hidden" : lit(i) ? "active" : done ? "rest" : "read"}
+              {...(done ? { onFocus: () => setHover(i), onBlur: () => setHover(null) } : {})}
             />
           ))}
         </div>
 
         {/* caption, like a note pinned to the canvas */}
         <div className="absolute right-6 bottom-5 left-6 flex items-center gap-3 rounded-lg border border-[#e2e2e2] bg-white px-4 py-3 shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-          <span className="grid size-6 shrink-0 place-items-center rounded-full bg-[#1e1e1e] text-[11px] font-semibold text-white">
-            {tabOf(phase) + 1}
+          <span
+            className="grid size-6 shrink-0 place-items-center rounded-full text-[11px] font-semibold text-white transition-colors duration-300"
+            style={{ background: focus >= 0 ? C.purple : "#1e1e1e" }}
+          >
+            {focus >= 0 ? focus + 1 : tabOf(phase) + 1}
           </span>
           <span
             key={phase}

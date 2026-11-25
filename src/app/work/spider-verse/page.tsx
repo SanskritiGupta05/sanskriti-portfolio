@@ -63,7 +63,7 @@ export default function SpiderVerse() {
               />
             </div>
             <div className="mt-8">
-              <ToolRow tools={["chatgpt", "figma", "cursor"]} />
+              <ToolRow tools={["chatgpt", "figma", "cursor", "xcode"]} />
             </div>
             {/* the three key moments, captured from the live site */}
             <div className="relative mt-10 overflow-hidden rounded-[22px] px-6 pt-10" style={{ background: STAGE }}>

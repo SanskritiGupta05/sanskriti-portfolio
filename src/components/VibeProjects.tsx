@@ -13,7 +13,7 @@ const PROJECTS: { name: string; line: string; tags: string[]; img: string; href:
     name: "Spider-Verse Interaction",
     line: "What if a mystery card could come to life? An interactive Spider-Verse-inspired experiment with a little cinematic magic.",
     tags: ["Creative Coding", "AI"],
-    tools: ["chatgpt", "figma", "cursor"],
+    tools: ["chatgpt", "figma", "cursor", "xcode"],
     img: "/assets/cases/spider-verse.webp",
     href: "/work/spider-verse",
   },
