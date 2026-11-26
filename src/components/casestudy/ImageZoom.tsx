@@ -3,16 +3,32 @@
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-const MIN_WIDTH = 120;
+// Tap any case study image to see it up close (her ask, for every case study).
+// Mounted once by src/app/work/layout.tsx, so it works on every /work/* page without each page's
+// image components knowing about it: it listens for clicks on images inside the case study
+// (<article> or its <header>), skipping images inside links/buttons/nav and small ones (logos,
+// avatars, icons). The viewer shows the original file (not Next's resized copy) fitted to the
+// screen; tapping a large image toggles between "fit" and its real size, which you can then pan.
+// Esc, the × button or a tap on the backdrop closes it.
+// Other pages can mount it too: `within` picks where images open from, `minWidth` the smallest
+// image that counts, and `fullSize={false}` drops the real-size mode (a tap on the image closes it,
+// so phones never pan sideways). The About page uses it this way.
 
-function eligible(el: EventTarget | null): HTMLImageElement | null {
+const MIN_WIDTH = 120; // rendered px; anything smaller is a logo or an icon
+
+function eligible(
+    el: EventTarget | null,
+    within: string,
+    minWidth: number,
+): HTMLImageElement | null {
     if (!(el instanceof HTMLImageElement)) return null;
-    if (!el.closest("article, header")) return null;
+    if (!el.closest(within)) return null;
     if (el.closest("a, button, nav, [data-nozoom]")) return null;
-    if (el.getBoundingClientRect().width < MIN_WIDTH) return null;
+    if (el.getBoundingClientRect().width < minWidth) return null;
     return el;
 }
 
+// the original file behind a next/image (unoptimized images already point at it)
 function originalSrc(img: HTMLImageElement): string {
     const src = img.currentSrc || img.src;
     try {
@@ -22,7 +38,15 @@ function originalSrc(img: HTMLImageElement): string {
     return src;
 }
 
-export function ImageZoom() {
+export function ImageZoom({
+    within = "article, header",
+    minWidth = MIN_WIDTH,
+    fullSize = true,
+}: {
+    within?: string;
+    minWidth?: number;
+    fullSize?: boolean;
+} = {}) {
     const [open, setOpen] = useState<{ src: string; alt: string } | null>(null);
     const [actual, setActual] = useState(false);
     const [big, setBig] = useState(false);
@@ -34,14 +58,15 @@ export function ImageZoom() {
 
     useEffect(() => {
         const onClick = (e: MouseEvent) => {
-            const img = eligible(e.target);
+            const img = eligible(e.target, within, minWidth);
             if (!img) return;
             e.preventDefault();
             setActual(false);
             setOpen({ src: originalSrc(img), alt: img.alt });
         };
+        // show a zoom cursor on the images that open
         const onOver = (e: MouseEvent) => {
-            const img = eligible(e.target);
+            const img = eligible(e.target, within, minWidth);
             if (img) img.style.cursor = "zoom-in";
         };
         document.addEventListener("click", onClick);
@@ -50,7 +75,7 @@ export function ImageZoom() {
             document.removeEventListener("click", onClick);
             document.removeEventListener("mouseover", onOver);
         };
-    }, []);
+    }, [within, minWidth]);
 
     useEffect(() => {
         if (!open) return;
@@ -81,8 +106,9 @@ export function ImageZoom() {
                 onLoad={(e) => {
                     const im = e.currentTarget;
                     setBig(
-                        im.naturalWidth > window.innerWidth * 0.95 ||
-                            im.naturalHeight > window.innerHeight * 0.9,
+                        fullSize &&
+                            (im.naturalWidth > window.innerWidth * 0.95 ||
+                                im.naturalHeight > window.innerHeight * 0.9),
                     );
                 }}
                 onClick={(e) => {
