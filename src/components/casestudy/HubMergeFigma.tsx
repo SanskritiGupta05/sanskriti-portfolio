@@ -4,6 +4,16 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { C, NoteCard, Pin, Spotlight } from "./figmaStage";
 
+// Design decision #2 as a live Figma-style storyboard (HTML/CSS, not a video: sharp at any size and replayable).
+// Five steps, each with a caption, so a first-time viewer can follow it:
+//   0 Before        the old app: a list of hub names (1), then a second screen for one hub's details (2)
+//   1 On the list   Map, Hub name and Scooters light up in blue, one by one
+//   2 On the detail Hub photo, Address and Available bike light up in orange
+//   3 Merge         all six pieces fly, staggered, to their exact spots on the new single screen
+//   4 After         the pieces settle, then four comment pins explain what else got better
+// Plays when scrolled into view; Replay runs it again. Piece positions come from the Figma frames
+// (old screens 440×979, new screen 440×956). Screens: public/assets/cases/bounce/v5/hq (3×).
+
 const W = 860;
 const H = 628;
 const SRC = "/assets/cases/bounce/v5/hq";
@@ -13,6 +23,9 @@ const UI = {
 const BLUE = "#0d99ff";
 const ORANGE = "#ff7a29";
 
+// where the phones sit on the stage
+// layout: Before (two old phones) and After (new phone + notes) are two sections on one grid, same height.
+// both sections share one grid: tag at +14, frame names at +48, phones at +68, 24px under the tallest content
 const SEC = { y: 72, h: 448 };
 const BEFORE = { x: 24, w: 360 };
 const AFTER = { x: 436, w: 400 };
@@ -109,8 +122,9 @@ const CAPTIONS = [
     "One screen, map first: riders find the closest scooter without reading a list.",
 ];
 const TABS = ["Before", "Spot the parts", "Merge", "After"];
-const tabOf = (phase: number) => (phase === 0 ? 0 : phase <= 2 ? 1 : phase === 3 ? 2 : 3);
+const tabOf = (phase: number) => (phase === 0 ? 0 : phase <= 2 ? 1 : phase === 3 ? 2 : 3); // phases 4–6 are all "After"
 
+// what else got better, each pointing at an area of the new screen (440-wide design space)
 const NOTES: { area: Rect; title: string; sub: string }[] = [
     {
         area: [0, 62, 440, 470],
@@ -134,6 +148,7 @@ const NOTES: { area: Rect; title: string; sub: string }[] = [
     },
 ];
 
+// timeline: when each step starts (ms)
 const T_LIST = 2000;
 const T_DETAIL = 4000;
 const T_MERGE = 6200;
@@ -198,14 +213,25 @@ export function HubMergeFigma() {
         const ro = new ResizeObserver(([e]) => setScale(Math.min(1, e.contentRect.width / W)));
         ro.observe(el);
         const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-        let started = false;
+        // plays when it scrolls into view; once finished, scrolling away resets it to the
+        // start, so coming back plays it again from the beginning
+        let armed = true;
         const io = new IntersectionObserver(
             ([e]) => {
-                if (!e.isIntersecting || started) return;
-                started = true;
-                io.disconnect();
-                if (reduce) setT(T_DONE + 1);
-                else play();
+                if (reduce) {
+                    if (e.isIntersecting) setT(T_DONE + 1);
+                    return;
+                }
+                if (e.isIntersecting) {
+                    if (!armed) return;
+                    armed = false;
+                    play();
+                } else if (performance.now() - start.current >= T_DONE) {
+                    if (raf.current) cancelAnimationFrame(raf.current);
+                    setT(0);
+                    setHover(null);
+                    armed = true;
+                }
             },
             { threshold: 0.45 },
         );
@@ -248,15 +274,12 @@ export function HubMergeFigma() {
     const ease = "transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]";
 
     return (
-        <div
-            ref={wrap}
-            className="relative w-full overflow-hidden rounded-2xl border border-black/[0.05] bg-[#f5f5f5]"
-            style={{ height: H * scale }}
-        >
+        <div ref={wrap} className="relative w-full overflow-hidden" style={{ height: H * scale }}>
             <div
                 className="absolute top-0 left-0 origin-top-left"
                 style={{ width: W, height: H, transform: `scale(${scale})`, ...UI }}
             >
+                {/* step tabs, like a Figma page switcher */}
                 <div className="absolute top-5 left-6 flex items-center gap-1 rounded-lg border border-[#e2e2e2] bg-white p-1 shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
                     {TABS.map((label, i) => {
                         const on = tabOf(phase) === i;
@@ -276,8 +299,9 @@ export function HubMergeFigma() {
                     })}
                 </div>
 
+                {/* Before section */}
                 <div
-                    className="absolute rounded-md border border-[#e2e2e2] bg-white"
+                    className="absolute rounded-md border border-[#e2e2e2] bg-[#f5f5f5]"
                     style={{ left: BEFORE.x, top: SEC.y, width: BEFORE.w, height: SEC.h }}
                 />
                 <span
@@ -334,6 +358,7 @@ export function HubMergeFigma() {
                     />
                 </div>
 
+                {/* connector */}
                 <div
                     className={`absolute grid justify-items-center gap-1.5 ${ease} ${showAfter ? "opacity-100" : "opacity-0"}`}
                     style={{
@@ -358,6 +383,7 @@ export function HubMergeFigma() {
                     <span className="text-[10px] font-medium text-[#0d99ff]">merged</span>
                 </div>
 
+                {/* After section */}
                 <div
                     className={`absolute ${ease} ${showAfter ? "opacity-100" : "translate-y-3 opacity-0"}`}
                     style={{ left: AFTER.x, top: SEC.y, width: AFTER.w, height: SEC.h }}
@@ -385,6 +411,7 @@ export function HubMergeFigma() {
                     </div>
                 </div>
 
+                {/* the six pieces: light up on their old screen, then fly to their spot on the new one */}
                 {PIECES.map((p, i) => {
                     const local = p.from === "list" ? i : i - 3;
                     const lit = t >= (p.from === "list" ? T_LIST : T_DETAIL) + local * 450;
@@ -416,6 +443,7 @@ export function HubMergeFigma() {
                     );
                 })}
 
+                {/* what else got better: one spotlight at a time, its pin in the margin, its card lit */}
                 {NOTES.map((n, i) => {
                     const b = noteArea(n.area);
                     return (
@@ -467,6 +495,7 @@ export function HubMergeFigma() {
                     ))}
                 </div>
 
+                {/* caption, like a note pinned to the canvas */}
                 <div className="absolute right-6 bottom-5 left-6 flex items-center gap-3 rounded-lg border border-[#e2e2e2] bg-white px-4 py-3 shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
                     <span
                         className="grid size-6 shrink-0 place-items-center rounded-full text-[11px] font-semibold text-white transition-colors duration-300"

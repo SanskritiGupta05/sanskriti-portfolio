@@ -1,11 +1,20 @@
 "use client";
 
-import { motion, type MotionValue, useScroll } from "motion/react";
 import Image from "next/image";
-import { type ReactNode, useEffect, useRef, useState } from "react";
-
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { motion, useScroll, type MotionValue } from "motion/react";
 import { Paperclip } from "@/components/PaperStack";
+import { Figtree } from "next/font/google";
 
+// case study reading text: Figtree (her pick, 2026-11-26). Headings stay Redaction, small labels stay Courier.
+// Loaded here so only case study pages get it; the rest of the site keeps its fonts.
+const figtree = Figtree({ subsets: ["latin"], variable: "--font-read", display: "swap" });
+
+// The "margin notes" case study language, as reusable parts:
+// a page frame with a sticky contents list (its dot follows the section you're in) and a thin
+// reading-progress line, plus sections, screens, a before/after switch, taped notes and flow chips.
+
+// sub: optional parts of a section (e.g. Solution #1–#4); in the sheet layout they unfold under the item while you're in it
 export type TocItem = {
     id: string;
     label: string;
@@ -13,6 +22,8 @@ export type TocItem = {
     sub?: { id: string; label: string }[];
 };
 
+// a quiet nudge back to the top, bottom right: it appears once the reader is past the header, its ring
+// fills with reading progress, and it steps away once the case study has ended (so it never sits on the footer)
 function BackToTop({
     progress,
     end,
@@ -95,8 +106,12 @@ export function CaseStudyFrame({
     toc: TocItem[];
     header: ReactNode;
     children: ReactNode;
+    // "column": contents list beside the article in one centred column.
+    // "sheet": contents list on the dotted page at the left, the case study on a clipped paper sheet that runs off the right edge.
     layout?: "column" | "sheet";
+    // extra classes for the sheet's content, e.g. a body font for one case study
     contentClassName?: string;
+    // colour of the reading-progress line and the active contents item (default: the site's terracotta)
     accent?: string;
 }) {
     const box = useRef<HTMLDivElement>(null);
@@ -108,6 +123,7 @@ export function CaseStudyFrame({
     const [activeSub, setActiveSub] = useState<string | undefined>();
 
     useEffect(() => {
+        // a contents item can stand for several sections (match) and sub-parts (sub); whichever is in view lights it up
         const owner = new Map<string, string>();
         const subs = new Set<string>();
         toc.forEach((t) => {
@@ -214,6 +230,7 @@ export function CaseStudyFrame({
                     </nav>
                     <div className="relative mt-4 rounded-t-[22px] rounded-bl-[22px] border border-line bg-bg shadow-[0_-10px_50px_-24px_rgba(60,40,20,0.35)] md:mt-0 md:rounded-tr-none md:border-r-0">
                         <Paperclip className="absolute -top-6 left-6 z-10 !h-[70px] !w-6 rotate-[18deg]" />
+                        {/* a woven fabric label hanging from the top edge, text reading bottom to top */}
                         <span
                             aria-hidden="true"
                             className="absolute top-0 left-16 z-10 hidden w-[34px] rotate-180 rounded-t-[2px] px-[9px] py-5 font-mono text-[12px] font-bold tracking-[0.2em] text-[#f6e4d8] uppercase [writing-mode:vertical-rl] [text-shadow:0_1px_0_rgba(90,20,15,0.45)] sm:block md:left-12"
@@ -228,7 +245,7 @@ export function CaseStudyFrame({
                             Case study
                         </span>
                         <div
-                            className={`max-w-[1040px] px-6 pt-12 pb-24 sm:pr-10 sm:pl-24 md:pl-[104px] [&_h2]:max-w-[44ch] [&_p.printed]:max-w-[82ch] ${contentClassName}`}
+                            className={`${figtree.variable} [font-family:var(--font-read),system-ui,sans-serif] [&_:where(.label)]:[font-family:var(--font-mono)] max-w-[1040px] px-6 pt-12 pb-24 sm:pr-10 sm:pl-24 md:pl-[104px] [&_h2]:max-w-[44ch] [&_p.printed]:max-w-[82ch] [&_.printed]:[filter:none] [&_.printed]:[text-shadow:none] [&_.printed]:[-webkit-text-stroke:0] ${contentClassName}`}
                         >
                             {header}
                             <article className="mt-24 grid min-w-0 gap-28">{children}</article>
@@ -305,6 +322,7 @@ export function Quote({ children }: { children: ReactNode }) {
     );
 }
 
+// a screen or set of screens, framed
 export function Shot({
     src,
     w,
@@ -335,6 +353,7 @@ export function Shot({
     );
 }
 
+// flip between the old and the new screens
 export function BeforeAfter({
     before,
     after,
@@ -374,6 +393,7 @@ export function BeforeAfter({
     );
 }
 
+// a principle or decision, pinned on with a strip of tape
 export function Note({
     label,
     children,
@@ -398,6 +418,7 @@ export function Note({
     );
 }
 
+// a sequence of states, as chips joined by arrows
 export function Flow({ steps }: { steps: string[] }) {
     return (
         <ol className="flex flex-wrap items-center gap-x-2 gap-y-2">

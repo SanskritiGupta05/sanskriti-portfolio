@@ -1,7 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+
+// Shared kit for the Bounce case study's Figma-style animations (HTML/CSS, not video: sharp and replayable).
+// A fixed-size stage scales to its column; a clock (t, ms) starts when the stage scrolls into view and
+// Replay restarts it. Parts look like Figma: sections with name tags, frame names, dashed highlight boxes,
+// comment pins and comment cards, step tabs and a caption bar.
 
 export const FIGMA_FONT = {
     fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif',
@@ -32,7 +37,7 @@ export function useStageClock(total: number) {
         };
         raf.current = requestAnimationFrame(tick);
     };
-    return { wrap, scale, setScale, t, setT, play, raf };
+    return { wrap, scale, setScale, t, setT, play, raf, start };
 }
 
 export function Stage({
@@ -46,21 +51,31 @@ export function Stage({
     total: number;
     children: (t: number, replay: () => void, done: boolean) => ReactNode;
 }) {
-    const { wrap, scale, setScale, t, setT, play, raf } = useStageClock(total);
+    const { wrap, scale, setScale, t, setT, play, raf, start } = useStageClock(total);
     useEffect(() => {
         const el = wrap.current;
         if (!el) return;
         const ro = new ResizeObserver(([e]) => setScale(Math.min(1, e.contentRect.width / w)));
         ro.observe(el);
         const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-        let started = false;
+        // plays when it scrolls into view; once finished, scrolling away resets it to the
+        // start, so coming back plays it again from the beginning
+        let armed = true;
         const io = new IntersectionObserver(
             ([e]) => {
-                if (!e.isIntersecting || started) return;
-                started = true;
-                io.disconnect();
-                if (reduce) setT(total + 1);
-                else play();
+                if (reduce) {
+                    if (e.isIntersecting) setT(total + 1);
+                    return;
+                }
+                if (e.isIntersecting) {
+                    if (!armed) return;
+                    armed = false;
+                    play();
+                } else if (performance.now() - start.current >= total) {
+                    if (raf.current) cancelAnimationFrame(raf.current);
+                    setT(0);
+                    armed = true;
+                }
             },
             { threshold: 0.45 },
         );
@@ -74,11 +89,7 @@ export function Stage({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
-        <div
-            ref={wrap}
-            className="relative w-full overflow-hidden rounded-2xl border border-black/[0.05] bg-[#f5f5f5]"
-            style={{ height: h * scale }}
-        >
+        <div ref={wrap} className="relative w-full overflow-hidden" style={{ height: h * scale }}>
             <div
                 className="absolute top-0 left-0 origin-top-left"
                 style={{
@@ -129,6 +140,7 @@ export function Caption({
     text: string;
     done: boolean;
     onReplay: () => void;
+    // the badge takes a spotlight's colour (and number) while one is on, so caption and pin match
     color?: string;
 }) {
     return (
@@ -166,6 +178,7 @@ export function Caption({
     );
 }
 
+// a Figma section: grey (or green for "after") with a name tag
 export function SectionBox({
     x,
     y,
@@ -189,7 +202,7 @@ export function SectionBox({
             style={{ left: x, top: y, width: w, height: h }}
         >
             <div
-                className={`absolute inset-0 rounded-md border ${after ? "border-[#bfe7c9] bg-[#f3fbf5]" : "border-[#e2e2e2] bg-white"}`}
+                className={`absolute inset-0 rounded-md border ${after ? "border-[#bfe7c9] bg-[#f3fbf5]" : "border-[#e2e2e2] bg-[#f5f5f5]"}`}
             />
             <span
                 className={`absolute rounded px-2 py-[3px] text-[11px] font-medium ${after ? "bg-[#14ae5c] text-white" : "bg-[#e6e6e6] text-[#1e1e1e]"}`}
@@ -222,6 +235,7 @@ export function FrameName({
     );
 }
 
+// a phone screen image; crossfades between several sources
 export function Screen({
     x,
     y,
@@ -264,6 +278,7 @@ export function Screen({
     );
 }
 
+// a dashed highlight box with a label chip (positions in stage px)
 export function Highlight({
     x,
     y,
@@ -311,6 +326,7 @@ export function Highlight({
     );
 }
 
+// a numbered comment pin, like Figma's
 export function Pin({
     x,
     y,
@@ -334,6 +350,7 @@ export function Pin({
     );
 }
 
+// a comment card: the matching numbered pin, then the title and one line
 export function CommentCard({
     n,
     title,
@@ -403,6 +420,8 @@ export function Cursor({
     );
 }
 
+// a spotlight on one area of a phone screen: the area keeps its colour inside a thin ring, the rest of the
+// phone dims (a huge box-shadow, clipped to the phone). Only one should be on at a time.
 export function Spotlight({
     phone,
     area,
@@ -439,6 +458,8 @@ export function Spotlight({
     );
 }
 
+// a comment card that can be the one in focus, a quieter one already read, or hidden; hovering or
+// focusing it calls onFocus so the stage can light up its area again
 export function NoteCard({
     n,
     title,
@@ -456,6 +477,7 @@ export function NoteCard({
     state: "hidden" | "active" | "read" | "rest";
     onFocus?: () => void;
     onBlur?: () => void;
+    // stacked (number above the text), for narrow cards set in a row
     compact?: boolean;
 }) {
     const shown = state !== "hidden";

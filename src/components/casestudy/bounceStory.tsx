@@ -1,7 +1,13 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 
+// Pieces for the Bounce Daily case study v5 (Qmentis structure). They mirror her Figma frame
+// "Bounce Daily · case study v5" (file eJ4fYjVQ…, page "Case study · web page", frame 1337:10605):
+// a red mono eyebrow + serif headline per section, mono body, soft skeu cards, her composed figures
+// (exported 2× to public/assets/cases/bounce/v5) and decision canvases with a "The call" bar.
+
 const FIG = "/assets/cases/bounce/v5";
+// the figures restyled as a Figma file (sections, frame names, selection), exported at 3× into v5/hq
 const HQ: Record<string, [number, number]> = {
     "kyc-spots": [2544, 2345],
     "old-signup": [2688, 1652],
@@ -39,6 +45,7 @@ const SKEU =
 
 export function Eyebrow({ children, className = "" }: { children: ReactNode; className?: string }) {
     return (
+        // a section label like a ticker: a small glowing red dot, then bold mono caps
         <span
             className={`flex items-center gap-2.5 font-mono text-[14px] font-bold tracking-[0.14em] text-[#c8553b] uppercase ${className}`}
         >
@@ -59,6 +66,7 @@ export function Body({ children }: { children: ReactNode }) {
     );
 }
 
+// a top-level section: red eyebrow, serif statement headline, then the story
 export function Section({
     id,
     eyebrow,
@@ -91,6 +99,7 @@ export function Section({
     );
 }
 
+// one of her figures, as composed in Figma
 export function Fig({
     name,
     alt,
@@ -146,6 +155,7 @@ export function Tags({ items }: { items: string[] }) {
     );
 }
 
+// Company / Team / Timeline / Platform, under a hairline
 export function Facts({ items }: { items: { k: string; v: ReactNode; sub?: ReactNode }[] }) {
     return (
         <dl className="grid gap-x-10 gap-y-7 border-t border-line pt-7 sm:grid-cols-2">
@@ -183,6 +193,7 @@ export function BigStats({ items }: { items: { n: string; l: string }[] }) {
     );
 }
 
+// small soft cards in two columns: optional red label, serif title, mono line
 const TONES = {
     blue: "bg-[linear-gradient(180deg,#f3f7ff,#e8f0ff)] shadow-[inset_0_1px_0_#fff,0_0_0_1px_rgba(47,95,179,0.14),0_12px_24px_-14px_rgba(40,30,20,0.2)]",
     amber: "bg-[linear-gradient(180deg,#fffaf0,#fff1d9)] shadow-[inset_0_1px_0_#fff,0_0_0_1px_rgba(168,106,0,0.14),0_12px_24px_-14px_rgba(40,30,20,0.2)]",
@@ -210,6 +221,7 @@ export function Cards({
                 >
                     {c.k &&
                         (c.icon ? (
+                            // a stronger label: a small tinted icon tile, then bold caps
                             <span className="flex items-center gap-2.5">
                                 <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-[#fdeeea] shadow-[inset_0_1px_0_#fff,0_0_0_1px_rgba(200,85,59,0.18)] dark:bg-[#3a2622]">
                                     <c.icon
@@ -287,6 +299,7 @@ export function RiderCard({
     );
 }
 
+// one part of the solution walk-through
 export function Solution({
     id,
     label,
@@ -316,6 +329,7 @@ export function Solution({
     );
 }
 
+// a design decision: number, title, principle, why, then her figure on a canvas with "The call"
 export function Decision({
     id,
     n,
@@ -335,7 +349,9 @@ export function Decision({
     children: ReactNode;
     fig?: string;
     alt?: string;
+    // a live figure (e.g. the hub merge) instead of an image
     figure?: ReactNode;
+    // a second container under the figure (e.g. the flow as screens)
     extra?: ReactNode;
     call: ReactNode;
 }) {
@@ -349,7 +365,7 @@ export function Decision({
                 {principle}
             </p>
             <Body>{children}</Body>
-            <div className="grid gap-0 overflow-hidden rounded-[24px] bg-[#f5f5f5] px-3 pb-3 sm:px-6 sm:pb-6 dark:bg-surface">
+            <div className="grid gap-4">
                 {figure ?? (
                     <Image
                         src={figSrc(fig)}
@@ -403,6 +419,7 @@ export function QuoteCard({ children, by }: { children: ReactNode; by: string })
     );
 }
 
+// numbered takeaways in two columns, each under a hairline
 export function Takeaways({ items }: { items: [string, string][] }) {
     return (
         <ol className="grid gap-x-8 sm:grid-cols-2">
@@ -421,6 +438,7 @@ export function Takeaways({ items }: { items: [string, string][] }) {
     );
 }
 
+// "Live on Google Play" as a quiet text link with the Play logo, for the Platform fact
 export function PlayLink() {
     return (
         <a
@@ -443,6 +461,8 @@ export function PlayLink() {
     );
 }
 
+// the whole old journey vs the new one, as a Figma canvas: an "Old app" and a green "New app" section, each step a small
+// frame with its screen count, blue prototype arrows between them, and New / Moved here / Removed tags (Figma v5, The big move)
 type Kind = "kept" | "removed" | "new" | "moved";
 const KIND: Record<Kind, { stroke: string; tag?: [string, string] }> = {
     kept: { stroke: "#dcdcdc" },
@@ -497,7 +517,7 @@ function FlowSection({
 }) {
     return (
         <div
-            className={`grid gap-3.5 rounded-md border px-[18px] pt-3.5 pb-5 ${after ? "border-[#bfe7c9] bg-[#f3fbf5]" : "border-[#e2e2e2] bg-white"}`}
+            className={`grid gap-3.5 rounded-md border px-[18px] pt-3.5 pb-5 ${after ? "border-[#bfe7c9] bg-[#f3fbf5]" : "border-[#e2e2e2] bg-[#f5f5f5]"}`}
         >
             <span
                 className={`w-fit rounded px-2 py-[3px] text-[11px] font-medium ${after ? "bg-[#14ae5c] text-white" : "bg-[#e6e6e6] text-[#1e1e1e]"}`}
@@ -550,10 +570,7 @@ function FlowSection({
 export function FlowCompare({ caption }: { caption?: string }) {
     return (
         <figure className="grid min-w-0 gap-3">
-            <div
-                className="grid gap-[18px] rounded-2xl border border-black/[0.05] bg-[#f5f5f5] p-4 sm:p-6"
-                style={FIGMA_UI}
-            >
+            <div className="grid gap-[18px]" style={FIGMA_UI}>
                 <FlowSection label="Old app · 15 steps, 39 screens" steps={OLD_FLOW} />
                 <FlowSection label="New app · 13 stages" after steps={NEW_FLOW} />
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
