@@ -1,4 +1,5 @@
-import { useId } from "react";
+import { useEffect, useId, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 
 const LINE = "#6b4a30";
 const LW = 2.4;
@@ -68,9 +69,46 @@ const fuzz = (cx: number, cy: number, r: number, n = 34) =>
         return `${i ? "L" : "M"}${(cx + Math.cos(a) * rr).toFixed(1)} ${(cy + Math.sin(a) * rr).toFixed(1)}`;
     }).join(" ") + "Z";
 
+function useIdle() {
+    const reduce = useReducedMotion();
+    return (keys: Record<string, number[]>, duration: number, delay = 0) =>
+        reduce
+            ? {}
+            : {
+                  animate: keys,
+                  transition: { duration, delay, repeat: Infinity, ease: "easeInOut" as const },
+              };
+}
+function useBlink() {
+    const reduce = useReducedMotion();
+    const [shut, setShut] = useState(false);
+    useEffect(() => {
+        if (reduce) return;
+        let t: ReturnType<typeof setTimeout>;
+        const loop = () => {
+            t = setTimeout(
+                () => {
+                    setShut(true);
+                    t = setTimeout(() => {
+                        setShut(false);
+                        loop();
+                    }, 150);
+                },
+                2600 + Math.random() * 1800,
+            );
+        };
+        loop();
+        return () => clearTimeout(t);
+    }, [reduce]);
+    return shut;
+}
+const CAT_BLINK = CAT_FACE.map((r, i) => (i === 5 ? r.replace(/k/g, "F") : r));
+
 export function ConsoleArt() {
     const u = useId().replace(/:/g, "");
     const id = (n: string) => `bc-${n}-${u}`;
+    const idle = useIdle();
+    const shut = useBlink();
     return (
         <svg
             viewBox="0 0 260 260"
@@ -126,41 +164,43 @@ export function ConsoleArt() {
                     fill={`url(#${id("dots")})`}
                 />
             </g>
-            <g transform="rotate(12 186 72)" filter={`url(#${id("sh")})`}>
-                <rect
-                    x="156"
-                    y="44"
-                    width="62"
-                    height="62"
-                    rx="13"
-                    fill="#a8261d"
-                    stroke={LINE}
-                    strokeWidth="2"
-                    transform="translate(0 6)"
-                />
-                <rect
-                    x="156"
-                    y="44"
-                    width="62"
-                    height="62"
-                    rx="13"
-                    fill={`url(#${id("red")})`}
-                    stroke={LINE}
-                    strokeWidth="2"
-                />
-                <path
-                    d="M164 52 Q187 47 210 52"
-                    stroke="#fff"
-                    strokeOpacity=".35"
-                    strokeWidth="3"
-                    fill="none"
-                    strokeLinecap="round"
-                />
-                <path
-                    d="M178 61 Q177 57 181 59 L203 72 Q206 75 203 77 L181 90 Q177 92 178 88 Z"
-                    fill="#fff"
-                />
-            </g>
+            <motion.g {...idle({ y: [0, -4, 0] }, 2.8)}>
+                <g transform="rotate(12 186 72)" filter={`url(#${id("sh")})`}>
+                    <rect
+                        x="156"
+                        y="44"
+                        width="62"
+                        height="62"
+                        rx="13"
+                        fill="#a8261d"
+                        stroke={LINE}
+                        strokeWidth="2"
+                        transform="translate(0 6)"
+                    />
+                    <rect
+                        x="156"
+                        y="44"
+                        width="62"
+                        height="62"
+                        rx="13"
+                        fill={`url(#${id("red")})`}
+                        stroke={LINE}
+                        strokeWidth="2"
+                    />
+                    <path
+                        d="M164 52 Q187 47 210 52"
+                        stroke="#fff"
+                        strokeOpacity=".35"
+                        strokeWidth="3"
+                        fill="none"
+                        strokeLinecap="round"
+                    />
+                    <path
+                        d="M178 61 Q177 57 181 59 L203 72 Q206 75 203 77 L181 90 Q177 92 178 88 Z"
+                        fill="#fff"
+                    />
+                </g>
+            </motion.g>
             <g transform="rotate(-24 118 140)" filter={`url(#${id("sh")})`}>
                 <rect
                     x="56"
@@ -202,7 +242,7 @@ export function ConsoleArt() {
                 />
                 <rect x="78" y="72" width="84" height="68" rx="5" fill="#86a06a" />
                 <Pix
-                    rows={CAT_FACE}
+                    rows={shut ? CAT_BLINK : CAT_FACE}
                     pal={{
                         o: "#6b4630",
                         P: "#f2a99b",
@@ -278,61 +318,71 @@ export function ConsoleArt() {
                 )}
                 <circle cx="62" cy="92" r="3" fill="#fbf2e4" stroke={LINE} strokeWidth="1.4" />
             </g>
-            <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path
-                    d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196"
+            <motion.g
+                style={{ transformOrigin: "66px 112px", transformBox: "view-box" }}
+                {...idle({ rotate: [0, 7, -5, 0] }, 3.4)}
+            >
+                <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <path
+                        d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196"
+                        stroke={LINE}
+                        strokeWidth="6"
+                    />
+                    <path
+                        d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196"
+                        stroke="#e8782c"
+                        strokeWidth="3.6"
+                    />
+                    <path
+                        d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196"
+                        stroke="#f6b06a"
+                        strokeWidth="1.2"
+                        strokeDasharray="3 4"
+                    />
+                    <path
+                        d="M66 112 C 58 126, 52 150, 54 172 C 55 182, 54 190, 52 196"
+                        stroke={LINE}
+                        strokeWidth="5"
+                    />
+                    <path
+                        d="M66 112 C 58 126, 52 150, 54 172 C 55 182, 54 190, 52 196"
+                        stroke="#d9602a"
+                        strokeWidth="2.8"
+                    />
+                </g>
+                <rect
+                    x="46"
+                    y="194"
+                    width="12"
+                    height="9"
+                    rx="3"
+                    fill="#e2b04a"
                     stroke={LINE}
-                    strokeWidth="6"
+                    strokeWidth="1.6"
                 />
                 <path
-                    d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196"
-                    stroke="#e8782c"
-                    strokeWidth="3.6"
+                    d={fuzz(52, 224, 19)}
+                    fill="#231d1b"
+                    stroke="#231d1b"
+                    strokeWidth="1"
+                    strokeLinejoin="round"
                 />
-                <path
-                    d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196"
-                    stroke="#f6b06a"
-                    strokeWidth="1.2"
-                    strokeDasharray="3 4"
-                />
-                <path
-                    d="M66 112 C 58 126, 52 150, 54 172 C 55 182, 54 190, 52 196"
-                    stroke={LINE}
-                    strokeWidth="5"
-                />
-                <path
-                    d="M66 112 C 58 126, 52 150, 54 172 C 55 182, 54 190, 52 196"
-                    stroke="#d9602a"
-                    strokeWidth="2.8"
-                />
-            </g>
-            <rect
-                x="46"
-                y="194"
-                width="12"
-                height="9"
-                rx="3"
-                fill="#e2b04a"
-                stroke={LINE}
-                strokeWidth="1.6"
-            />
-            <path
-                d={fuzz(52, 224, 19)}
-                fill="#231d1b"
-                stroke="#231d1b"
-                strokeWidth="1"
-                strokeLinejoin="round"
-            />
-            <circle cx="44.5" cy="222" r="5.2" fill="#fff" />
-            <circle cx="59.5" cy="222" r="5.2" fill="#fff" />
-            <circle cx="45.5" cy="223" r="2.4" fill="#231d1b" />
-            <circle cx="58.5" cy="223" r="2.4" fill="#231d1b" />
-            <path
+                <circle cx="44.5" cy="222" r="5.2" fill="#fff" />
+                <circle cx="59.5" cy="222" r="5.2" fill="#fff" />
+                <circle cx="45.5" cy="223" r="2.4" fill="#231d1b" />
+                <circle cx="58.5" cy="223" r="2.4" fill="#231d1b" />
+            </motion.g>
+            <motion.path
                 d={sparkle(232, 196, 13)}
                 fill="#f4c04e"
                 stroke="#c9862c"
                 strokeWidth="1.6"
                 strokeLinejoin="round"
+                style={{ transformOrigin: "232px 196px", transformBox: "view-box" }}
+                {...idle(
+                    { scale: [1, 1.28, 0.9, 1], rotate: [0, 20, 0, 0], opacity: [1, 1, 0.75, 1] },
+                    2.2,
+                )}
             />
         </svg>
     );
@@ -495,6 +545,7 @@ const PETAL = "M0 0 C -6 -3, -6 -11, 0 -13 L2 -10 L4 -13 C 9 -10, 7 -3, 0 0 Z";
 export function PolaroidArt() {
     const u = useId().replace(/:/g, "");
     const id = (n: string) => `bp-${n}-${u}`;
+    const idle = useIdle();
     return (
         <svg
             viewBox="0 0 260 260"
@@ -652,40 +703,56 @@ export function PolaroidArt() {
                     </g>
                 ))}
             </g>
-            <g fill="none" stroke="#6b4026" strokeLinecap="round">
-                <path
-                    d="M18 190 C 40 150, 70 118, 104 96 C 140 72, 176 52, 220 26"
-                    strokeWidth="4"
-                />
-                <path d="M70 120 C 56 118, 44 122, 34 128" strokeWidth="2.6" />
-                <path d="M134 78 C 140 66, 150 58, 160 56" strokeWidth="2.4" />
-                <path d="M190 42 C 200 40, 210 44, 222 50" strokeWidth="2.2" />
-                <path d="M96 102 C 86 92, 76 88, 64 88" strokeWidth="2.2" />
-            </g>
-            <Blossom x={34} y={128} r={11} rot={10} />
-            <Blossom x={64} y={88} r={10} rot={-20} />
-            <Blossom x={104} y={96} r={12} rot={15} />
-            <Blossom x={160} y={56} r={12} rot={-10} />
-            <Blossom x={136} y={44} r={10} rot={30} />
-            <Blossom x={198} y={52} r={10} rot={5} />
-            <Bud x={222} y={26} rot={40} />
-            <Bud x={230} y={50} rot={70} />
-            <Bud x={84} y={70} rot={-30} />
-            <Bud x={18} y={100} rot={-60} />
-            <path
-                d={PETAL}
-                transform="translate(246 96) rotate(30)"
-                fill="#f6aebb"
-                stroke="#d2566c"
-                strokeWidth="1.2"
-            />
-            <path
-                d={PETAL}
-                transform="translate(248 142) rotate(-20) scale(.85)"
-                fill="#f6aebb"
-                stroke="#d2566c"
-                strokeWidth="1.2"
-            />
+            <motion.g
+                style={{ transformOrigin: "18px 190px", transformBox: "view-box" }}
+                {...idle({ rotate: [0, 1.6, -0.6, 0] }, 4.6)}
+            >
+                <g fill="none" stroke="#6b4026" strokeLinecap="round">
+                    <path
+                        d="M18 190 C 40 150, 70 118, 104 96 C 140 72, 176 52, 220 26"
+                        strokeWidth="4"
+                    />
+                    <path d="M70 120 C 56 118, 44 122, 34 128" strokeWidth="2.6" />
+                    <path d="M134 78 C 140 66, 150 58, 160 56" strokeWidth="2.4" />
+                    <path d="M190 42 C 200 40, 210 44, 222 50" strokeWidth="2.2" />
+                    <path d="M96 102 C 86 92, 76 88, 64 88" strokeWidth="2.2" />
+                </g>
+                <Blossom x={34} y={128} r={11} rot={10} />
+                <Blossom x={64} y={88} r={10} rot={-20} />
+                <Blossom x={104} y={96} r={12} rot={15} />
+                <Blossom x={160} y={56} r={12} rot={-10} />
+                <Blossom x={136} y={44} r={10} rot={30} />
+                <Blossom x={198} y={52} r={10} rot={5} />
+                <Bud x={222} y={26} rot={40} />
+                <Bud x={230} y={50} rot={70} />
+                <Bud x={84} y={70} rot={-30} />
+                <Bud x={18} y={100} rot={-60} />
+            </motion.g>
+            {(
+                [
+                    [246, 96, 30, 1, 0],
+                    [248, 142, -20, 0.85, 1.4],
+                    [210, 20, 60, 0.8, 2.6],
+                ] as const
+            ).map(([x, y, r, sc, d]) => (
+                <motion.g
+                    key={x}
+                    style={{ transformBox: "fill-box", transformOrigin: "center" }}
+                    {...idle(
+                        { x: [0, 10, 18], y: [0, 14, 30], rotate: [0, 40, 90], opacity: [0, 1, 0] },
+                        4.2,
+                        d,
+                    )}
+                >
+                    <path
+                        d={PETAL}
+                        transform={`translate(${x} ${y}) rotate(${r}) scale(${sc})`}
+                        fill="#f6aebb"
+                        stroke="#d2566c"
+                        strokeWidth="1.2"
+                    />
+                </motion.g>
+            ))}
         </svg>
     );
 }
