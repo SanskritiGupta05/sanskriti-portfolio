@@ -8,6 +8,7 @@ import { VideoCarousel } from "@/components/playground/VideoCarousel";
 import { PaperStack } from "@/components/PaperStack";
 import { CaseStudies } from "@/components/CaseStudies";
 import { VibeProjects } from "@/components/VibeProjects";
+import { Toolkit } from "@/components/Toolkit";
 
 // One narrow centred column with wide empty margins on both sides (like Sam's and Mythili's sites).
 // The lantern hangs outside it, from the page's top-right corner.
@@ -116,6 +117,8 @@ export default function Home() {
               <div className="mx-auto w-full max-w-[874px] px-6">
                 {/* vibe-coded side projects, then the footer */}
                 <VibeProjects />
+                {/* the tools she uses day to day, and the tech she knows */}
+                <Toolkit />
                 <Footer />
               </div>
             ),
