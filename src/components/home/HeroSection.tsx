@@ -15,7 +15,7 @@ export function HeroSection() {
                 </h1>
                 <HeroBio />
                 <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
-                    <SakuraButtonLink href="#resume" finish="raised">
+                    <SakuraButtonLink href="/Sanskriti_Gupta_Resume.pdf" target="_blank" rel="noopener noreferrer" finish="raised">
                         Résumé
                     </SakuraButtonLink>
                     <SakuraButtonLink href="/work" tone="paper" finish="raised">
