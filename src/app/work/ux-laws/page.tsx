@@ -104,10 +104,10 @@ export default function UxLaws() {
                         </Link>
                         <div className="mt-8 flex items-center gap-4">
                             <Image
-                                src="/assets/cases/uxie/uxie-logo-no-lines.webp"
+                                src="/assets/cases/uxie/uxie-logo.webp"
                                 alt="UXie logo"
-                                width={1266}
-                                height={1243}
+                                width={1137}
+                                height={1140}
                                 sizes="64px"
                                 className="size-16"
                             />
