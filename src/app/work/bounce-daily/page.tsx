@@ -1,27 +1,19 @@
-import { CreditCard, House, ListChecks, Palette, Repeat, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-
-import {
-    CheckoutStory,
-    KycCardsStory,
-    PlansStory,
-    RenewStory,
-    RideStory,
-    ScooterStory,
-} from "@/components/casestudy/bounceAnims";
+import { Nav } from "@/components/Nav";
 import {
     Benchmark,
     FeatureTestimonial,
     MarkerBand,
     OutcomeCards,
 } from "@/components/casestudy/bounceOutcome";
+import { Footer } from "@/components/Footer";
+import { CaseStudyFrame, type TocItem } from "@/components/casestudy/Margin";
 import {
     BigStats,
     Body,
     Cards,
-    Chips,
     Decision,
     Eyebrow,
     Facts,
@@ -33,18 +25,26 @@ import {
     Solution,
     Tags,
 } from "@/components/casestudy/bounceStory";
-import { HubMergeFigma } from "@/components/casestudy/HubMergeFigma";
-import { KycFlowScreens } from "@/components/casestudy/kycFlow";
-import { CaseStudyFrame, type TocItem } from "@/components/casestudy/Margin";
 import { Mark } from "@/components/casestudy/Mark";
+import { KycFlowScreens } from "@/components/casestudy/kycFlow";
 import { TakeStatements, UiBento } from "@/components/casestudy/uiLayer";
-import { Footer } from "@/components/Footer";
-import { Nav } from "@/components/Nav";
+import { HubMergeFigma } from "@/components/casestudy/HubMergeFigma";
+import {
+    CheckoutStory,
+    RideStory,
+    RenewStory,
+    KycCardsStory,
+    PlansStory,
+    ScooterStory,
+} from "@/components/casestudy/bounceAnims";
+import { CreditCard, House, ListChecks, Palette, Repeat, Sparkles } from "lucide-react";
 
+// a key fact inside body text: bold, in the heading ink
 function B({ children }: { children: React.ReactNode }) {
     return <strong className="font-bold text-head">{children}</strong>;
 }
 
+// short pointers with a small red bullet, in the body type
 function Pointers({ items }: { items: React.ReactNode[] }) {
     return (
         <ul className="grid gap-3">
@@ -65,6 +65,10 @@ export const metadata: Metadata = {
     title: "Bounce Daily · Sanskriti",
     description: "From a document wall to a rider journey: redesigning the Bounce Daily rider app.",
 };
+
+// Bounce Daily case study v5. Mirrors her Figma frame "Bounce Daily · case study v5 (Qmentis structure)"
+// (file eJ4fYjVQ…, page "Case study · web page", frame 1337:10605); outline in docs/bounce-daily-case-study-v5.md.
+// Change the Figma first, then mirror it here. Decisions are hers; Aum is named only in the Team fact.
 
 const TOC: TocItem[] = [
     { id: "context", label: "Context" },
@@ -93,6 +97,7 @@ const TOC: TocItem[] = [
             { id: "more", label: "More calls, at a glance" },
         ],
     },
+    { id: "errors", label: "Error states" },
     { id: "edge", label: "Edge cases" },
     { id: "ui", label: "The UI layer" },
     { id: "real", label: "Making it real" },
@@ -101,6 +106,7 @@ const TOC: TocItem[] = [
 
 export default function BounceDaily() {
     return (
+        // the contents list is in Redaction, like every header on this page
         <div className="w-full [&_nav[aria-label=Contents]]:font-serif [&_nav[aria-label=Contents]_.label]:text-[15px] [&_nav[aria-label=Contents]_.label]:tracking-normal [&_nav[aria-label=Contents]_.label]:normal-case [&_nav[aria-label=Contents]_a]:text-[15px]">
             <div className="mx-auto max-w-[826px] px-6">
                 <Nav />
@@ -558,32 +564,38 @@ export default function BounceDaily() {
                 </section>
 
                 <Section
-                    id="edge"
-                    eyebrow="Edge cases"
-                    headline="A sold-out hub isn't an edge case for the rider it happens to."
+                    id="errors"
+                    eyebrow="Error states"
+                    headline="A sold-out hub is a lost day for the rider it happens to."
                 >
                     <Body>
-                        Beyond the happy path I designed eight scenarios. In the old app most of
+                        Beyond the happy path I designed eight error states. In the old app most of
                         them ended in a toast or a timer running out. Now each one says what went
-                        wrong in plain words, shows an illustration instead of a paragraph, and
-                        gives one clear way forward.
+                        wrong in plain words and gives one clear way forward.
                     </Body>
-                    <Chips
-                        items={[
-                            "Hub sold out",
-                            "City not served",
-                            "Payment failed",
-                            "KYC not approved",
-                            "Plan ending",
-                            "Plan ended",
-                            "Kilometres low",
-                            "Dues before a trip",
-                        ]}
-                    />
                     <Fig
-                        name="errors"
-                        alt="Hub sold out, not in your city yet, payment failed, and KYC not approved, each with one next step."
-                        caption="Hub sold out, not in your city yet, payment failed, and KYC not approved, each with one next step."
+                        name="error-states-v1"
+                        section
+                        alt="Eight error screens: hub sold out, not in your city, payment failed, KYC not approved, plan ended, dues before a trip, kilometres low, and licence not approved."
+                        caption="Hub sold out, not in your city yet, payment failed, KYC not approved, plan ended, dues before a trip, kilometres low, and a licence not approved on switch, each with one next step."
+                    />
+                </Section>
+
+                <Section
+                    id="edge"
+                    eyebrow="Edge cases"
+                    headline="Riders don't always take the path we drew."
+                >
+                    <Body>
+                        Some riders won&apos;t share their location, some are in a hurry, and some
+                        want a faster scooter halfway through a rental. None of these is an error,
+                        so none of them should feel like one. Each one gets its own way through.
+                    </Body>
+                    <Fig
+                        name="edge-cases-v1"
+                        section
+                        alt="Five edge cases: no location shared, paid with KYC skipped, KYC in review, switching to a faster scooter mid-rental, and coming back after a plan ended."
+                        caption="Entering an area instead of sharing location, paying before KYC, waiting on a KYC review, switching to high speed mid-rental, and coming back after a plan ended."
                     />
                 </Section>
 
@@ -621,6 +633,8 @@ export default function BounceDaily() {
                     eyebrow="Learnings and reflections"
                     headline="Shipped on Android in 3 months."
                 >
+                    {/* the product manager's testimonial (words and photo from her Framer testimonial card), in a warm
+              featured card; then his benchmark line, and what shipped / what moved */}
                     <FeatureTestimonial
                         pull={
                             <>

@@ -20,6 +20,9 @@ const HQ: Record<string, [number, number]> = {
     scooter: [2544, 1742],
     "kyc-status": [2544, 1940],
     renewals: [2544, 1728],
+    // the section alone (no grey canvas), shown at its 1× size
+    "error-states-v1": [2058, 2934],
+    "edge-cases-v1": [2556, 1634],
 };
 const figSrc = (name: string) => (HQ[name] ? `${FIG}/figma/${name}.webp` : `${FIG}/${name}.webp`);
 const figSize = (name: string): [number, number] => HQ[name] ?? SIZES[name] ?? [1792, 1000];
@@ -105,11 +108,14 @@ export function Fig({
     alt,
     caption,
     href,
+    section,
 }: {
     name: string;
     alt: string;
     caption?: string;
     href?: string;
+    // a bare Figma section export (3×): shown no wider than its 1× size, centred, its own corners
+    section?: boolean;
 }) {
     const img = (
         <Image
@@ -119,7 +125,8 @@ export function Fig({
             height={figSize(name)[1]}
             unoptimized
             sizes="(min-width: 1100px) 900px, 100vw"
-            className="block h-auto w-full rounded-[20px]"
+            className={`block h-auto w-full ${section ? "mx-auto" : "rounded-[20px]"}`}
+            style={section ? { maxWidth: figSize(name)[0] / 3 } : undefined}
         />
     );
     return (
