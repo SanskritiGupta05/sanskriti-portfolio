@@ -161,11 +161,6 @@ export function ConsoleArt() {
                     fill="#fff"
                 />
             </g>
-            <g stroke="#e0462f" strokeWidth="4.2" strokeLinecap="round">
-                <path d="M30 70 L50 80" />
-                <path d="M58 36 L68 58" />
-                <path d="M94 30 L90 54" />
-            </g>
             <g transform="rotate(-24 118 140)" filter={`url(#${id("sh")})`}>
                 <rect
                     x="56"
