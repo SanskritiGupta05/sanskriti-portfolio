@@ -84,7 +84,7 @@ export function Stage({
   return (
     <div
       ref={wrap}
-      className="relative w-full overflow-hidden rounded-2xl border border-black/[0.05] bg-[#f5f5f5]"
+      className="relative w-full overflow-hidden"
       style={{ height: h * scale }}
     >
       <div
@@ -175,7 +175,7 @@ export function Caption({
   );
 }
 
-// a Figma section: white (or green for "after") with a name tag
+// a Figma section: grey (or green for "after") with a name tag
 export function SectionBox({
   x,
   y,
@@ -199,7 +199,7 @@ export function SectionBox({
       style={{ left: x, top: y, width: w, height: h }}
     >
       <div
-        className={`absolute inset-0 rounded-md border ${after ? "border-[#bfe7c9] bg-[#f3fbf5]" : "border-[#e2e2e2] bg-white"}`}
+        className={`absolute inset-0 rounded-md border ${after ? "border-[#bfe7c9] bg-[#f3fbf5]" : "border-[#e2e2e2] bg-[#f5f5f5]"}`}
       />
       <span
         className={`absolute rounded px-2 py-[3px] text-[11px] font-medium ${after ? "bg-[#14ae5c] text-white" : "bg-[#e6e6e6] text-[#1e1e1e]"}`}

@@ -243,7 +243,7 @@ export function HubMergeFigma() {
   return (
     <div
       ref={wrap}
-      className="relative w-full overflow-hidden rounded-2xl border border-black/[0.05] bg-[#f5f5f5]"
+      className="relative w-full overflow-hidden"
       style={{ height: H * scale }}
     >
       <div
@@ -272,7 +272,7 @@ export function HubMergeFigma() {
 
         {/* Before section */}
         <div
-          className="absolute rounded-md border border-[#e2e2e2] bg-white"
+          className="absolute rounded-md border border-[#e2e2e2] bg-[#f5f5f5]"
           style={{ left: BEFORE.x, top: SEC.y, width: BEFORE.w, height: SEC.h }}
         />
         <span

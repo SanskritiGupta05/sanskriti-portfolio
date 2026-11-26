@@ -386,7 +386,7 @@ export function Decision({
         {principle}
       </p>
       <Body>{children}</Body>
-      <div className="grid gap-0 overflow-hidden rounded-[24px] bg-[#f5f5f5] px-3 pb-3 sm:px-6 sm:pb-6 dark:bg-surface">
+      <div className="grid gap-4">
         {figure ?? (
           <Image
             src={figSrc(fig)}
@@ -559,7 +559,7 @@ function FlowSection({
 }) {
   return (
     <div
-      className={`grid gap-3.5 rounded-md border px-[18px] pt-3.5 pb-5 ${after ? "border-[#bfe7c9] bg-[#f3fbf5]" : "border-[#e2e2e2] bg-white"}`}
+      className={`grid gap-3.5 rounded-md border px-[18px] pt-3.5 pb-5 ${after ? "border-[#bfe7c9] bg-[#f3fbf5]" : "border-[#e2e2e2] bg-[#f5f5f5]"}`}
     >
       <span
         className={`w-fit rounded px-2 py-[3px] text-[11px] font-medium ${after ? "bg-[#14ae5c] text-white" : "bg-[#e6e6e6] text-[#1e1e1e]"}`}
@@ -613,7 +613,7 @@ export function FlowCompare({ caption }: { caption?: string }) {
   return (
     <figure className="grid min-w-0 gap-3">
       <div
-        className="grid gap-[18px] rounded-2xl border border-black/[0.05] bg-[#f5f5f5] p-4 sm:p-6"
+        className="grid gap-[18px]"
         style={FIGMA_UI}
       >
         <FlowSection label="Old app · 15 steps, 39 screens" steps={OLD_FLOW} />
