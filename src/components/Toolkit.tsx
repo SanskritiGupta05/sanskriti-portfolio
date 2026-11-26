@@ -1,6 +1,7 @@
 "use client";
 
 import { TOOLS } from "@/components/Keyword";
+import { PixelPencil } from "@/components/PixelPencil";
 
 // "Tools I use day to day" + "Tech I know" (her list). Same app-icon tiles as the hero's skill fans
 // (Keyword.tsx); the extra marks are official outlines from Simple Icons (OpenAI, Notion, Vercel, HTML5, CSS3, Swift),
@@ -158,8 +159,8 @@ export function Toolkit() {
   return (
     <section aria-labelledby="toolkit-title" className="pt-20">
       <div className="mb-6 flex items-center gap-3">
-        <span aria-hidden="true" className="grid h-8 w-10 rotate-6 place-items-center rounded-md border border-[#cfe0ef] bg-[#eef5fb] text-sm shadow-[0_3px_0_#cfe0ef]">
-          ✎
+        <span aria-hidden="true" className="grid h-11 w-13 rotate-6 place-items-center overflow-hidden rounded-lg border border-[#cfe0ef] bg-[#eef5fb] shadow-[0_3px_0_#cfe0ef]">
+          <PixelPencil />
         </span>
         <h2 id="toolkit-title" className="label rounded-sm bg-[#e8f1f9] px-2.5 py-1 !text-[#2b5f8c]">
           Toolkit
