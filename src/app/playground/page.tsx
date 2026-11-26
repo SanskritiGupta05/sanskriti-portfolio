@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 import { LazyVideo } from "@/components/playground/LazyVideo";
+import { Lightbox } from "@/components/playground/Lightbox";
 
 export const metadata: Metadata = {
     title: "Playground · Sanskriti",
@@ -356,7 +357,9 @@ export default function PlaygroundPage() {
                     </p>
                 </header>
 
-                <div className="grid gap-8 md:gap-10">
+                {/* tap any image or video to open it in a popup (see Lightbox) */}
+
+                <div data-lightbox className="grid gap-8 md:gap-10">
                     {ROWS.map((row, i) => (
                         <div
                             key={i}
@@ -384,6 +387,7 @@ export default function PlaygroundPage() {
                 </div>
             </main>
             <Footer />
+            <Lightbox />
         </div>
     );
 }
