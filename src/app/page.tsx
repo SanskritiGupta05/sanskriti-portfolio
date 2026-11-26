@@ -9,6 +9,7 @@ import { PaperStack } from "@/components/PaperStack";
 import { CaseStudies } from "@/components/CaseStudies";
 import { VibeProjects } from "@/components/VibeProjects";
 import { Toolkit } from "@/components/Toolkit";
+import { BeyondWork } from "@/components/home/BeyondWork";
 
 // One narrow centred column with wide empty margins on both sides (like Sam's and Mythili's sites).
 // The lantern hangs outside it, from the page's top-right corner.
@@ -89,7 +90,7 @@ export default function Home() {
                     <SakuraButtonLink href="#resume" finish="raised">
                       Résumé
                     </SakuraButtonLink>
-                    <SakuraButtonLink href="#work" tone="paper" finish="raised">
+                    <SakuraButtonLink href="/work" tone="paper" finish="raised">
                       See work
                     </SakuraButtonLink>
                   </div>
@@ -119,6 +120,7 @@ export default function Home() {
                 <VibeProjects />
                 {/* the tools she uses day to day, and the tech she knows */}
                 <Toolkit />
+                <BeyondWork />
                 <Footer />
               </div>
             ),

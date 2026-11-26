@@ -144,7 +144,7 @@ function Row({ label, items }: { label: string; items: { name: string; icon: Rea
       <ul className="flex flex-wrap gap-x-6 gap-y-4">
         {items.map((t) => (
           <li key={t.name} className="group flex items-center gap-2.5">
-            <span className="relative size-7 shrink-0 transition-transform duration-300 ease-out group-hover:-translate-y-0.5 [&>span]:absolute [&>span]:top-0 [&>span]:left-0 [&>span]:origin-top-left [&>span]:scale-70 [&>span]:shadow-[inset_0_0_0_1px_rgba(0,0,0,0.06)]">
+            <span className="relative size-9 shrink-0 transition-transform duration-300 ease-out group-hover:-translate-y-0.5 [&>span]:absolute [&>span]:top-0 [&>span]:left-0 [&>span]:origin-top-left [&>span]:scale-90 [&>span]:shadow-[inset_0_0_0_1px_rgba(0,0,0,0.06)]">
               {t.icon}
             </span>
             <span className="text-sm text-muted-foreground transition-colors group-hover:text-head">{t.name}</span>
