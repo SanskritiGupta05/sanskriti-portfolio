@@ -38,7 +38,7 @@ export function useStageClock(total: number) {
     };
     raf.current = requestAnimationFrame(tick);
   };
-  return { wrap, scale, setScale, t, setT, play, raf };
+  return { wrap, scale, setScale, t, setT, play, raf, start };
 }
 
 export function Stage({
@@ -52,7 +52,8 @@ export function Stage({
   total: number;
   children: (t: number, replay: () => void, done: boolean) => ReactNode;
 }) {
-  const { wrap, scale, setScale, t, setT, play, raf } = useStageClock(total);
+  const { wrap, scale, setScale, t, setT, play, raf, start } =
+    useStageClock(total);
   useEffect(() => {
     const el = wrap.current;
     if (!el) return;
@@ -61,14 +62,24 @@ export function Stage({
     );
     ro.observe(el);
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let started = false;
+    // plays when it scrolls into view; once finished, scrolling away resets it to the
+    // start, so coming back plays it again from the beginning
+    let armed = true;
     const io = new IntersectionObserver(
       ([e]) => {
-        if (!e.isIntersecting || started) return;
-        started = true;
-        io.disconnect();
-        if (reduce) setT(total + 1);
-        else play();
+        if (reduce) {
+          if (e.isIntersecting) setT(total + 1);
+          return;
+        }
+        if (e.isIntersecting) {
+          if (!armed) return;
+          armed = false;
+          play();
+        } else if (performance.now() - start.current >= total) {
+          if (raf.current) cancelAnimationFrame(raf.current);
+          setT(0);
+          armed = true;
+        }
       },
       { threshold: 0.45 },
     );
