@@ -2,11 +2,10 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-
 import { C, NoteCard, Pin, Spotlight } from "./figmaStage";
 
 const W = 860;
-const H = 640;
+const H = 628;
 const SRC = "/assets/cases/bounce/v5/hq";
 const UI = {
     fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif',
@@ -14,9 +13,18 @@ const UI = {
 const BLUE = "#0d99ff";
 const ORANGE = "#ff7a29";
 
-const SEC = { y: 72, h: 460 };
-const OLD = { w: 128, h: 285, y: SEC.y + (SEC.h - 285) / 2 + 10, listX: 42, detailX: 196 };
-const NEW = { w: 172, h: 374, x: 440, y: SEC.y + 60 };
+const SEC = { y: 72, h: 448 };
+const BEFORE = { x: 24, w: 360 };
+const AFTER = { x: 436, w: 400 };
+const OLD = {
+    w: 150,
+    h: 334,
+    y: SEC.y + 68,
+    listX: BEFORE.x + 18,
+    detailX: BEFORE.x + 18 + 150 + 24,
+};
+const NEW = { w: 160, h: 348, x: AFTER.x + 18, y: SEC.y + 68 };
+const NOTES_X = NEW.x + NEW.w + 16;
 const so = OLD.w / 440;
 const sn = NEW.w / 440;
 
@@ -167,7 +175,7 @@ function PhoneImg({
 export function HubMergeFigma() {
     const wrap = useRef<HTMLDivElement>(null);
     const [scale, setScale] = useState(1);
-    const [t, setT] = useState(0);
+    const [t, setT] = useState(0); // elapsed ms on a coarse clock
     const [hover, setHover] = useState<number | null>(null);
     const raf = useRef<number | undefined>(undefined);
     const start = useRef(0);
@@ -270,11 +278,11 @@ export function HubMergeFigma() {
 
                 <div
                     className="absolute rounded-md border border-[#e2e2e2] bg-white"
-                    style={{ left: 24, top: SEC.y, width: 318, height: SEC.h }}
+                    style={{ left: BEFORE.x, top: SEC.y, width: BEFORE.w, height: SEC.h }}
                 />
                 <span
                     className="absolute rounded bg-[#e6e6e6] px-2 py-[3px] text-[11px] font-medium text-[#1e1e1e]"
-                    style={{ left: 42, top: SEC.y + 14 }}
+                    style={{ left: BEFORE.x + 18, top: SEC.y + 14 }}
                 >
                     Before · 2 screens
                 </span>
@@ -302,7 +310,7 @@ export function HubMergeFigma() {
                 <svg
                     aria-hidden="true"
                     className="absolute text-[#b3b3b3]"
-                    style={{ left: 174, top: OLD.y + 136 }}
+                    style={{ left: OLD.listX + OLD.w + 3, top: OLD.y + OLD.h / 2 - 6 }}
                     width="18"
                     height="12"
                     viewBox="0 0 18 12"
@@ -328,11 +336,15 @@ export function HubMergeFigma() {
 
                 <div
                     className={`absolute grid justify-items-center gap-1.5 ${ease} ${showAfter ? "opacity-100" : "opacity-0"}`}
-                    style={{ left: 356, top: 300 }}
+                    style={{
+                        left: BEFORE.x + BEFORE.w + 4,
+                        width: AFTER.x - BEFORE.x - BEFORE.w - 8,
+                        top: NEW.y + NEW.h / 2 - 16,
+                    }}
                 >
-                    <svg width="56" height="16" viewBox="0 0 56 16" aria-hidden="true">
+                    <svg width="40" height="16" viewBox="0 0 40 16" aria-hidden="true">
                         <path
-                            d="M2 8 H50 M42 2 L50 8 L42 14"
+                            d="M2 8 H36 M30 2 L36 8 L30 14"
                             fill="none"
                             stroke={BLUE}
                             strokeWidth="1.6"
@@ -343,12 +355,12 @@ export function HubMergeFigma() {
                             style={{ transition: "stroke-dashoffset 700ms ease" }}
                         />
                     </svg>
-                    <span className="text-[10px] font-medium text-[#0d99ff]">one screen</span>
+                    <span className="text-[10px] font-medium text-[#0d99ff]">merged</span>
                 </div>
 
                 <div
                     className={`absolute ${ease} ${showAfter ? "opacity-100" : "translate-y-3 opacity-0"}`}
-                    style={{ left: 422, top: SEC.y, width: 208, height: SEC.h }}
+                    style={{ left: AFTER.x, top: SEC.y, width: AFTER.w, height: SEC.h }}
                 >
                     <div className="absolute inset-0 rounded-md border border-[#bfe7c9] bg-[#f3fbf5]" />
                     <span
@@ -363,7 +375,7 @@ export function HubMergeFigma() {
                     >
                         Pick a hub · Map
                     </span>
-                    <div className="absolute" style={{ left: NEW.x - 422, top: NEW.y - SEC.y }}>
+                    <div className="absolute" style={{ left: NEW.x - AFTER.x, top: NEW.y - SEC.y }}>
                         <PhoneImg
                             src="hub-new-map"
                             w={NEW.w}
@@ -424,7 +436,14 @@ export function HubMergeFigma() {
                 >
                     Hover a note to find it on the screen
                 </span>
-                <div className="absolute grid w-[192px] gap-2" style={{ left: 646, top: SEC.y }}>
+                <div
+                    className="absolute grid gap-2"
+                    style={{
+                        left: NOTES_X,
+                        width: AFTER.x + AFTER.w - 18 - NOTES_X,
+                        top: NEW.y - 20,
+                    }}
+                >
                     {NOTES.map((n, i) => (
                         <NoteCard
                             key={n.title}
