@@ -7,12 +7,14 @@ import { LuckyCat } from "./LuckyCat";
 
 // Bounce Daily leads (full width); AppX and eight.money sit side by side below it.
 // AppX has no case study page yet, so its card is "Coming soon" and doesn't link anywhere.
-const PROJECTS: { name: string; line: string; tags: string[]; img: string; href?: string }[] = [
+// `aspect` is the banner's own shape when it isn't the default 2880×1546 (so nothing gets cropped)
+const PROJECTS: { name: string; line: string; tags: string[]; img: string; aspect?: string; href?: string }[] = [
   {
     name: "Bounce Daily",
     line: "Rethinking the end-to-end scooter rental experience, making it easier for people to discover, book and get moving.",
     tags: ["Product Design", "2025"],
-    img: "/assets/cases/bounce-daily.webp",
+    img: "/assets/cases/bounce-daily-v2.webp",
+    aspect: "aspect-[1440/1024]",
     href: "/work/bounce-daily",
   },
   {
@@ -66,7 +68,7 @@ export function CaseStudies() {
                 className={`group flex h-full flex-col rounded-[20px] ${lead ? "md:flex-row md:items-stretch" : ""} border border-line bg-bg p-2 text-head shadow-[0_18px_36px_-26px_rgba(60,40,20,0.35)] transition duration-300 ${p.href ? "hover:-translate-y-1.5 hover:shadow-[0_26px_44px_-26px_rgba(60,40,20,0.42)]" : "cursor-default"}`}
               >
                 <span
-                  className={`relative block aspect-[2880/1546] shrink-0 overflow-hidden rounded-[14px] ${lead ? "md:w-[58%]" : ""}`}
+                  className={`relative block ${p.aspect ?? "aspect-[2880/1546]"} shrink-0 overflow-hidden rounded-[14px] ${lead ? "md:w-[58%]" : ""}`}
                 >
                   <Image
                     src={p.img}
