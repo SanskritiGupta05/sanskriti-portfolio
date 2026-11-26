@@ -1,13 +1,27 @@
+// Primary case studies (home #work sheet, and tier 1 of the /work page): a short intro, then Bounce Daily as a full-width
+// lead card and the other two side by side below it
+// (after Sanskriti's reference): a white card with the project's banner (from her Framer site),
+// the name with an arrow, one line, and the tags as small chips. Hovering lifts a card.
 import Image from "next/image";
-
 import { LuckyCat } from "./LuckyCat";
 
-const PROJECTS: { name: string; line: string; tags: string[]; img: string; href?: string }[] = [
+// Bounce Daily leads (full width); AppX and eight.money sit side by side below it.
+// AppX has no case study page yet, so its card is "Coming soon" and doesn't link anywhere.
+// `aspect` is the banner's own shape when it isn't the default 2880×1546 (so nothing gets cropped)
+const PROJECTS: {
+    name: string;
+    line: string;
+    tags: string[];
+    img: string;
+    aspect?: string;
+    href?: string;
+}[] = [
     {
         name: "Bounce Daily",
         line: "Rethinking the end-to-end scooter rental experience, making it easier for people to discover, book and get moving.",
         tags: ["Product Design", "2025"],
-        img: "/assets/cases/bounce-daily.webp",
+        img: "/assets/cases/bounce-daily-v2.webp",
+        aspect: "aspect-[1440/1024]",
         href: "/work/bounce-daily",
     },
     {
@@ -30,6 +44,8 @@ export function CaseStudies() {
         <section aria-labelledby="work-title" className="pt-20">
             <span className="label">Primary case studies</span>
 
+            {/* the heading with a little pixel lucky cat waving beside it
+          (pinned to the heading, so it doesn't push the heading away from the label) */}
             <div className="relative mt-3 w-fit">
                 <h2 id="work-title" className="font-serif text-h2m text-head md:text-h2">
                     From problems to shipped products.
@@ -43,6 +59,7 @@ export function CaseStudies() {
 
             <ul className="mt-12 grid gap-4 md:grid-cols-2">
                 {PROJECTS.map((p, i) => {
+                    // Bounce Daily leads: full width, banner on the left and the story on the right
                     const lead = i === 0;
                     const Card = p.href ? "a" : "div";
                     return (
@@ -52,7 +69,7 @@ export function CaseStudies() {
                                 className={`group flex h-full flex-col rounded-[20px] ${lead ? "md:flex-row md:items-stretch" : ""} border border-line bg-bg p-2 text-head shadow-[0_18px_36px_-26px_rgba(60,40,20,0.35)] transition duration-300 ${p.href ? "hover:-translate-y-1.5 hover:shadow-[0_26px_44px_-26px_rgba(60,40,20,0.42)]" : "cursor-default"}`}
                             >
                                 <span
-                                    className={`relative block aspect-[2880/1546] shrink-0 overflow-hidden rounded-[14px] ${lead ? "md:w-[58%]" : ""}`}
+                                    className={`relative block ${p.aspect ?? "aspect-[2880/1546]"} shrink-0 overflow-hidden rounded-[14px] ${lead ? "md:w-[58%]" : ""}`}
                                 >
                                     <Image
                                         src={p.img}
@@ -109,6 +126,7 @@ export function CaseStudies() {
     );
 }
 
+// "AppX (YC'21)" with the orange Y Combinator logo before "YC'21", like in the hero
 function WithYC({ name }: { name: string }) {
     const [before, after] = name.split("YC");
     return (
