@@ -60,7 +60,7 @@ export default function UxLaws() {
               ← All work
             </Link>
             <div className="mt-8 flex items-center gap-4">
-              <Image src="/assets/cases/uxie/uxie-logo-no-lines.webp" alt="UXie logo" width={1266} height={1243} sizes="64px" className="size-16" />
+              <Image src="/assets/cases/uxie/uxie-logo.webp" alt="UXie logo" width={1137} height={1140} sizes="64px" className="size-16" />
               <span className="label">Personal project · Design + build</span>
             </div>
             <h1 className="mt-4 font-serif text-h2 text-head">UXie</h1>
