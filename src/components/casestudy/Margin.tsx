@@ -4,6 +4,11 @@ import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useScroll, type MotionValue } from "motion/react";
 import { Paperclip } from "@/components/PaperStack";
+import { Figtree } from "next/font/google";
+
+// case study reading text: Figtree (her pick, 2026-11-26). Headings stay Redaction, small labels stay Courier.
+// Loaded here so only case study pages get it; the rest of the site keeps its fonts.
+const figtree = Figtree({ subsets: ["latin"], variable: "--font-read", display: "swap" });
 
 // The "margin notes" case study language, as reusable parts:
 // a page frame with a sticky contents list (its dot follows the section you're in) and a thin
@@ -206,7 +211,7 @@ export function CaseStudyFrame({
               Case study
             </span>
             <div
-              className={`max-w-[1040px] px-6 pt-12 pb-24 sm:pr-10 sm:pl-24 md:pl-[104px] [&_h2]:max-w-[44ch] [&_p.printed]:max-w-[82ch] ${contentClassName}`}
+              className={`${figtree.variable} [font-family:var(--font-read),system-ui,sans-serif] [&_:where(.label)]:[font-family:var(--font-mono)] max-w-[1040px] px-6 pt-12 pb-24 sm:pr-10 sm:pl-24 md:pl-[104px] [&_h2]:max-w-[44ch] [&_p.printed]:max-w-[82ch] [&_.printed]:[filter:none] [&_.printed]:[text-shadow:none] [&_.printed]:[-webkit-text-stroke:0] ${contentClassName}`}
             >
               {header}
               <article className="mt-24 grid min-w-0 gap-28">
