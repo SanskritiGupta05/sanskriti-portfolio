@@ -58,8 +58,8 @@ const fuzz = (cx: number, cy: number, r: number, n = 34) =>
 // gentle idle loops (still when the visitor prefers reduced motion)
 function useIdle() {
   const reduce = useReducedMotion();
-  return (keys: Record<string, number[]>, duration: number, delay = 0) =>
-    reduce ? {} : { animate: keys, transition: { duration, delay, repeat: Infinity, ease: "easeInOut" as const } };
+  return (keys: Record<string, number[]>, duration: number, delay = 0, times?: number[]) =>
+    reduce ? {} : { animate: keys, transition: { duration, delay, times, repeat: Infinity, ease: "easeInOut" as const } };
 }
 // the console cat blinks every few seconds
 function useBlink() {
@@ -155,8 +155,7 @@ export function ConsoleArt() {
         <circle cx="62" cy="92" r="3" fill="#fbf2e4" stroke={LINE} strokeWidth="1.4" />
       </g>
 
-      {/* the keychain: a braided orange cord, a gold bead and a soot sprite, swinging from the strap hole */}
-      <motion.g style={{ transformOrigin: "66px 112px", transformBox: "view-box" }} {...idle({ rotate: [0, 7, -5, 0] }, 3.4)}>
+      {/* the keychain: a braided orange cord, a gold bead and a soot sprite */}
       <g fill="none" strokeLinecap="round" strokeLinejoin="round">
         <path d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196" stroke={LINE} strokeWidth="6" />
         <path d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196" stroke="#e8782c" strokeWidth="3.6" />
@@ -165,11 +164,25 @@ export function ConsoleArt() {
         <path d="M66 112 C 58 126, 52 150, 54 172 C 55 182, 54 190, 52 196" stroke="#d9602a" strokeWidth="2.8" />
       </g>
       <rect x="46" y="194" width="12" height="9" rx="3" fill="#e2b04a" stroke={LINE} strokeWidth="1.6" />
-      <path d={fuzz(52, 224, 19)} fill="#231d1b" stroke="#231d1b" strokeWidth="1" strokeLinejoin="round" />
-      <circle cx="44.5" cy="222" r="5.2" fill="#fff" />
-      <circle cx="59.5" cy="222" r="5.2" fill="#fff" />
-      <circle cx="45.5" cy="223" r="2.4" fill="#231d1b" />
-      <circle cx="58.5" cy="223" r="2.4" fill="#231d1b" />
+      {/* the soot sprite stays put on its cord: its fuzz breathes, it looks around and blinks */}
+      <motion.g style={{ transformOrigin: "52px 224px", transformBox: "view-box" }} {...idle({ scale: [1, 1.07, 1] }, 1.8)}>
+        <motion.path
+          d={fuzz(52, 224, 19)}
+          fill="#231d1b"
+          stroke="#231d1b"
+          strokeWidth="1"
+          strokeLinejoin="round"
+          style={{ transformOrigin: "52px 224px", transformBox: "view-box" }}
+          {...idle({ rotate: [0, 8, 0] }, 1.8)}
+        />
+        <motion.g style={{ transformOrigin: "52px 222px", transformBox: "view-box" }} {...idle({ scaleY: [1, 1, 0.1, 1, 1] }, 4, 0, [0, 0.9, 0.94, 0.98, 1])}>
+          <circle cx="44.5" cy="222" r="5.2" fill="#fff" />
+          <circle cx="59.5" cy="222" r="5.2" fill="#fff" />
+          <motion.g {...idle({ x: [0, -2, -2, 2, 2, 0], y: [0, 0, 1, 1, 0, 0] }, 5)}>
+            <circle cx="45.5" cy="223" r="2.4" fill="#231d1b" />
+            <circle cx="58.5" cy="223" r="2.4" fill="#231d1b" />
+          </motion.g>
+        </motion.g>
       </motion.g>
 
       {/* sparkle */}
