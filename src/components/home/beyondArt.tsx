@@ -71,12 +71,18 @@ const fuzz = (cx: number, cy: number, r: number, n = 34) =>
 
 function useIdle() {
     const reduce = useReducedMotion();
-    return (keys: Record<string, number[]>, duration: number, delay = 0) =>
+    return (keys: Record<string, number[]>, duration: number, delay = 0, times?: number[]) =>
         reduce
             ? {}
             : {
                   animate: keys,
-                  transition: { duration, delay, repeat: Infinity, ease: "easeInOut" as const },
+                  transition: {
+                      duration,
+                      delay,
+                      times,
+                      repeat: Infinity,
+                      ease: "easeInOut" as const,
+                  },
               };
 }
 function useBlink() {
@@ -318,59 +324,68 @@ export function ConsoleArt() {
                 )}
                 <circle cx="62" cy="92" r="3" fill="#fbf2e4" stroke={LINE} strokeWidth="1.4" />
             </g>
-            <motion.g
-                style={{ transformOrigin: "66px 112px", transformBox: "view-box" }}
-                {...idle({ rotate: [0, 7, -5, 0] }, 3.4)}
-            >
-                <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-                    <path
-                        d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196"
-                        stroke={LINE}
-                        strokeWidth="6"
-                    />
-                    <path
-                        d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196"
-                        stroke="#e8782c"
-                        strokeWidth="3.6"
-                    />
-                    <path
-                        d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196"
-                        stroke="#f6b06a"
-                        strokeWidth="1.2"
-                        strokeDasharray="3 4"
-                    />
-                    <path
-                        d="M66 112 C 58 126, 52 150, 54 172 C 55 182, 54 190, 52 196"
-                        stroke={LINE}
-                        strokeWidth="5"
-                    />
-                    <path
-                        d="M66 112 C 58 126, 52 150, 54 172 C 55 182, 54 190, 52 196"
-                        stroke="#d9602a"
-                        strokeWidth="2.8"
-                    />
-                </g>
-                <rect
-                    x="46"
-                    y="194"
-                    width="12"
-                    height="9"
-                    rx="3"
-                    fill="#e2b04a"
+            <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+                <path
+                    d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196"
                     stroke={LINE}
-                    strokeWidth="1.6"
+                    strokeWidth="6"
                 />
                 <path
+                    d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196"
+                    stroke="#e8782c"
+                    strokeWidth="3.6"
+                />
+                <path
+                    d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196"
+                    stroke="#f6b06a"
+                    strokeWidth="1.2"
+                    strokeDasharray="3 4"
+                />
+                <path
+                    d="M66 112 C 58 126, 52 150, 54 172 C 55 182, 54 190, 52 196"
+                    stroke={LINE}
+                    strokeWidth="5"
+                />
+                <path
+                    d="M66 112 C 58 126, 52 150, 54 172 C 55 182, 54 190, 52 196"
+                    stroke="#d9602a"
+                    strokeWidth="2.8"
+                />
+            </g>
+            <rect
+                x="46"
+                y="194"
+                width="12"
+                height="9"
+                rx="3"
+                fill="#e2b04a"
+                stroke={LINE}
+                strokeWidth="1.6"
+            />
+            <motion.g
+                style={{ transformOrigin: "52px 224px", transformBox: "view-box" }}
+                {...idle({ scale: [1, 1.07, 1] }, 1.8)}
+            >
+                <motion.path
                     d={fuzz(52, 224, 19)}
                     fill="#231d1b"
                     stroke="#231d1b"
                     strokeWidth="1"
                     strokeLinejoin="round"
+                    style={{ transformOrigin: "52px 224px", transformBox: "view-box" }}
+                    {...idle({ rotate: [0, 8, 0] }, 1.8)}
                 />
-                <circle cx="44.5" cy="222" r="5.2" fill="#fff" />
-                <circle cx="59.5" cy="222" r="5.2" fill="#fff" />
-                <circle cx="45.5" cy="223" r="2.4" fill="#231d1b" />
-                <circle cx="58.5" cy="223" r="2.4" fill="#231d1b" />
+                <motion.g
+                    style={{ transformOrigin: "52px 222px", transformBox: "view-box" }}
+                    {...idle({ scaleY: [1, 1, 0.1, 1, 1] }, 4, 0, [0, 0.9, 0.94, 0.98, 1])}
+                >
+                    <circle cx="44.5" cy="222" r="5.2" fill="#fff" />
+                    <circle cx="59.5" cy="222" r="5.2" fill="#fff" />
+                    <motion.g {...idle({ x: [0, -2, -2, 2, 2, 0], y: [0, 0, 1, 1, 0, 0] }, 5)}>
+                        <circle cx="45.5" cy="223" r="2.4" fill="#231d1b" />
+                        <circle cx="58.5" cy="223" r="2.4" fill="#231d1b" />
+                    </motion.g>
+                </motion.g>
             </motion.g>
             <motion.path
                 d={sparkle(232, 196, 13)}
