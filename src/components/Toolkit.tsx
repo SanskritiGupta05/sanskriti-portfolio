@@ -1,6 +1,7 @@
 "use client";
 
 import { TOOLS } from "@/components/Keyword";
+import { PixelPencil } from "@/components/PixelPencil";
 
 const TILE =
     "grid size-10 place-items-center rounded-[10px] shadow-[0_8px_18px_-8px_rgba(40,20,10,0.55),inset_0_0_0_1px_rgba(255,255,255,0.08)]";
@@ -172,9 +173,9 @@ export function Toolkit() {
             <div className="mb-6 flex items-center gap-3">
                 <span
                     aria-hidden="true"
-                    className="grid h-8 w-10 rotate-6 place-items-center rounded-md border border-[#cfe0ef] bg-[#eef5fb] text-sm shadow-[0_3px_0_#cfe0ef]"
+                    className="grid h-11 w-13 rotate-6 place-items-center overflow-hidden rounded-lg border border-[#cfe0ef] bg-[#eef5fb] shadow-[0_3px_0_#cfe0ef]"
                 >
-                    ✎
+                    <PixelPencil />
                 </span>
                 <h2
                     id="toolkit-title"
