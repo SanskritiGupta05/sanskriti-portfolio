@@ -15,7 +15,7 @@ export function HeroSection() {
                 </h1>
                 <HeroBio />
                 <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
-                    <SakuraButtonLink href="/Sanskriti_Gupta_Resume.pdf" target="_blank" rel="noopener noreferrer" finish="raised">
+                    <SakuraButtonLink href="https://drive.google.com/file/d/1fTzstEuRtChq5MFMOtj2_nIuYtiiQ_kU/view?usp=sharing" target="_blank" rel="noopener noreferrer" finish="raised">
                         Résumé
                     </SakuraButtonLink>
                     <SakuraButtonLink href="/work" tone="paper" finish="raised">
