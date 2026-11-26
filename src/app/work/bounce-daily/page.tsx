@@ -9,7 +9,6 @@ import {
   BigStats,
   Body,
   Cards,
-  Chips,
   Decision,
   Eyebrow,
   Facts,
@@ -104,6 +103,7 @@ const TOC: TocItem[] = [
       { id: "more", label: "More calls, at a glance" },
     ],
   },
+  { id: "errors", label: "Error states" },
   { id: "edge", label: "Edge cases" },
   { id: "ui", label: "The UI layer" },
   { id: "real", label: "Making it real" },
@@ -590,32 +590,39 @@ export default function BounceDaily() {
         </section>
 
         <Section
-          id="edge"
-          eyebrow="Edge cases"
-          headline="A sold-out hub isn't an edge case for the rider it happens to."
+          id="errors"
+          eyebrow="Error states"
+          headline="A sold-out hub is a lost day for the rider it happens to."
         >
           <Body>
-            Beyond the happy path I designed eight scenarios. In the old app
+            Beyond the happy path I designed eight error states. In the old app
             most of them ended in a toast or a timer running out. Now each one
-            says what went wrong in plain words, shows an illustration instead
-            of a paragraph, and gives one clear way forward.
+            says what went wrong in plain words and gives one clear way forward.
           </Body>
-          <Chips
-            items={[
-              "Hub sold out",
-              "City not served",
-              "Payment failed",
-              "KYC not approved",
-              "Plan ending",
-              "Plan ended",
-              "Kilometres low",
-              "Dues before a trip",
-            ]}
-          />
           <Fig
-            name="errors"
-            alt="Hub sold out, not in your city yet, payment failed, and KYC not approved, each with one next step."
-            caption="Hub sold out, not in your city yet, payment failed, and KYC not approved, each with one next step."
+            name="error-states-v1"
+            section
+            alt="Eight error screens: hub sold out, not in your city, payment failed, KYC not approved, plan ended, dues before a trip, kilometres low, and licence not approved."
+            caption="Hub sold out, not in your city yet, payment failed, KYC not approved, plan ended, dues before a trip, kilometres low, and a licence not approved on switch, each with one next step."
+          />
+        </Section>
+
+        <Section
+          id="edge"
+          eyebrow="Edge cases"
+          headline="Riders don't always take the path we drew."
+        >
+          <Body>
+            Some riders won&apos;t share their location, some are in a hurry,
+            and some want a faster scooter halfway through a rental. None of
+            these is an error, so none of them should feel like one. Each one
+            gets its own way through.
+          </Body>
+          <Fig
+            name="edge-cases-v1"
+            section
+            alt="Five edge cases: no location shared, paid with KYC skipped, KYC in review, switching to a faster scooter mid-rental, and coming back after a plan ended."
+            caption="Entering an area instead of sharing location, paying before KYC, waiting on a KYC review, switching to high speed mid-rental, and coming back after a plan ended."
           />
         </Section>
 
