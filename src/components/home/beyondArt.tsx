@@ -1,4 +1,5 @@
-import { useId } from "react";
+import { useEffect, useId, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 
 // The two illustrations for "Beyond product work", drawn in code after Sanskriti's reference
 // (soft, warm vector pieces with a brown outline and a little depth; only the cat on the console
@@ -54,11 +55,42 @@ const fuzz = (cx: number, cy: number, r: number, n = 34) =>
     return `${i ? "L" : "M"}${(cx + Math.cos(a) * rr).toFixed(1)} ${(cy + Math.sin(a) * rr).toFixed(1)}`;
   }).join(" ") + "Z";
 
+// gentle idle loops (still when the visitor prefers reduced motion)
+function useIdle() {
+  const reduce = useReducedMotion();
+  return (keys: Record<string, number[]>, duration: number, delay = 0) =>
+    reduce ? {} : { animate: keys, transition: { duration, delay, repeat: Infinity, ease: "easeInOut" as const } };
+}
+// the console cat blinks every few seconds
+function useBlink() {
+  const reduce = useReducedMotion();
+  const [shut, setShut] = useState(false);
+  useEffect(() => {
+    if (reduce) return;
+    let t: ReturnType<typeof setTimeout>;
+    const loop = () => {
+      t = setTimeout(() => {
+        setShut(true);
+        t = setTimeout(() => {
+          setShut(false);
+          loop();
+        }, 150);
+      }, 2600 + Math.random() * 1800);
+    };
+    loop();
+    return () => clearTimeout(t);
+  }, [reduce]);
+  return shut;
+}
+const CAT_BLINK = CAT_FACE.map((r, i) => (i === 5 ? r.replace(/k/g, "F") : r));
+
 export function ConsoleArt() {
   // unique ids: the tile is drawn twice (in place and in the hover burst), and a hidden copy's
   // clip path or gradient must not be the one the visible copy points at
   const u = useId().replace(/:/g, "");
   const id = (n: string) => `bc-${n}-${u}`;
+  const idle = useIdle();
+  const shut = useBlink();
   return (
     <svg viewBox="0 0 260 260" className="block h-auto w-full overflow-visible" aria-hidden="true">
       <defs>
@@ -81,13 +113,15 @@ export function ConsoleArt() {
         <rect x="126" y="104" width="104" height="132" rx="10" fill={`url(#${id("dots")})`} />
       </g>
 
-      {/* red play tile */}
+      {/* red play tile, bobbing */}
+      <motion.g {...idle({ y: [0, -4, 0] }, 2.8)}>
       <g transform="rotate(12 186 72)" filter={`url(#${id("sh")})`}>
         <rect x="156" y="44" width="62" height="62" rx="13" fill="#a8261d" stroke={LINE} strokeWidth="2" transform="translate(0 6)" />
         <rect x="156" y="44" width="62" height="62" rx="13" fill={`url(#${id("red")})`} stroke={LINE} strokeWidth="2" />
         <path d="M164 52 Q187 47 210 52" stroke="#fff" strokeOpacity=".35" strokeWidth="3" fill="none" strokeLinecap="round" />
         <path d="M178 61 Q177 57 181 59 L203 72 Q206 75 203 77 L181 90 Q177 92 178 88 Z" fill="#fff" />
       </g>
+      </motion.g>
 
       {/* the console: a thick cream body with its side showing */}
       <g transform="rotate(-24 118 140)" filter={`url(#${id("sh")})`}>
@@ -97,7 +131,7 @@ export function ConsoleArt() {
         {/* screen */}
         <rect x="70" y="64" width="100" height="84" rx="10" fill="#4a4a40" stroke={LINE} strokeWidth="1.6" />
         <rect x="78" y="72" width="84" height="68" rx="5" fill="#86a06a" />
-        <Pix rows={CAT_FACE} pal={{ o: "#6b4630", P: "#f2a99b", F: "#fbe6c8", k: "#2b2420", c: "#f3a08f", n: "#d9735f", w: "#6b4630" }} x={82.5} y={84} s={4} />
+        <Pix rows={shut ? CAT_BLINK : CAT_FACE} pal={{ o: "#6b4630", P: "#f2a99b", F: "#fbe6c8", k: "#2b2420", c: "#f3a08f", n: "#d9735f", w: "#6b4630" }} x={82.5} y={84} s={4} />
         <path d="M82 76 L96 76 L82 90 Z" fill="#fff" opacity=".14" />
         {/* d-pad */}
         <path d="M83 166 h10 v-10 h12 v10 h10 v12 h-10 v10 h-12 v-10 h-10 z" fill="#e0453a" stroke={LINE} strokeWidth="1.8" strokeLinejoin="round" />
@@ -121,7 +155,8 @@ export function ConsoleArt() {
         <circle cx="62" cy="92" r="3" fill="#fbf2e4" stroke={LINE} strokeWidth="1.4" />
       </g>
 
-      {/* the keychain: a braided orange cord, a gold bead and a soot sprite */}
+      {/* the keychain: a braided orange cord, a gold bead and a soot sprite, swinging from the strap hole */}
+      <motion.g style={{ transformOrigin: "66px 112px", transformBox: "view-box" }} {...idle({ rotate: [0, 7, -5, 0] }, 3.4)}>
       <g fill="none" strokeLinecap="round" strokeLinejoin="round">
         <path d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196" stroke={LINE} strokeWidth="6" />
         <path d="M66 112 C 44 118, 34 140, 38 166 C 40 180, 46 190, 52 196" stroke="#e8782c" strokeWidth="3.6" />
@@ -135,9 +170,18 @@ export function ConsoleArt() {
       <circle cx="59.5" cy="222" r="5.2" fill="#fff" />
       <circle cx="45.5" cy="223" r="2.4" fill="#231d1b" />
       <circle cx="58.5" cy="223" r="2.4" fill="#231d1b" />
+      </motion.g>
 
       {/* sparkle */}
-      <path d={sparkle(232, 196, 13)} fill="#f4c04e" stroke="#c9862c" strokeWidth="1.6" strokeLinejoin="round" />
+      <motion.path
+        d={sparkle(232, 196, 13)}
+        fill="#f4c04e"
+        stroke="#c9862c"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+        style={{ transformOrigin: "232px 196px", transformBox: "view-box" }}
+        {...idle({ scale: [1, 1.28, 0.9, 1], rotate: [0, 20, 0, 0], opacity: [1, 1, 0.75, 1] }, 2.2)}
+      />
     </svg>
   );
 }
@@ -268,6 +312,7 @@ export function PolaroidArt() {
   // clip path or gradient must not be the one the visible copy points at
   const u = useId().replace(/:/g, "");
   const id = (n: string) => `bp-${n}-${u}`;
+  const idle = useIdle();
   return (
     <svg viewBox="0 0 260 260" className="block h-auto w-full overflow-visible" aria-hidden="true">
       <defs>
@@ -340,7 +385,8 @@ export function PolaroidArt() {
         ))}
       </g>
 
-      {/* sakura branch over the top of the polaroid */}
+      {/* sakura branch over the top of the polaroid, swaying a little from its base */}
+      <motion.g style={{ transformOrigin: "18px 190px", transformBox: "view-box" }} {...idle({ rotate: [0, 1.6, -0.6, 0] }, 4.6)}>
       <g fill="none" stroke="#6b4026" strokeLinecap="round">
         <path d="M18 190 C 40 150, 70 118, 104 96 C 140 72, 176 52, 220 26" strokeWidth="4" />
         <path d="M70 120 C 56 118, 44 122, 34 128" strokeWidth="2.6" />
@@ -358,9 +404,19 @@ export function PolaroidArt() {
       <Bud x={230} y={50} rot={70} />
       <Bud x={84} y={70} rot={-30} />
       <Bud x={18} y={100} rot={-60} />
+      </motion.g>
       {/* petals drifting off to the right */}
-      <path d={PETAL} transform="translate(246 96) rotate(30)" fill="#f6aebb" stroke="#d2566c" strokeWidth="1.2" />
-      <path d={PETAL} transform="translate(248 142) rotate(-20) scale(.85)" fill="#f6aebb" stroke="#d2566c" strokeWidth="1.2" />
+      {(
+        [
+          [246, 96, 30, 1, 0],
+          [248, 142, -20, 0.85, 1.4],
+          [210, 20, 60, 0.8, 2.6],
+        ] as const
+      ).map(([x, y, r, sc, d]) => (
+        <motion.g key={x} style={{ transformBox: "fill-box", transformOrigin: "center" }} {...idle({ x: [0, 10, 18], y: [0, 14, 30], rotate: [0, 40, 90], opacity: [0, 1, 0] }, 4.2, d)}>
+          <path d={PETAL} transform={`translate(${x} ${y}) rotate(${r}) scale(${sc})`} fill="#f6aebb" stroke="#d2566c" strokeWidth="1.2" />
+        </motion.g>
+      ))}
     </svg>
   );
 }

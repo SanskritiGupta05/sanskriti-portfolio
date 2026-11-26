@@ -242,7 +242,7 @@ export function BeyondWork() {
         </span>
       </h2>
       <p className="printed mx-auto mt-5 max-w-[60ch] text-balance">
-        The other side of my design life – my journey, my interests, and the little experiments I build for fun.
+        The other side of my design life: my journey, my interests, and the little experiments I build for fun.
       </p>
 
       <ul className="mt-12 grid grid-cols-1 justify-items-center gap-10 sm:grid-cols-2 sm:gap-8">

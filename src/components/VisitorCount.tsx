@@ -28,7 +28,7 @@ export function VisitorCount() {
   return (
     <span className="label inline-flex items-center gap-1.5 !text-ink" title="Visitors so far">
       <Eye aria-hidden="true" className="size-4" strokeWidth={1.6} />
-      <span className="tabular-nums">{count === null ? "—" : count.toLocaleString("en-IN")}</span>
+      <span className="tabular-nums">{count === null ? "…" : count.toLocaleString("en-IN")}</span>
       <span className="sr-only">visitors</span>
     </span>
   );
