@@ -89,13 +89,6 @@ export function ConsoleArt() {
         <path d="M178 61 Q177 57 181 59 L203 72 Q206 75 203 77 L181 90 Q177 92 178 88 Z" fill="#fff" />
       </g>
 
-      {/* sparks */}
-      <g stroke="#e0462f" strokeWidth="4.2" strokeLinecap="round">
-        <path d="M30 70 L50 80" />
-        <path d="M58 36 L68 58" />
-        <path d="M94 30 L90 54" />
-      </g>
-
       {/* the console: a thick cream body with its side showing */}
       <g transform="rotate(-24 118 140)" filter={`url(#${id("sh")})`}>
         <rect x="56" y="48" width="128" height="178" rx="22" fill="#dcc3a0" stroke={LINE} strokeWidth={LW} transform="translate(5 9)" />
