@@ -18,7 +18,7 @@ export function HeroSection() {
                     <SakuraButtonLink href="#resume" finish="raised">
                         Résumé
                     </SakuraButtonLink>
-                    <SakuraButtonLink href="#work" tone="paper" finish="raised">
+                    <SakuraButtonLink href="/work" tone="paper" finish="raised">
                         See work
                     </SakuraButtonLink>
                 </div>

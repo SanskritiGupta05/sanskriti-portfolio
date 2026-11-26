@@ -1,4 +1,5 @@
 import { Footer } from "@/components/Footer";
+import { BeyondWork } from "@/components/home/BeyondWork";
 import { Toolkit } from "@/components/Toolkit";
 import { VibeProjects } from "@/components/VibeProjects";
 
@@ -9,6 +10,7 @@ export function VibeSheet() {
         <SheetBody>
             <VibeProjects />
             <Toolkit />
+            <BeyondWork />
             <Footer />
         </SheetBody>
     );

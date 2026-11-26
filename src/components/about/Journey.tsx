@@ -457,7 +457,7 @@ export function Journey() {
                         alt="Sanskriti's GitHub contribution graph with the tooltip: 38 contributions on November 19th"
                         box="relative mt-6 block w-full"
                         tilt="-rotate-[3deg]"
-                        caption="38 in one day"
+                        caption="write shipping code"
                         keepColor
                         sizes="(min-width: 768px) 200px, 45vw"
                     />
