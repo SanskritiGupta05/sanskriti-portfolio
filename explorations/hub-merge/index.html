@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hub screens · merge transition (demo)</title>
+<style>
+  :root { --red: #D42B31; --ink: #161616; --grey: #6B6B6B; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #F5F3EF; font-family: "Hanken Grotesk", -apple-system, system-ui, sans-serif; color: var(--ink); }
+  .wrap { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 32px; }
+  .stage { position: relative; width: 980px; height: 640px; }
+  .phone { position: absolute; border-radius: 22px; overflow: hidden; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 12px 32px rgba(0,0,0,.08); will-change: transform, opacity; }
+  .phone img { display: block; width: 100%; height: 100%; }
+  .cap { position: absolute; top: 4px; display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; color: var(--ink); letter-spacing: -.01em; white-space: nowrap; will-change: transform, opacity; }
+  .stamp { font-style: normal; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; line-height: 1; }
+  .stamp.before { color: #5E5A54; background: #E6E2DB; }
+  .stamp.after { color: #fff; background: var(--red); }
+  .arrow { position: absolute; top: 318px; left: 616px; font-size: 22px; color: #B8B2A8; }
+  .piece { position: absolute; overflow: hidden; border-radius: 6px; transform-origin: 0 0; will-change: transform, opacity; pointer-events: none; opacity: 0; }
+  .piece .layer { position: absolute; inset: 0; background-repeat: no-repeat; }
+  .hl { position: absolute; border: 1.5px solid var(--red); border-radius: 8px; opacity: 0; pointer-events: none; }
+  .tag { position: absolute; transform: translate(0, -100%); margin-top: -4px; font-size: 11px; font-weight: 600; color: #fff; background: var(--red); padding: 2px 7px; border-radius: 20px; white-space: nowrap; opacity: 0; pointer-events: none; }
+  .tag.right { transform: none; margin-top: 0; }
+  svg.lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .callout { position: absolute; width: 236px; opacity: 0; will-change: transform, opacity; }
+  .callout b { display: block; font-size: 15px; font-weight: 600; line-height: 1.3; }
+  .callout span { display: block; margin-top: 3px; font-size: 13px; line-height: 1.4; color: var(--grey); }
+  .callout.left { text-align: right; }
+  .kind { display: inline-block; font-style: normal; font-size: 10px; font-weight: 700; letter-spacing: .06em; padding: 1px 6px; border-radius: 6px; margin: 0 6px; vertical-align: 2px; }
+  .kind.ux { color: var(--red); background: #FBE9EA; }
+  .kind.ui { color: #2F5BD3; background: #E8EEFC; }
+  .zoom { margin-top: 8px; height: 35px; border-radius: 8px; background-repeat: no-repeat; box-shadow: 0 0 0 1px #E3DED6, 0 4px 12px rgba(0,0,0,.06); }
+  .callout.left .zoom { margin-left: auto; }
+  .legend { display: flex; gap: 14px; font-size: 13px; color: var(--grey); opacity: 0; }
+  .controls { display: flex; gap: 14px; align-items: center; }
+  button { font: inherit; font-size: 14px; font-weight: 600; border: 1px solid #D9D9D9; background: #fff; border-radius: 12px; padding: 9px 16px; cursor: pointer; }
+  button:hover { background: #F7F7F7; }
+  .note { font-size: 13px; color: var(--grey); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage" id="stage"></div>
+  <div class="controls">
+    <button id="replay">↺ Replay</button>
+    <span class="legend" id="legend"><span><i class="kind ux">UX</i>how it works</span><span><i class="kind ui">UI</i>how it looks</span></span>
+    <span class="note">On the case study page it plays once when scrolled into view.</span>
+  </div>
+</div>
+<script>
+const S = 0.6;
+const IMG = {
+  list:   { src: "old-list@2x.webp",   w: 430, h: 956 },
+  detail: { src: "old-detail@2x.webp", w: 430, h: 956 },
+  hub:    { src: "new-hub@2x.webp",    w: 440, h: 956 },
+};
+const TOP = 40;
+const PHONE = { list: { x: 0, y: TOP }, detail: { x: 300, y: TOP }, hub: { x: 700, y: TOP } };
+const CENTER_X = (980 - IMG.hub.w * S) / 2;          // where the new screen ends up
+const PIECES = [
+  { label: "Map",            from: ["list",   [0, 108, 430, 260]],  to: [0, 62, 440, 470] },
+  { label: "Hub photo",      from: ["detail", [165, 113, 100, 177]], to: [60, 563, 123, 93] },
+  { label: "Hub name",       from: ["list",   [121, 504, 68, 22]],   to: [195, 564, 113, 23] },
+  { label: "Address",        from: ["detail", [17, 364, 370, 70]],   to: [195, 616, 183, 17] },
+  { label: "Scooters",       from: ["list",   [121, 532, 88, 20]],   to: [60, 668, 110, 29], tagRight: true },
+  { label: "Available bike", from: ["detail", [16, 509, 399, 94]],   to: [60, 668, 110, 29] },
+];
+// what's better: UX (how it works) and UI (how it looks). Spots are in new-screen px.
+// at = where the line meets the screen; rect = dashed outline; parts = numbered dashed sub-boxes; zoom = magnified crop under the label
+const CALLOUTS = [
+  // rect = dashed ring around the thing (x, y, w, h, radius in screen px); the line leaves from its edge, nothing sits on top
+  { side: "left",  kind: "ux", rect: [-10, -10, 460, 976, 47], anchorY: 70,
+    title: "One screen, not two", sub: "Hub list and hub detail are now one screen. No more going back and forth." },
+  { side: "right", kind: "ux", rect: [300, 239, 27, 36, 7],
+    title: "Battery stations on the map", sub: "Riders also see where to swap batteries, not just where hubs are." },
+  { side: "left",  kind: "ux", rect: [205, 301, 50, 50, 25],
+    title: "Map first", sub: "Hubs around the rider, instead of a list of names to read." },
+  { side: "right", kind: "ux", rect: [319, 562, 59, 26, 13],
+    title: "Nearest hub first", sub: "Distance and a Nearest tag, up front." },
+  { side: "left",  kind: "ui", rect: [44, 548, 350, 254, 16], anchorY: 560,
+    parts: [[57, 560, 129, 99], [191, 561, 124, 28], [191, 591, 180, 66]],
+    title: "Clear card hierarchy", sub: "Photo, then name, then distance, address and hours. The eye knows where to start." },
+  { side: "right", kind: "ui", rect: [56, 665, 272, 36, 18], zoom: [52, 662, 280, 42],
+    title: "Scooters + batteries as chips", sub: "Both counts read at a glance, side by side." },
+  { side: "left",  kind: "ux", rect: [55, 723, 108, 30, 8],
+    title: "Call the hub in one tap", sub: "The hub's number is on the card, so riders can check before they travel." },
+  { side: "right", kind: "ux", rect: [20, 860, 400, 58, 17],
+    title: "The CTA confirms your hub", sub: "“Pick scooter at RR Nagar” names the selected hub and invites the rider on." },
+];
+const stage = document.getElementById("stage");
+const legend = document.getElementById("legend");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const EASE = "cubic-bezier(.22,1,.36,1)";      // soft ease-out
+const EASE_IO = "cubic-bezier(.65,0,.35,1)";   // for the centre move
+const box = (k, r, x0 = PHONE[k].x) => ({ left: x0 + r[0] * S, top: PHONE[k].y + r[1] * S, width: r[2] * S, height: r[3] * S });
+function bg(img, r) { // map crop r of img onto the whole box, whatever its size
+  const sx = r[2] === img.w ? 0 : (r[0] / (img.w - r[2])) * 100;
+  const sy = r[3] === img.h ? 0 : (r[1] / (img.h - r[3])) * 100;
+  return `url(${img.src}) ${sx}% ${sy}% / ${(img.w / r[2]) * 100}% ${(img.h / r[3]) * 100}%`;
+}
+const px = o => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, typeof v === "number" ? v + "px" : v]));
+function el(cls, style = {}, html = "", parent = stage) { const d = document.createElement("div"); d.className = cls; Object.assign(d.style, px(style)); d.innerHTML = html; parent.appendChild(d); return d; }
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const anim = (n, frames, o) => n.animate(frames, Object.assign({ fill: "forwards", easing: EASE }, o));
+const fadeTo = (n, to, duration, delay = 0) => anim(n, [{ opacity: getComputedStyle(n).opacity }, { opacity: to }], { duration, delay });
+let N = {}, run = 0;
+
+function build() {
+  stage.innerHTML = ""; N = { caps: {}, phones: {} };
+  legend.getAnimations().forEach(a => a.cancel()); legend.style.opacity = 0;
+  N.caps.list = el("cap", { left: 0 }, `<i class="stamp before">Old UI</i>Hub list`);
+  N.caps.detail = el("cap", { left: 300 }, `<i class="stamp before">Old UI</i>Hub detail`);
+  N.caps.hub = el("cap", { left: 700 }, `<i class="stamp after">After revamp</i>Pick a hub near you`);
+  N.arrow = el("arrow", {}, "→");
+  for (const k of ["list", "detail", "hub"]) N.phones[k] = el("phone", { left: PHONE[k].x, top: PHONE[k].y, width: IMG[k].w * S, height: IMG[k].h * S }, `<img src="${IMG[k].src}" alt="">`);
+  N.phones.hub.style.opacity = 0;
+  N.ghost = el("phone", { left: PHONE.hub.x, top: PHONE.hub.y, width: IMG.hub.w * S, height: IMG.hub.h * S, background: "#ECE9E4", boxShadow: "none" });
+  N.hl = []; N.tags = []; N.pieces = [];
+  PIECES.forEach(pc => {
+    const [k, r] = pc.from, a = box(k, r), b = box("hub", pc.to);
+    N.hl.push(el("hl", { left: a.left - 3, top: a.top - 3, width: a.width + 6, height: a.height + 6 }));
+    N.tags.push(pc.tagRight ? el("tag right", { left: a.left + a.width + 8, top: a.top - 1 }, pc.label) : el("tag", { left: a.left - 3, top: a.top - 3 }, pc.label));
+    // the piece lives at its END box; a transform makes it start at the old box (GPU only, no layout work)
+    const p = el("piece", b, `<div class="layer" style="background:${bg(IMG[k], r)}"></div><div class="layer" style="background:${bg(IMG.hub, pc.to)};opacity:0"></div>`);
+    p._start = `translate(${a.left - b.left}px, ${a.top - b.top}px) scale(${a.width / b.width}, ${a.height / b.height})`;
+    p.style.transform = p._start;
+    N.pieces.push(p);
+  });
+  // callouts (hidden until the end)
+  N.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); N.svg.setAttribute("class", "lines"); stage.appendChild(N.svg);
+  const SVG = "http://www.w3.org/2000/svg";
+  const mk = (tag, attrs) => { const n = document.createElementNS(SVG, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); N.svg.appendChild(n); return n; };
+  const sx = x => CENTER_X + x * S, sy = y => TOP + y * S;
+  N.callouts = CALLOUTS.map(c => {
+    const color = c.kind === "ux" ? "#D42B31" : "#2F5BD3";
+    const left = c.side === "left";
+    const [x, y, w, h, r] = c.rect;
+    const startX = sx(left ? x : x + w) + (left ? -6 : 6), lineY = sy(c.anchorY ?? y + h / 2);
+    const labX = left ? CENTER_X - 30 - 236 : CENTER_X + IMG.hub.w * S + 30;
+    const endX = left ? CENTER_X - 24 : CENTER_X + IMG.hub.w * S + 24;
+    const big = w > 200;   // big rings (screen, card, CTA) stay quiet
+    const shapes = [mk("rect", { x: sx(x), y: sy(y), width: w * S, height: h * S, rx: r * S, fill: "none", stroke: color, "stroke-width": 1.3, "stroke-dasharray": "4 3", "stroke-opacity": big && !c.parts ? 0.55 : 1 })];
+    (c.parts || []).forEach(([qx, qy, qw, qh]) => shapes.push(mk("rect", { x: sx(qx), y: sy(qy), width: qw * S, height: qh * S, rx: 4, fill: "none", stroke: color, "stroke-width": 1, "stroke-dasharray": "2 3" })));
+    const tick = mk("circle", { cx: startX, cy: lineY, r: 3.2, fill: color, stroke: "#fff", "stroke-width": 1.5 });   // dot sits just outside the ring, never on the component
+    shapes.forEach(n => n.style.opacity = 0); tick.style.opacity = 0;
+    const len = Math.abs(endX - startX);
+    const path = mk("path", { d: `M ${startX} ${lineY} L ${endX} ${lineY}`, stroke: color, "stroke-width": 1, "stroke-opacity": 0.8, fill: "none" });
+    path.style.strokeDasharray = len; path.style.strokeDashoffset = len;
+    N.svg.appendChild(tick);
+    const pill = `<i class="kind ${c.kind}">${c.kind.toUpperCase()}</i>`;
+    let zoom = "";
+    if (c.zoom) { const [, , zw0, zh0] = c.zoom, zw = 236, zh = zw * zh0 / zw0; zoom = `<div class="zoom" style="width:${zw}px;height:${zh}px;background:${bg(IMG.hub, c.zoom)}"></div>`; }
+    const lab = el("callout " + c.side, { left: labX, top: lineY - 10 }, `<b>${left ? c.title + pill : pill + c.title}</b><span>${c.sub}</span>${zoom}`);
+    return { path, dot: tick, lab, len, shapes, side: c.side };
+  });
+}
+function endState() {
+  for (const k of ["list", "detail"]) { N.phones[k].style.opacity = 0; N.caps[k].style.opacity = 0; }
+  N.arrow.style.opacity = 0; N.ghost.style.opacity = 0;
+  N.phones.hub.style.opacity = 1; N.phones.hub.style.transform = `translateX(${CENTER_X - PHONE.hub.x}px)`;
+  N.caps.hub.style.transform = `translateX(${CENTER_X - PHONE.hub.x}px)`;
+  N.callouts.forEach(c => { c.path.style.strokeDashoffset = 0; c.dot.style.opacity = 1; c.lab.style.opacity = 1; c.shapes.forEach(n => n.style.opacity = 1); });
+  legend.style.opacity = 1;
+}
+async function play() {
+  const r = ++run; build();
+  if (reduce) { endState(); return; }
+  const ok = () => r === run;
+  await wait(400); if (!ok()) return;
+  // 1 · point at what carries over
+  N.hl.forEach((h, i) => fadeTo(h, 1, 350, i * 80));
+  N.tags.forEach((t, i) => fadeTo(t, 1, 350, i * 80));
+  await wait(1300); if (!ok()) return;
+  // 2 · lift: pieces fade in on top, old screens recede
+  N.hl.forEach(h => fadeTo(h, 0, 300)); N.tags.forEach(t => fadeTo(t, 0, 300));
+  N.pieces.forEach(p => anim(p, [{ opacity: 0, boxShadow: "0 0 0 rgba(0,0,0,0)" }, { opacity: 1, boxShadow: "0 8px 22px rgba(0,0,0,.16)" }], { duration: 350 }));
+  fadeTo(N.phones.list, 0.22, 600); fadeTo(N.phones.detail, 0.22, 600);
+  await wait(380); if (!ok()) return;
+  // 3 · glide (transform only) and turn into the new version on the way
+  N.pieces.forEach((p, i) => {
+    const delay = i * 90;
+    anim(p, [{ transform: p._start }, { transform: "none" }], { duration: 1250, delay, easing: EASE });
+    anim(p.children[1], [{ opacity: 0 }, { opacity: 1 }], { duration: 700, delay: delay + 300, easing: "ease-in-out" });
+    anim(p.children[0], [{ opacity: 1 }, { opacity: 0 }], { duration: 700, delay: delay + 450, easing: "ease-in-out" });
+  });
+  await wait(1250 + 90 * 5); if (!ok()) return;
+  // 4 · the new screen settles underneath; pieces melt into it
+  fadeTo(N.ghost, 0, 500); fadeTo(N.phones.hub, 1, 500);
+  N.pieces.forEach(p => anim(p, [{ opacity: 1, boxShadow: "0 8px 22px rgba(0,0,0,.16)" }, { opacity: 0, boxShadow: "0 0 0 rgba(0,0,0,0)" }], { duration: 500, delay: 150 }));
+  await wait(650); if (!ok()) return;
+  // 5 · pause on the result
+  await wait(900); if (!ok()) return;
+  // 6 · old screens leave, new screen moves to the centre
+  for (const k of ["list", "detail"]) { anim(N.phones[k], [{ opacity: 0.22, transform: "translateX(0)" }, { opacity: 0, transform: "translateX(-24px)" }], { duration: 500, easing: EASE_IO }); fadeTo(N.caps[k], 0, 400); }
+  fadeTo(N.arrow, 0, 300);
+  const dx = CENTER_X - PHONE.hub.x;
+  anim(N.phones.hub, [{ transform: "translateX(0)" }, { transform: `translateX(${dx}px)` }], { duration: 900, delay: 150, easing: EASE_IO });
+  anim(N.caps.hub, [{ transform: "translateX(0)" }, { transform: `translateX(${dx}px)` }], { duration: 900, delay: 150, easing: EASE_IO });
+  await wait(1150); if (!ok()) return;
+  // 7 · point out what's better, UX and UI
+  fadeTo(legend, 1, 400);
+  N.callouts.forEach((c, i) => {
+    const d = i * 260;
+    c.shapes.forEach(n => anim(n, [{ opacity: 0 }, { opacity: 1 }], { duration: 350, delay: d }));
+    anim(c.dot, [{ opacity: 0 }, { opacity: 1 }], { duration: 250, delay: d + 150 });
+    anim(c.path, [{ strokeDashoffset: c.len }, { strokeDashoffset: 0 }], { duration: 450, delay: d + 80 });
+    anim(c.lab, [{ opacity: 0, transform: `translateX(${c.side === "left" ? 8 : -8}px)` }, { opacity: 1, transform: "translateX(0)" }], { duration: 450, delay: d + 300 });
+  });
+}
+document.getElementById("replay").addEventListener("click", play);
+Promise.all(Object.values(IMG).map(i => new Promise(r => { const im = new Image(); im.onload = im.onerror = r; im.src = i.src; }))).then(play);
+</script>
+</body>
+</html>
