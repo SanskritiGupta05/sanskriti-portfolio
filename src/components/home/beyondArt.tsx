@@ -165,17 +165,16 @@ export function ConsoleArt() {
       </g>
       <rect x="46" y="194" width="12" height="9" rx="3" fill="#e2b04a" stroke={LINE} strokeWidth="1.6" />
       {/* the soot sprite stays put on its cord: its fuzz breathes, it looks around and blinks */}
-      <motion.g style={{ transformOrigin: "52px 224px", transformBox: "view-box" }} {...idle({ scale: [1, 1.07, 1] }, 1.8)}>
+      <motion.g {...idle({ scale: [1, 1.07, 1] }, 1.8)}>
         <motion.path
           d={fuzz(52, 224, 19)}
           fill="#231d1b"
           stroke="#231d1b"
           strokeWidth="1"
           strokeLinejoin="round"
-          style={{ transformOrigin: "52px 224px", transformBox: "view-box" }}
           {...idle({ rotate: [0, 8, 0] }, 1.8)}
         />
-        <motion.g style={{ transformOrigin: "52px 222px", transformBox: "view-box" }} {...idle({ scaleY: [1, 1, 0.1, 1, 1] }, 4, 0, [0, 0.9, 0.94, 0.98, 1])}>
+        <motion.g {...idle({ scaleY: [1, 1, 0.1, 1, 1] }, 4, 0, [0, 0.9, 0.94, 0.98, 1])}>
           <circle cx="44.5" cy="222" r="5.2" fill="#fff" />
           <circle cx="59.5" cy="222" r="5.2" fill="#fff" />
           <motion.g {...idle({ x: [0, -2, -2, 2, 2, 0], y: [0, 0, 1, 1, 0, 0] }, 5)}>
@@ -192,7 +191,6 @@ export function ConsoleArt() {
         stroke="#c9862c"
         strokeWidth="1.6"
         strokeLinejoin="round"
-        style={{ transformOrigin: "232px 196px", transformBox: "view-box" }}
         {...idle({ scale: [1, 1.28, 0.9, 1], rotate: [0, 20, 0, 0], opacity: [1, 1, 0.75, 1] }, 2.2)}
       />
     </svg>
@@ -399,7 +397,7 @@ export function PolaroidArt() {
       </g>
 
       {/* sakura branch over the top of the polaroid, swaying a little from its base */}
-      <motion.g style={{ transformOrigin: "18px 190px", transformBox: "view-box" }} {...idle({ rotate: [0, 1.6, -0.6, 0] }, 4.6)}>
+      <motion.g style={{ originX: 0, originY: 1 }} {...idle({ rotate: [0, 1.6, -0.6, 0] }, 4.6)}>
       <g fill="none" stroke="#6b4026" strokeLinecap="round">
         <path d="M18 190 C 40 150, 70 118, 104 96 C 140 72, 176 52, 220 26" strokeWidth="4" />
         <path d="M70 120 C 56 118, 44 122, 34 128" strokeWidth="2.6" />
@@ -426,7 +424,7 @@ export function PolaroidArt() {
           [210, 20, 60, 0.8, 2.6],
         ] as const
       ).map(([x, y, r, sc, d]) => (
-        <motion.g key={x} style={{ transformBox: "fill-box", transformOrigin: "center" }} {...idle({ x: [0, 10, 18], y: [0, 14, 30], rotate: [0, 40, 90], opacity: [0, 1, 0] }, 4.2, d)}>
+        <motion.g key={x} {...idle({ x: [0, 10, 18], y: [0, 14, 30], rotate: [0, 40, 90], opacity: [0, 1, 0] }, 4.2, d)}>
           <path d={PETAL} transform={`translate(${x} ${y}) rotate(${r}) scale(${sc})`} fill="#f6aebb" stroke="#d2566c" strokeWidth="1.2" />
         </motion.g>
       ))}
